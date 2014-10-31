@@ -40,6 +40,9 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   private EntityLivingBase lastAttackTarget = null;
 
+  private boolean firstUpdate = false;
+  private boolean isMounted = false;
+
   public EntityFallenKnight(World world) {
     super(world);
     this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
@@ -111,9 +114,10 @@ public class EntityFallenKnight extends EntitySkeleton {
     super.onLivingUpdate();
     if(isRiding()) {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
-      if(lastAttackTarget != getAttackTarget()) {        
+      if(lastAttackTarget != getAttackTarget() || firstUpdate) {
         cancelCurrentTasks(entLiving);
-        lastAttackTarget = getAttackTarget();        
+        lastAttackTarget = getAttackTarget();
+        firstUpdate = false;
       }
       if(lastAttackTarget == null) {
         entLiving.getNavigator().setSpeed(1);
@@ -121,6 +125,12 @@ public class EntityFallenKnight extends EntitySkeleton {
         entLiving.getNavigator().setSpeed(2.5);
       }
     }
+    if(!isMounted == isRiding()) {      
+      //getAiAttackOnCollide().resetTask();
+      //getNavigator().clearPathEntity();     
+    }    
+    isMounted = isRiding();
+
   }
 
   private void cancelCurrentTasks(EntityLiving ent) {
@@ -140,48 +150,6 @@ public class EntityFallenKnight extends EntitySkeleton {
     }
   }
 
-  @Override
-  public PathNavigate getNavigator() {
-    if(ridingEntity instanceof EntityLiving) {
-      return ((EntityLiving) ridingEntity).getNavigator();
-    }
-    return super.getNavigator();
-  }
-
-  //  public boolean attackEntityAsMob(Entity p_70652_1_)
-  //  {
-  //      if (super.attackEntityAsMob(p_70652_1_))
-  //      {
-  //          if (this.getSkeletonType() == 1 && p_70652_1_ instanceof EntityLivingBase)
-  //          {
-  //              ((EntityLivingBase)p_70652_1_).addPotionEffect(new PotionEffect(Potion.wither.id, 200));
-  //          }
-  //
-  //          return true;
-  //      }
-  //      else
-  //      {
-  //          return false;
-  //      }
-  //  }
-
-  //  public boolean attackEntityAsMob(Entity p_70652_1_)
-  //  {
-  //      boolean flag = super.attackEntityAsMob(p_70652_1_);
-  //
-  //      if (flag)
-  //      {
-  //          int i = this.worldObj.difficultySetting.getDifficultyId();
-  //
-  //          if (this.getHeldItem() == null && this.isBurning() && this.rand.nextFloat() < (float)i * 0.3F)
-  //          {
-  //              p_70652_1_.setFire(2 * i);
-  //          }
-  //      }
-  //
-  //      return flag;
-  //  }
-
   protected void addRandomArmor() {
 
     float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? 0.1F : 0.25F;
@@ -194,11 +162,12 @@ public class EntityFallenKnight extends EntitySkeleton {
         }
       }
     }
-    if(rand.nextFloat() > 0.25) {
-      setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
-    } else {
-      setCurrentItemOrArmor(0, new ItemStack(Items.bow));
-    }
+    setCurrentItemOrArmor(4, new ItemStack(Items.chainmail_helmet));
+    //    if(rand.nextFloat() > 0.25) {
+//    setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
+    //    } else {
+          setCurrentItemOrArmor(0, new ItemStack(Items.bow));
+    //    }
   }
 
   private Item getArmorForSlot(int slot) {
@@ -222,11 +191,6 @@ public class EntityFallenKnight extends EntitySkeleton {
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, 1));
 
-    //From Zombie
-    float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
-    setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
-    setCanBreakDoors(rand.nextFloat() < f * 0.1F);
-
     setSkeletonType(0);
     addRandomArmor();
     enchantEquipment();
@@ -234,6 +198,17 @@ public class EntityFallenKnight extends EntitySkeleton {
     EntityFallenMount mount = new EntityFallenMount(worldObj);
     mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
     mount.onSpawnWithEgg((IEntityLivingData) null);
+    isMounted = true;
+
+    if(!isMounted) {
+      //From Zombie
+      float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
+      setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
+      setCanBreakDoors(rand.nextFloat() < f * 0.1F);
+    } else {
+      setCanPickUpLoot(false);
+      setCanBreakDoors(false);
+    }
 
     worldObj.spawnEntityInWorld(mount);
     mountEntity(mount);
@@ -278,4 +253,38 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   protected void dropRareDrop(int p_70600_1_) {
   }
+
+  //public boolean attackEntityAsMob(Entity p_70652_1_)
+  //  {
+  //      if (super.attackEntityAsMob(p_70652_1_))
+  //      {
+  //          if (this.getSkeletonType() == 1 && p_70652_1_ instanceof EntityLivingBase)
+  //          {
+  //              ((EntityLivingBase)p_70652_1_).addPotionEffect(new PotionEffect(Potion.wither.id, 200));
+  //          }
+  //
+  //          return true;
+  //      }
+  //      else
+  //      {
+  //          return false;
+  //      }
+  //  }
+
+  //  public boolean attackEntityAsMob(Entity p_70652_1_)
+  //  {
+  //      boolean flag = super.attackEntityAsMob(p_70652_1_);
+  //
+  //      if (flag)
+  //      {
+  //          int i = this.worldObj.difficultySetting.getDifficultyId();
+  //
+  //          if (this.getHeldItem() == null && this.isBurning() && this.rand.nextFloat() < (float)i * 0.3F)
+  //          {
+  //              p_70652_1_.setFire(2 * i);
+  //          }
+  //      }
+  //
+  //      return flag;
+  //  }
 }
