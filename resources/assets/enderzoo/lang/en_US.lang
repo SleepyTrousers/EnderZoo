@@ -1,0 +1,9 @@
+//***  Ender Zoo *****//
+
+item.itemSpawnEggEnderZoo.name=Spawn
+
+//Mobs
+entity.enderzoo.Enderminy.name=Enderminy
+entity.enderzoo.ConcussionCreeper.name=Concussion Creeper
+entity.enderzoo.FallenKnight.name=Fallen Knight
+entity.enderzoo.FallenMount.name=Fallen Stead

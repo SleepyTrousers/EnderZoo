@@ -1,0 +1,21 @@
+[
+{
+  "modid": "EnderZoo",
+  "name": "Ender Zoo",
+  "description": "More Mobs",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "http://enderio.com",
+  "updateUrl": "",
+  "authors": [
+    "crazypants"
+  ],
+  "credits": "By CrazyPants",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
