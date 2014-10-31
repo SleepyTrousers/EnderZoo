@@ -1,9 +1,9 @@
-//***  Ender Zoo *****//
+﻿//***  Ender Zoo *****//
 
 item.itemSpawnEggEnderZoo.name=Erschaffe
 
 //Mobs
 entity.enderzoo.Enderminy.name=Enderminy
-entity.enderzoo.ConcussionCreeper.name=Ersch�tterungscreeper
+entity.enderzoo.ConcussionCreeper.name=Erschütterungscreeper
 entity.enderzoo.FallenKnight.name=Gefallener Ritter
 entity.enderzoo.FallenMount.name=Gefallenes Ross
