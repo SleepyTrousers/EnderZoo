@@ -1,4 +1,4 @@
-package crazypants.enderzoo.entity;
+package crazypants.enderzoo.entity.ai;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -15,19 +15,19 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
 
   World worldObj;
   EntityCreature attacker;
-  /**
-   * An amount of decrementing ticks that allows the entity to attack once the
-   * tick reaches 0.
-   */
-  int attackTick;
-  /** The speed with which the mob will approach the target */
+  
+  int attackPause;
+
   double speedTowardsTarget;
+  double speedTowardsTargetMounted;
+  
   /**
    * When true, the mob will continue chasing its target, even if it can't find
    * a path to them right now.
    */
   boolean longMemory;
-  /** The PathEntity of our entity. */
+  
+  
   PathEntity entityPathEntity;
   Class classTarget;
   private int pathUpdateTimer;
@@ -36,16 +36,18 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   private double targetPosZ;
 
   private int failedPathFindingPenalty;
+  
 
-  public EntityAIMountedAttackOnCollide(EntityCreature attacker, Class targetClass, double speedTowardsTarget, boolean longMemory) {
-    this(attacker, speedTowardsTarget, longMemory);
+  public EntityAIMountedAttackOnCollide(EntityCreature attacker, Class targetClass, double speedTowardsTarget, double speedTowardsTargetMounted, boolean longMemory) {
+    this(attacker, speedTowardsTarget, speedTowardsTargetMounted, longMemory);
     this.classTarget = targetClass;
   }
 
-  public EntityAIMountedAttackOnCollide(EntityCreature attacker, double speedTowardsTarget, boolean longMemory) {
+  public EntityAIMountedAttackOnCollide(EntityCreature attacker, double speedTowardsTarget, double speedTowardsTargetMounted, boolean longMemory) {
     this.attacker = attacker;
     this.worldObj = attacker.worldObj;
     this.speedTowardsTarget = speedTowardsTarget;
+    this.speedTowardsTargetMounted = speedTowardsTargetMounted;
     this.longMemory = longMemory;
     this.setMutexBits(3);
   }
@@ -105,9 +107,9 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
     
     EntityLivingBase target = attacker.getAttackTarget();
     attacker.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);        
-    --this.pathUpdateTimer;
+    --pathUpdateTimer;
 
-    double distanceFromAttackerSq = this.attacker.getDistanceSq(target.posX, target.boundingBox.minY, target.posZ);
+    double distanceFromAttackerSq = attacker.getDistanceSq(target.posX, target.boundingBox.minY, target.posZ);
     if((longMemory || attacker.getEntitySenses().canSee(target))
         && pathUpdateTimer <= 0
         && (targetPosX == 0.0D && targetPosY == 0.0D && targetPosZ == 0.0D
@@ -116,7 +118,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
       targetPosX = target.posX;
       targetPosY = target.boundingBox.minY;
       targetPosZ = target.posZ;
-      pathUpdateTimer = failedPathFindingPenalty + 4 + this.attacker.getRNG().nextInt(7);
+      pathUpdateTimer = failedPathFindingPenalty + 4 + attacker.getRNG().nextInt(7);
 
       if(getNavigator().getPath() != null) {
         PathPoint finalPathPoint = getNavigator().getPath().getFinalPathPoint();
@@ -135,20 +137,27 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
         pathUpdateTimer += 5;
       }
 
-      if(!getNavigator().tryMoveToEntityLiving(target, this.speedTowardsTarget)) {
-        this.pathUpdateTimer += 15;
+      if(!getNavigator().tryMoveToEntityLiving(target, getAttackSpeed())) {
+        pathUpdateTimer += 15;
       }
     }
 
-    this.attackTick = Math.max(this.attackTick - 1, 0);
+    attackPause = Math.max(attackPause - 1, 0);
     double d1 = getAttackReach(target);
-    if(distanceFromAttackerSq <= d1 && this.attackTick <= 20) {
-      attackTick = 20;
+    if(distanceFromAttackerSq <= d1 && attackPause <= 20) {
+      attackPause = 20;
       if(attacker.getHeldItem() != null) {
         attacker.swingItem();
       }
       attacker.attackEntityAsMob(target);
     }
+  }
+
+  private double getAttackSpeed() {
+    if(attacker.isRiding()) {
+      return speedTowardsTargetMounted;
+    }
+    return speedTowardsTarget;
   }
 
   protected PathNavigate getNavigator() {

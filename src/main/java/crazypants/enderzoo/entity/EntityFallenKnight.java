@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
+import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -31,8 +34,10 @@ public class EntityFallenKnight extends EntitySkeleton {
   public static final int EGG_BG_COL = 0x365A25;
   public static final int EGG_FG_COL = 0x111111;
   public static String NAME = "enderzoo.FallenKnight";
+    
+  private static final double ATTACK_MOVE_SPEED = 1.2;
 
-  private EntityAIArrowAttack aiArrowAttack;
+  private EntityAIMountedArrowAttack aiArrowAttack;
   private EntityAIMountedAttackOnCollide aiAttackOnCollide;
 
   private final EntityAIBreakDoor breakDoorAI = new EntityAIBreakDoor(this);
@@ -45,10 +50,11 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   public EntityFallenKnight(World world) {
     super(world);
-    this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
-    this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, false));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, false));
   }
 
+  @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
     //Zombie follow range
@@ -57,6 +63,7 @@ public class EntityFallenKnight extends EntitySkeleton {
     getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
   }
 
+  @Override
   protected void attackEntity(Entity target, float distance) {
     if(attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY
         && target.boundingBox.minY < boundingBox.maxY) {
@@ -72,39 +79,43 @@ public class EntityFallenKnight extends EntitySkeleton {
     return 2;
   }
 
+  @Override
   public void setCombatTask() {
-    this.tasks.removeTask(getAiAttackOnCollide());
-    this.tasks.removeTask(getAiArrowAttack());
+    tasks.removeTask(getAiAttackOnCollide());
+    tasks.removeTask(getAiArrowAttack());
     ItemStack itemstack = this.getHeldItem();
     if(itemstack != null && itemstack.getItem() == Items.bow) {
-      this.tasks.addTask(4, getAiArrowAttack());
+      tasks.addTask(4, getAiArrowAttack());
     } else {
-      this.tasks.addTask(4, getAiAttackOnCollide());
+      tasks.addTask(4, getAiAttackOnCollide());
     }
   }
 
-  public EntityAIArrowAttack getAiArrowAttack() {
+  public EntityAIMountedArrowAttack getAiArrowAttack() {
     if(aiArrowAttack == null) {
-      aiArrowAttack = new EntityAIArrowAttack(this, 1.0D, 20, 60, 15.0F);
+      aiArrowAttack = new EntityAIMountedArrowAttack(this, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED, 20, 60, 15.0F);
     }
     return aiArrowAttack;
   }
 
   public EntityAIMountedAttackOnCollide getAiAttackOnCollide() {
     if(aiAttackOnCollide == null) {
-      aiAttackOnCollide = new EntityAIMountedAttackOnCollide(this, EntityPlayer.class, 1.2D, false);
+      aiAttackOnCollide = new EntityAIMountedAttackOnCollide(this, EntityPlayer.class, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED, false);
     }
     return aiAttackOnCollide;
   }
 
+  @Override
   protected String getLivingSound() {
     return "mob.zombie.say";
   }
 
+  @Override
   protected String getHurtSound() {
     return "mob.zombie.hurt";
   }
 
+  @Override
   protected String getDeathSound() {
     return "mob.zombie.death";
   }
@@ -118,19 +129,14 @@ public class EntityFallenKnight extends EntitySkeleton {
         cancelCurrentTasks(entLiving);
         lastAttackTarget = getAttackTarget();
         firstUpdate = false;
-      }
-      if(lastAttackTarget == null) {
-        entLiving.getNavigator().setSpeed(1);
-      } else {
-        entLiving.getNavigator().setSpeed(2.5);
-      }
+      }      
     }
     if(!isMounted == isRiding()) {      
-      //getAiAttackOnCollide().resetTask();
-      //getNavigator().clearPathEntity();     
-    }    
-    isMounted = isRiding();
-
+      getAiAttackOnCollide().resetTask();
+      getAiArrowAttack().resetTask();
+      getNavigator().clearPathEntity();
+      isMounted = isRiding();
+    }        
   }
 
   private void cancelCurrentTasks(EntityLiving ent) {
@@ -150,6 +156,7 @@ public class EntityFallenKnight extends EntitySkeleton {
     }
   }
 
+  @Override
   protected void addRandomArmor() {
 
     float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? 0.1F : 0.25F;
