@@ -1,5 +1,8 @@
 package crazypants.enderzoo.entity;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -16,6 +19,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -28,8 +32,8 @@ public class EntityFallenMount extends EntityHorse {
   public static final int EGG_FG_COL = 0xA0A0A0;
   public static String NAME = "enderzoo.FallenMount";
 
-  public static final double MOUNTED_ATTACK_MOVE_SPEED = 2.5;
-  
+  public static final double MOUNTED_ATTACK_MOVE_SPEED = Config.fallenMountChargeSpeed;;
+
   private boolean wasRidden = false;
   private final EntityAINearestAttackableTarget findTargetAI;
   private EntityAIAttackOnCollide attackAI;
@@ -46,19 +50,16 @@ public class EntityFallenMount extends EntityHorse {
     tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(8, new EntityAILookIdle(this));
 
-    findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);    
+    findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
-    updateAttackAI(); 
+    updateAttackAI();
   }
-  
-  
 
   @Override
-  protected void applyEntityAttributes() {  
+  protected void applyEntityAttributes() {
     super.applyEntityAttributes();
     getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-    //TODO
-    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(4);
+    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(Config.fallenMountBaseAttackDamage);
   }
 
   @Override
@@ -84,6 +85,35 @@ public class EntityFallenMount extends EntityHorse {
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2);
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());
+    
+    float chanceOfArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
+        : Config.fallenMountChanceArmored;
+    if(rand.nextFloat() <= chanceOfArmor) {
+      
+      //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied and the moon phase
+      float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY,posZ);
+      occupiedDiffcultyMultiplier /= 1.5f; // normalize
+      float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
+          : Config.fallenMountChanceArmorUpgrade;        
+      chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
+      
+      int armorLevel = 0;
+      for(int i=0;i<2;i++) {
+        if(rand.nextFloat() <= chanceImprovedArmor) {
+          armorLevel++;
+        }
+      }
+      Item armor = Items.iron_horse_armor;
+      switch(armorLevel) {
+      case 1:
+        armor = Items.golden_horse_armor;
+        break;
+      case 2:
+        armor = Items.diamond_horse_armor;
+        break;
+      }      
+      func_146086_d(new ItemStack(armor));
+    }
     return data;
   }
 
@@ -97,22 +127,36 @@ public class EntityFallenMount extends EntityHorse {
 
   @Override
   public void onLivingUpdate() {
-    //    if(worldObj.isDaytime() && !worldObj.isRemote) {
-    //      float f = getBrightness(1.0F);
-    //      if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
-    //          && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) {
-    //        setFire(8);
-    //      }
-    //    }
+    if(worldObj.isDaytime() && !worldObj.isRemote) {
+      if(burnInSun()) {
+        float f = getBrightness(1.0F);
+        if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
+            && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) {
+          setFire(8);
+        }
+      }
+    }
+
     super.onLivingUpdate();
     setEatingHaystack(false);
     setEatingHaystack(false);
     setEating(false);
-        
+
     if(wasRidden != isRidden()) {
       updateAttackAI();
-      wasRidden = isRidden();      
-    }   
+      wasRidden = isRidden();
+    }
+  }
+
+  
+  private boolean burnInSun() {        
+    if(!isRidden()) {
+      return getTotalArmorValue() == 0;
+    }    
+    if(Config.fallenMountShadedByRider) {
+      return false;
+    }
+    return getTotalArmorValue() > 0;
   }
 
   protected boolean isRidden() {
@@ -125,7 +169,7 @@ public class EntityFallenMount extends EntityHorse {
     if(!isRidden()) {
       targetTasks.addTask(2, findTargetAI);
       tasks.addTask(4, attackAI);
-    }    
+    }
   }
 
   public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
@@ -143,9 +187,9 @@ public class EntityFallenMount extends EntityHorse {
     }
     super.attackEntityAsMob(target);
     if(!isRearing()) {
-      makeHorseRearWithSound();      
-    }    
-    float damage = (float)getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();    
+      makeHorseRearWithSound();
+    }
+    float damage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
     return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
   }
 

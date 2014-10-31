@@ -17,7 +17,7 @@ public class TeleportHelper {
 
   public static boolean teleportRandomly(EntityLivingBase entity, int distance) {
     double d0 = entity.posX + (rand.nextDouble() - 0.5D) * distance;
-    double d1 = entity.posY + rand.nextInt(distance) - distance / 2;
+    double d1 = entity.posY + rand.nextInt(distance + 1) - distance / 2;
     double d2 = entity.posZ + (rand.nextDouble() - 0.5D) * distance;
     return teleportTo(entity, d0, d1, d2, false);
   }

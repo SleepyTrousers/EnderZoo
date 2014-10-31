@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
 import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 
@@ -23,6 +24,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
@@ -34,8 +36,8 @@ public class EntityFallenKnight extends EntitySkeleton {
   public static final int EGG_BG_COL = 0x365A25;
   public static final int EGG_FG_COL = 0x111111;
   public static String NAME = "enderzoo.FallenKnight";
-    
-  private static final double ATTACK_MOVE_SPEED = 1.2;
+
+  private static final double ATTACK_MOVE_SPEED = Config.fallenKnightChargeSpeed;
 
   private EntityAIMountedArrowAttack aiArrowAttack;
   private EntityAIMountedAttackOnCollide aiAttackOnCollide;
@@ -57,10 +59,8 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    //Zombie follow range
-    getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-    //Wither Skelly attack damage
-    getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(4.0D);
+    getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Config.fallenKnightFollowRange);
+    getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Config.fallenKnightBaseDamage);
   }
 
   @Override
@@ -93,7 +93,8 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   public EntityAIMountedArrowAttack getAiArrowAttack() {
     if(aiArrowAttack == null) {
-      aiArrowAttack = new EntityAIMountedArrowAttack(this, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED, 20, 60, 15.0F);
+      aiArrowAttack = new EntityAIMountedArrowAttack(this, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED,
+          Config.fallenKnightRangedMinAttackPause, Config.fallenKnightRangedMaxAttackPause, Config.fallenKnightRangedMaxRange);
     }
     return aiArrowAttack;
   }
@@ -129,14 +130,17 @@ public class EntityFallenKnight extends EntitySkeleton {
         cancelCurrentTasks(entLiving);
         lastAttackTarget = getAttackTarget();
         firstUpdate = false;
-      }      
+      }
     }
-    if(!isMounted == isRiding()) {      
+    if(!isMounted == isRiding()) {
       getAiAttackOnCollide().resetTask();
       getAiArrowAttack().resetTask();
       getNavigator().clearPathEntity();
       isMounted = isRiding();
-    }        
+    }
+    if(isBurning() && isRiding()) {
+      ridingEntity.setFire(8);
+    }
   }
 
   private void cancelCurrentTasks(EntityLiving ent) {
@@ -159,36 +163,45 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   protected void addRandomArmor() {
 
-    float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? 0.1F : 0.25F;
+    //Value between 0 and 1 (normal) - 1.5 based on how long a chnunk has been occupied
+    float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY,posZ);
+    occupiedDiffcultyMultiplier /= 1.5f; // normalize
+
+    float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChanceArmorUpgradeHard
+        : Config.fallenKnightChanceArmorUpgrade;        
+    chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
+    
+    int armorLevel = this.rand.nextInt(2);              
+    for (int i = 0; i < 2; i++) {
+      if(this.rand.nextFloat() <= chanceImprovedArmor) {
+        armorLevel++;
+      }
+    }
+    if(armorLevel == 1) {
+      //Skip gold armor, I don't like it
+      armorLevel++;
+    }     
+    
+    float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChancePerArmorPieceHard
+        : Config.fallenKnightChancePerArmorPiece;
+
     for (int slot = 1; slot < 5; slot++) {
       ItemStack itemStack = getEquipmentInSlot(slot);
-      if(itemStack == null && rand.nextFloat() > chancePerPiece) {
-        Item item = getArmorForSlot(slot);
+      if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
+        Item item = EntityLiving.getArmorItemForSlot(slot, armorLevel);
         if(item != null) {
-          setCurrentItemOrArmor(slot, new ItemStack(item));
+          ItemStack stack = new ItemStack(item);
+          if(armorLevel == 0) {
+            ((ItemArmor)item).func_82813_b(stack, 0);
+          }                    
+          setCurrentItemOrArmor(slot, stack);
         }
       }
     }
-    setCurrentItemOrArmor(4, new ItemStack(Items.chainmail_helmet));
-    //    if(rand.nextFloat() > 0.25) {
-//    setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
-    //    } else {
-          setCurrentItemOrArmor(0, new ItemStack(Items.bow));
-    //    }
-  }
-
-  private Item getArmorForSlot(int slot) {
-    switch (slot) {
-    case 1:
-      return Items.chainmail_boots;
-    case 2:
-      return Items.chainmail_leggings;
-    case 3:
-      return Items.chainmail_chestplate;
-    case 4:
-      return Items.chainmail_helmet;
-    default:
-      return null;
+    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
+      setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
+    } else {
+      setCurrentItemOrArmor(0, new ItemStack(Items.bow));
     }
   }
 
@@ -202,23 +215,26 @@ public class EntityFallenKnight extends EntitySkeleton {
     addRandomArmor();
     enchantEquipment();
 
-    EntityFallenMount mount = new EntityFallenMount(worldObj);
-    mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-    mount.onSpawnWithEgg((IEntityLivingData) null);
-    isMounted = true;
+    EntityFallenMount mount = null;
+    if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
+      mount = new EntityFallenMount(worldObj);
+      mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
+      mount.onSpawnWithEgg((IEntityLivingData) null);
+      isMounted = true;
+    } else {
+      isMounted = false;
+    }
 
-    if(!isMounted) {
-      //From Zombie
+    if(isMounted) {
+      setCanPickUpLoot(false);
+      setCanBreakDoors(false);
+      worldObj.spawnEntityInWorld(mount);
+      mountEntity(mount);
+    } else {
       float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
       setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
       setCanBreakDoors(rand.nextFloat() < f * 0.1F);
-    } else {
-      setCanPickUpLoot(false);
-      setCanBreakDoors(false);
     }
-
-    worldObj.spawnEntityInWorld(mount);
-    mountEntity(mount);
 
     return livingData;
   }

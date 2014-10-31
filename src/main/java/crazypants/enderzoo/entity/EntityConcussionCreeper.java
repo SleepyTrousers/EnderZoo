@@ -31,8 +31,9 @@ public class EntityConcussionCreeper extends EntityCreeper {
       fFuseTime.setAccessible(true);
     } catch (Exception e) {
       Log.error("Could not create ender creeper  logic as fields not found");
-    }
+    }    
   }
+  
 
   @Override
   public void onUpdate() {

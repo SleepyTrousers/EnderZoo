@@ -44,9 +44,6 @@ public class EntityEnderminy extends EntityMob {
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
       6.2, 0)).setSaved(false);
   
-
-  
-
   /**
    * Counter to delay the teleportation of an enderman towards the currently
    * attacked target
@@ -232,7 +229,7 @@ public class EntityEnderminy extends EntityMob {
 
   protected boolean teleportRandomly(int distance) {
     double d0 = posX + (rand.nextDouble() - 0.5D) * distance;
-    double d1 = posY + rand.nextInt(distance) - distance / 2;
+    double d1 = posY + rand.nextInt(distance + 1) - distance / 2;
     double d2 = posZ + (rand.nextDouble() - 0.5D) * distance;
     return teleportTo(d0, d1, d2);
   }

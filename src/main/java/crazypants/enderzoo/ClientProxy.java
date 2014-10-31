@@ -17,6 +17,7 @@ import crazypants.enderzoo.entity.EntityEnderminy;
 import crazypants.enderzoo.entity.render.RenderConcussionCreeper;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
 import crazypants.enderzoo.entity.render.RenderFallenKnight;
+import crazypants.enderzoo.entity.render.RenderFallenMount;
 
 
 public class ClientProxy extends CommonProxy {
@@ -41,8 +42,10 @@ public class ClientProxy extends CommonProxy {
       RenderingRegistry.registerEntityRenderingHandler(EntityConcussionCreeper.class, new RenderConcussionCreeper());
     }
     if(Config.fallenKnightEnabled) {
-      RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new RenderFallenKnight());
-      RenderingRegistry.registerEntityRenderingHandler(EntityFallenMount.class, new RenderHorse(new ModelHorse(), 0.75F));
+      RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new RenderFallenKnight());      
+    }
+    if(Config.fallenMountEnabled) {
+      RenderingRegistry.registerEntityRenderingHandler(EntityFallenMount.class, new RenderFallenMount());
     }
   }
   
