@@ -1,0 +1,9 @@
+//***  Ender Zoo *****//
+
+item.itemSpawnEggEnderZoo.name=生成
+
+//Mobs
+entity.enderzoo.Enderminy.name=迷你末影人
+entity.enderzoo.ConcussionCreeper.name=震荡爬行者
+entity.enderzoo.FallenKnight.name=堕落骑士
+entity.enderzoo.FallenMount.name=堕落战马
