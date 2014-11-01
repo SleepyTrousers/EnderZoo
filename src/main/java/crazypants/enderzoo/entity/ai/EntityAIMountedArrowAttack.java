@@ -1,12 +1,19 @@
 package crazypants.enderzoo.entity.ai;
 
+import javax.vecmath.Point3i;
+import javax.vecmath.Vector3d;
+
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.World;
+import crazypants.enderzoo.entity.EntityUtil;
 
 public class EntityAIMountedArrowAttack extends EntityAIBase {
 
@@ -26,7 +33,14 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   private float attackRange;
   private float attackRangeSq;
 
-  public EntityAIMountedArrowAttack(IRangedAttackMob host, double moveSpeed, double mountedEntityMoveSpeed, int minAttackTime, int maxAttackTime, float attackRange) {
+  private int runAwayTimer = 0;
+
+  private PathPoint runningAwayTo;
+
+  private boolean useRunAwayTactic;
+  
+  public EntityAIMountedArrowAttack(IRangedAttackMob host, double moveSpeed, double mountedEntityMoveSpeed, int minAttackTime, int maxAttackTime,
+      float attackRange, boolean useRunAwayTactic) {
     this.timeUntilNextAttack = -1;
     this.rangedAttackEntityHost = host;
     this.entityHost = (EntityLiving) host;
@@ -36,6 +50,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     this.maxRangedAttackTime = maxAttackTime;
     this.attackRange = attackRange;
     this.attackRangeSq = attackRange * attackRange;
+    this.useRunAwayTactic = useRunAwayTactic;
     this.setMutexBits(3);
   }
 
@@ -55,9 +70,11 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   }
 
   public void resetTask() {
-    this.attackTarget = null;
-    this.timeTargetHidden = 0;
-    this.timeUntilNextAttack = -1;
+    attackTarget = null;
+    timeTargetHidden = 0;
+    timeUntilNextAttack = -1;
+    runAwayTimer = 0;
+    runningAwayTo = null;
   }
 
   /**
@@ -73,11 +90,27 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       timeTargetHidden = 0;
     }
 
-    if(distToTargetSq <= attackRangeSq && timeTargetHidden >= 20) {
+    boolean runningAway = isRunningAway(); 
+    if(!runningAway) {
+      runAwayTimer--;
+    }
+    
+    if(!runningAway && distToTargetSq <= attackRangeSq && timeTargetHidden >= 20) {          
       getNavigator().clearPathEntity();
-    } else if (distToTargetSq > (attackRangeSq * 0.9)) {
+    } else if(distToTargetSq > (attackRangeSq * 0.9)) {
       getNavigator().tryMoveToEntityLiving(attackTarget, getMoveSpeed());
     }
+
+    if(canSeeTarget && entityHost.isRiding() && distToTargetSq < 36 && runAwayTimer <= 0 && runAway()) {
+      --timeUntilNextAttack;
+      return;
+    }
+    
+    if(runningAway) {
+      --timeUntilNextAttack;
+      return;
+    }
+    
 
     entityHost.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
 
@@ -93,6 +126,96 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
       timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
     }
+  }
+
+  private boolean isRunningAway() {
+
+    if(runningAwayTo == null) {
+      return false;
+    }
+    if(getNavigator().noPath()) {
+      runningAwayTo = null;
+      return false;
+    }
+    PathPoint dest = getNavigator().getPath().getFinalPathPoint();
+    return dest.equals(runningAwayTo);
+  }
+
+  private boolean runAway() {
+
+    if(!useRunAwayTactic) {
+      return false;
+    }
+    
+    runAwayTimer = 40;
+    Vector3d targetDir = new Vector3d(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+    Vector3d entityPos = EntityUtil.getEntityPosition(entityHost);
+    targetDir.sub(entityPos);
+    targetDir.scale(-1);
+    targetDir.normalize();
+
+    double distance = attackRange * 0.9;
+    targetDir.scale(distance);
+    targetDir.add(entityPos);
+
+    Point3i probePoint = new Point3i((int) Math.round(targetDir.x), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.z));
+
+    Point3i target = new Point3i(probePoint);
+
+    World world = entityHost.worldObj;
+
+    //first find some air in the y
+    boolean foundTargetSpace = false;
+    for (int xOff = -2; xOff < 3 && !foundTargetSpace; xOff++) {
+      probePoint.x = target.x + xOff;
+      for (int zOff = -2; zOff < 3 && !foundTargetSpace; zOff++) {
+        probePoint.z = target.z + zOff;
+        foundTargetSpace = seachUpForClearSpace(probePoint, world);
+        if(!foundTargetSpace) {
+          probePoint.y = target.y;
+        }
+      }
+    }
+    if(!foundTargetSpace) {
+      return false;
+    }
+
+    boolean res = getNavigator().tryMoveToXYZ(probePoint.x, probePoint.y, probePoint.z, mountedEntityMoveSpeed);
+    if(getNavigator().noPath()) {
+      runningAwayTo = null;
+    } else {
+      runningAwayTo = getNavigator().getPath().getFinalPathPoint();
+    }
+    return res;
+  }
+
+  protected boolean seachUpForClearSpace(Point3i target, World world) {
+    boolean foundY = false;
+    for (int i = 0; i < 10 && !foundY; i++) {
+      if(world.isAirBlock(target.x, target.y, target.z)) {
+        foundY = true;
+      } else {
+        target.y++;
+      }
+    }
+    boolean onGround = false;
+    if(foundY) {
+      for (int i = 0; i < 10 && !onGround; i++) {
+        onGround = !world.isAirBlock(target.x, target.y - 1, target.z) && !isLiquid(world, target.x, target.y - 1, target.z);
+        if(!onGround) {
+          target.y--;
+        }
+      }
+    }
+    return foundY && onGround;
+  }
+
+  private boolean isLiquid(World world, int x, int y, int z) {
+    Block block = world.getBlock(x, y, z);
+    if(block.getMaterial().isLiquid()) {
+      return true;
+    }
+    return false;
   }
 
   private double getMoveSpeed() {

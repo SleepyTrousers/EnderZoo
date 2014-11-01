@@ -52,7 +52,6 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   public EntityFallenKnight(World world) {
     super(world);
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
     targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, false));
   }
 
@@ -94,7 +93,8 @@ public class EntityFallenKnight extends EntitySkeleton {
   public EntityAIMountedArrowAttack getAiArrowAttack() {
     if(aiArrowAttack == null) {
       aiArrowAttack = new EntityAIMountedArrowAttack(this, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED,
-          Config.fallenKnightRangedMinAttackPause, Config.fallenKnightRangedMaxAttackPause, Config.fallenKnightRangedMaxRange);
+          Config.fallenKnightRangedMinAttackPause, Config.fallenKnightRangedMaxAttackPause, Config.fallenKnightRangedMaxRange,
+          Config.fallKnightMountedArchesMaintainDistance);
     }
     return aiArrowAttack;
   }
@@ -131,6 +131,9 @@ public class EntityFallenKnight extends EntitySkeleton {
         lastAttackTarget = getAttackTarget();
         firstUpdate = false;
       }
+    } else if(firstUpdate) {
+
+      firstUpdate = false;
     }
     if(!isMounted == isRiding()) {
       getAiAttackOnCollide().resetTask();
@@ -164,14 +167,14 @@ public class EntityFallenKnight extends EntitySkeleton {
   protected void addRandomArmor() {
 
     //Value between 0 and 1 (normal) - 1.5 based on how long a chnunk has been occupied
-    float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY,posZ);
+    float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
     occupiedDiffcultyMultiplier /= 1.5f; // normalize
 
     float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChanceArmorUpgradeHard
-        : Config.fallenKnightChanceArmorUpgrade;        
+        : Config.fallenKnightChanceArmorUpgrade;
     chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
-    
-    int armorLevel = this.rand.nextInt(2);              
+
+    int armorLevel = this.rand.nextInt(2);
     for (int i = 0; i < 2; i++) {
       if(this.rand.nextFloat() <= chanceImprovedArmor) {
         armorLevel++;
@@ -180,8 +183,8 @@ public class EntityFallenKnight extends EntitySkeleton {
     if(armorLevel == 1) {
       //Skip gold armor, I don't like it
       armorLevel++;
-    }     
-    
+    }
+
     float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChancePerArmorPieceHard
         : Config.fallenKnightChancePerArmorPiece;
 
@@ -192,8 +195,8 @@ public class EntityFallenKnight extends EntitySkeleton {
         if(item != null) {
           ItemStack stack = new ItemStack(item);
           if(armorLevel == 0) {
-            ((ItemArmor)item).func_82813_b(stack, 0);
-          }                    
+            ((ItemArmor) item).func_82813_b(stack, 0);
+          }
           setCurrentItemOrArmor(slot, stack);
         }
       }
@@ -220,7 +223,9 @@ public class EntityFallenKnight extends EntitySkeleton {
       mount = new EntityFallenMount(worldObj);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
       mount.onSpawnWithEgg((IEntityLivingData) null);
-      isMounted = true;
+      if(EntityUtil.isSpaceAvailableForSpawn(worldObj, mount)) {
+        isMounted = true;
+      }
     } else {
       isMounted = false;
     }

@@ -106,7 +106,7 @@ public class ItemSpawnEgg extends Item {
 
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     EntityLiving entity = (EntityLiving)EntityList.createEntityByName(MobInfo.values()[damage].getName(), world);
-    spawnEntity(posX, posY, posZ, entity, world);
+    spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
     return entity;    
   }
 

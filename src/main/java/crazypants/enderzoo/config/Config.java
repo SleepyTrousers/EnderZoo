@@ -78,6 +78,7 @@ public final class Config {
   public static float fallenKnightChanceMounted = 0.75f;
   public static float fallenKnightChanceArmorUpgradeHard = 0.4f;
   public static float fallenKnightChanceArmorUpgrade = 0.2f;
+  public static boolean fallKnightMountedArchesMaintainDistance = true;
 
   public static final Section sectionFallenMount = new Section("Fallen Mount", "fallenMount");
   public static boolean fallenMountEnabled = true;
@@ -190,6 +191,8 @@ public final class Config {
     fallenKnightChanceArmorUpgrade = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgrade", fallenKnightChanceArmorUpgrade,
         "The chance the type of armor equipped will be improved")
         .getDouble(fallenKnightChanceArmorUpgrade);
+    fallKnightMountedArchesMaintainDistance = config.getBoolean("fallKnightMountedArchesMaintainDistance", sectionFallenKnight.name,
+        fallKnightMountedArchesMaintainDistance, "When true mounted archer knigts will attempt to keep distance between themselves and their target");
 
     fallenMountEnabled = config.getBoolean("fallenMountEnabled", sectionFallenMount.name, fallenMountEnabled, "If false fallen mounts will be disabled");
     fallenMountChargeSpeed = config.get(sectionFallenMount.name, "fallenMountChargeSpeed", fallenMountChargeSpeed,
