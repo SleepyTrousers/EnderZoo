@@ -45,7 +45,6 @@ public final class Config {
 
   public static final Section sectionEnderminy = new Section("Enderminy", "enderminy");
   public static boolean enderminyEnabled = true;
-  public static int enderminySpawnRate = 60;
   public static boolean enderminyAttacksPlayerOnSight = false;
   public static boolean enderminyAttacksCreepers = true;
   public static int enderminyAttackDamage = 10;
@@ -58,14 +57,12 @@ public final class Config {
 
   public static final Section sectionConCreeper = new Section("Concussion Creeper", "concussionCreeper");
   public static boolean concussionCreeperEnabled = true;
-  public static int concussionCreeperSpawnRate = 60;
   public static int concussionCreeperMaxTeleportRange = 32;
   public static int concussionCreeperConfusionDuration = 100;
   public static int concussionCreeperExplosionRange = 5;
 
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
   public static boolean fallenKnightEnabled = true;
-  public static int fallenKnightSpawnRate = 60;
   public static double fallenKnightBaseDamage = 4.0;
   public static double fallenKnightFollowRange = 40.0;
   public static double fallenKnightChargeSpeed = 1.2;
@@ -127,9 +124,7 @@ public final class Config {
 
   public static void processConfig(Configuration config) {
 
-    enderminyEnabled = config.getBoolean("enderminyEnabled", sectionEnderminy.name, enderminyEnabled, "Wether Enderminies are enabled");
-    enderminySpawnRate = config.get(sectionEnderminy.name, "enderminySpawnRate", enderminySpawnRate,
-        "Sets the spawn rate of Enderminies. 10=Enderman spawn rate, 100=Zombie spawn rate").getInt(enderminySpawnRate);
+    enderminyEnabled = config.getBoolean("enderminyEnabled", sectionEnderminy.name, enderminyEnabled, "Wether Enderminies are enabled");    
     enderminyAttacksPlayerOnSight = config.getBoolean("enderminyAttacksPlayerOnSight", sectionEnderminy.name, enderminyAttacksPlayerOnSight,
         "When true an Enderminy will attack a player if it looks at them, otherwise they are neutral mobs.");
     enderminyAttacksCreepers = config.getBoolean("enderminyAttacksCreepers", sectionEnderminy.name, enderminyAttacksCreepers,
@@ -151,8 +146,6 @@ public final class Config {
 
     concussionCreeperEnabled = config.getBoolean("concussionCreeperEnabled", sectionConCreeper.name, concussionCreeperEnabled,
         "Wether ConcussionCreepers are enabled");
-    concussionCreeperSpawnRate = config.get(sectionConCreeper.name, "concussionCreeperSpawnRate", concussionCreeperSpawnRate,
-        "Sets the spawn rate of ConcussionCreepers. 10=Enderman spawn rate, 100=Zombie spawn rate").getInt(concussionCreeperSpawnRate);
     concussionCreeperMaxTeleportRange = config.get(sectionConCreeper.name, "concussionCreeperMaxTeleportRange", concussionCreeperMaxTeleportRange,
         "Sets the max range entites can be telported when the creeper explodes").getInt(concussionCreeperMaxTeleportRange);
     concussionCreeperConfusionDuration = config.get(sectionConCreeper.name, "concussionCreeperConfusionDuration", concussionCreeperConfusionDuration,
@@ -160,9 +153,7 @@ public final class Config {
     concussionCreeperExplosionRange = config.get(sectionConCreeper.name, "concussionCreeperExplosionRange", concussionCreeperExplosionRange,
         "The range of the 'teleport explosion'").getInt(concussionCreeperExplosionRange);
 
-    fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
-    fallenKnightSpawnRate = config.get(sectionFallenKnight.name, "fallenKnightSpawnRate", fallenKnightSpawnRate,
-        "Sets the spawn rate of Fallen Knights. 10=Enderman spawn rate, 100=Zombie spawn rate").getInt(fallenKnightSpawnRate);
+    fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");    
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
         fallenKnightBaseDamage);
     fallenKnightFollowRange = config.get(sectionFallenKnight.name, "fallenKnightFollowRange", fallenKnightFollowRange, "Follow range of a knight").getDouble(
@@ -186,7 +177,7 @@ public final class Config {
     fallenKnightChanceMounted = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceMounted", fallenKnightChanceMounted,
         "The chance a spawned knight will be mounted").getDouble(
         fallenKnightChanceMounted);
-    fallenKnightChanceArmorUpgradeHard = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgradeHard", fallenKnightSpawnRate,
+    fallenKnightChanceArmorUpgradeHard = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgradeHard", fallenKnightChanceArmorUpgradeHard,
         "The chance the type of armor equipped will be improved when dificult is hard")
         .getDouble(fallenKnightChanceArmorUpgradeHard);
     fallenKnightChanceArmorUpgrade = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgrade", fallenKnightChanceArmorUpgrade,

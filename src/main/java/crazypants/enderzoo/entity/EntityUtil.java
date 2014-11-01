@@ -12,11 +12,11 @@ import net.minecraft.world.World;
 
 public class EntityUtil {
 
-  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity) {
-    return isSpaceAvailableForSpawn(worldObj, entity, false);
+  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions) {
+    return isSpaceAvailableForSpawn(worldObj, entity, checkEntityCollisions, false);
   }
   
-  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean canSpawnInLiquid) {
+  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
     int i = MathHelper.floor_double(entity.posX);
     int j = MathHelper.floor_double(entity.boundingBox.minY);
     int k = MathHelper.floor_double(entity.posZ);
@@ -24,7 +24,7 @@ public class EntityUtil {
     if(entity.getBlockPathWeight(i, j, k) < 0) {
       return false;
     }
-    if(!worldObj.checkNoEntityCollision(entity.boundingBox)) {
+    if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.boundingBox)) {
       return false;
     }
     if(!worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty()) {

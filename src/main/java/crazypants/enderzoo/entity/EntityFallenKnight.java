@@ -262,11 +262,12 @@ public class EntityFallenKnight extends EntitySkeleton {
       mount = new EntityFallenMount(worldObj);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
       mount.onSpawnWithEgg((IEntityLivingData) null);
-      if(EntityUtil.isSpaceAvailableForSpawn(worldObj, mount)) {
+      //NB: don;t check for entity collisions as we know the knight will collide
+      if(EntityUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
         isMounted = true;
-      }
-    } else {
-      isMounted = false;
+      } 
+    } else {      
+      isMounted = false;      
     }
 
     if(isMounted) {
