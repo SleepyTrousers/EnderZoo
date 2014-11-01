@@ -5,3 +5,4 @@ Version 0.1.0.2 Beta
 - Mounted archer Fallen Knights will now attempt to stay out of melee range
 - Ground archer Fallen Knights will switch to a sword when in melee range
 - Added randomized Fallen Knights swords based on global difficulty and regional difficulty settings
+- Added GUI to change config in game

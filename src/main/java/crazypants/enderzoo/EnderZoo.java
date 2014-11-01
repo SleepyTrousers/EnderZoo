@@ -16,7 +16,7 @@ import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.entity.MobSpawns;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 
-@Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)")
+@Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
 public class EnderZoo {
 
   public static final String MODID = "EnderZoo";
