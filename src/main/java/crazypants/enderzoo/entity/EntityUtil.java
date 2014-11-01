@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 public class EntityUtil {
@@ -37,6 +38,17 @@ public class EntityUtil {
 
   public static Vector3d getEntityPosition(Entity entity) {    
     return new Vector3d(entity.posX, entity.posY, entity.posZ);
+  }
+  
+  public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {
+    //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied
+    float occupiedDiffcultyMultiplier = world.func_147462_b(x,y,z);
+    occupiedDiffcultyMultiplier /= 1.5f; // normalize
+    return occupiedDiffcultyMultiplier;
+  }
+  
+  public static String getDisplayNameForEntity(String mobName) {
+    return StatCollector.translateToLocal("entity." + mobName + ".name");
   }
   
 }

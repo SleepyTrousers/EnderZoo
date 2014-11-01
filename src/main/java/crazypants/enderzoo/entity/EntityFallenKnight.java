@@ -33,8 +33,9 @@ import net.minecraft.world.World;
 
 public class EntityFallenKnight extends EntitySkeleton {
 
-  public static final int EGG_BG_COL = 0x365A25;
-  public static final int EGG_FG_COL = 0x111111;
+  public static final int EGG_FG_COL = 0x365A25;
+  public static final int EGG_BG_COL = 0xA0A0A0;
+
   public static String NAME = "enderzoo.FallenKnight";
 
   private static final double ATTACK_MOVE_SPEED = Config.fallenKnightChargeSpeed;
@@ -81,9 +82,8 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   public void setCombatTask() {
     tasks.removeTask(getAiAttackOnCollide());
-    tasks.removeTask(getAiArrowAttack());
-    ItemStack itemstack = this.getHeldItem();
-    if(itemstack != null && itemstack.getItem() == Items.bow) {
+    tasks.removeTask(getAiArrowAttack());    
+    if(isRanged()) {
       tasks.addTask(4, getAiArrowAttack());
     } else {
       tasks.addTask(4, getAiAttackOnCollide());
@@ -128,13 +128,11 @@ public class EntityFallenKnight extends EntitySkeleton {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
       if(lastAttackTarget != getAttackTarget() || firstUpdate) {
         cancelCurrentTasks(entLiving);
-        lastAttackTarget = getAttackTarget();
-        firstUpdate = false;
+        lastAttackTarget = getAttackTarget();        
       }
-    } else if(firstUpdate) {
-
-      firstUpdate = false;
-    }
+    } 
+    firstUpdate = false;
+    
     if(!isMounted == isRiding()) {
       getAiAttackOnCollide().resetTask();
       getAiArrowAttack().resetTask();
@@ -144,6 +142,15 @@ public class EntityFallenKnight extends EntitySkeleton {
     if(isBurning() && isRiding()) {
       ridingEntity.setFire(8);
     }
+    if( Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance) 
+        && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {
+      setCurrentItemOrArmor(0, getSwordForLevel(getRandomEquipmentLevel()));
+    }
+  }
+
+  private boolean isRanged() {
+    ItemStack itemstack = this.getHeldItem();
+    return itemstack != null && itemstack.getItem() == Items.bow;
   }
 
   private void cancelCurrentTasks(EntityLiving ent) {
@@ -166,27 +173,18 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   protected void addRandomArmor() {
 
-    //Value between 0 and 1 (normal) - 1.5 based on how long a chnunk has been occupied
-    float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
-    occupiedDiffcultyMultiplier /= 1.5f; // normalize
-
-    float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChanceArmorUpgradeHard
-        : Config.fallenKnightChanceArmorUpgrade;
-    chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
-
-    int armorLevel = this.rand.nextInt(2);
-    for (int i = 0; i < 2; i++) {
-      if(this.rand.nextFloat() <= chanceImprovedArmor) {
-        armorLevel++;
-      }
-    }
+    float occupiedDiffcultyMultiplier = EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ);
+    
+    int equipmentLevel = getRandomEquipmentLevel(occupiedDiffcultyMultiplier);
+    int armorLevel = equipmentLevel;  
     if(armorLevel == 1) {
       //Skip gold armor, I don't like it
       armorLevel++;
     }
 
-    float chancePerPiece = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenKnightChancePerArmorPieceHard
+    float chancePerPiece = isHardDifficulty() ? Config.fallenKnightChancePerArmorPieceHard
         : Config.fallenKnightChancePerArmorPiece;
+    chancePerPiece *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
 
     for (int slot = 1; slot < 5; slot++) {
       ItemStack itemStack = getEquipmentInSlot(slot);
@@ -201,11 +199,52 @@ public class EntityFallenKnight extends EntitySkeleton {
         }
       }
     }
-    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
-      setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
+    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {      
+      setCurrentItemOrArmor(0, getSwordForLevel(equipmentLevel));
     } else {
       setCurrentItemOrArmor(0, new ItemStack(Items.bow));
     }
+  }
+
+  private int getRandomEquipmentLevel() {
+    return getRandomEquipmentLevel(EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ));
+  }
+
+  private int getRandomEquipmentLevel(float occupiedDiffcultyMultiplier) {
+    float chanceImprovedArmor = isHardDifficulty() ? Config.fallenKnightChanceArmorUpgradeHard
+        : Config.fallenKnightChanceArmorUpgrade;
+    chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
+
+    int armorLevel = this.rand.nextInt(2);
+    for (int i = 0; i < 2; i++) {
+      if(this.rand.nextFloat() <= chanceImprovedArmor) {
+        armorLevel++;
+      }
+    }
+    return armorLevel;
+  }
+
+  protected boolean isHardDifficulty() {
+    return worldObj.difficultySetting == EnumDifficulty.HARD;
+  }
+
+  private ItemStack getSwordForLevel(int swordLevel) {
+    ////have a better chance of not getting a wooden or stone sword
+    if(swordLevel < 2) {
+      swordLevel += rand.nextInt(isHardDifficulty() ? 3 : 2);
+      swordLevel = Math.min(swordLevel, 2);
+    }
+    switch (swordLevel) {
+    case 0:
+      return new ItemStack(Items.wooden_sword);
+    case 1:
+      return new ItemStack(Items.stone_sword);
+    case 2:
+      return new ItemStack(Items.iron_sword);
+    case 4:
+      return new ItemStack(Items.diamond_sword);
+    }
+    return null;
   }
 
   @Override
