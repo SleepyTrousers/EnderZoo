@@ -142,7 +142,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   }
 
   private boolean runAway() {
-
+System.out.println("EntityAIMountedArrowAttack.runAway: ");
     if(!useRunAwayTactic) {
       return false;
     }
@@ -152,7 +152,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     Vec3 entityPos = EntityUtil.getEntityPosition(entityHost);
     targetDir = VecUtil.subtract(targetDir, entityPos);        
     targetDir = VecUtil.scale(targetDir, -1);
-    targetDir.normalize();
+    targetDir = targetDir.normalize();
 
     double distance = attackRange * 0.9;
     targetDir = VecUtil.scale(targetDir, distance);
@@ -160,7 +160,6 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     
 
     Point3i probePoint = new Point3i((int) Math.round(targetDir.xCoord), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.zCoord));
-
     Point3i target = new Point3i(probePoint);
 
     World world = entityHost.worldObj;
@@ -181,10 +180,13 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       return false;
     }
 
+    System.out.println("EntityAIMountedArrowAttack.runAway: " + probePoint.x +"," +  probePoint.y + "," +  probePoint.z);
     boolean res = getNavigator().tryMoveToXYZ(probePoint.x, probePoint.y, probePoint.z, mountedEntityMoveSpeed);
     if(getNavigator().noPath()) {
+      System.out.println("EntityAIMountedArrowAttack.runAway: Failed running away path");
       runningAwayTo = null;
     } else {
+      System.out.println("EntityAIMountedArrowAttack.runAway: found running away point");
       runningAwayTo = getNavigator().getPath().getFinalPathPoint();
     }
     return res;

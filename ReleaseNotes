@@ -1,7 +1,18 @@
 -------------------------------------------
+Version 1.0.1 
+-------------------------------------------
+Changes
+- Added Wither Witch, throws wither potions
+- Added Withering Powder, dropped by Wither Witch, used to brew wither potions
+- Added zh_CN.lang (Mrkwtkr)
+
+Bugs
+- #4 Server crash due to use of classes unavailable on server
+- Fixed Fallen Steeds spawning without riders
+
+-------------------------------------------
 Version 1.0.0.3 Beta
 -------------------------------------------
-
 - Mounted archer Fallen Knights will now attempt to stay out of melee range
 - Ground archer Fallen Knights will switch to a sword when in melee range
 - Added randomized Fallen Knights swords based on global difficulty and regional difficulty settings

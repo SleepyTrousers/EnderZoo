@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -16,6 +17,7 @@ import net.minecraft.entity.ai.EntityAIRunAroundLikeCrazy;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -52,7 +54,7 @@ public class EntityFallenMount extends EntityHorse {
 
     findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
-    updateAttackAI();
+    updateAttackAI();    
   }
 
   @Override
@@ -74,6 +76,34 @@ public class EntityFallenMount extends EntityHorse {
       return super.interact(p_70085_1_);
     }
     return false;
+  }
+
+  @Override
+  protected boolean canDespawn() {    
+    return true;
+  }
+
+  @Override
+  public boolean canMateWith(EntityAnimal p_70878_1_) {
+    return false;
+  }
+
+  @Override
+  public boolean allowLeashing() {
+    return false;
+  }
+
+  @Override
+  public boolean isBreedingItem(ItemStack p_70877_1_) {   
+    return false;
+  }  
+
+  @Override
+  public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {    
+    if(type == EnumCreatureType.monster) {      
+      return true;
+    }
+    return false;    
   }
 
   @Override

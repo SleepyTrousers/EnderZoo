@@ -48,7 +48,7 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   private EntityLivingBase lastAttackTarget = null;
 
-  private boolean firstUpdate = false;
+  private boolean firstUpdate = true;
   private boolean isMounted = false;
 
   public EntityFallenKnight(World world) {
@@ -83,7 +83,7 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   public void setCombatTask() {
     tasks.removeTask(getAiAttackOnCollide());
-    tasks.removeTask(getAiArrowAttack());    
+    tasks.removeTask(getAiArrowAttack());
     if(isRanged()) {
       tasks.addTask(4, getAiArrowAttack());
     } else {
@@ -125,15 +125,20 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   public void onLivingUpdate() {
     super.onLivingUpdate();
+
+    if(firstUpdate && !worldObj.isRemote) {
+      spawnMount();
+    }
+
     if(isRiding()) {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
       if(lastAttackTarget != getAttackTarget() || firstUpdate) {
         cancelCurrentTasks(entLiving);
-        lastAttackTarget = getAttackTarget();        
+        lastAttackTarget = getAttackTarget();
       }
-    } 
+    }
     firstUpdate = false;
-    
+
     if(!isMounted == isRiding()) {
       getAiAttackOnCollide().resetTask();
       getAiArrowAttack().resetTask();
@@ -143,10 +148,38 @@ public class EntityFallenKnight extends EntitySkeleton {
     if(isBurning() && isRiding()) {
       ridingEntity.setFire(8);
     }
-    if( Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance) 
+    if(Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance)
         && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {
       setCurrentItemOrArmor(0, getSwordForLevel(getRandomEquipmentLevel()));
     }
+  }
+
+  @Override
+  protected void despawnEntity() {
+    Entity mount = ridingEntity;
+    super.despawnEntity();
+    if(isDead && mount != null) {
+      mount.setDead();
+    }
+  }
+
+  private void spawnMount() {
+    EntityFallenMount mount = null;
+    if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
+      mount = new EntityFallenMount(worldObj);
+      mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
+      mount.onSpawnWithEgg((IEntityLivingData) null);
+      //NB: don;t check for entity collisions as we know the knight will collide
+      if(!EntityUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
+        mount = null;
+      }
+    } 
+    if(mount != null) {
+      setCanPickUpLoot(false);
+      setCanBreakDoors(false);
+      worldObj.spawnEntityInWorld(mount);      
+      mountEntity(mount);
+    }    
   }
 
   private boolean isRanged() {
@@ -175,9 +208,9 @@ public class EntityFallenKnight extends EntitySkeleton {
   protected void addRandomArmor() {
 
     float occupiedDiffcultyMultiplier = EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ);
-    
+
     int equipmentLevel = getRandomEquipmentLevel(occupiedDiffcultyMultiplier);
-    int armorLevel = equipmentLevel;  
+    int armorLevel = equipmentLevel;
     if(armorLevel == 1) {
       //Skip gold armor, I don't like it
       armorLevel++;
@@ -200,7 +233,7 @@ public class EntityFallenKnight extends EntitySkeleton {
         }
       }
     }
-    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {      
+    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
       setCurrentItemOrArmor(0, getSwordForLevel(equipmentLevel));
     } else {
       setCurrentItemOrArmor(0, new ItemStack(Items.bow));
@@ -257,30 +290,10 @@ public class EntityFallenKnight extends EntitySkeleton {
     setSkeletonType(0);
     addRandomArmor();
     enchantEquipment();
-
-    EntityFallenMount mount = null;
-    if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
-      mount = new EntityFallenMount(worldObj);
-      mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-      mount.onSpawnWithEgg((IEntityLivingData) null);
-      //NB: don;t check for entity collisions as we know the knight will collide
-      if(EntityUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
-        isMounted = true;
-      } 
-    } else {      
-      isMounted = false;      
-    }
-
-    if(isMounted) {
-      setCanPickUpLoot(false);
-      setCanBreakDoors(false);
-      worldObj.spawnEntityInWorld(mount);
-      mountEntity(mount);
-    } else {
-      float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
-      setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
-      setCanBreakDoors(rand.nextFloat() < f * 0.1F);
-    }
+    
+    float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
+    setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
+    setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
 
     return livingData;
   }

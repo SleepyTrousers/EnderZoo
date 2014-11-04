@@ -55,8 +55,16 @@ same id and 0 biomeTypes.
     <biomeType name="JUNGLE" />
   </entry>
   
-  <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="40" minGroupSize="1" maxGroupSize="4">   
+  <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="50" minGroupSize="1" maxGroupSize="4">   
     <biomeType name="PLAINS" />
+  </entry>
+  
+  <entry id="WitherWitch" mobName="enderzoo.WitherWitch" rate="10" minGroupSize="1" maxGroupSize="1">   
+    <biomeType name="FOREST" />
+    <biomeType name="SWAMP" />    
+    <biomeType name="PLAINS" />
+    <biomeType name="HILLS" />
+    <biomeType name="MOUNTAIN" />    
   </entry>
 
 </SpawnConfig>
