@@ -64,6 +64,7 @@ public final class Config {
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
   public static boolean fallenKnightEnabled = true;
   public static double fallenKnightBaseDamage = 4.0;
+  public static double fallenKnightHealth = 12;
   public static double fallenKnightFollowRange = 40.0;
   public static double fallenKnightChargeSpeed = 1.2;
   public static int fallenKnightRangedMinAttackPause = 20;
@@ -87,6 +88,15 @@ public final class Config {
   public static float fallenMountChanceArmoredHard = 0.9f;
   public static float fallenMountChanceArmorUpgrade = 0.01f;
   public static float fallenMountChanceArmorUpgradeHard = 0.05f;
+  public static double fallenMountHealth = 30;
+
+  public static final Section sectionWitherWitch = new Section("Wither Witch", "witherWitch");
+  public static boolean witherWitchEnabled = true;
+  public static double witherWitchHealth = 30;
+
+  
+
+  
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -156,6 +166,8 @@ public final class Config {
     fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");    
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
         fallenKnightBaseDamage);
+    fallenKnightHealth = config.get(sectionFallenKnight.name, "fallenKnightHealth", fallenKnightHealth, "Health of a knight").getDouble(
+        fallenKnightHealth);
     fallenKnightFollowRange = config.get(sectionFallenKnight.name, "fallenKnightFollowRange", fallenKnightFollowRange, "Follow range of a knight").getDouble(
         fallenKnightFollowRange);
     fallenKnightChargeSpeed = config.get(sectionFallenKnight.name, "fallenKnightChargeSpeed", fallenKnightChargeSpeed,
@@ -195,6 +207,8 @@ public final class Config {
         "he speed at which a mount will charge its target").getDouble(fallenMountChargeSpeed);
     fallenMountBaseAttackDamage = config.get(sectionFallenMount.name, "fallenMountBaseAttackDamage", fallenMountBaseAttackDamage,
         "Base attack damage of the mount").getDouble(fallenMountBaseAttackDamage);
+    fallenMountHealth = config.get(sectionFallenMount.name, "fallenMountHealth", fallenMountHealth,
+        "Base attack damage of the mount").getDouble(fallenMountHealth);
     fallenMountShadedByRider = config.getBoolean("fallenMountShadedByRider", sectionFallenMount.name, fallenMountShadedByRider,
         "When true a mount will not burn in the sun unless its rider is");
     fallenMountChanceArmored = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmored", fallenMountChanceArmored,
@@ -205,7 +219,10 @@ public final class Config {
         "The chance a mount's armor will be upgraded").getDouble(fallenMountChanceArmorUpgrade);
     fallenMountChanceArmorUpgradeHard = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmorUpgradeHard", fallenMountChanceArmorUpgradeHard,
         "The chance a mount's armor will be upgraded when difficulty is hard").getDouble(fallenMountChanceArmorUpgradeHard);
-
+    
+    witherWitchEnabled= config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
+    witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth,
+        "Base attack damage of the mount").getDouble(witherWitchHealth);
   }
 
   private Config() {

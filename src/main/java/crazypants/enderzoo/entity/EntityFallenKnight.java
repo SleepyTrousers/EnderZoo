@@ -61,6 +61,7 @@ public class EntityFallenKnight extends EntitySkeleton {
     super.applyEntityAttributes();
     getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Config.fallenKnightFollowRange);
     getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Config.fallenKnightBaseDamage);
+    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenKnightHealth);
   }
 
   @Override

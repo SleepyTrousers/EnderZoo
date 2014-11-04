@@ -81,7 +81,7 @@ public class EntityFallenMount extends EntityHorse {
     setHorseType(3);
     setHorseSaddled(true);
     setGrowingAge(0);
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(15.0);
+    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenMountHealth);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2);
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());

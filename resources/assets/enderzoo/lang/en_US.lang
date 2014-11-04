@@ -1,9 +1,12 @@
 //***  Ender Zoo *****//
 
 item.itemSpawnEggEnderZoo.name=Spawn
+item.witheringDust.name=Withering Dust
+item.itemPotionEZ.wither.name=Potion of Withering
 
 //Mobs
 entity.enderzoo.Enderminy.name=Enderminy
 entity.enderzoo.ConcussionCreeper.name=Concussion Creeper
 entity.enderzoo.FallenKnight.name=Fallen Knight
 entity.enderzoo.FallenMount.name=Fallen Steed
+entity.enderzoo.WitherWitch.name=Wither Witch

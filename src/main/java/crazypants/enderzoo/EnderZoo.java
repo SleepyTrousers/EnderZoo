@@ -14,6 +14,9 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemSpawnEgg;
+import crazypants.enderzoo.item.ItemWitheringDust;
+import crazypants.enderzoo.potion.EntityPotionEZ_WIP;
+import crazypants.enderzoo.potion.ItemPotionEZ_WIP;
 import crazypants.enderzoo.spawn.MobSpawns;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
@@ -30,15 +33,20 @@ public class EnderZoo {
   public static CommonProxy proxy;
 
   public static ItemSpawnEgg itemSpawnEgg;
+  public static ItemWitheringDust itemWitheringDust;
+  
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
+       
     Config.load(event);
     for (MobInfo mob : MobInfo.values()) {
       registerEntity(mob);
 
     }    
-    itemSpawnEgg = ItemSpawnEgg.create();
+    itemSpawnEgg = ItemSpawnEgg.create();       
+    itemWitheringDust = ItemWitheringDust.create();
+          
   }
 
   private void registerEntity(MobInfo mob) {

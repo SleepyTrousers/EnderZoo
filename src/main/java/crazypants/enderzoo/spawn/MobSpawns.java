@@ -18,15 +18,12 @@ import crazypants.enderzoo.entity.MobInfo;
 
 public class MobSpawns {
 
-  private static final boolean PRINT_DEBUG = true;
+  private static final boolean PRINT_DEBUG = false;
 
   private MobSpawns() {
   }
 
   public static void registerSpawns() {
-    //    addSpawn(MobInfo.ENDERMINY, Config.enderminySpawnRate, 1, Config.enderminyMaxGroupSize, BiomeDictionary.Type.FOREST, Type.SWAMP, Type.JUNGLE);         
-    //    addSpawn(MobInfo.CONCUSSION_CREEPER, Config.concussionCreeperSpawnRate, 1, 2, BASE_LAND_TYPES);
-    //    addSpawn(MobInfo.DARK_KNIGHT, Config.fallenKnightSpawnRate, 1, 2, BiomeDictionary.Type.PLAINS);
     List<SpawnEntry> entries = SpawnConfig.loadSpawnConfig();
     Log.info("Applying " + entries.size() + " spawn entries from config.");
     for(SpawnEntry entry : entries) {
