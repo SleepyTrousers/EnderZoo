@@ -1,8 +1,5 @@
 package crazypants.enderzoo.entity.ai;
 
-import javax.vecmath.Point3i;
-import javax.vecmath.Vector3d;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -12,8 +9,11 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import crazypants.enderzoo.entity.EntityUtil;
+import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityAIMountedArrowAttack extends EntityAIBase {
 
@@ -148,17 +148,18 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     }
     
     runAwayTimer = 40;
-    Vector3d targetDir = new Vector3d(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
-    Vector3d entityPos = EntityUtil.getEntityPosition(entityHost);
-    targetDir.sub(entityPos);
-    targetDir.scale(-1);
+    Vec3 targetDir = Vec3.createVectorHelper(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+    Vec3 entityPos = EntityUtil.getEntityPosition(entityHost);
+    targetDir = VecUtil.subtract(targetDir, entityPos);        
+    targetDir = VecUtil.scale(targetDir, -1);
     targetDir.normalize();
 
     double distance = attackRange * 0.9;
-    targetDir.scale(distance);
-    targetDir.add(entityPos);
+    targetDir = VecUtil.scale(targetDir, distance);
+    targetDir = VecUtil.add(targetDir, entityPos);
+    
 
-    Point3i probePoint = new Point3i((int) Math.round(targetDir.x), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.z));
+    Point3i probePoint = new Point3i((int) Math.round(targetDir.xCoord), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.zCoord));
 
     Point3i target = new Point3i(probePoint);
 

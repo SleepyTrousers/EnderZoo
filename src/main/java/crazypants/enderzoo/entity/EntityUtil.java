@@ -1,13 +1,11 @@
 package crazypants.enderzoo.entity;
 
-import javax.vecmath.Tuple3d;
-import javax.vecmath.Vector3d;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 public class EntityUtil {
@@ -36,8 +34,8 @@ public class EntityUtil {
     return true;
   }
 
-  public static Vector3d getEntityPosition(Entity entity) {    
-    return new Vector3d(entity.posX, entity.posY, entity.posZ);
+  public static Vec3 getEntityPosition(Entity entity) {    
+    return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
   }
   
   public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {

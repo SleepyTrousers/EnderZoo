@@ -41,7 +41,6 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob {
   public static final String NAME = "enderzoo.WitherWitch";
   public static final int EGG_BG_COL = 0x26520D;
   public static final int EGG_FG_COL = 0x905E43;
-
   
   private ItemStack[] drops = new ItemStack[] {
       new ItemStack(EnderZoo.itemWitheringDust),

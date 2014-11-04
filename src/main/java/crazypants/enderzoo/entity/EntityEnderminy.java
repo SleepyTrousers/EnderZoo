@@ -5,8 +5,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import javax.vecmath.Vector3d;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -31,6 +29,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityEnderminy extends EntityMob {
 
@@ -416,22 +415,23 @@ public class EntityEnderminy extends EntityMob {
   }
 
   private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
-    Vector3d pos = new Vector3d();
+    
+    Vec3 pos = Vec3.createVectorHelper(0, 0, 0);
 
     @Override
     public int compare(EntityCreeper o1, EntityCreeper o2) {
-      pos.set(posX, posY, posZ);
-      double d1 = distanceSquared(new Vector3d(o1.posX, o1.posY, o1.posZ), pos);
-      double d2 = distanceSquared(new Vector3d(o2.posX, o2.posY, o2.posZ), pos);
+      VecUtil.set(pos, posX, posY, posZ);      
+      double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
+      double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
       return Double.compare(d1, d2);
     }
   }
   
-  public double distanceSquared(Vector3d v1, Vector3d v2) {
+  public double distanceSquared(double x, double y, double z, Vec3 v2) {
     double dx, dy, dz;
-    dx = v1.x - v2.x;
-    dy = v1.y - v2.y;
-    dz = v1.z - v2.z;
+    dx = x - v2.xCoord;
+    dy = y - v2.yCoord;
+    dz = z - v2.zCoord;
     return (dx * dx + dy * dy + dz * dz);
   }
 
