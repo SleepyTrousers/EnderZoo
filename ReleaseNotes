@@ -18,3 +18,11 @@ Version 1.0.0.3 Beta
 - Added randomized Fallen Knights swords based on global difficulty and regional difficulty settings
 - Added GUI to change config in game
 - Added XML based spawn configs
+
+-------------------------------------------
+Version 1.0.0.0 Beta
+-------------------------------------------
+- Moved Enderminy and Concussion Creepers from EnderIO
+- Added Fallen Knights
+- Added Fallen Mounts
+- Added de_DE.lang (Xaw4)
