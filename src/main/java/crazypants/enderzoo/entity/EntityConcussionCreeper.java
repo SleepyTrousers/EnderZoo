@@ -26,9 +26,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
     super(world);
     try {
       fTimeSinceIgnited = ReflectionHelper.findField(EntityCreeper.class, "timeSinceIgnited", "field_70833_d");
-      fTimeSinceIgnited.setAccessible(true);
       fFuseTime = ReflectionHelper.findField(EntityCreeper.class, "fuseTime", "field_82225_f");
-      fFuseTime.setAccessible(true);
     } catch (Exception e) {
       Log.error("Could not create ender creeper  logic as fields not found");
     }    
