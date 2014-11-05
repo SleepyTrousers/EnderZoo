@@ -8,7 +8,8 @@ public enum MobInfo {
   CONCUSSION_CREEPER(EntityConcussionCreeper.class, EntityConcussionCreeper.NAME, EntityConcussionCreeper.EGG_BG_COL, EntityConcussionCreeper.EGG_FG_COL, Config.concussionCreeperEnabled),
   DARK_KNIGHT(EntityFallenKnight.class, EntityFallenKnight.NAME, EntityFallenKnight.EGG_BG_COL, EntityFallenKnight.EGG_FG_COL, Config.fallenKnightEnabled),
   DARK_MOUNT(EntityFallenMount.class, EntityFallenMount.NAME, EntityFallenMount.EGG_BG_COL, EntityFallenMount.EGG_FG_COL, Config.fallenMountEnabled),
-  WITHER_WITCH(EntityWitherWitch.class, EntityWitherWitch.NAME, EntityWitherWitch.EGG_BG_COL, EntityWitherWitch.EGG_FG_COL, Config.witherWitchEnabled);  
+  WITHER_WITCH(EntityWitherWitch.class, EntityWitherWitch.NAME, EntityWitherWitch.EGG_BG_COL, EntityWitherWitch.EGG_FG_COL, Config.witherWitchEnabled),
+  WITHER_CAT(EntityWitherCat.class, EntityWitherCat.NAME, EntityWitherCat.EGG_BG_COL, EntityWitherCat.EGG_FG_COL, Config.witherCatEnabled);;  
     
   final Class<? extends EntityLiving> clz;
   final String name;

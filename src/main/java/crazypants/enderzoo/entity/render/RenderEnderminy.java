@@ -25,8 +25,8 @@ public class RenderEnderminy extends RenderLiving {
 
   public RenderEnderminy() {
     super(new ModelEnderman(), 0.5F);
-    this.endermanModel = (ModelEnderman) super.mainModel;
-    this.setRenderPassModel(this.endermanModel);
+    endermanModel = (ModelEnderman) super.mainModel;
+    setRenderPassModel(endermanModel);
   }
 
 

@@ -94,6 +94,11 @@ public final class Config {
   public static boolean witherWitchEnabled = true;
   public static double witherWitchHealth = 30;
 
+  public static final Section sectionWitherCat= new Section("Wither Cat", "witherCat");
+  public static boolean witherCatEnabled = true;
+  public static double witherCatHealth = 12;
+  public static double witherCatAttackDamage = 4;
+
   
 
   
@@ -208,7 +213,7 @@ public final class Config {
     fallenMountBaseAttackDamage = config.get(sectionFallenMount.name, "fallenMountBaseAttackDamage", fallenMountBaseAttackDamage,
         "Base attack damage of the mount").getDouble(fallenMountBaseAttackDamage);
     fallenMountHealth = config.get(sectionFallenMount.name, "fallenMountHealth", fallenMountHealth,
-        "Base attack damage of the mount").getDouble(fallenMountHealth);
+        "Base attack health of the mount").getDouble(fallenMountHealth);
     fallenMountShadedByRider = config.getBoolean("fallenMountShadedByRider", sectionFallenMount.name, fallenMountShadedByRider,
         "When true a mount will not burn in the sun unless its rider is");
     fallenMountChanceArmored = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmored", fallenMountChanceArmored,
@@ -223,6 +228,12 @@ public final class Config {
     witherWitchEnabled= config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
     witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth,
         "Base attack damage of the mount").getDouble(witherWitchHealth);
+    
+    witherCatEnabled = config.getBoolean("witherCatEnabled", sectionWitherCat.name, witherCatEnabled, "If false Wither Cats will be disabled");
+    witherCatHealth = config.get(sectionWitherCat.name, "witherCatHealth", witherCatHealth,
+        "Base health of the wither cat").getDouble(witherCatHealth);
+    witherCatAttackDamage= config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage,
+        "Base attack damage of the wither cat").getDouble(witherCatAttackDamage);
   }
 
   private Config() {
