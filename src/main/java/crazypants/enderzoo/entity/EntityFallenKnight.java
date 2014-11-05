@@ -164,6 +164,10 @@ public class EntityFallenKnight extends EntitySkeleton {
   }
 
   private void spawnMount() {
+    if(ridingEntity != null) {
+      return;
+    }
+    
     EntityFallenMount mount = null;
     if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
       mount = new EntityFallenMount(worldObj);
