@@ -1,6 +1,8 @@
 //***  Ender Zoo *****//
 
 item.itemSpawnEggEnderZoo.name=生成
+item.witheringDust.name=凋零粉末
+item.itemPotionEZ.wither.name=凋零药水
 
 //Mobs
 entity.enderzoo.Enderminy.name=迷你末影人
