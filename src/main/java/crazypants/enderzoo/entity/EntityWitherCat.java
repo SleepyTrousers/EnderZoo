@@ -25,7 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class EntityWitherCat extends EntityMob {
+public class EntityWitherCat extends EntityMob implements IEnderZooMob{
 
   public enum GrowthMode {
     NONE,

@@ -4,16 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
-import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -27,11 +22,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
+import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 
-public class EntityFallenKnight extends EntitySkeleton {
+public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   public static final int EGG_FG_COL = 0x365A25;
   public static final int EGG_BG_COL = 0xA0A0A0;

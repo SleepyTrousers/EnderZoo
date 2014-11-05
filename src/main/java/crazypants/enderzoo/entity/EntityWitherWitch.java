@@ -36,7 +36,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityWitherWitch extends EntityMob implements IRangedAttackMob {
+public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
   public static final String NAME = "enderzoo.WitherWitch";
   public static final int EGG_BG_COL = 0x26520D;

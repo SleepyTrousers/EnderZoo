@@ -31,7 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;
 
-public class EntityEnderminy extends EntityMob {
+public class EntityEnderminy extends EntityMob implements IEnderZooMob{
 
   public static String NAME = "enderzoo.Enderminy";
   public static final int EGG_BG_COL = 0x27624D;

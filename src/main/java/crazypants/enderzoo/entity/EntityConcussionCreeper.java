@@ -13,7 +13,7 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 
-public class EntityConcussionCreeper extends EntityCreeper {
+public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooMob{
 
   public static final String NAME = "enderzoo.ConcussionCreeper";
   public static final int EGG_BG_COL = 0x56FF8E;
