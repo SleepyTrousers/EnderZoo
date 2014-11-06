@@ -120,7 +120,6 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     super.onLivingUpdate();
 
     if(firstUpdate && !worldObj.isRemote) {
-      System.out.println("EntityFallenKnight.onLivingUpdate: Spawned is: " + spawned);
       spawnMount();
     }
 
