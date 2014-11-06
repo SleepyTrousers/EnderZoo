@@ -6,6 +6,12 @@ public class Point3i {
   public int y;
   public int z;
   
+  public Point3i() {
+    x = 0;
+    y = 0;
+    z = 0;
+  }
+
   public Point3i(int x, int y, int z) {  
     this.x = x;
     this.y = y;
@@ -13,10 +19,11 @@ public class Point3i {
   }
 
   public Point3i(Point3i other) {
-    this.x = other.x;
-    this.y = other.y;
-    this.z = other.z;
+    x = other.x;
+    y = other.y;
+    z = other.z;
   }
+
   
   
 }

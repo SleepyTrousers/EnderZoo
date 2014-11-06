@@ -12,6 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import crazypants.enderzoo.entity.EntityUtil;
+import crazypants.enderzoo.entity.SpawnUtil;
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
 
@@ -25,7 +26,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   private double mountedEntityMoveSpeed;
 
   private int timeUntilNextAttack;
-  private int timeTargetHidden;
+  private int timeTargetVisible;
 
   private int minRangedAttackTime;
   private int maxRangedAttackTime;
@@ -71,7 +72,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
 
   public void resetTask() {
     attackTarget = null;
-    timeTargetHidden = 0;
+    timeTargetVisible = 0;
     timeUntilNextAttack = -1;
     runAwayTimer = 0;
     runningAwayTo = null;
@@ -85,9 +86,9 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     boolean canSeeTarget = entityHost.getEntitySenses().canSee(attackTarget);
 
     if(canSeeTarget) {
-      ++timeTargetHidden;
+      ++timeTargetVisible;
     } else {
-      timeTargetHidden = 0;
+      timeTargetVisible = 0;
     }
 
     boolean runningAway = isRunningAway(); 
@@ -95,7 +96,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       runAwayTimer--;
     }
     
-    if(!runningAway && distToTargetSq <= attackRangeSq && timeTargetHidden >= 20) {          
+    if(!runningAway && distToTargetSq <= attackRangeSq && timeTargetVisible >= 20) {          
       getNavigator().clearPathEntity();
     } else if(distToTargetSq > (attackRangeSq * 0.9)) {
       getNavigator().tryMoveToEntityLiving(attackTarget, getMoveSpeed());
@@ -142,7 +143,6 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   }
 
   private boolean runAway() {
-System.out.println("EntityAIMountedArrowAttack.runAway: ");
     if(!useRunAwayTactic) {
       return false;
     }
@@ -164,63 +164,19 @@ System.out.println("EntityAIMountedArrowAttack.runAway: ");
 
     World world = entityHost.worldObj;
 
-    //first find some air in the y
-    boolean foundTargetSpace = false;
-    for (int xOff = -2; xOff < 3 && !foundTargetSpace; xOff++) {
-      probePoint.x = target.x + xOff;
-      for (int zOff = -2; zOff < 3 && !foundTargetSpace; zOff++) {
-        probePoint.z = target.z + zOff;
-        foundTargetSpace = seachUpForClearSpace(probePoint, world);
-        if(!foundTargetSpace) {
-          probePoint.y = target.y;
-        }
-      }
-    }
-    if(!foundTargetSpace) {
+    if(!SpawnUtil.findClearGround(world, target, probePoint)) {
       return false;
     }
 
-    System.out.println("EntityAIMountedArrowAttack.runAway: " + probePoint.x +"," +  probePoint.y + "," +  probePoint.z);
     boolean res = getNavigator().tryMoveToXYZ(probePoint.x, probePoint.y, probePoint.z, mountedEntityMoveSpeed);
     if(getNavigator().noPath()) {
-      System.out.println("EntityAIMountedArrowAttack.runAway: Failed running away path");
       runningAwayTo = null;
     } else {
-      System.out.println("EntityAIMountedArrowAttack.runAway: found running away point");
       runningAwayTo = getNavigator().getPath().getFinalPathPoint();
     }
     return res;
   }
-
-  protected boolean seachUpForClearSpace(Point3i target, World world) {
-    boolean foundY = false;
-    for (int i = 0; i < 10 && !foundY; i++) {
-      if(world.isAirBlock(target.x, target.y, target.z)) {
-        foundY = true;
-      } else {
-        target.y++;
-      }
-    }
-    boolean onGround = false;
-    if(foundY) {
-      for (int i = 0; i < 10 && !onGround; i++) {
-        onGround = !world.isAirBlock(target.x, target.y - 1, target.z) && !isLiquid(world, target.x, target.y - 1, target.z);
-        if(!onGround) {
-          target.y--;
-        }
-      }
-    }
-    return foundY && onGround;
-  }
-
-  private boolean isLiquid(World world, int x, int y, int z) {
-    Block block = world.getBlock(x, y, z);
-    if(block.getMaterial().isLiquid()) {
-      return true;
-    }
-    return false;
-  }
-
+  
   private double getMoveSpeed() {
     if(entityHost.isRiding()) {
       return mountedEntityMoveSpeed;

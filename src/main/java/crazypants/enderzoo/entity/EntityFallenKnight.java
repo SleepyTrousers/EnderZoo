@@ -1,23 +1,12 @@
 package crazypants.enderzoo.entity;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
-import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIArrowAttack;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityVillager;
@@ -27,9 +16,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
+import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 
 public class EntityFallenKnight extends EntitySkeleton {
 
@@ -50,6 +40,8 @@ public class EntityFallenKnight extends EntitySkeleton {
 
   private boolean firstUpdate = true;
   private boolean isMounted = false;
+  
+  private boolean spawned = false;
 
   public EntityFallenKnight(World world) {
     super(world);
@@ -127,13 +119,14 @@ public class EntityFallenKnight extends EntitySkeleton {
     super.onLivingUpdate();
 
     if(firstUpdate && !worldObj.isRemote) {
+      System.out.println("EntityFallenKnight.onLivingUpdate: Spawned is: " + spawned);
       spawnMount();
     }
 
     if(isRiding()) {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
       if(lastAttackTarget != getAttackTarget() || firstUpdate) {
-        cancelCurrentTasks(entLiving);
+        EntityUtil.cancelCurrentTasks(entLiving);
         lastAttackTarget = getAttackTarget();
       }
     }
@@ -164,7 +157,7 @@ public class EntityFallenKnight extends EntitySkeleton {
   }
 
   private void spawnMount() {
-    if(ridingEntity != null) {
+    if(ridingEntity != null && spawned) {
       return;
     }
     
@@ -174,7 +167,7 @@ public class EntityFallenKnight extends EntitySkeleton {
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
       mount.onSpawnWithEgg((IEntityLivingData) null);
       //NB: don;t check for entity collisions as we know the knight will collide
-      if(!EntityUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
+      if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
         mount = null;
       }
     } 
@@ -187,26 +180,11 @@ public class EntityFallenKnight extends EntitySkeleton {
   }
 
   private boolean isRanged() {
-    ItemStack itemstack = this.getHeldItem();
+    ItemStack itemstack = getHeldItem();
     return itemstack != null && itemstack.getItem() == Items.bow;
   }
 
-  private void cancelCurrentTasks(EntityLiving ent) {
-    Iterator iterator = ent.tasks.taskEntries.iterator();
 
-    List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
-    while (iterator.hasNext()) {
-      EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
-      if(entityaitaskentry != null) {
-        currentTasks.add(entityaitaskentry);
-      }
-    }
-    //Only available way to stop current execution is to remove all current tasks, then re-add them 
-    for (EntityAITaskEntry task : currentTasks) {
-      ent.tasks.removeTask(task.action);
-      ent.tasks.addTask(task.priority, task.action);
-    }
-  }
 
   @Override
   protected void addRandomArmor() {
@@ -253,9 +231,9 @@ public class EntityFallenKnight extends EntitySkeleton {
         : Config.fallenKnightChanceArmorUpgrade;
     chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
 
-    int armorLevel = this.rand.nextInt(2);
+    int armorLevel = rand.nextInt(2);
     for (int i = 0; i < 2; i++) {
-      if(this.rand.nextFloat() <= chanceImprovedArmor) {
+      if(rand.nextFloat() <= chanceImprovedArmor) {
         armorLevel++;
       }
     }
@@ -263,7 +241,7 @@ public class EntityFallenKnight extends EntitySkeleton {
   }
 
   protected boolean isHardDifficulty() {
-    return worldObj.difficultySetting == EnumDifficulty.HARD;
+    return EntityUtil.isHardDifficulty(worldObj);
   }
 
   private ItemStack getSwordForLevel(int swordLevel) {
@@ -288,15 +266,17 @@ public class EntityFallenKnight extends EntitySkeleton {
   @Override
   public IEntityLivingData onSpawnWithEgg(IEntityLivingData livingData) {
 
+    spawned = true;
+    
     //From base entity living class
-    getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", this.rand.nextGaussian() * 0.05D, 1));
+    getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
 
     setSkeletonType(0);
     addRandomArmor();
     enchantEquipment();
     
-    float f = this.worldObj.func_147462_b(this.posX, this.posY, this.posZ);
-    setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
+    float f = worldObj.func_147462_b(posX, posY, posZ);
+    setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
     setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
 
     return livingData;
@@ -308,6 +288,7 @@ public class EntityFallenKnight extends EntitySkeleton {
     root.setBoolean("canBreakDoors", canBreakDoors);
   }
 
+  @Override
   public void readEntityFromNBT(NBTTagCompound root) {
     super.readEntityFromNBT(root);
     setCanBreakDoors(root.getBoolean("canBreakDoors"));
@@ -317,16 +298,16 @@ public class EntityFallenKnight extends EntitySkeleton {
     if(canBreakDoors != val) {
       canBreakDoors = val;
       if(canBreakDoors) {
-        this.tasks.addTask(1, breakDoorAI);
+        tasks.addTask(1, breakDoorAI);
       } else {
-        this.tasks.removeTask(breakDoorAI);
+        tasks.removeTask(breakDoorAI);
       }
     }
   }
 
   @Override
   protected void dropFewItems(boolean hitByPlayer, int lootingLevel) {
-    int numDrops = this.rand.nextInt(3 + lootingLevel);
+    int numDrops = rand.nextInt(3 + lootingLevel);
     for (int i = 0; i < numDrops; ++i) {
       if(rand.nextBoolean()) {
         dropItem(Items.bone, 1);

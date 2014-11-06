@@ -1,43 +1,30 @@
 package crazypants.enderzoo.entity;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.util.MathHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import crazypants.enderzoo.vec.Point3i;
 
 public class EntityUtil {
 
-  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions) {
-    return isSpaceAvailableForSpawn(worldObj, entity, checkEntityCollisions, false);
-  }
-  
-  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
-    int i = MathHelper.floor_double(entity.posX);
-    int j = MathHelper.floor_double(entity.boundingBox.minY);
-    int k = MathHelper.floor_double(entity.posZ);
-    
-    if(entity.getBlockPathWeight(i, j, k) < 0) {
-      return false;
-    }
-    if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.boundingBox)) {
-      return false;
-    }
-    if(!worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty()) {
-      return false;
-    }    
-    if(!canSpawnInLiquid && worldObj.isAnyLiquid(entity.boundingBox)) {
-      return false;
-    }    
-    return true;
+  public static boolean isHardDifficulty(World worldObj) {
+    return worldObj.difficultySetting == EnumDifficulty.HARD;
   }
 
-  public static Vec3 getEntityPosition(Entity entity) {    
-    return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
-  }
-  
   public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {
     //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied
     float occupiedDiffcultyMultiplier = world.func_147462_b(x,y,z);
@@ -48,5 +35,40 @@ public class EntityUtil {
   public static String getDisplayNameForEntity(String mobName) {
     return StatCollector.translateToLocal("entity." + mobName + ".name");
   }
+
+  public static Vec3 getEntityPosition(Entity entity) {    
+    return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+  }
   
+  public static Point3i getEntityPositionI(Entity entity) {    
+    return new Point3i((int)entity.posX,(int)entity.posY,(int)entity.posZ);
+  }
+  
+  public static void cancelCurrentTasks(EntityLiving ent) {
+    Iterator iterator = ent.tasks.taskEntries.iterator();
+
+    List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
+    while (iterator.hasNext()) {
+      EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
+      if(entityaitaskentry != null) {
+        currentTasks.add(entityaitaskentry);
+      }
+    }
+    //Only available way to stop current execution is to remove all current tasks, then re-add them 
+    for (EntityAITaskEntry task : currentTasks) {
+      ent.tasks.removeTask(task.action);
+      ent.tasks.addTask(task.priority, task.action);
+    }
+    ent.getNavigator().clearPathEntity();
+  }
+
+  public static IAttributeInstance removeModifier(EntityLivingBase ent, IAttribute p, UUID u) {
+    IAttributeInstance att = ent.getEntityAttribute(p);
+    AttributeModifier curmod = att.getModifier(u);
+    if(curmod != null) {
+      att.removeModifier(curmod);
+    }
+    return att;
+  }
+
 }

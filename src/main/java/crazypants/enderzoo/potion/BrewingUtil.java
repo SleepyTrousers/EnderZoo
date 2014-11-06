@@ -2,13 +2,11 @@ package crazypants.enderzoo.potion;
 
 import java.util.List;
 
-import crazypants.enderzoo.EnderZoo;
-
 import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
+import crazypants.enderzoo.EnderZoo;
 
 public class BrewingUtil {
   
@@ -18,6 +16,21 @@ public class BrewingUtil {
   private static final ItemStack GUN_POWDER = new ItemStack(Items.gunpowder);
   private static final ItemStack SPECKLED_MELLON = new ItemStack(Items.speckled_melon);
   private static final ItemStack GHAST_TEAR = new ItemStack(Items.ghast_tear);
+  private static final ItemStack SPIDER_EYE = new ItemStack(Items.spider_eye);
+  private static final ItemStack FERMENTED_SPIDER_EYE = new ItemStack(Items.fermented_spider_eye);
+
+  public static ItemStack createHarmingPotion(boolean isAugmented, boolean isSplash) {
+    ItemStack result = createAwkwardPotion();
+    addIngredientToPotion(result, SPIDER_EYE);
+    addIngredientToPotion(result, FERMENTED_SPIDER_EYE);
+    if(isAugmented) {
+      addIngredientToPotion(result, GLOWSTONE);
+    }
+    if(isSplash) {
+      addIngredientToPotion(result, GUN_POWDER);
+    }
+    return result;
+  }
 
   public static ItemStack createWitherPotion(boolean isProlonged, boolean isSplash) {
     ItemStack result = createAwkwardPotion();
@@ -87,5 +100,5 @@ public class BrewingUtil {
     return ingredient == null ? targetMetaData : (ingredient.getItem().isPotionIngredient(ingredient) ? PotionHelper.applyIngredient(targetMetaData, ingredient
         .getItem().getPotionEffect(ingredient)) : targetMetaData);
   }
-  
+
 }

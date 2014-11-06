@@ -93,15 +93,16 @@ public final class Config {
   public static final Section sectionWitherWitch = new Section("Wither Witch", "witherWitch");
   public static boolean witherWitchEnabled = true;
   public static double witherWitchHealth = 30;
+  public static int witherWitchMinCats = 1;
+  public static int witherWitchMaxCats = 2;
 
   public static final Section sectionWitherCat= new Section("Wither Cat", "witherCat");
   public static boolean witherCatEnabled = true;
   public static double witherCatHealth = 12;
-  public static double witherCatAttackDamage = 4;
+  public static double witherCatAttackDamage = 3;
+  public static double witherCatAngryHealth = 30;
+  public static double witherCatAngryAttackDamage = 12;
 
-  
-
-  
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -228,6 +229,10 @@ public final class Config {
     witherWitchEnabled= config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
     witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth,
         "Base attack damage of the mount").getDouble(witherWitchHealth);
+    witherWitchMinCats = config.get(sectionWitherWitch.name, "witherWitchMinCats", witherWitchMinCats,
+        "The minimum number of cats spawned with a Wither Witch").getInt(witherWitchMinCats);
+    witherWitchMaxCats = config.get(sectionWitherWitch.name, "witherWitchMaxCats", witherWitchMaxCats,
+        "The maximum number of cats spawned with a Wither Witch").getInt(witherWitchMaxCats);
     
     witherCatEnabled = config.getBoolean("witherCatEnabled", sectionWitherCat.name, witherCatEnabled, "If false Wither Cats will be disabled");
     witherCatHealth = config.get(sectionWitherCat.name, "witherCatHealth", witherCatHealth,

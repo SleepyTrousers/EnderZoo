@@ -15,8 +15,6 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
-import crazypants.enderzoo.potion.EntityPotionEZ_WIP;
-import crazypants.enderzoo.potion.ItemPotionEZ_WIP;
 import crazypants.enderzoo.spawn.MobSpawns;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
@@ -46,7 +44,8 @@ public class EnderZoo {
     }    
     itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
-          
+
+    //DebugUtil.instance.setEnabled(true);          
   }
 
   private void registerEntity(MobInfo mob) {
