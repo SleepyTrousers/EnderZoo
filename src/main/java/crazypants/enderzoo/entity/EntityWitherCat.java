@@ -23,7 +23,7 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideOwned;
 import crazypants.enderzoo.entity.ai.EntityAIFollowOwner;
 
-public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherCat, EntityWitherWitch> {
+public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherCat, EntityWitherWitch>, IEnderZooMob {
 
   public enum GrowthMode {
     NONE,

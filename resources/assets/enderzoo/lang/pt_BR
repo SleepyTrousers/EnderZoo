@@ -1,0 +1,12 @@
+//***  Ender Zoo *****//
+
+item.itemSpawnEggEnderZoo.name=Spawn
+item.witheringDust.name=Pó de Decomposição
+item.itemPotionEZ.wither.name=Poção de Decomposição
+
+//Mobs
+entity.enderzoo.Enderminy.name=Endermini
+entity.enderzoo.ConcussionCreeper.name=Creeper de Concussão
+entity.enderzoo.FallenKnight.name=Cavaleiro Caído
+entity.enderzoo.FallenMount.name=Corcel Caído
+entity.enderzoo.WitherWitch.name=Bruxa Wither

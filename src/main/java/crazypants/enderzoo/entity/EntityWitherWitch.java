@@ -32,7 +32,7 @@ import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
 import crazypants.enderzoo.potion.BrewingUtil;
 import crazypants.enderzoo.vec.Point3i;
 
-public class EntityWitherWitch extends EntityMob implements IRangedAttackMob {
+public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
   public static final String NAME = "enderzoo.WitherWitch";
   public static final int EGG_BG_COL = 0x26520D;

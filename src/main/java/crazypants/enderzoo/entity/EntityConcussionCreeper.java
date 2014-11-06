@@ -13,7 +13,7 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 
-public class EntityConcussionCreeper extends EntityCreeper {
+public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooMob{
 
   public static final String NAME = "enderzoo.ConcussionCreeper";
   public static final int EGG_BG_COL = 0x56FF8E;
@@ -26,9 +26,7 @@ public class EntityConcussionCreeper extends EntityCreeper {
     super(world);
     try {
       fTimeSinceIgnited = ReflectionHelper.findField(EntityCreeper.class, "timeSinceIgnited", "field_70833_d");
-      fTimeSinceIgnited.setAccessible(true);
       fFuseTime = ReflectionHelper.findField(EntityCreeper.class, "fuseTime", "field_82225_f");
-      fFuseTime.setAccessible(true);
     } catch (Exception e) {
       Log.error("Could not create ender creeper  logic as fields not found");
     }    

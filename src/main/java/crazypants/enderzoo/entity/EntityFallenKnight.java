@@ -1,5 +1,6 @@
 package crazypants.enderzoo.entity;
 
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +22,7 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
 import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 
-public class EntityFallenKnight extends EntitySkeleton {
+public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   public static final int EGG_FG_COL = 0x365A25;
   public static final int EGG_BG_COL = 0xA0A0A0;

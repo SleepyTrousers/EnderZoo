@@ -39,8 +39,14 @@ repositories {
     mavenCentral()
 }
 
+repositories {
+    mavenCentral()
+    maven { url "http://mobiusstrip.eu/maven" }
+    maven { url = "http://chickenbones.net/maven/" }
+}
+
 dependencies {
-    
+    compile "mcp.mobius.waila:Waila:${waila_version}"
 }
 
 sourceSets {
