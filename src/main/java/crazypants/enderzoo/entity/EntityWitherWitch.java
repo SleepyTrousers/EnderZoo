@@ -49,6 +49,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   };
 
   private int attackTimer;
+  private EntityLivingBase attackedWithPotion;
+
   private int healTimer;
   private boolean isHealing;
 
@@ -62,9 +64,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   public EntityWitherWitch(World world) {
     super(world);
-
     rangedAttackAI = new EntityAIRangedAttack(this, 1, 60, 10);
-    
     tasks.addTask(1, new EntityAISwimming(this));
     tasks.addTask(1, new EntityAISwimming(this));    
     tasks.addTask(2, rangedAttackAI);
@@ -114,6 +114,19 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     for (int i = 0; i < numDrops; ++i) {
       ItemStack item = drops[rand.nextInt(drops.length)].copy();
       entityDropItem(item, 0);
+    }
+  }
+
+  @Override
+  public void setRevengeTarget(EntityLivingBase target) {
+    EntityLivingBase curTarget = getAITarget();
+    super.setRevengeTarget(target);
+    if(curTarget == target || worldObj.isRemote || target == null) {
+      return;
+    }
+    float distToSrc = getDistanceToEntity(target);
+    if(distToSrc > getNavigator().getPathSearchRange() && distToSrc < 50) {
+      getAttributeMap().getAttributeInstance(SharedMonsterAttributes.followRange).setBaseValue(distToSrc + 2);
     }
   }
 
@@ -177,6 +190,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       healTimer = 40;
     } else if(noActiveTargetTime > 40 && !isHealing && getHeldItem() != null) {
       setCurrentItemOrArmor(0, null);
+      attackedWithPotion = null;
     }
     if(isHealing && healTimer <= 0) {
       throwHealthPotion();
@@ -202,6 +216,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   @Override
   public void attackEntityWithRangedAttack(EntityLivingBase entity, float rangeRatio) {
     if(attackTimer <= 0 && getHeldItem() != null && !isHealing) {
+
+      attackedWithPotion = entity;
+
       double x = entity.posX + entity.motionX - posX;
       double y = entity.posY + entity.getEyeHeight() - 1.100000023841858D - posY;
       double z = entity.posZ + entity.motionZ - posZ;
@@ -322,6 +339,10 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     }
     EntityLivingBase currentTarget = getActiveTarget();
     EntityLivingBase hitBy = getAITarget();
+    if(hitBy == null) {
+      //agro the cats if we have been hit or we have actually thrown a potion
+      hitBy = attackedWithPotion;
+    }
     angerCats(currentTarget, hitBy);
   }
 

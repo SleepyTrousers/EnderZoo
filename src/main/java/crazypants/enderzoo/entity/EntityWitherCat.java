@@ -161,14 +161,16 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       return false;
     }
     boolean res = super.attackEntityFrom(source, amount);
-    if(source.getEntity() instanceof EntityLivingBase) {
-      if(owner != null) {
-        EntityLivingBase ownerHitBy = owner.getAITarget();
-        if(ownerHitBy == null) {
-          owner.setRevengeTarget((EntityLivingBase) source.getEntity());
+    if(!worldObj.isRemote) {
+      if(source.getEntity() instanceof EntityLivingBase) {
+        if(owner != null) {
+          EntityLivingBase ownerHitBy = owner.getAITarget();
+          if(ownerHitBy == null) {
+            owner.setRevengeTarget((EntityLivingBase) source.getEntity());
+          }
+        } else if(owner == null) {
+          setAttackTarget((EntityLivingBase) source.getEntity());
         }
-      } else if(owner == null) {
-        setAttackTarget((EntityLivingBase) source.getEntity());
       }
     }
     return res;
