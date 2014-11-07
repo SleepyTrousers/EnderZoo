@@ -96,13 +96,23 @@ public final class Config {
   public static int witherWitchMinCats = 1;
   public static int witherWitchMaxCats = 2;
 
-  public static final Section sectionWitherCat= new Section("Wither Cat", "witherCat");
+  public static final Section sectionWitherCat = new Section("Wither Cat", "witherCat");
   public static boolean witherCatEnabled = true;
   public static double witherCatHealth = 12;
   public static double witherCatAttackDamage = 3;
   public static double witherCatAngryHealth = 30;
   public static double witherCatAngryAttackDamage = 12;
 
+  public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
+  public static int enchantmentWitherArrowWeight = 2;
+  public static int enchantmentWitherArrowDuration = 200;
+  public static int enchantmentWitherArrowMinEnchantability = 20;
+  public static int enchantmentWitherArrowMaxEnchantability = 50;
+
+  public static int enchantmentWitherWeaponWeight = 2;
+  public static int enchantmentWitherWeaponDuration = 200;
+  public static int enchantmentWitherWeaponMinEnchantability = 20;
+  public static int enchantmentWitherWeaponMaxEnchantability = 50;
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -140,7 +150,7 @@ public final class Config {
 
   public static void processConfig(Configuration config) {
 
-    enderminyEnabled = config.getBoolean("enderminyEnabled", sectionEnderminy.name, enderminyEnabled, "Wether Enderminies are enabled");    
+    enderminyEnabled = config.getBoolean("enderminyEnabled", sectionEnderminy.name, enderminyEnabled, "Wether Enderminies are enabled");
     enderminyAttacksPlayerOnSight = config.getBoolean("enderminyAttacksPlayerOnSight", sectionEnderminy.name, enderminyAttacksPlayerOnSight,
         "When true an Enderminy will attack a player if it looks at them, otherwise they are neutral mobs.");
     enderminyAttacksCreepers = config.getBoolean("enderminyAttacksCreepers", sectionEnderminy.name, enderminyAttacksCreepers,
@@ -169,7 +179,7 @@ public final class Config {
     concussionCreeperExplosionRange = config.get(sectionConCreeper.name, "concussionCreeperExplosionRange", concussionCreeperExplosionRange,
         "The range of the 'teleport explosion'").getInt(concussionCreeperExplosionRange);
 
-    fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");    
+    fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
         fallenKnightBaseDamage);
     fallenKnightHealth = config.get(sectionFallenKnight.name, "fallenKnightHealth", fallenKnightHealth, "Health of a knight").getDouble(
@@ -225,20 +235,43 @@ public final class Config {
         "The chance a mount's armor will be upgraded").getDouble(fallenMountChanceArmorUpgrade);
     fallenMountChanceArmorUpgradeHard = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmorUpgradeHard", fallenMountChanceArmorUpgradeHard,
         "The chance a mount's armor will be upgraded when difficulty is hard").getDouble(fallenMountChanceArmorUpgradeHard);
-    
-    witherWitchEnabled= config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
+
+    witherWitchEnabled = config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
     witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth,
         "Base attack damage of the mount").getDouble(witherWitchHealth);
     witherWitchMinCats = config.get(sectionWitherWitch.name, "witherWitchMinCats", witherWitchMinCats,
         "The minimum number of cats spawned with a Wither Witch").getInt(witherWitchMinCats);
     witherWitchMaxCats = config.get(sectionWitherWitch.name, "witherWitchMaxCats", witherWitchMaxCats,
         "The maximum number of cats spawned with a Wither Witch").getInt(witherWitchMaxCats);
-    
+
     witherCatEnabled = config.getBoolean("witherCatEnabled", sectionWitherCat.name, witherCatEnabled, "If false Wither Cats will be disabled");
     witherCatHealth = config.get(sectionWitherCat.name, "witherCatHealth", witherCatHealth,
         "Base health of the wither cat").getDouble(witherCatHealth);
-    witherCatAttackDamage= config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage,
+    witherCatAttackDamage = config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage,
         "Base attack damage of the wither cat").getDouble(witherCatAttackDamage);
+
+    enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
+        "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
+        enchantmentWitherArrowWeight);
+    enchantmentWitherArrowDuration = config.get(sectionEnchants.name, "enchantmentWitherArrowDuration", enchantmentWitherArrowDuration,
+        "Duration of the wither effect in ticks").getInt(
+        enchantmentWitherArrowDuration);
+    enchantmentWitherArrowMinEnchantability = config.get(sectionEnchants.name, "enchantmentWitherArrowMinEnchantability",
+        enchantmentWitherArrowMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherArrowMinEnchantability);
+    enchantmentWitherArrowMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherArrowMaxEnchantability",
+        enchantmentWitherArrowMaxEnchantability, "The maximum required level").getInt(enchantmentWitherArrowMaxEnchantability);
+
+    enchantmentWitherWeaponWeight = config.get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponWeight,
+        "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
+        enchantmentWitherWeaponWeight);
+    enchantmentWitherWeaponDuration = config.get(sectionEnchants.name, "enchantmentWitherWeaponDuration", enchantmentWitherWeaponDuration,
+        "Duration of the wither effect in ticks").getInt(
+        enchantmentWitherWeaponDuration);
+    enchantmentWitherWeaponMinEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMinEnchantability",
+        enchantmentWitherWeaponMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherWeaponMinEnchantability);
+    enchantmentWitherWeaponMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMaxEnchantability",
+        enchantmentWitherWeaponMaxEnchantability, "The maximum required level").getInt(enchantmentWitherWeaponMaxEnchantability);
+
   }
 
   private Config() {

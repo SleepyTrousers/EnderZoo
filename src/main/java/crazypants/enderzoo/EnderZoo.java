@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
@@ -69,6 +70,8 @@ public class EnderZoo {
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
     MobSpawns.registerSpawns();
+    //Register enchantments
+    Enchantments.getInstance();
   }
 
 }

@@ -23,3 +23,7 @@ entity.enderzoo.ConcussionCreeper.desc.3=When it explodes.
 entity.enderzoo.FallenKnight.desc.1=Ranged armored zombie
 entity.enderzoo.WitherWitch.desc.1=Throws wither potions
 
+//Enchants
+enchantment.enderzoo.witherArrow=Withering 
+enchantment.enderzoo.witherWeapon=Decay
+
