@@ -1,9 +1,25 @@
-﻿//***  Ender Zoo *****//
+//***  Ender Zoo *****//
 
 item.itemSpawnEggEnderZoo.name=Erschaffe
+item.witheringDust.name=Verfallener Staub
+item.itemPotionEZ.wither.name=Trank des Verfalls
 
 //Mobs
 entity.enderzoo.Enderminy.name=Enderminy
 entity.enderzoo.ConcussionCreeper.name=Erschütterungscreeper
 entity.enderzoo.FallenKnight.name=Gefallener Ritter
 entity.enderzoo.FallenMount.name=Gefallenes Ross
+entity.enderzoo.WitherWitch.name=Witherhexe
+entity.enderzoo.WitherCat.name=Witherkatze
+
+//Waila
+entity.enderzoo.Enderminy.desc.1=Neutrales Wesen,
+entity.enderzoo.Enderminy.desc.2=attackiert Creeper
+
+entity.enderzoo.ConcussionCreeper.desc.1=Zerstört keine Blöcke.
+entity.enderzoo.ConcussionCreeper.desc.2=Teleportiert nahe Gegner,
+entity.enderzoo.ConcussionCreeper.desc.3=wenn er explodiert.
+
+entity.enderzoo.FallenKnight.desc.1=Mit Fernwaffen ausgestatteter Zombie
+entity.enderzoo.WitherWitch.desc.1=Wirft mit Withertränken
+
