@@ -7,6 +7,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import crazypants.enderzoo.charge.EntityPrimedCharge;
+import crazypants.enderzoo.charge.RenderPrimedCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityConcussionCreeper;
 import crazypants.enderzoo.entity.EntityEnderminy;
@@ -20,8 +22,6 @@ import crazypants.enderzoo.entity.render.RenderFallenKnight;
 import crazypants.enderzoo.entity.render.RenderFallenMount;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
-import crazypants.enderzoo.potion.EntityPotionEZ_WIP;
-import crazypants.enderzoo.potion.RenderPotionEntity_WIP;
 
 
 public class ClientProxy extends CommonProxy {
@@ -57,9 +57,11 @@ public class ClientProxy extends CommonProxy {
     if(Config.witherCatEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherCat.class, new RenderWitherCat());
     }
+    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
     //RenderingRegistry.registerEntityRenderingHandler(EntityPotionEZ_WIP.class, new RenderPotionEntity_WIP());
   }
   
+  @Override
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
     ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, true));
     Minecraft.getMinecraft().thePlayer.timeInPortal = 1;

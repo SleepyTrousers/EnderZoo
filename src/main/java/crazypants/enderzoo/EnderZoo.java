@@ -3,6 +3,11 @@ package crazypants.enderzoo;
 import static crazypants.enderzoo.EnderZoo.MODID;
 import static crazypants.enderzoo.EnderZoo.MOD_NAME;
 import static crazypants.enderzoo.EnderZoo.VERSION;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -12,9 +17,12 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import crazypants.enderzoo.charge.BlockConfusingCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
+import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import crazypants.enderzoo.spawn.MobSpawns;
@@ -34,6 +42,8 @@ public class EnderZoo {
 
   public static ItemSpawnEgg itemSpawnEgg;
   public static ItemWitheringDust itemWitheringDust;
+  public static ItemConfusingDust itemConfusingDust;
+  public static BlockConfusingCharge blockConfusingCharge;
   
 
   @EventHandler
@@ -46,6 +56,9 @@ public class EnderZoo {
     }    
     itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
+    itemConfusingDust = ItemConfusingDust.create();
+
+    blockConfusingCharge = BlockConfusingCharge.create();
 
     //DebugUtil.instance.setEnabled(true);          
           
@@ -73,6 +86,16 @@ public class EnderZoo {
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
     MobSpawns.registerSpawns();
+    addRecipes();
+  }
+
+  private void addRecipes() {
+    if(Config.confusingChargeEnabled) {
+      OreDictionary.registerOre("sand", new ItemStack(Blocks.sand, 1, OreDictionary.WILDCARD_VALUE));
+      ItemStack cc = new ItemStack(blockConfusingCharge);
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.gunpowder));
+    }
+
   }
 
 }

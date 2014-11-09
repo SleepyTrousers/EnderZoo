@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
@@ -27,23 +28,37 @@ public class EntityUtil {
 
   public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {
     //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied
-    float occupiedDiffcultyMultiplier = world.func_147462_b(x,y,z);
+    float occupiedDiffcultyMultiplier = world.func_147462_b(x, y, z);
     occupiedDiffcultyMultiplier /= 1.5f; // normalize
     return occupiedDiffcultyMultiplier;
   }
-  
+
   public static String getDisplayNameForEntity(String mobName) {
     return StatCollector.translateToLocal("entity." + mobName + ".name");
   }
 
-  public static Vec3 getEntityPosition(Entity entity) {    
+  public static Vec3 getEntityPosition(Entity entity) {
     return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
   }
-  
-  public static Point3i getEntityPositionI(Entity entity) {    
-    return new Point3i((int)entity.posX,(int)entity.posY,(int)entity.posZ);
+
+  public static AxisAlignedBB getBoundsAround(Entity entity, double range) {
+    return getBoundsAround(entity.posX, entity.posY, entity.posZ, range);
   }
-  
+
+  public static AxisAlignedBB getBoundsAround(Vec3 pos, double range) {
+    return getBoundsAround(pos.xCoord, pos.yCoord, pos.zCoord, range);
+  }
+
+  public static AxisAlignedBB getBoundsAround(double x, double y, double z, double range) {
+    return AxisAlignedBB.getBoundingBox(
+        x - range, y - range, z - range,
+        x + range, y + range, z + range);
+  }
+
+  public static Point3i getEntityPositionI(Entity entity) {
+    return new Point3i((int) entity.posX, (int) entity.posY, (int) entity.posZ);
+  }
+
   public static void cancelCurrentTasks(EntityLiving ent) {
     Iterator iterator = ent.tasks.taskEntries.iterator();
 

@@ -2,7 +2,8 @@
 
 item.itemSpawnEggEnderZoo.name=Spawn
 item.witheringDust.name=Withering Dust
-item.itemPotionEZ.wither.name=Potion of Withering
+item.confusingDust.name=Confusing Powder
+
 
 //Mobs
 entity.enderzoo.Enderminy.name=Enderminy
@@ -26,4 +27,7 @@ entity.enderzoo.WitherWitch.desc.1=Throws wither potions
 //Enchants
 enchantment.enderzoo.witherArrow=Withering 
 enchantment.enderzoo.witherWeapon=Decay
+
+//Blocks
+tile.blockConfusingCharge.name=Concussion Charge
 

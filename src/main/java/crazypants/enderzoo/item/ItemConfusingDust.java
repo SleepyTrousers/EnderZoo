@@ -11,36 +11,36 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.Log;
 
-public class ItemWitheringDust extends Item {
+public class ItemConfusingDust extends Item {
 
-  private static final String NAME = "witheringDust";
+  private static final String NAME = "confusingDust";
 
-  public static ItemWitheringDust create() {
-    ItemWitheringDust res = new ItemWitheringDust();
+  public static ItemConfusingDust create() {
+    ItemConfusingDust res = new ItemConfusingDust();
     res.init();
     return res;
   }
 
-  private ItemWitheringDust() {
+  private ItemConfusingDust() {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    setTextureName("enderzoo:itemWitheringDust");
+    setTextureName("enderzoo:itemConfusingDust");
     setHasSubtypes(false);
   }
-  
+
   private void init() {
-    GameRegistry.registerItem(this, NAME);    
+    GameRegistry.registerItem(this, NAME);
     try {
-      HashMap myPotionRequirements = (HashMap)ReflectionHelper.getPrivateValue(PotionHelper.class, null, "potionRequirements", "field_77927_l");      
-      myPotionRequirements.put(Integer.valueOf(Potion.wither.getId()), "0 & 1 & !2 &  3 & 0+6");
+      HashMap myPotionRequirements = (HashMap) ReflectionHelper.getPrivateValue(PotionHelper.class, null, "potionRequirements", "field_77927_l");
+      myPotionRequirements.put(Integer.valueOf(Potion.confusion.getId()), "0 & 1 & 2 & !3 & 0+6");
     } catch (Exception e) {
       Log.error("ItemWitheringDust: Could not register wither potion recipe " + e);
-    }    
+    }
   }
-  
+
   @Override
   public String getPotionEffect(ItemStack p_150896_1_) {
-    return "+0+1-2+3&4-4+13";
+    return "+0+1+2-3&4-4+13";
   }
-  
+
 }

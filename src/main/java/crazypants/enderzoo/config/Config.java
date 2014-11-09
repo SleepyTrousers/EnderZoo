@@ -114,6 +114,11 @@ public final class Config {
   public static int enchantmentWitherWeaponMinEnchantability = 20;
   public static int enchantmentWitherWeaponMaxEnchantability = 50;
 
+  public static final Section sectionCharges = new Section("Charges", "charges");
+  public static boolean confusingChargeEnabled = true;
+  public static double confusingChargeRange = 6;
+  public static int confusingChargeEffectDuration = 300;
+
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -271,6 +276,17 @@ public final class Config {
         enchantmentWitherWeaponMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherWeaponMinEnchantability);
     enchantmentWitherWeaponMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMaxEnchantability",
         enchantmentWitherWeaponMaxEnchantability, "The maximum required level").getInt(enchantmentWitherWeaponMaxEnchantability);
+    
+    confusingChargeEnabled = config.getBoolean("confusingChargeEnabled", sectionCharges.name, confusingChargeEnabled,
+        "If false Confusing Charges will be disabled");
+    confusingChargeRange = config.get(sectionCharges.name, "confusingChargeRange", confusingChargeRange,
+        "The range of teh confusion charges effect").getDouble(
+        confusingChargeRange);
+    confusingChargeEffectDuration = config.get(sectionCharges.name, "confusingChargeEffectDuration", confusingChargeEffectDuration,
+        "Numer of ticks the confusion effect active. Scales with distance from the expolosion").getInt(
+        confusingChargeEffectDuration);
+
+
 
   }
 
