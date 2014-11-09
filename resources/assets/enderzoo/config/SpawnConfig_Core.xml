@@ -49,6 +49,11 @@ same id and 0 biomeTypes.
     <biomeType name="BASE_LAND_TYPES" />
   </entry>
   
+  <entry id="ConcussionCreeperExcludes" mobName="enderzoo.ConcussionCreeper" rate="80" remove="true">   
+    <biomeType name="NETHER" />
+    <biomeType name="MUSHROOM" />
+  </entry>
+  
   <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="60">   
     <biomeType name="FOREST" />
     <biomeType name="SWAMP" />

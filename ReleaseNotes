@@ -1,6 +1,8 @@
 -------------------------------------------
 Version 1.0.3 
 -------------------------------------------
+Changes
+- #7 Removed Concussion Creepers spawning on Mushroom Island and Nether (occurred with BoP)
 - #9 Update zh_CN.lang (Mrkwtkr)
 - #10 Update de_DE.lang (Vexatos)
 
