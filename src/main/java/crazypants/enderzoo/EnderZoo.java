@@ -49,6 +49,9 @@ public class EnderZoo {
 
     //DebugUtil.instance.setEnabled(true);          
           
+    //Register enchantments
+    Enchantments.getInstance();
+
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
   }
 
@@ -70,8 +73,6 @@ public class EnderZoo {
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
     MobSpawns.registerSpawns();
-    //Register enchantments
-    Enchantments.getInstance();
   }
 
 }
