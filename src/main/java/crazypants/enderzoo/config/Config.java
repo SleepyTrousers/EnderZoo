@@ -123,6 +123,8 @@ public final class Config {
   public static double enderChargeRange = 6;
   public static int enderChargeMaxTeleportRange = 64;
 
+  public static boolean concussionChargeEnabled = true;
+
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -298,7 +300,8 @@ public final class Config {
         "The max range effected entities will be teleported. Distance is randomised").getInt(
         enderChargeMaxTeleportRange);
 
-
+    concussionChargeEnabled = config.getBoolean("concussionChargeEnabled", sectionCharges.name, concussionChargeEnabled,
+        "If false Concussion Charges will be disabled");
 
   }
 

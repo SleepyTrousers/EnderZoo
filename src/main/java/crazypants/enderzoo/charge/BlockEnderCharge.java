@@ -33,9 +33,17 @@ public class BlockEnderCharge extends BlockConfusingCharge {
 
   @Override
   public void explode(EntityPrimedCharge entity) {
-
     PacketHandler.sendToAllAround(new PacketExplodeEffect(entity, this), entity);
+    doEntityTeleport(entity);
+  }
 
+  @Override
+  public void explodeEffect(World world, double x, double y, double z) {
+    world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
+    doTeleportEffect(world, x, y, z);
+  }
+
+  public static void doEntityTeleport(EntityPrimedCharge entity) {
     World world = entity.worldObj;
     world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 1F,
         1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
@@ -52,10 +60,8 @@ public class BlockEnderCharge extends BlockConfusingCharge {
     }
   }
 
-  @Override
-  public void explodeEffect(World world, double x, double y, double z) {
-    world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
 
+  public static void doTeleportEffect(World world, double x, double y, double z) {
     Random random = world.rand;
     for (int i = 0; i < 100; ++i) {
       double d = random.nextDouble() * 2D;
@@ -66,7 +72,6 @@ public class BlockEnderCharge extends BlockConfusingCharge {
       EntityPortalFX entityfx = new EntityPortalFX(world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
           motionZ);
       Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
-
     }
   }
 

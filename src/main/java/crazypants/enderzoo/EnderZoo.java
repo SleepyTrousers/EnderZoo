@@ -18,6 +18,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import crazypants.enderzoo.charge.BlockConcussionCharge;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
 import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
@@ -25,6 +26,7 @@ import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
+import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import crazypants.enderzoo.spawn.MobSpawns;
@@ -46,17 +48,22 @@ public class EnderZoo {
   public static ItemWitheringDust itemWitheringDust;
   public static ItemConfusingDust itemConfusingDust;
   public static ItemEnderFragment itemEnderFragment;
+  public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
+  
+  
   public static BlockConfusingCharge blockConfusingCharge;
   public static BlockEnderCharge blockEnderCharge;
+  public static BlockConcussionCharge blockConcussionCharge;
   
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
-       
+
+    itemForCreativeMenuIcon = ItemForCreativeMenuIcon.create();
+
     Config.load(event);
     for (MobInfo mob : MobInfo.values()) {
       registerEntity(mob);
-
     }    
     itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
@@ -65,6 +72,7 @@ public class EnderZoo {
 
     blockConfusingCharge = BlockConfusingCharge.create();
     blockEnderCharge = BlockEnderCharge.create();
+    blockConcussionCharge = BlockConcussionCharge.create();
 
     //DebugUtil.instance.setEnabled(true);          
           
@@ -105,6 +113,11 @@ public class EnderZoo {
       OreDictionary.registerOre("sand", new ItemStack(Blocks.sand, 1, OreDictionary.WILDCARD_VALUE));
       ItemStack cc = new ItemStack(blockEnderCharge);
       GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
+    }
+    if(Config.concussionChargeEnabled) {
+      OreDictionary.registerOre("sand", new ItemStack(Blocks.sand, 1, OreDictionary.WILDCARD_VALUE));
+      ItemStack cc = new ItemStack(blockConcussionCharge);
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
     }
     GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
 

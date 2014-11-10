@@ -28,7 +28,7 @@ public class EnderZooTab extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    return EnderZoo.itemSpawnEgg;
+    return EnderZoo.itemForCreativeMenuIcon;
   }
 
 }

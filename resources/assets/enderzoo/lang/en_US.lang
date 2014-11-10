@@ -33,4 +33,5 @@ enchantment.enderzoo.witherWeapon=Decay
 //Blocks
 tile.blockConfusingCharge.name=Confusing Charge
 tile.blockEnderCharge.name=Ender Charge
+tile.blockConcussionCharge.name=Concussion Charge
 
