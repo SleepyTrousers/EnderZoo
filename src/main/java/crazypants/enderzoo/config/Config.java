@@ -119,6 +119,10 @@ public final class Config {
   public static double confusingChargeRange = 6;
   public static int confusingChargeEffectDuration = 300;
 
+  public static boolean enderChargeEnabled = true;
+  public static double enderChargeRange = 6;
+  public static int enderChargeMaxTeleportRange = 64;
+
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -280,11 +284,19 @@ public final class Config {
     confusingChargeEnabled = config.getBoolean("confusingChargeEnabled", sectionCharges.name, confusingChargeEnabled,
         "If false Confusing Charges will be disabled");
     confusingChargeRange = config.get(sectionCharges.name, "confusingChargeRange", confusingChargeRange,
-        "The range of teh confusion charges effect").getDouble(
+        "The range of the confusion charges effect").getDouble(
         confusingChargeRange);
     confusingChargeEffectDuration = config.get(sectionCharges.name, "confusingChargeEffectDuration", confusingChargeEffectDuration,
         "Numer of ticks the confusion effect active. Scales with distance from the expolosion").getInt(
         confusingChargeEffectDuration);
+
+    enderChargeEnabled = config.getBoolean("enderChargeEnabled", sectionCharges.name, enderChargeEnabled,
+        "If false Ender Charges will be disabled");
+    enderChargeRange = config.get(sectionCharges.name, "enderChargeRange", enderChargeRange,
+        "The range of the ender charges effect").getDouble(enderChargeRange);
+    enderChargeMaxTeleportRange = config.get(sectionCharges.name, "enderChargeMaxTeleportRange", enderChargeMaxTeleportRange,
+        "The max range effected entities will be teleported. Distance is randomised").getInt(
+        enderChargeMaxTeleportRange);
 
 
 

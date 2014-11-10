@@ -19,10 +19,12 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
+import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemConfusingDust;
+import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import crazypants.enderzoo.spawn.MobSpawns;
@@ -43,7 +45,9 @@ public class EnderZoo {
   public static ItemSpawnEgg itemSpawnEgg;
   public static ItemWitheringDust itemWitheringDust;
   public static ItemConfusingDust itemConfusingDust;
+  public static ItemEnderFragment itemEnderFragment;
   public static BlockConfusingCharge blockConfusingCharge;
+  public static BlockEnderCharge blockEnderCharge;
   
 
   @EventHandler
@@ -57,8 +61,10 @@ public class EnderZoo {
     itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
+    itemEnderFragment = ItemEnderFragment.create();
 
     blockConfusingCharge = BlockConfusingCharge.create();
+    blockEnderCharge = BlockEnderCharge.create();
 
     //DebugUtil.instance.setEnabled(true);          
           
@@ -95,6 +101,12 @@ public class EnderZoo {
       ItemStack cc = new ItemStack(blockConfusingCharge);
       GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.gunpowder));
     }
+    if(Config.enderChargeEnabled) {
+      OreDictionary.registerOre("sand", new ItemStack(Blocks.sand, 1, OreDictionary.WILDCARD_VALUE));
+      ItemStack cc = new ItemStack(blockEnderCharge);
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
+    }
+    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
 
   }
 

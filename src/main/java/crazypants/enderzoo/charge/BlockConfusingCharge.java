@@ -52,14 +52,20 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     return res;
   }
 
-  protected BlockConfusingCharge() {
-    setCreativeTab(EnderZooTab.tabEnderZoo);
-    setBlockName(NAME);
+  private String name;
 
+  protected BlockConfusingCharge() {
+    this(NAME);
+  }
+
+  protected BlockConfusingCharge(String name) {
+    setCreativeTab(EnderZooTab.tabEnderZoo);
+    setBlockName(name);
+    this.name = name;
   }
 
   protected void init() {
-    GameRegistry.registerBlock(this, NAME);
+    GameRegistry.registerBlock(this, name);
     ChargeRegister.instance.registerCharge(this);
   }
 
@@ -141,9 +147,9 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   @Override
   public void registerBlockIcons(IIconRegister p_149651_1_) {
-    blockIcon = p_149651_1_.registerIcon("enderzoo:" + NAME + "_side");
-    topIcon = p_149651_1_.registerIcon("enderzoo:" + NAME + "_top");
-    bottomIcon = p_149651_1_.registerIcon("enderzoo:" + NAME + "_bottom");
+    blockIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_side");
+    topIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_top");
+    bottomIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_bottom");
   }
 
   @Override

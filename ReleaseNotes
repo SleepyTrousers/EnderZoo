@@ -2,9 +2,12 @@
 Version 1.0.3 
 -------------------------------------------
 Changes
-- Concussion Creepers now have a chance to drop Confusing Powder
-- Nausea potions can be brewed using Confusing Powder
-- Added Concussion Charges. TNT like block that causes confusion. Crafted using Confusing Powder
+- Added Confusing Powder, dropped by Concussion Creepers
+- Added Ender Fragment, dropped by Concussion Creepers and Enderminies
+  - 5 ender fragments can be crafted into an Ender Pearl
+- Added Nausea potions can be brewed using Confusing Powder
+- Added Confusing Charges. TNT like block that causes confusion. Crafted using Confusing Powder
+- Added Ender Charges.TNT like block that randomly teleports surrounding entities. Crafted using Ender Fragments
 - #7 Removed Concussion Creepers spawning on Mushroom Island and Nether (occurred with BoP)
 - #9 Update zh_CN.lang (Mrkwtkr)
 - #10 Update de_DE.lang (Vexatos)

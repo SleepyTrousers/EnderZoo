@@ -86,7 +86,10 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
 
   @Override
   protected Item getDropItem() {
-    if(rand.nextInt(2) == 1) {
+    int num = rand.nextInt(3);
+    if(num == 0) {
+      return EnderZoo.itemEnderFragment;
+    } else if(num == 1) {
       return EnderZoo.itemConfusingDust;
     } else {
       return Items.gunpowder;

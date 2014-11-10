@@ -1,8 +1,10 @@
 //***  Ender Zoo *****//
 
+//Items
 item.itemSpawnEggEnderZoo.name=Spawn
 item.witheringDust.name=Withering Dust
 item.confusingDust.name=Confusing Powder
+item.enderFragment.name=Ender Fragment
 
 
 //Mobs
@@ -29,5 +31,6 @@ enchantment.enderzoo.witherArrow=Withering
 enchantment.enderzoo.witherWeapon=Decay
 
 //Blocks
-tile.blockConfusingCharge.name=Concussion Charge
+tile.blockConfusingCharge.name=Confusing Charge
+tile.blockEnderCharge.name=Ender Charge
 
