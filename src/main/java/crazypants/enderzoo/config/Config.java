@@ -101,7 +101,8 @@ public final class Config {
   public static double witherCatHealth = 12;
   public static double witherCatAttackDamage = 3;
   public static double witherCatAngryHealth = 30;
-  public static double witherCatAngryAttackDamage = 12;
+  public static double witherCatAngryAttackDamage = 9;
+  public static double witherCatAngryAttackDamageHardModifier = 2;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowWeight = 2;
@@ -124,6 +125,7 @@ public final class Config {
   public static int enderChargeMaxTeleportRange = 64;
 
   public static boolean concussionChargeEnabled = true;
+
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -260,6 +262,9 @@ public final class Config {
         "Base health of the wither cat").getDouble(witherCatHealth);
     witherCatAttackDamage = config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage,
         "Base attack damage of the wither cat").getDouble(witherCatAttackDamage);
+    witherCatAngryAttackDamageHardModifier = config.get(sectionWitherCat.name, "witherCatAngryAttackDamageHardModifier",
+        witherCatAngryAttackDamageHardModifier,
+        "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
 
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(

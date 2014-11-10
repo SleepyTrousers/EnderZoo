@@ -53,6 +53,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
 
   private EntityWitherWitch owner;
   private EntityAIFollowOwner followTask;
+  private boolean firstUpdate = true;
 
   public EntityWitherCat(World world) {
     super(world);
@@ -251,7 +252,8 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     if(growthRatio == 0) {
       return;
     }
-    double attackDif = Config.witherCatAngryAttackDamage - Config.witherCatAttackDamage;
+    double damageInc = EntityUtil.isHardDifficulty(worldObj) ? Config.witherCatAngryAttackDamageHardModifier : 0;
+    double attackDif = (damageInc + Config.witherCatAngryAttackDamage) - Config.witherCatAttackDamage;
     double toAdd = attackDif * growthRatio;
     AttributeModifier mod = new AttributeModifier(ATTACK_BOOST_MOD_UID, "Transformed Attack Modifier", toAdd, 0);
     att.applyModifier(mod);
@@ -288,6 +290,25 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
         fx.motionY *= 0.025f;
       }
     }
+  }
+
+  @Override
+  public void onEntityUpdate() {
+    super.onEntityUpdate();
+    firstUpdate = false;
+  }
+
+  @Override
+  public void setPosition(double x, double y, double z) {
+    posX = x;
+    posY = y;
+    posZ = z;
+    double hw = width / 2.0F;
+    double hd = hw * 2.75;
+    float f1 = height;
+    boundingBox.setBounds(
+        x - hw, y - yOffset + ySize, z - hd,
+        x + hw, y - yOffset + ySize + f1, z + hd);
   }
 
   @Override

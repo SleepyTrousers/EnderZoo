@@ -1,20 +1,19 @@
 package crazypants.enderzoo.entity.render;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
-import crazypants.enderzoo.entity.EntityEnderminy;
-import crazypants.enderzoo.entity.EntityWitherCat;
-import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.model.ModelOcelot;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderOcelot;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+
+import crazypants.enderzoo.entity.EntityWitherCat;
+import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 
 public class RenderWitherCat extends RenderLiving {
 
@@ -32,13 +31,57 @@ public class RenderWitherCat extends RenderLiving {
   }
 
   @Override
-  public void doRender(EntityLiving entity, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    super.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+  public void doRender(EntityLiving entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+    super.doRender(entity, x, y, z, p_76986_8_, p_76986_9_);
     GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
+
+    boolean renderBounds = false;
+    if(renderBounds) {
+      AxisAlignedBB bb = entity.boundingBox;
+      if(bb != null) {
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+
+        GL11.glPushMatrix();
+
+        GL11.glTranslatef((float) x, (float) y, (float) z);
+        GL11.glPushMatrix();
+        GL11.glRotatef(-entity.renderYawOffset, 0, 1, 0);
+
+        Tessellator tes = Tessellator.instance;
+        tes.startDrawingQuads();
+        tes.setColorOpaque_F(1, 1, 1);
+
+        double width = (bb.maxX - bb.minX) / 2;
+        double height = bb.maxY - bb.minY;
+        double depth = (bb.maxZ - bb.minZ) / 2;
+
+        tes.addVertex(-width, 0, 0);
+        tes.addVertex(width, 0, 0);
+        tes.addVertex(width, height, 0);
+        tes.addVertex(-width, height, 0);
+
+        tes.addVertex(0, 0, -depth);
+        tes.addVertex(0, 0, depth);
+        tes.addVertex(0, height, depth);
+        tes.addVertex(0, height, -depth);
+        tes.draw();
+
+        GL11.glPopMatrix();
+        GL11.glPopMatrix();
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_CULL_FACE);
+      }
+    }
   }
 
   @Override
   protected void preRenderCallback(EntityLivingBase entity, float partialTick) {
+
     EntityWitherCat cat = (EntityWitherCat) entity;
     float scale = cat.getScale();
     if(scale > 1) {
@@ -49,6 +92,7 @@ public class RenderWitherCat extends RenderLiving {
       float widthFactor = 1 - (cat.getAngryScale() - scale);
       GL11.glScalef(scale + (0.25f * widthFactor), scale, scale - (0.1f * widthFactor));
     }
+
   }
 
   @Override
@@ -74,7 +118,7 @@ public class RenderWitherCat extends RenderLiving {
       char c0 = 61680;
       int j = c0 % 65536;
       int k = c0 / 65536;
-      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
+      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
       GL11.glEnable(GL11.GL_LIGHTING);
 
       return 1;

@@ -9,9 +9,14 @@ Changes
 - Added Confusing Charges. TNT like block that causes confusion. Crafted using Confusing Powder
 - Added Ender Charges.TNT like block that randomly teleports surrounding entities. Crafted using Ender Fragments
 - Added Concussion Charges. Combined effects of Ender and Confusing Charges
+- Lower default spawn rate
+- Small nurf to Wither Cats
 - #7 Removed Concussion Creepers spawning on Mushroom Island and Nether (occurred with BoP)
 - #9 Update zh_CN.lang (Mrkwtkr)
 - #10 Update de_DE.lang (Vexatos)
+
+Bugs
+- #11 Hit box for the wither cat is too small
 
 
 -------------------------------------------

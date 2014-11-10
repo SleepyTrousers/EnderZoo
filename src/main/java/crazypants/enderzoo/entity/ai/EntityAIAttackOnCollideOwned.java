@@ -59,7 +59,7 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
 
   private boolean isTooFarFromOwner() {
     if(ownable.getOwner() == null) {
-      return true;
+      return false;
     }
     double distance = getDistanceSqFromOwner();
     double maxRange = ownable.asEntity().getNavigator().getPathSearchRange();

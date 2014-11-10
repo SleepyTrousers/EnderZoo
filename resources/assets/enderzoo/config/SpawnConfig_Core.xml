@@ -44,7 +44,7 @@ same id and 0 biomeTypes.
  -->
 <SpawnConfig>
 
-  <entry id="ConcussionCreeper" mobName="enderzoo.ConcussionCreeper" creatureType="monster" rate="80" minGroupSize="1" maxGroupSize="3"
+  <entry id="ConcussionCreeper" mobName="enderzoo.ConcussionCreeper" creatureType="monster" rate="40" minGroupSize="1" maxGroupSize="3"
     remove="false">   
     <biomeType name="BASE_LAND_TYPES" />
   </entry>
@@ -54,13 +54,13 @@ same id and 0 biomeTypes.
     <biomeType name="MUSHROOM" />
   </entry>
   
-  <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="60">   
+  <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="30">   
     <biomeType name="FOREST" />
     <biomeType name="SWAMP" />
     <biomeType name="JUNGLE" />
   </entry>
   
-  <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="50" minGroupSize="1" maxGroupSize="4">   
+  <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="30" minGroupSize="1" maxGroupSize="4">   
     <biomeType name="PLAINS" />
   </entry>
   
