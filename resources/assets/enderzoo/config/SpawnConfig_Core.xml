@@ -60,8 +60,16 @@ same id and 0 biomeTypes.
     <biomeType name="JUNGLE" />
   </entry>
   
+  <entry id="EnderMinyExcludes" mobName="enderzoo.Enderminy" rate="80" remove="true">   
+    <biomeType name="NETHER" />
+  </entry>
+  
   <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="30" minGroupSize="1" maxGroupSize="4">   
     <biomeType name="PLAINS" />
+  </entry>
+  
+  <entry id="FallenKnightExcludes" mobName="enderzoo.FallenKnight" rate="80" remove="true">   
+    <biomeType name="NETHER" />
   </entry>
   
   <entry id="WitherWitch" mobName="enderzoo.WitherWitch" rate="10" minGroupSize="1" maxGroupSize="1">   
@@ -70,6 +78,10 @@ same id and 0 biomeTypes.
     <biomeType name="PLAINS" />
     <biomeType name="HILLS" />
     <biomeType name="MOUNTAIN" />    
+  </entry>
+  
+  <entry id="WitherWitchExcludes" mobName="enderzoo.WitherWitch" rate="80" remove="true">   
+    <biomeType name="NETHER" />
   </entry>
 
 </SpawnConfig>
