@@ -1,6 +1,5 @@
 package crazypants.enderzoo.entity.ai;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,17 +41,17 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   
   public EntityAIMountedArrowAttack(IRangedAttackMob host, double moveSpeed, double mountedEntityMoveSpeed, int minAttackTime, int maxAttackTime,
       float attackRange, boolean useRunAwayTactic) {
-    this.timeUntilNextAttack = -1;
-    this.rangedAttackEntityHost = host;
-    this.entityHost = (EntityLiving) host;
-    this.entityMoveSpeed = moveSpeed;
+    timeUntilNextAttack = -1;
+    rangedAttackEntityHost = host;
+    entityHost = (EntityLiving) host;
+    entityMoveSpeed = moveSpeed;
     this.mountedEntityMoveSpeed = mountedEntityMoveSpeed;
-    this.minRangedAttackTime = minAttackTime;
-    this.maxRangedAttackTime = maxAttackTime;
+    minRangedAttackTime = minAttackTime;
+    maxRangedAttackTime = maxAttackTime;
     this.attackRange = attackRange;
-    this.attackRangeSq = attackRange * attackRange;
+    attackRangeSq = attackRange * attackRange;
     this.useRunAwayTactic = useRunAwayTactic;
-    this.setMutexBits(3);
+    setMutexBits(3);
   }
 
   @Override
@@ -66,10 +65,12 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     }
   }
 
+  @Override
   public boolean continueExecuting() {
     return shouldExecute() || !getNavigator().noPath();
   }
 
+  @Override
   public void resetTask() {
     attackTarget = null;
     timeTargetVisible = 0;
@@ -81,6 +82,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   /**
    * Updates the task
    */
+  @Override
   public void updateTask() {
     double distToTargetSq = entityHost.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
     boolean canSeeTarget = entityHost.getEntitySenses().canSee(attackTarget);
@@ -113,7 +115,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     }
     
 
-    entityHost.getLookHelper().setLookPositionWithEntity(this.attackTarget, 30.0F, 30.0F);
+    entityHost.getLookHelper().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 
     if(--timeUntilNextAttack == 0) {
       if(distToTargetSq > attackRangeSq || !canSeeTarget) {
@@ -123,7 +125,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       rangeRatio = MathHelper.clamp_float(rangeRatio, 0.1f, 1);
       rangedAttackEntityHost.attackEntityWithRangedAttack(attackTarget, rangeRatio);
       timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
-    } else if(this.timeUntilNextAttack < 0) {
+    } else if(timeUntilNextAttack < 0) {
       float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
       timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
     }

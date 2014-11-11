@@ -174,9 +174,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     if(mount != null) {
       setCanPickUpLoot(false);
       setCanBreakDoors(false);
-      worldObj.spawnEntityInWorld(mount);      
+      worldObj.spawnEntityInWorld(mount);
       mountEntity(mount);
-    }    
+    }
   }
 
   private boolean isRanged() {
@@ -260,7 +260,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     case 4:
       return new ItemStack(Items.diamond_sword);
     }
-    return null;
+    return new ItemStack(Items.iron_sword);
   }
 
   @Override

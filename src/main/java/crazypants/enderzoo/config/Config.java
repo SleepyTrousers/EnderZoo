@@ -203,8 +203,8 @@ public final class Config {
         "The speed at which a knight will charge its target").getDouble(fallenKnightChargeSpeed);
     fallenKnightRangedMinAttackPause = config.get(sectionFallenKnight.name, "fallenKnightRangedMinAttackPause", fallenKnightRangedMinAttackPause,
         "The min number of ticks between ranged attacks").getInt(fallenKnightRangedMinAttackPause);
-    fallenKnightRangedMaxAttackPause = config.get(sectionFallenKnight.name, "fallenKnightRangedMinAttackPause", fallenKnightRangedMinAttackPause,
-        "The max number of ticks between ranged attacks").getInt(fallenKnightRangedMinAttackPause);
+    fallenKnightRangedMaxAttackPause = config.get(sectionFallenKnight.name, "fallenKnightRangedMaxAttackPause", fallenKnightRangedMaxAttackPause,
+        "The max number of ticks between ranged attacks").getInt(fallenKnightRangedMaxAttackPause);
     fallenKnightRangedMaxRange = (float) config.get(sectionFallenKnight.name, "fallenKnightRangedMaxRange", fallenKnightRangedMaxRange,
         "The max attack range when using a bow").getDouble(fallenKnightRangedMaxRange);
     fallenKnightChancePerArmorPiece = (float) config.get(sectionFallenKnight.name, "fallenKnightChancePerArmorPiece", fallenKnightChancePerArmorPiece,

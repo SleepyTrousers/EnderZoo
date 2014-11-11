@@ -18,6 +18,7 @@ Changes
 
 Bugs
 - #11 Hit box for the wither cat is too small
+- Fixed firing rate of ranged Fallen Knights. Config option fallenKnightRangedMaxAttackPause was reading the min value
 
 
 -------------------------------------------
