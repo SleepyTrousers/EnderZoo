@@ -1,5 +1,7 @@
 package crazypants.enderzoo.charge;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 
@@ -28,6 +30,7 @@ public class BlockConcussionCharge extends BlockConfusingCharge {
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
     super.explodeEffect(world, x, y, z);
     BlockEnderCharge.doTeleportEffect(world, x, y, z);

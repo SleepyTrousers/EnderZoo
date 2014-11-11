@@ -11,7 +11,8 @@ Changes
 - Added Concussion Charges. Combined effects of Ender and Confusing Charges
 - Lower default spawn rate
 - Small nurf to Wither Cats
-- #7 Removed Concussion Creepers spawning on Mushroom Island and Nether (occurred with BoP)
+- Prevented all mobs spawning in the nether (occurred with BoP) 
+- #7 Removed Concussion Creepers spawning on Mushroom Island 
 - #9 Update zh_CN.lang (Mrkwtkr)
 - #10 Update de_DE.lang (Vexatos)
 
