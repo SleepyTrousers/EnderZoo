@@ -3,6 +3,8 @@ package crazypants.enderzoo.charge;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityPortalFX;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +40,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
     world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
     doTeleportEffect(world, x, y, z);
@@ -59,8 +62,8 @@ public class BlockEnderCharge extends BlockConfusingCharge {
       }
     }
   }
-
-
+  
+  @SideOnly(Side.CLIENT)
   public static void doTeleportEffect(World world, double x, double y, double z) {
     Random random = world.rand;
     for (int i = 0; i < 100; ++i) {
