@@ -95,6 +95,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   }
 
   @Override
+  @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
 
     List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, EntityUtil.getBoundsAround(x, y, z, Config.confusingChargeRange));
