@@ -104,6 +104,12 @@ public final class Config {
   public static double witherCatAngryAttackDamage = 9;
   public static double witherCatAngryAttackDamageHardModifier = 2;
 
+  public static final Section sectionDireWolf = new Section("Dire Wolf", "direWolf");
+  public static boolean direWolfEnabled = true;
+  public static double direWolfHealth = 25;
+  public static double direWolfAttackDamage = 9;
+  public static double direWolfHardAttackModifier = 2;
+
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowWeight = 2;
   public static int enchantmentWitherArrowDuration = 200;
@@ -265,6 +271,15 @@ public final class Config {
     witherCatAngryAttackDamageHardModifier = config.get(sectionWitherCat.name, "witherCatAngryAttackDamageHardModifier",
         witherCatAngryAttackDamageHardModifier,
         "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
+
+    direWolfEnabled = config.getBoolean("direWolfEnabled", sectionDireWolf.name, direWolfEnabled, "If false Dire Wolves will be disabled");
+    direWolfHealth = config.get(sectionDireWolf.name, "direWolfHealth", direWolfHealth,
+        "Base health of the Dire Wolf").getDouble(direWolfHealth);
+    direWolfAttackDamage = config.get(sectionDireWolf.name, "direWolfAttackDamage", direWolfAttackDamage,
+        "Base attack damage of the dire wolf").getDouble(direWolfAttackDamage);
+    direWolfHardAttackModifier = config.get(sectionDireWolf.name, "direWolfHardAttackModifier",
+        direWolfHardAttackModifier,
+        "The increase to damage when playing on hard").getDouble(direWolfHardAttackModifier);
 
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(

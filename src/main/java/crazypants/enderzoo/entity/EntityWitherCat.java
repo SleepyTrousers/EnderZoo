@@ -311,6 +311,22 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
         x + hw, y - yOffset + ySize + f1, z + hd);
   }
 
+  //TODO: New sounds
+  @Override
+  protected String getLivingSound() {
+    return "mob.cat.meow";
+  }
+
+  @Override
+  protected String getHurtSound() {
+    return "mob.cat.hitt";
+  }
+
+  @Override
+  protected String getDeathSound() {
+    return "mob.cat.hitt";
+  }
+
   @Override
   public boolean writeToNBTOptional(NBTTagCompound root) {
     if(getOwner() == null) {

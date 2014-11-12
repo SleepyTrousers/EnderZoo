@@ -11,12 +11,14 @@ import crazypants.enderzoo.charge.EntityPrimedCharge;
 import crazypants.enderzoo.charge.RenderPrimedCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityConcussionCreeper;
+import crazypants.enderzoo.entity.EntityDireWolf;
 import crazypants.enderzoo.entity.EntityEnderminy;
 import crazypants.enderzoo.entity.EntityFallenKnight;
 import crazypants.enderzoo.entity.EntityFallenMount;
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherWitch;
 import crazypants.enderzoo.entity.render.RenderConcussionCreeper;
+import crazypants.enderzoo.entity.render.RenderDirewolf;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
 import crazypants.enderzoo.entity.render.RenderFallenKnight;
 import crazypants.enderzoo.entity.render.RenderFallenMount;
@@ -56,6 +58,9 @@ public class ClientProxy extends CommonProxy {
     } 
     if(Config.witherCatEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherCat.class, new RenderWitherCat());
+    }
+    if(Config.direWolfEnabled) {
+      RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new RenderDirewolf());
     }
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
     //RenderingRegistry.registerEntityRenderingHandler(EntityPotionEZ_WIP.class, new RenderPotionEntity_WIP());

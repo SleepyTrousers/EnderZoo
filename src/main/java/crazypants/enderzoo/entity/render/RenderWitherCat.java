@@ -1,12 +1,10 @@
 package crazypants.enderzoo.entity.render;
 
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -34,50 +32,9 @@ public class RenderWitherCat extends RenderLiving {
   public void doRender(EntityLiving entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
     super.doRender(entity, x, y, z, p_76986_8_, p_76986_9_);
     GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
-
-    boolean renderBounds = false;
-    if(renderBounds) {
-      AxisAlignedBB bb = entity.boundingBox;
-      if(bb != null) {
-
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glDisable(GL11.GL_LIGHTING);
-        GL11.glDisable(GL11.GL_CULL_FACE);
-
-        GL11.glPushMatrix();
-
-        GL11.glTranslatef((float) x, (float) y, (float) z);
-        GL11.glPushMatrix();
-        GL11.glRotatef(-entity.renderYawOffset, 0, 1, 0);
-
-        Tessellator tes = Tessellator.instance;
-        tes.startDrawingQuads();
-        tes.setColorOpaque_F(1, 1, 1);
-
-        double width = (bb.maxX - bb.minX) / 2;
-        double height = bb.maxY - bb.minY;
-        double depth = (bb.maxZ - bb.minZ) / 2;
-
-        tes.addVertex(-width, 0, 0);
-        tes.addVertex(width, 0, 0);
-        tes.addVertex(width, height, 0);
-        tes.addVertex(-width, height, 0);
-
-        tes.addVertex(0, 0, -depth);
-        tes.addVertex(0, 0, depth);
-        tes.addVertex(0, height, depth);
-        tes.addVertex(0, height, -depth);
-        tes.draw();
-
-        GL11.glPopMatrix();
-        GL11.glPopMatrix();
-
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glEnable(GL11.GL_LIGHTING);
-        GL11.glEnable(GL11.GL_CULL_FACE);
-      }
-    }
+    RenderUtil.renderEntityBoundingBox(entity, x, y, z);
   }
+
 
   @Override
   protected void preRenderCallback(EntityLivingBase entity, float partialTick) {

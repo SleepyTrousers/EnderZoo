@@ -14,6 +14,7 @@ entity.enderzoo.FallenKnight.name=Fallen Knight
 entity.enderzoo.FallenMount.name=Fallen Steed
 entity.enderzoo.WitherWitch.name=Wither Witch
 entity.enderzoo.WitherCat.name=Wither Cat
+entity.enderzoo.DireWolf.name=Dire Wolf
 
 //Waila
 entity.enderzoo.Enderminy.desc.1=Neutral Mob,
