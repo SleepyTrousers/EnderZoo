@@ -35,6 +35,12 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   }
 
   @Override
+  protected void applyEntityAttributes() {
+    super.applyEntityAttributes();
+    MobInfo.CONCUSSION_CREEPER.applyAttributes(this);
+  }
+
+  @Override
   public void onUpdate() {
 
     if(isEntityAlive()) {

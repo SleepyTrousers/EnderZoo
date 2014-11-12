@@ -32,7 +32,7 @@ public class RenderWitherCat extends RenderLiving {
   public void doRender(EntityLiving entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
     super.doRender(entity, x, y, z, p_76986_8_, p_76986_9_);
     GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
-    RenderUtil.renderEntityBoundingBox(entity, x, y, z);
+    //    RenderUtil.renderEntityBoundingBox(entity, x, y, z);
   }
 
 

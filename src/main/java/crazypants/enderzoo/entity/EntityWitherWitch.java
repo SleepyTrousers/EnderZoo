@@ -83,8 +83,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.witherWitchHealth);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    MobInfo.WITHER_WITCH.applyAttributes(this);
   }
 
   @Override

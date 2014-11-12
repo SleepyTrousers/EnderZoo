@@ -53,8 +53,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
     getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Config.fallenKnightFollowRange);
-    getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Config.fallenKnightBaseDamage);
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenKnightHealth);
+    MobInfo.FALLEN_KNIGHT.applyAttributes(this);
   }
 
   @Override

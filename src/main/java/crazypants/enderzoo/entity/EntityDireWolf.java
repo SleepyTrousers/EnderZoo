@@ -5,7 +5,6 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import crazypants.enderzoo.config.Config;
 
 public class EntityDireWolf extends EntityMob {
 
@@ -35,23 +34,9 @@ public class EntityDireWolf extends EntityMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.direWolfHealth);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
-    getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Config.direWolfAttackDamage);
+    MobInfo.DIRE_WOLF.applyAttributes(this);
   }
-
-  //  @Override
-  //  public void setPosition(double x, double y, double z) {
-  //    posX = x;
-  //    posY = y;
-  //    posZ = z;
-  //    double hw = width / 2.0F;
-  //    double hd = hw * 2.75;
-  //    float f1 = height;
-  //    boundingBox.setBounds(
-  //        x - hw, y - yOffset + ySize, z - hd,
-  //        x + hw, y - yOffset + ySize + f1, z + hd);
-  //  }
 
   @Override
   protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_) {

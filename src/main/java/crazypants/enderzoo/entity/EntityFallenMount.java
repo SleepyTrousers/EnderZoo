@@ -55,7 +55,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
     getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(Config.fallenMountBaseAttackDamage);
+    MobInfo.FALLEN_MOUNT.applyAttributes(this);
   }
 
   @Override
@@ -196,6 +196,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     }
   }
 
+  @Override
   public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
     //Need to pretend we arn't being ridden else it will update as if a player was riding us    
     Entity prev = riddenByEntity;

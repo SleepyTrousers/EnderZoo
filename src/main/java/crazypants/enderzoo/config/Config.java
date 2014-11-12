@@ -60,6 +60,7 @@ public final class Config {
   public static int concussionCreeperMaxTeleportRange = 32;
   public static int concussionCreeperConfusionDuration = 100;
   public static int concussionCreeperExplosionRange = 5;
+  public static double concussionCreeperHealth = 20;
 
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
   public static boolean fallenKnightEnabled = true;
@@ -132,7 +133,6 @@ public final class Config {
 
   public static boolean concussionChargeEnabled = true;
 
-
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -197,6 +197,8 @@ public final class Config {
         "Sets the durtaion in ticks of the confusion effect applied on explosion").getInt(concussionCreeperConfusionDuration);
     concussionCreeperExplosionRange = config.get(sectionConCreeper.name, "concussionCreeperExplosionRange", concussionCreeperExplosionRange,
         "The range of the 'teleport explosion'").getInt(concussionCreeperExplosionRange);
+    concussionCreeperHealth = config.get(sectionConCreeper.name, "concussionCreeperHealth", concussionCreeperHealth,
+        "Health of Concussion Creeper. 40=Enderman health, 20=Zombie health").getDouble(concussionCreeperHealth);
 
     fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
