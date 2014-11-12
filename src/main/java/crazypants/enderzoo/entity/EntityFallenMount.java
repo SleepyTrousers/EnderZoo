@@ -36,7 +36,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   public EntityFallenMount(World world) {
     super(world);
-    setHorseTamed(true);
+    //setHorseTamed(true);
     setGrowingAge(0);
     setHorseSaddled(true);
 
@@ -48,7 +48,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
-    updateAttackAI();    
+    updateAttackAI(); 
   }
 
   @Override
