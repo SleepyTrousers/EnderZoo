@@ -1,5 +1,10 @@
 package crazypants.enderzoo;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -8,10 +13,14 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class DebugUtil {
 
   public static DebugUtil instance = new DebugUtil();
+
+  @SideOnly(Side.CLIENT)
+  private EntityLivingBase lastMouseOver;
 
   public void setEnabled(boolean enabled) {
     if(enabled) {
@@ -30,6 +39,32 @@ public class DebugUtil {
       return;
     }
     evt.player.setHealth(evt.player.getMaxHealth());
+  }
+
+  @SideOnly(Side.CLIENT)
+  @SubscribeEvent
+  public void onPlayerTickClient(PlayerTickEvent evt) {
+    if(evt.side != Side.CLIENT || evt.phase != Phase.END) {
+      return;
+    }
+    MovingObjectPosition mo = Minecraft.getMinecraft().objectMouseOver;
+    if(mo != null && mo.entityHit != null && mo.entityHit instanceof EntityLivingBase) {
+      EntityLivingBase el = (EntityLivingBase) mo.entityHit;
+      if(el != lastMouseOver) {
+        double baseAttack = 0;
+        double attack = 0;
+        IAttributeInstance damAtt = el.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+        if(damAtt != null) {
+          baseAttack = damAtt.getBaseValue();
+          attack = damAtt.getAttributeValue();
+        }
+        System.out.println("DebugUtil.onPlayerTickClient: Health: " + el.getMaxHealth() + " Base Damage: " + baseAttack + " Damage: " + attack);
+      }
+      lastMouseOver = el;
+    } else {
+      lastMouseOver = null;
+    }
+
   }
 
   @SubscribeEvent

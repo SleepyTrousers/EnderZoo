@@ -65,7 +65,7 @@ public final class Config {
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
   public static boolean fallenKnightEnabled = true;
   public static double fallenKnightBaseDamage = 4.0;
-  public static double fallenKnightHealth = 12;
+  public static double fallenKnightHealth = 20;
   public static double fallenKnightFollowRange = 40.0;
   public static double fallenKnightChargeSpeed = 1.2;
   public static int fallenKnightRangedMinAttackPause = 20;
@@ -107,7 +107,7 @@ public final class Config {
 
   public static final Section sectionDireWolf = new Section("Dire Wolf", "direWolf");
   public static boolean direWolfEnabled = true;
-  public static double direWolfHealth = 25;
+  public static double direWolfHealth = 26;
   public static double direWolfAttackDamage = 9;
   public static double direWolfHardAttackModifier = 2;
 

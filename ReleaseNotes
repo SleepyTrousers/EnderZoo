@@ -2,6 +2,7 @@
 Version 1.0.4 
 -------------------------------------------
 Changes
+- Increased default Fallen Knight health to 20 (same as a Zombie, Skeleton etc)
 - #14 Rename pt_BR to pt_BR.lang (Adaptivity)
 - #17 Update zh_CN.lang (Mrkwtkr)
 
