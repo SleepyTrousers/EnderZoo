@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -34,9 +35,10 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   private final EntityAINearestAttackableTarget findTargetAI;
   private EntityAIAttackOnCollide attackAI;
 
+  private ItemStack armor;
+
   public EntityFallenMount(World world) {
     super(world);
-    //setHorseTamed(true);
     setGrowingAge(0);
     setHorseSaddled(true);
 
@@ -103,7 +105,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public IEntityLivingData onSpawnWithEgg(IEntityLivingData data) {
     setHorseType(3);
-    setHorseSaddled(true);
+    setHorseSaddled(true);    
     setGrowingAge(0);
     getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenMountHealth);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2);
@@ -113,30 +115,31 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     float chanceOfArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
         : Config.fallenMountChanceArmored;
     if(rand.nextFloat() <= chanceOfArmor) {
-      
+
       //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied and the moon phase
-      float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY,posZ);
+      float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
       occupiedDiffcultyMultiplier /= 1.5f; // normalize
       float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
-          : Config.fallenMountChanceArmorUpgrade;        
+          : Config.fallenMountChanceArmorUpgrade;
       chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
-      
+
       int armorLevel = 0;
-      for(int i=0;i<2;i++) {
+      for (int i = 0; i < 2; i++) {
         if(rand.nextFloat() <= chanceImprovedArmor) {
           armorLevel++;
         }
       }
-      Item armor = Items.iron_horse_armor;
-      switch(armorLevel) {
+      Item armorItem = Items.iron_horse_armor;
+      switch (armorLevel) {
       case 1:
-        armor = Items.golden_horse_armor;
+        armorItem = Items.golden_horse_armor;
         break;
       case 2:
-        armor = Items.diamond_horse_armor;
+        armorItem = Items.diamond_horse_armor;
         break;
-      }      
-      func_146086_d(new ItemStack(armor));
+      }
+      armor = new ItemStack(armorItem);
+      func_146086_d(armor);
     }
     return data;
   }
@@ -217,5 +220,27 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     float damage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
     return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
   }
+
+  @Override
+  public void writeEntityToNBT(NBTTagCompound root) {
+    super.writeEntityToNBT(root);
+    if(armor != null) {
+      NBTTagCompound armTag = new NBTTagCompound();
+      armor.writeToNBT(armTag);
+      root.setTag("armor", armTag);
+    }
+  }
+
+  @Override
+  public void readEntityFromNBT(NBTTagCompound root) {
+    super.readEntityFromNBT(root);
+    setHorseSaddled(true);
+    if(root.hasKey("armor")) {
+      NBTTagCompound armTag = root.getCompoundTag("armor");
+      armor = ItemStack.loadItemStackFromNBT(armTag);
+      func_146086_d(armor);
+    }
+  }
+
 
 }

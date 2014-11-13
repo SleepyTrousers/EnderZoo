@@ -156,7 +156,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private void spawnMount() {
-    if(ridingEntity != null && spawned) {
+    if(ridingEntity != null || !spawned) {
       return;
     }
     
