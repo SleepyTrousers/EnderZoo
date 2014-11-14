@@ -124,9 +124,11 @@ public final class Config {
 
   public static final Section sectionDireWolf = new Section("Dire Wolf", "direWolf");
   public static boolean direWolfEnabled = true;
-  public static double direWolfHealth = 26;
-  public static double direWolfAttackDamage = 9;
-  public static double direWolfHardAttackModifier = 2;
+  public static boolean direWolfPackAttackEnabled = true;
+  public static double direWolfHealth = 20;
+  public static double direWolfAttackDamage = 10;
+  public static double direWolfHardAttackModifier = 1;
+  public static double direWolfAggresiveRange = 4;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowWeight = 2;
@@ -149,6 +151,8 @@ public final class Config {
   public static int enderChargeMaxTeleportRange = 64;
 
   public static boolean concussionChargeEnabled = true;
+
+
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -292,6 +296,8 @@ public final class Config {
         "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
 
     direWolfEnabled = config.getBoolean("direWolfEnabled", sectionDireWolf.name, direWolfEnabled, "If false Dire Wolves will be disabled");
+    direWolfPackAttackEnabled = config.getBoolean("direWolfPackAttackEnabled", sectionDireWolf.name, direWolfPackAttackEnabled,
+        "When true all nearby dire wolves will join an attack");
     direWolfHealth = config.get(sectionDireWolf.name, "direWolfHealth", direWolfHealth,
         "Base health of the Dire Wolf").getDouble(direWolfHealth);
     direWolfAttackDamage = config.get(sectionDireWolf.name, "direWolfAttackDamage", direWolfAttackDamage,
@@ -299,6 +305,8 @@ public final class Config {
     direWolfHardAttackModifier = config.get(sectionDireWolf.name, "direWolfHardAttackModifier",
         direWolfHardAttackModifier,
         "The increase to damage when playing on hard").getDouble(direWolfHardAttackModifier);
+    direWolfAggresiveRange = config.get(sectionDireWolf.name, "direWolfAggresiveRange", direWolfAggresiveRange,
+        "If a player gets within this range they will be attacked").getDouble(direWolfAggresiveRange);
 
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
