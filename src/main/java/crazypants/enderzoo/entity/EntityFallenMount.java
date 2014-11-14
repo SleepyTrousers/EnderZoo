@@ -44,7 +44,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     tasks.taskEntries.clear();
     tasks.addTask(0, new EntityAISwimming(this));
-    tasks.addTask(6, new EntityAIWander(this, 0.7D));
+    tasks.addTask(6, new EntityAIWander(this, 1.2D));
     tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(8, new EntityAILookIdle(this));
 
