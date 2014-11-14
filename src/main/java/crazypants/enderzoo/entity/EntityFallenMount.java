@@ -154,8 +154,11 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   @Override
   public void onLivingUpdate() {
+
+    super.onLivingUpdate();
+
     if(worldObj.isDaytime() && !worldObj.isRemote) {
-      if(burnInSun()) {
+      if(burnInSun() && worldObj.getTotalWorldTime() % 20 == 0) {
         float f = getBrightness(1.0F);
         if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
             && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) {
@@ -163,10 +166,6 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
         }
       }
     }
-
-    super.onLivingUpdate();
-    setEatingHaystack(false);
-    setEatingHaystack(false);
     setEating(false);
 
     if(wasRidden != isRidden()) {
