@@ -43,6 +43,23 @@ public final class Config {
 
   public static File configDirectory;
 
+  public static final Section sectionDifficulty = new Section("Difficulty", "difficulty");
+  public static boolean enderZooDifficultyModifierEnabled = true;
+  public static double enderZooEasyHealthModifier = 0.9;
+  public static double enderZooEasyAttackModifier = 0.9;
+  public static double enderZooNormalHealthModifier = 1;
+  public static double enderZooNormalAttackModifier = 1;
+  public static double enderZooHardHealthModifier = 1.1;
+  public static double enderZooHardAttackModifier = 1.1;
+
+  public static boolean globalDifficultyModifierEnabled = true;
+  public static double globalEasyHealthModifier = 0.9;
+  public static double globalEasyAttackModifier = 0.9;
+  public static double globalNormalHealthModifier = 1;
+  public static double globalNormalAttackModifier = 1;
+  public static double globalHardHealthModifier = 1.1;
+  public static double globalHardAttackModifier = 1.1;
+
   public static final Section sectionEnderminy = new Section("Enderminy", "enderminy");
   public static boolean enderminyEnabled = true;
   public static boolean enderminyAttacksPlayerOnSight = false;
@@ -324,6 +341,36 @@ public final class Config {
 
     concussionChargeEnabled = config.getBoolean("concussionChargeEnabled", sectionCharges.name, concussionChargeEnabled,
         "If false Concussion Charges will be disabled");
+
+    enderZooDifficultyModifierEnabled = config.getBoolean("enderZooDifficultyModifierEnabled", sectionDifficulty.name, enderZooDifficultyModifierEnabled,
+        "When enabled health and base damage for all Ender Zoo mobs will be modified based on difficulty");
+    enderZooEasyHealthModifier = config.get(sectionDifficulty.name, "enderZooEasyHealthModifier", enderZooEasyHealthModifier,
+        "When in easy difficulty base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(enderZooEasyHealthModifier);
+    enderZooNormalHealthModifier = config.get(sectionDifficulty.name, "enderZooNormalHealthModifier", enderZooNormalHealthModifier,
+        "When in normal difficultry base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(enderZooNormalHealthModifier);
+    enderZooHardHealthModifier = config.get(sectionDifficulty.name, "enderZooHardHealthModifier", enderZooHardHealthModifier,
+        "When in hard mode base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(enderZooHardHealthModifier);
+    enderZooEasyAttackModifier = config.get(sectionDifficulty.name, "enderZooEasyAttackModifier", enderZooEasyAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(enderZooEasyAttackModifier);
+    enderZooNormalAttackModifier = config.get(sectionDifficulty.name, "enderZooNormalAttackModifier", enderZooNormalAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(enderZooNormalAttackModifier);
+    enderZooHardAttackModifier = config.get(sectionDifficulty.name, "enderZooHardAttackModifier", enderZooHardAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(enderZooHardAttackModifier);
+
+    globalDifficultyModifierEnabled = config.getBoolean("globalDifficultyModifierEnabled", sectionDifficulty.name, globalDifficultyModifierEnabled,
+        "When enabled health and base damage for all non Ender Zoo mobs will be modified based on difficulty");
+    globalEasyHealthModifier = config.get(sectionDifficulty.name, "globalEasyHealthModifier", globalEasyHealthModifier,
+        "When in easy difficulty base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(globalEasyHealthModifier);
+    globalNormalHealthModifier = config.get(sectionDifficulty.name, "globalNormalHealthModifier", globalNormalHealthModifier,
+        "When in normal difficultry base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(globalNormalHealthModifier);
+    globalHardHealthModifier = config.get(sectionDifficulty.name, "globalHardHealthModifier", globalHardHealthModifier,
+        "When in hard mode base health is multiplied by this value, rounded to the nearest whole 'heart'").getDouble(globalHardHealthModifier);
+    globalEasyAttackModifier = config.get(sectionDifficulty.name, "globalEasyAttackModifier", globalEasyAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(globalEasyAttackModifier);
+    globalNormalAttackModifier = config.get(sectionDifficulty.name, "globalNormalAttackModifier", globalNormalAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(globalNormalAttackModifier);
+    globalHardAttackModifier = config.get(sectionDifficulty.name, "globalHardAttackModifier", globalHardAttackModifier,
+        "When in easy difficulty base attack damage is multiplied by this value").getDouble(globalHardAttackModifier);
 
   }
 

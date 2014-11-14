@@ -6,7 +6,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class EntityDireWolf extends EntityMob {
+public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   public static final String NAME = "enderzoo.DireWolf";
   public static final int EGG_BG_COL = 0x606060;

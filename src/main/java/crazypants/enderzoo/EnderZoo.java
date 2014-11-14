@@ -29,6 +29,7 @@ import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
+import crazypants.enderzoo.spawn.MobSpawnEventHandler;
 import crazypants.enderzoo.spawn.MobSpawns;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
@@ -55,6 +56,7 @@ public class EnderZoo {
   public static BlockEnderCharge blockEnderCharge;
   public static BlockConcussionCharge blockConcussionCharge;
   
+  public static MobSpawnEventHandler spawnEventHandler;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -109,6 +111,11 @@ public class EnderZoo {
   public void postInit(FMLPostInitializationEvent event) {
     MobSpawns.registerSpawns();
     addRecipes();
+
+    if(Config.enderZooDifficultyModifierEnabled || Config.globalDifficultyModifierEnabled) {
+      spawnEventHandler = new MobSpawnEventHandler();
+    }
+
   }
 
   private void addRecipes() {
