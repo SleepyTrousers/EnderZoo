@@ -26,6 +26,13 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   public static final int EGG_BG_COL = 0x606060;
   public static final int EGG_FG_COL = 0xA0A0A0;
 
+  private static final String SND_HURT = "enderzoo:direwolf.hurt";
+  private static final String SND_HOWL = "enderzoo:direwolf.howl";
+  private static final String SND_GROWL = "enderzoo:direwolf.growl";
+  private static final String SND_DEATH = "enderzoo:direwolf.death";
+
+  private static final int ANGRY_INDEX = 12;
+
   private static final float DEF_HEIGHT = 0.8F;
   private static final float DEF_WIDTH = 0.6F;
 
@@ -51,13 +58,23 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   }
 
   @Override
+  protected void entityInit() {
+    super.entityInit();
+    getDataWatcher().addObject(ANGRY_INDEX, (byte) 0);
+    updateAngry();
+  }
+
+  @Override
   protected boolean isAIEnabled() {
     return true;
   }
 
   public boolean isAngry() {
-    //TODO
-    return false;
+    return getDataWatcher().getWatchableObjectByte(ANGRY_INDEX) == 1;
+  }
+
+  private void updateAngry() {
+    getDataWatcher().updateObject(ANGRY_INDEX, getAttackTarget() != null ? (byte) 1 : (byte) 0);
   }
 
   @Override
@@ -75,18 +92,34 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   @Override
   protected String getLivingSound() {
-    return "mob.wolf.growl";
+    if(isAngry()) {
+      return SND_GROWL;
+    }
+    if(EntityUtil.isPlayerWithinRange(this, 12)) {
+      return SND_GROWL;
+    }
+
+    boolean howl = rand.nextFloat() > 0.95;
+    return howl ? SND_HOWL : SND_GROWL;
+  }
+
+  @Override
+  public void playSound(String name, float volume, float pitch) {
+    if(SND_HOWL.equals(name)) {
+      volume = 5;
+      pitch *= 0.8f;
+    }
+    worldObj.playSoundAtEntity(this, name, volume, pitch);
   }
 
   @Override
   protected String getHurtSound() {
-    //return "mob.wolf.hurt";
-    return "mob.wolf.growl";
+    return SND_HURT;
   }
 
   @Override
   protected String getDeathSound() {
-    return "mob.wolf.death";
+    return SND_DEATH;
   }
 
   @Override
@@ -105,6 +138,9 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   }
 
   public float getTailRotation() {
+    if(isAngry()) {
+      return (float) Math.PI / 2;
+    }
     return (float) Math.PI / 4;
   }
 
@@ -131,6 +167,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
         doGroupArgo(curTarget);
       }
       previsousAttackTarget = getAttackTarget();
+      updateAngry();
     }
   }
 

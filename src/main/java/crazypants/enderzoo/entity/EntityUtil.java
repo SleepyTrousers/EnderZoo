@@ -13,6 +13,7 @@ import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
@@ -84,6 +85,20 @@ public class EntityUtil {
       att.removeModifier(curmod);
     }
     return att;
+  }
+
+  public static double getDistanceSqToNearestPlayer(Entity entity, double maxRange) {
+    AxisAlignedBB bounds = getBoundsAround(entity, maxRange);
+    EntityPlayer nearest = (EntityPlayer) entity.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, bounds, entity);
+    if(nearest == null) {
+      return 1;
+    }
+    return nearest.getDistanceSqToEntity(entity);
+  }
+
+  public static boolean isPlayerWithinRange(Entity entity, double range) {
+    List res = entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, getBoundsAround(entity, range));
+    return res != null && !res.isEmpty();
   }
 
 }
