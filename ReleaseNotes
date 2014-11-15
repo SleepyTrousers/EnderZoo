@@ -2,8 +2,12 @@
 Version 1.0.4 
 -------------------------------------------
 Changes
+- Added Dire Wolf
 - Added config options to modify the health and attack damage of EZ and/or all mobs based on difficulty setting
-- Added ability to exclude biomes with specific tags in SpawnConfig.xml
+- Updated format and options for SpawnConfig_Core/User.xml
+  - Added ability to exclude biomes 
+  - Added 'any' and 'all' biome matching filters
+  - Added support for specifying biomes by name
 - Increased default Fallen Knight health to 20 (same as a Zombie, Skeleton etc)
 - #14 Rename pt_BR to pt_BR.lang (Adaptivity)
 - #17, #18 Update zh_CN.lang (Mrkwtkr)
