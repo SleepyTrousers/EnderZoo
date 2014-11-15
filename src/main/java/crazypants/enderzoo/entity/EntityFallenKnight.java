@@ -122,7 +122,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
       spawnMount();
     }
 
-    if(isRiding()) {
+    if(isRidingMount()) {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
       if(lastAttackTarget != getAttackTarget() || firstUpdate) {
         EntityUtil.cancelCurrentTasks(entLiving);
@@ -131,19 +131,23 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
     firstUpdate = false;
 
-    if(!isMounted == isRiding()) {
+    if(!isMounted == isRidingMount()) {
       getAiAttackOnCollide().resetTask();
       getAiArrowAttack().resetTask();
       getNavigator().clearPathEntity();
-      isMounted = isRiding();
+      isMounted = isRidingMount();
     }
-    if(isBurning() && isRiding()) {
+    if(isBurning() && isRidingMount()) {
       ridingEntity.setFire(8);
     }
     if(Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance)
         && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {
       setCurrentItemOrArmor(0, getSwordForLevel(getRandomEquipmentLevel()));
     }
+  }
+
+  private boolean isRidingMount() {
+    return isRiding() && ridingEntity.getClass() == EntityFallenMount.class;
   }
 
   @Override

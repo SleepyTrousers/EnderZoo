@@ -1,0 +1,28 @@
+{
+  "direwolf.hurt": {
+    "category": "hostile",
+    "sounds": [
+      "direwolf/hurt"
+    ]
+  },
+  "direwolf.death": {
+    "category": "hostile",
+    "sounds": [
+      "direwolf/death"
+    ]
+  },
+  "direwolf.growl": {
+    "category": "hostile",
+    "sounds": [
+      "direwolf/growl1",
+      "direwolf/growl2",
+      "direwolf/growl3"
+    ]
+  },
+  "direwolf.howl": {
+    "category": "hostile",
+    "sounds": [
+      "direwolf/howl"
+    ]
+  }
+}

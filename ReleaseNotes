@@ -9,6 +9,7 @@ Changes
 
 Bugs
 - #16 Fallen Steeds not killable using Cauldron protection plugin (MikeLydeamore)
+- #20 crash if fallen knight ends up in a cart
 - Fixed wander speed of fallen mount
 - Fixed Fallen Mounts loosing saddles and armor on reload.
 
