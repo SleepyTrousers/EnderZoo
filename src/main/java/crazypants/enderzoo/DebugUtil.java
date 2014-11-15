@@ -4,11 +4,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -23,6 +23,12 @@ public class DebugUtil {
   private EntityLivingBase lastMouseOver;
 
   public void setEnabled(boolean enabled) {
+    Object obf = Launch.blackboard.get("fml.deobfuscatedEnvironment");
+    if(obf == null || !(Boolean) obf) {
+      Log.warn("DebugUtil: Debug was enabled in a non dev. environemnt. Ignoring request.");
+      return;
+    }
+
     if(enabled) {
       System.err.println("DebugUtil.setEnabled:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
       MinecraftForge.EVENT_BUS.register(this);
@@ -70,7 +76,7 @@ public class DebugUtil {
   @SubscribeEvent
   public void onMonsterSpawn(LivingSpawnEvent evt) {
     if(evt.entityLiving != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
-      evt.setResult(Result.DENY);
+    //      evt.setResult(Result.DENY);
     }
   }
 

@@ -14,6 +14,8 @@ import java.util.List;
 import org.apache.commons.io.IOUtils;
 
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.spawn.ISpawnEntry;
+import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
 public class SpawnConfig {
 
@@ -73,9 +75,9 @@ public class SpawnConfig {
     }    
   }
 
-  private static void removeFrom(SpawnEntry useEntry, List<SpawnEntry> result) {
-    SpawnEntry toRemove = null;
-    for(SpawnEntry entry : result) {
+  private static void removeFrom(ISpawnEntry useEntry, List<SpawnEntry> result) {
+    ISpawnEntry toRemove = null;
+    for(ISpawnEntry entry : result) {
       if(useEntry.getId().equals(entry.getId())) {
         toRemove = entry;
         break;

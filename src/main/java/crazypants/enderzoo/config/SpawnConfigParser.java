@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.xml.parsers.SAXParser;
@@ -14,6 +13,7 @@ import javax.xml.parsers.SAXParserFactory;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 
 import org.apache.commons.io.IOUtils;
 import org.xml.sax.Attributes;
@@ -24,6 +24,10 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.spawn.IBiomeFilter;
+import crazypants.enderzoo.spawn.impl.BiomeDescriptor;
+import crazypants.enderzoo.spawn.impl.BiomeFilterAny;
+import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
 public class SpawnConfigParser extends DefaultHandler {
 
@@ -65,7 +69,8 @@ public class SpawnConfigParser extends DefaultHandler {
 
   public static final String ELEMENT_ROOT = "SpawnConfig";
   public static final String ELEMENT_ENTRY = "entry";
-  public static final String ELEMENT_BIOME_TYPE = "biomeType";
+  public static final String ELEMENT_FILTER = "biomeFilter";
+  public static final String ELEMENT_BIOME = "biome";
 
   public static final String ATT_ID = "id";
   public static final String ATT_MOB_NAME = "mobName";
@@ -74,13 +79,32 @@ public class SpawnConfigParser extends DefaultHandler {
   public static final String ATT_MIN_GRP = "minGroupSize";
   public static final String ATT_MAX_GRP = "maxGroupSize";
   public static final String ATT_REMOVE = "remove";
+
   public static final String ATT_NAME = "name";
+  public static final String ATT_TYPE = "type";
+  public static final String ATT_EXCLUDE = "exclude";
+
+  private static final String FILTER_TYPE_ANY = "any";
 
   public static final String BASE_LAND_TYPES = "BASE_LAND_TYPES";
+
+  private static final BiomeDictionary.Type[] BASE_LAND_TYPES_ARR = new BiomeDictionary.Type[] {
+      BiomeDictionary.Type.MESA,
+      BiomeDictionary.Type.FOREST,
+      BiomeDictionary.Type.PLAINS,
+      BiomeDictionary.Type.MOUNTAIN,
+      BiomeDictionary.Type.HILLS,
+      BiomeDictionary.Type.SWAMP,
+      BiomeDictionary.Type.SANDY,
+      BiomeDictionary.Type.SNOWY,
+      BiomeDictionary.Type.WASTELAND,
+      BiomeDictionary.Type.BEACH,
+  };
 
   private final List<SpawnEntry> result = new ArrayList<SpawnEntry>();
 
   private SpawnEntry currentEntry;
+  private IBiomeFilter currentFilter;
   private boolean invalidEntryElement = false;
   private boolean foundRoot = false;
   private boolean documentedClosed = false;
@@ -112,16 +136,46 @@ public class SpawnConfigParser extends DefaultHandler {
         Log.warn("New " + ELEMENT_ENTRY + " found before previous element closed. Discarding " + currentEntry);
       }
       parseEntry(attributes);
-    } else if(ELEMENT_BIOME_TYPE.equals(localName)) {
+
+    } else if(ELEMENT_FILTER.equals(localName)) {
       if(!foundRoot) {
-        Log.warn("Element " + ELEMENT_BIOME_TYPE + " found before " + ELEMENT_ROOT);
+        Log.warn("Element " + ELEMENT_FILTER + " found before " + ELEMENT_ROOT);
       }
-      if(currentEntry == null && !invalidEntryElement) {
-        Log.warn(ELEMENT_BIOME_TYPE + " found outside an " + ELEMENT_ENTRY + " element. It will be ignored");
+      if(currentEntry == null) {
+        if(!invalidEntryElement) {
+          Log.warn(ELEMENT_FILTER + " found outside an " + ELEMENT_ENTRY + " element. It will be ignored.");
+        }
+        return;
       }
-      if(!invalidEntryElement) {
+      parseFilter(attributes);
+
+    } else if(ELEMENT_BIOME.equals(localName)) {
+      if(!foundRoot) {
+        Log.warn("Element " + ELEMENT_BIOME + " found before " + ELEMENT_ROOT);
+      }
+      if((currentEntry == null || currentFilter == null) && !invalidEntryElement) {
+        Log.warn(ELEMENT_BIOME + " found outside an " + ELEMENT_ENTRY + " and/or " + ELEMENT_FILTER + " element. It will be ignored");
+      }
+      if(!invalidEntryElement && currentFilter != null) {
         parseBiomeType(attributes);
       }
+    }
+  }
+
+  @Override
+  public void endElement(String uri, String localName, String qName) throws SAXException {
+    if(ELEMENT_ENTRY.equals(localName) && currentEntry != null) {
+      if(currentEntry != null) {
+        result.add(currentEntry);
+      }
+      currentEntry = null;
+    } else if(ELEMENT_FILTER.equals(localName)) {
+      if(currentFilter != null && currentEntry != null) {
+        currentEntry.addBiomeFilter(currentFilter);
+      }
+      currentFilter = null;
+    } else if(ELEMENT_ROOT.equals(localName)) {
+      documentedClosed = true;
     }
   }
 
@@ -134,7 +188,7 @@ public class SpawnConfigParser extends DefaultHandler {
       return;
     }
     String mobName = getStringValue(ATT_MOB_NAME, attributes, null);
-    if(mobName == null || mobName.trim().length() == 0) {
+    if(isEmptyString(mobName)) {
       Log.error(ELEMENT_ENTRY + " specified without an " + ATT_MOB_NAME + " atribute");
       invalidEntryElement = true;
       return;
@@ -182,32 +236,60 @@ public class SpawnConfigParser extends DefaultHandler {
 
   }
 
-  private void parseBiomeType(Attributes attributes) {
-    String biomeName = getStringValue(ATT_NAME, attributes, null);
-    if(biomeName == null || biomeName.trim().length() == 0) {
-      Log.warn("Attribute " + ATT_NAME + " not specified in element " + ELEMENT_BIOME_TYPE + " in entry " + currentEntry.getId());
-      return;
+  private void parseFilter(Attributes attributes) {
+    String typeStr = getStringValue(ATT_TYPE, attributes, null);
+    if(isEmptyString(typeStr)) {
+      Log.warn("Attribue " + ATT_TYPE + " not specified for element " + ELEMENT_FILTER + " defaulting to '" + FILTER_TYPE_ANY + "' filter");
+      typeStr = FILTER_TYPE_ANY;
     }
-    biomeName = biomeName.trim();
-    if(BASE_LAND_TYPES.equals(biomeName)) {
-      currentEntry.addBaseLandTypes();
-    } else {
-      try {
-        currentEntry.addBiomeType(BiomeDictionary.Type.valueOf(biomeName));
-      } catch (Exception e) {
-        Log.warn("Attribute " + ATT_NAME + " in element " + ELEMENT_BIOME_TYPE + " with value " + biomeName + " is invalid and has been ignored.");
-      }
+
+    if(FILTER_TYPE_ANY.equals(typeStr)) {
+      currentFilter = new BiomeFilterAny();
     }
+
+    if(currentFilter == null) {
+      Log.warn("Unknown " + ATT_TYPE + " '" + typeStr + "' specified for filter. Filter will be ignored.");
+    }
+
   }
 
-  @Override
-  public void endElement(String uri, String localName, String qName) throws SAXException {
-    if(ELEMENT_ENTRY.equals(localName) && currentEntry != null) {
-      result.add(currentEntry);
-      currentEntry = null;
-    } else if(ELEMENT_ROOT.equals(localName)) {
-      documentedClosed = true;
+  private void parseBiomeType(Attributes attributes) {
+    String biomeName = getStringValue(ATT_NAME, attributes, null);
+    boolean nameEmpty = isEmptyString(biomeName);
+    String biomeType = getStringValue(ATT_TYPE, attributes, null);
+    boolean typeEmpty = isEmptyString(biomeType);
+    if(nameEmpty && typeEmpty) {
+      Log.warn("Attribute " + ATT_NAME + " or " + ATT_TYPE + " not specified in element " + ELEMENT_BIOME + " in entry " + currentEntry.getId());
+      return;
     }
+    if(!nameEmpty && !typeEmpty) {
+      Log.warn("Attribute " + ATT_NAME + " and " + ATT_TYPE + " both specified in element " + ELEMENT_BIOME + " in entry " + currentEntry.getId()
+          + ". It will be ignored");
+      return;
+    }
+
+    boolean isExclude = getBooleanValue(ATT_EXCLUDE, attributes, false);
+    if(!typeEmpty) {
+      biomeType = biomeType.trim();
+      if(BASE_LAND_TYPES.equals(biomeType)) {
+        for (BiomeDictionary.Type type : BASE_LAND_TYPES_ARR) {
+          currentFilter.addBiomeDescriptor(new BiomeDescriptor(type, isExclude));
+        }
+      } else {
+        try {
+          Type type = BiomeDictionary.Type.valueOf(biomeType);
+          currentFilter.addBiomeDescriptor(new BiomeDescriptor(type, isExclude));
+        } catch (Exception e) {
+          Log.warn("Attribute " + ATT_TYPE + " in element " + ELEMENT_BIOME + " with value " + biomeType + " is invalid and has been ignored.");
+        }
+      }
+      return;
+    }
+    currentFilter.addBiomeDescriptor(new BiomeDescriptor(biomeName.trim(), isExclude));
+  }
+
+  protected boolean isEmptyString(String str) {
+    return str == null || str.trim().length() == 0;
   }
 
   @Override

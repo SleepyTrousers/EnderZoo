@@ -1,28 +1,14 @@
-package crazypants.enderzoo.config;
+package crazypants.enderzoo.spawn.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-import crazypants.enderzoo.entity.MobInfo;
+import crazypants.enderzoo.spawn.IBiomeFilter;
+import crazypants.enderzoo.spawn.ISpawnEntry;
 
-public class SpawnEntry {
+public class SpawnEntry implements ISpawnEntry {
 
-  private static final BiomeDictionary.Type[] BASE_LAND_TYPES = new BiomeDictionary.Type[] {
-      BiomeDictionary.Type.MESA,
-      BiomeDictionary.Type.FOREST,
-      BiomeDictionary.Type.PLAINS,
-      BiomeDictionary.Type.MOUNTAIN,
-      BiomeDictionary.Type.HILLS,
-      BiomeDictionary.Type.SWAMP,
-      BiomeDictionary.Type.SANDY,
-      BiomeDictionary.Type.SNOWY,
-      BiomeDictionary.Type.WASTELAND,
-      BiomeDictionary.Type.BEACH,
-  };
-  
   private final String id;
   private final String mobName;
   private final int rate;
@@ -32,28 +18,24 @@ public class SpawnEntry {
   private int maxGroupSize = 3;
   private boolean isRemove = false;
   
-  final List<BiomeDictionary.Type> types = new ArrayList<BiomeDictionary.Type>();
-  
+  private final List<IBiomeFilter> filters = new ArrayList<IBiomeFilter>();
+
   public SpawnEntry(String id, String mobName, int rate) {    
     this.id = id;
     this.mobName = mobName;
     this.rate = rate;
   }
 
-  public void addBiomeType(BiomeDictionary.Type type) {
-    types.add(type);
+  public void addBiomeFilter(IBiomeFilter filter) {
+    filters.add(filter);
   }
-  
-  public void addBaseLandTypes() {
-    for(BiomeDictionary.Type type : BASE_LAND_TYPES) {
-      addBiomeType(type);  
-    }
+
+  @Override
+  public List<IBiomeFilter> getFilters() {
+    return filters;
   }
-  
-  public BiomeDictionary.Type[] getBiomeTypeArray() {
-    return types.toArray(new BiomeDictionary.Type[types.size()]);
-  }  
-  
+
+  @Override
   public EnumCreatureType getCreatureType() {
     return creatureType;
   }
@@ -62,6 +44,7 @@ public class SpawnEntry {
     this.creatureType = creatureType;
   }
 
+  @Override
   public int getMinGroupSize() {
     return minGroupSize;
   }
@@ -70,6 +53,7 @@ public class SpawnEntry {
     this.minGroupSize = minGroupSize;
   }
 
+  @Override
   public int getMaxGroupSize() {
     return maxGroupSize;
   }
@@ -78,6 +62,7 @@ public class SpawnEntry {
     this.maxGroupSize = maxGroupSize;
   }
 
+  @Override
   public boolean isRemove() {
     return isRemove;
   }
@@ -86,26 +71,25 @@ public class SpawnEntry {
     this.isRemove = isRemove;
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public String getMobName() {
     return mobName;
   }
 
+  @Override
   public int getRate() {
     return rate;
-  }
-
-  public List<BiomeDictionary.Type> getTypes() {
-    return types;
   }
 
   @Override
   public String toString() {
     return "SpawnEntry [id=" + id + ", mobName=" + mobName + ", rate=" + rate + ", creatureType=" + creatureType + ", minGroupSize=" + minGroupSize
-        + ", maxGroupSize=" + maxGroupSize + ", isRemove=" + isRemove + ", types=" + types + "]";
+        + ", maxGroupSize=" + maxGroupSize + ", isRemove=" + isRemove + ", filter=" + filters + "]";
   }
 
 }

@@ -152,7 +152,8 @@ public final class Config {
 
   public static boolean concussionChargeEnabled = true;
 
-
+  public static final Section sectionDebug = new Section("Debug", "debug");
+  public static boolean spawnConfigPrintDetailedOutput = false;
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -379,6 +380,9 @@ public final class Config {
         "When in easy difficulty base attack damage is multiplied by this value").getDouble(globalNormalAttackModifier);
     globalHardAttackModifier = config.get(sectionDifficulty.name, "globalHardAttackModifier", globalHardAttackModifier,
         "When in easy difficulty base attack damage is multiplied by this value").getDouble(globalHardAttackModifier);
+
+    spawnConfigPrintDetailedOutput = config.getBoolean("spawnConfigPrintDetailedOutput", sectionDebug.name, spawnConfigPrintDetailedOutput,
+        "When enabled detailed information about spawn config will be printed to the log.");
 
   }
 
