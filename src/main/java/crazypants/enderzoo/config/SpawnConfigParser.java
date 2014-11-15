@@ -26,6 +26,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.spawn.IBiomeFilter;
 import crazypants.enderzoo.spawn.impl.BiomeDescriptor;
+import crazypants.enderzoo.spawn.impl.BiomeFilterAll;
 import crazypants.enderzoo.spawn.impl.BiomeFilterAny;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
@@ -85,6 +86,7 @@ public class SpawnConfigParser extends DefaultHandler {
   public static final String ATT_EXCLUDE = "exclude";
 
   private static final String FILTER_TYPE_ANY = "any";
+  private static final String FILTER_TYPE_ALL = "all";
 
   public static final String BASE_LAND_TYPES = "BASE_LAND_TYPES";
 
@@ -207,7 +209,7 @@ public class SpawnConfigParser extends DefaultHandler {
     String creatureType = getStringValue(ATT_CREATURE_TYPE, attributes, null);
     if(creatureType != null) {
       try {
-        EnumCreatureType.valueOf(creatureType.trim());
+        currentEntry.setCreatureType(EnumCreatureType.valueOf(creatureType.trim()));
       } catch (Exception e) {
         Log.warn("Invalid value specified for " + ATT_CREATURE_TYPE + " in entry " + id + " using default value " + currentEntry.getCreatureType() + " error: "
             + e);
@@ -245,6 +247,8 @@ public class SpawnConfigParser extends DefaultHandler {
 
     if(FILTER_TYPE_ANY.equals(typeStr)) {
       currentFilter = new BiomeFilterAny();
+    } else if(FILTER_TYPE_ALL.equals(typeStr)) {
+      currentFilter = new BiomeFilterAll();
     }
 
     if(currentFilter == null) {

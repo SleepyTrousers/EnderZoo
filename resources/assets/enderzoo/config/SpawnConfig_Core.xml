@@ -46,8 +46,8 @@ same id and no biome filters.
 
 biomeFilter attributes:
 - type: The type of filter
-  'any': if a biome matches any of the non-excluded biome entries the mob will be able to spawn in that biome 
-
+  'any': if a biome matches any of biome entries, and does not match any of the excluded entries, the mob will be able to spawn in that biome 
+  'all': if a biome matches all of biome entries, and does not match any of the excluded entries, the mob will be able to spawn in that biome
 
 
 Each filter must contain one or more biome entries
@@ -104,6 +104,15 @@ Each filter must contain one or more biome entries
       <biome type="PLAINS" />
       <biome type="HILLS" />
       <biome type="MOUNTAIN" />
+      <biome type="NETHER" exclude="true" />
+      <biome type="END" exclude="true" />
+    </biomeFilter>
+  </entry>
+  
+  <entry id="DireWolf" mobName="enderzoo.DireWolf" rate="30" minGroupSize="2" maxGroupSize="6">
+    <biomeFilter type="all">
+      <biome type="SNOWY" />
+      <biome type="CONIFEROUS" />      
       <biome type="NETHER" exclude="true" />
       <biome type="END" exclude="true" />
     </biomeFilter>

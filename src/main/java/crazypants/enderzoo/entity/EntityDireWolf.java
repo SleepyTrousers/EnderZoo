@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILeapAtTarget;
@@ -71,6 +72,31 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   public boolean isAngry() {
     return getDataWatcher().getWatchableObjectByte(ANGRY_INDEX) == 1;
+  }
+
+  @Override
+  protected boolean isValidLightLevel() {
+    return true;
+  }
+
+  @Override
+  public int getMaxSpawnedInChunk() {
+    return 6;
+  }
+
+  /**
+   * Returns true if the entity is of the @link{EnumCreatureType} provided
+   * 
+   * @param type
+   *          The EnumCreatureType type this entity is evaluating
+   * @param forSpawnCount
+   *          If this is being invoked to check spawn count caps.
+   * @return If the creature is of the type provided
+   */
+  @Override
+  public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+    System.out.println("EntityDireWolf.isCreatureType: " + type);
+    return type.getCreatureClass().isAssignableFrom(this.getClass());
   }
 
   private void updateAngry() {
