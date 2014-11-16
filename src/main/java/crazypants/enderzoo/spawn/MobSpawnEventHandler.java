@@ -1,7 +1,7 @@
 package crazypants.enderzoo.spawn;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +27,11 @@ public class MobSpawnEventHandler {
   private static List<EntityLivingBase> toApplyEZ = new ArrayList<EntityLivingBase>();
   private static List<EntityLivingBase> toApplyOthers = new ArrayList<EntityLivingBase>();
 
-  private Map<EnumDifficulty, Double> ezHealthMods = new EnumMap<EnumDifficulty, Double>(EnumDifficulty.class);
-  private Map<EnumDifficulty, Double> ezAttackMods = new EnumMap<EnumDifficulty, Double>(EnumDifficulty.class);
+  private Map<EnumDifficulty, Double> ezHealthMods = new HashMap<EnumDifficulty, Double>();
+  private Map<EnumDifficulty, Double> ezAttackMods = new HashMap<EnumDifficulty, Double>();
 
-  private Map<EnumDifficulty, Double> otherHealthMods = new EnumMap<EnumDifficulty, Double>(EnumDifficulty.class);
-  private Map<EnumDifficulty, Double> otherAttackMods = new EnumMap<EnumDifficulty, Double>(EnumDifficulty.class);
+  private Map<EnumDifficulty, Double> otherHealthMods = new HashMap<EnumDifficulty, Double>();
+  private Map<EnumDifficulty, Double> otherAttackMods = new HashMap<EnumDifficulty, Double>();
 
   public MobSpawnEventHandler() {
     MinecraftForge.EVENT_BUS.register(this);
