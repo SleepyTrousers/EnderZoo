@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
@@ -67,6 +68,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     tasks.addTask(4, new EntityAIWander(this, 1.0D));
     tasks.addTask(5, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     tasks.addTask(6, new EntityAILookIdle(this));
+    tasks.addTask(7, new EntityAIAttackOnCollide(this, 1.0D, true));
 
     setSize(DEF_WIDTH, DEF_HEIGHT);
   }
