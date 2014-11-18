@@ -5,6 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import crazypants.enderzoo.charge.EntityPrimedCharge;
@@ -24,6 +25,7 @@ import crazypants.enderzoo.entity.render.RenderFallenKnight;
 import crazypants.enderzoo.entity.render.RenderFallenMount;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
+import crazypants.enderzoo.item.GuardiansBowRenderer;
 
 
 public class ClientProxy extends CommonProxy {
@@ -64,6 +66,11 @@ public class ClientProxy extends CommonProxy {
     }
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
     //RenderingRegistry.registerEntityRenderingHandler(EntityPotionEZ_WIP.class, new RenderPotionEntity_WIP());
+
+    if(Config.guardiansBowEnabled) {
+      MinecraftForgeClient.registerItemRenderer(EnderZoo.itemGuardiansBow, new GuardiansBowRenderer());
+    }
+
   }
   
   @Override

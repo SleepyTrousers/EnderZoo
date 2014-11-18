@@ -155,6 +155,13 @@ public final class Config {
   public static final Section sectionDebug = new Section("Debug", "debug");
   public static boolean spawnConfigPrintDetailedOutput = false;
 
+  public static final Section sectionGuardian = new Section("Guardian", "guardian");
+  public static boolean guardiansBowEnabled = true;
+  public static int guardiansBowDrawTime = 14;
+  public static float guardiansBowDamageBonus = 0f;
+  public static float guardiansBowForceMultiplier = 3;
+  public static float guardiansBowFovMultiplier = 0.35F;
+
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -383,6 +390,17 @@ public final class Config {
 
     spawnConfigPrintDetailedOutput = config.getBoolean("spawnConfigPrintDetailedOutput", sectionDebug.name, spawnConfigPrintDetailedOutput,
         "When enabled detailed information about spawn config will be printed to the log.");
+
+    guardiansBowEnabled = config.getBoolean("guardiansBowEnabled", sectionGuardian.name, guardiansBowEnabled,
+        "If false the Guardians Bow will be disabled");
+    guardiansBowDrawTime = config.get(sectionGuardian.name, "guardiansBowDrawTime", guardiansBowDrawTime,
+        "The number of ticks it takes to fully draw the guardians bow. A 'vanilla' bow takes 20 ticks.").getInt(guardiansBowDrawTime);
+    guardiansBowDamageBonus = (float) config.get(sectionGuardian.name, "guardiansBowDamageBonus", guardiansBowDamageBonus,
+        "The damage bonus applied to arrows fire from the bow.").getDouble(guardiansBowDamageBonus);
+    guardiansBowForceMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowForceMultiplier", guardiansBowForceMultiplier,
+        "Effects the speed with which arrows leave the bow. A 'vanilla' bow has a multiplier of 2.").getDouble(guardiansBowForceMultiplier);
+    guardiansBowFovMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowFovMultiplier", guardiansBowFovMultiplier,
+        "The reduction in FOV when the bow is fullen drawn (the zoom level). A 'vanilla' bow has a value of 0.15").getDouble(guardiansBowFovMultiplier);
 
   }
 

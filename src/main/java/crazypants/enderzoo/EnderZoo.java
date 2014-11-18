@@ -27,6 +27,7 @@ import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
+import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import crazypants.enderzoo.spawn.MobSpawnEventHandler;
@@ -50,6 +51,7 @@ public class EnderZoo {
   public static ItemConfusingDust itemConfusingDust;
   public static ItemEnderFragment itemEnderFragment;
   public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
+  public static ItemGuardiansBow itemGuardiansBow;
   
   
   public static BlockConfusingCharge blockConfusingCharge;
@@ -71,6 +73,7 @@ public class EnderZoo {
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
     itemEnderFragment = ItemEnderFragment.create();
+    itemGuardiansBow = ItemGuardiansBow.create();
 
     blockConfusingCharge = BlockConfusingCharge.create();
     blockEnderCharge = BlockEnderCharge.create();
