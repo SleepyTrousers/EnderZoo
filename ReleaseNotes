@@ -2,6 +2,9 @@
 Version 1.0.5 
 -------------------------------------------
 
+Changes
+- #23 Halved default spawn rate for Wither Witches
+
 Bugs
 - #22 Server Crash 
 

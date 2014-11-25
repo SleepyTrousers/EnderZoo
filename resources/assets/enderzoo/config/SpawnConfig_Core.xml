@@ -97,7 +97,7 @@ Each filter must contain one or more biome entries
     </biomeFilter>
   </entry>
 
-  <entry id="WitherWitch" mobName="enderzoo.WitherWitch" rate="10" minGroupSize="1" maxGroupSize="1">
+  <entry id="WitherWitch" mobName="enderzoo.WitherWitch" rate="5" minGroupSize="1" maxGroupSize="1">
     <biomeFilter type="any">
       <biome type="FOREST" />
       <biome type="SWAMP" />
