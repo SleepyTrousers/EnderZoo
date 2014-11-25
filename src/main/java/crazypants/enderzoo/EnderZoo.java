@@ -117,6 +117,7 @@ public class EnderZoo {
 
     if(Config.enderZooDifficultyModifierEnabled || Config.globalDifficultyModifierEnabled) {
       spawnEventHandler = new MobSpawnEventHandler();
+      spawnEventHandler.init();
     }
 
   }

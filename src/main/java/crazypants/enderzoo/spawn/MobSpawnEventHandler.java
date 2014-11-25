@@ -34,8 +34,6 @@ public class MobSpawnEventHandler {
   private Map<EnumDifficulty, Double> otherAttackMods = new HashMap<EnumDifficulty, Double>();
 
   public MobSpawnEventHandler() {
-    MinecraftForge.EVENT_BUS.register(this);
-    FMLCommonHandler.instance().bus().register(this);
 
     ezHealthMods.put(EnumDifficulty.PEACEFUL, 1d);
     ezHealthMods.put(EnumDifficulty.EASY, Config.enderZooEasyHealthModifier);
@@ -55,6 +53,11 @@ public class MobSpawnEventHandler {
     otherAttackMods.put(EnumDifficulty.NORMAL, Config.globalNormalAttackModifier);
     otherAttackMods.put(EnumDifficulty.HARD, Config.globalHardAttackModifier);
 
+  }
+
+  public void init() {
+    MinecraftForge.EVENT_BUS.register(this);
+    FMLCommonHandler.instance().bus().register(this);
   }
 
   //  @SubscribeEvent
@@ -102,7 +105,9 @@ public class MobSpawnEventHandler {
   }
 
   private void applyGloablModifiers(EntityLivingBase entity, World world) {
-    //    System.out.println("MobSpawnEventHandler.applyGloablModifiers: " + entity.getClass());
+    if(world == null || world.difficultySetting == null) {
+      return;
+    }
     double attackModifier = otherAttackMods.get(world.difficultySetting);
     double healthModifier = otherHealthMods.get(world.difficultySetting);
     if(attackModifier != 1) {
@@ -114,6 +119,9 @@ public class MobSpawnEventHandler {
   }
 
   private void applyEnderZooModifiers(EntityLivingBase entity, World world) {
+    if(world == null || world.difficultySetting == null) {
+      return;
+    }
     double attackModifier = ezAttackMods.get(world.difficultySetting);
     double healthModifier = ezHealthMods.get(world.difficultySetting);
     if(attackModifier != 1) {
