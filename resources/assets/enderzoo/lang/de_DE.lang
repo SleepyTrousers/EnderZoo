@@ -1,8 +1,11 @@
 //***  Ender Zoo *****//
 
+//Items
 item.itemSpawnEggEnderZoo.name=Erschaffe
 item.witheringDust.name=Verfallener Staub
-item.itemPotionEZ.wither.name=Trank des Verfalls
+item.confusingDust.name=Verwirrpulver
+item.enderFragment.name=Enderfragment
+
 
 //Mobs
 entity.enderzoo.Enderminy.name=Enderminy
@@ -11,6 +14,7 @@ entity.enderzoo.FallenKnight.name=Gefallener Ritter
 entity.enderzoo.FallenMount.name=Gefallenes Ross
 entity.enderzoo.WitherWitch.name=Witherhexe
 entity.enderzoo.WitherCat.name=Witherkatze
+entity.enderzoo.DireWolf.name=Dire Wolf
 
 //Waila
 entity.enderzoo.Enderminy.desc.1=Neutrales Wesen,
@@ -23,3 +27,11 @@ entity.enderzoo.ConcussionCreeper.desc.3=wenn er explodiert.
 entity.enderzoo.FallenKnight.desc.1=Mit Fernwaffen ausgestatteter Zombie
 entity.enderzoo.WitherWitch.desc.1=Wirft mit Withertränken
 
+//Enchants
+enchantment.enderzoo.witherArrow=Zerfall
+enchantment.enderzoo.witherWeapon=Verfall
+
+//Blocks
+tile.blockConfusingCharge.name=Verwirrende Ladung
+tile.blockEnderCharge.name=Enderladung
+tile.blockConcussionCharge.name=Erschütterungsladung
