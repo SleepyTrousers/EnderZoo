@@ -39,8 +39,8 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   private static final float DEF_HEIGHT = 0.8F;
   private static final float DEF_WIDTH = 0.6F;
 
-  private static final int SCALE_INDEX = 12;
-  private static final int GROWTH_MODE_INDEX = 13;
+  private static final int SCALE_INDEX = 20;
+  private static final int GROWTH_MODE_INDEX = 21;
 
   private static final float ANGRY_SCALE = 2;
   private static final float SCALE_INC = 0.05f;
@@ -76,6 +76,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   @Override
   protected void entityInit() {
     super.entityInit();
+
     getDataWatcher().addObject(SCALE_INDEX, 1f);
     getDataWatcher().addObject(GROWTH_MODE_INDEX, (byte) GrowthMode.NONE.ordinal());
   }
@@ -96,11 +97,11 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   public void setScale(float scale) {
-    getDataWatcher().updateObject(12, scale);
+    getDataWatcher().updateObject(SCALE_INDEX, scale);
   }
 
   public float getScale() {
-    return getDataWatcher().getWatchableObjectFloat(12);
+    return getDataWatcher().getWatchableObjectFloat(SCALE_INDEX);
   }
 
   public void setGrowthMode(GrowthMode mode) {

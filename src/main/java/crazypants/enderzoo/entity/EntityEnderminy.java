@@ -32,13 +32,16 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;
 
-public class EntityEnderminy extends EntityMob implements IEnderZooMob{
+public class EntityEnderminy extends EntityMob implements IEnderZooMob {
+
 
   public static String NAME = "enderzoo.Enderminy";
   public static final int EGG_BG_COL = 0x27624D;
   public static final int EGG_FG_COL = 0x212121;
 
   private static final int MAX_RND_TP_DISTANCE = 32;
+
+  private static final int SCREAMING_INDEX = 20;
 
   private static final UUID attackingSpeedBoostModifierUUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291B0");
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
@@ -90,9 +93,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob{
   @Override
   protected void entityInit() {
     super.entityInit();
-    dataWatcher.addObject(16, new Byte((byte) 0));
-    dataWatcher.addObject(17, new Byte((byte) 0));
-    dataWatcher.addObject(18, new Byte((byte) 0));
+    dataWatcher.addObject(SCREAMING_INDEX, new Byte((byte) 0));
   }
 
   @Override
@@ -414,11 +415,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob{
   }
 
   public boolean isScreaming() {
-    return dataWatcher.getWatchableObjectByte(18) > 0;
+    return dataWatcher.getWatchableObjectByte(SCREAMING_INDEX) > 0;
   }
 
   public void setScreaming(boolean p_70819_1_) {
-    dataWatcher.updateObject(18, Byte.valueOf((byte) (p_70819_1_ ? 1 : 0)));
+    dataWatcher.updateObject(SCREAMING_INDEX, Byte.valueOf((byte) (p_70819_1_ ? 1 : 0)));
   }
 
   private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
