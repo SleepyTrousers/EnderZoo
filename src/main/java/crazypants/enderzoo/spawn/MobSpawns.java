@@ -1,5 +1,7 @@
 package crazypants.enderzoo.spawn;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.entity.EntityList;
@@ -11,23 +13,37 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.config.SpawnConfig;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
-public class MobSpawns {
+public final class MobSpawns {
 
   private static final boolean PRINT_DETAIL = Config.spawnConfigPrintDetailedOutput;
+
+  public static final MobSpawns instance = new MobSpawns();
+
+  private final List<ISpawnEntry> spawnEntries = new ArrayList<ISpawnEntry>();
 
   private MobSpawns() {
   }
 
-  public static void registerSpawns() {
+  public void loadSpawnConfig() {
     List<SpawnEntry> entries = SpawnConfig.loadSpawnConfig();
-    Log.info("Applying " + entries.size() + " spawn entries from config.");
-    for (SpawnEntry entry : entries) {
-      addSpawn(entry);
+    if(entries != null) {
+      Log.info("Applying " + entries.size() + " spawn entries from config.");
+      for (SpawnEntry entry : entries) {
+        addSpawn(entry);
+      }
+    } else {
+      Log.info("No spawn entries found in config.");
     }
 
   }
 
-  public static void addSpawn(ISpawnEntry entry) {
+  public void addSpawn(ISpawnEntry entry) {
+
+    if(entry == null) {
+      return;
+    }
+    spawnEntries.add(entry);
+
     Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.stringToClassMapping.get(entry.getMobName());
     if(clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
@@ -78,6 +94,10 @@ public class MobSpawns {
         System.out.print("null, ");
       }
     }
+  }
+
+  public Collection<ISpawnEntry> getEntries() {
+    return spawnEntries;
   }
 
 }

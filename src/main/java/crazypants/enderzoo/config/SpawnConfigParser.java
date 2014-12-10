@@ -28,6 +28,7 @@ import crazypants.enderzoo.spawn.IBiomeFilter;
 import crazypants.enderzoo.spawn.impl.BiomeDescriptor;
 import crazypants.enderzoo.spawn.impl.BiomeFilterAll;
 import crazypants.enderzoo.spawn.impl.BiomeFilterAny;
+import crazypants.enderzoo.spawn.impl.DimensionFilter;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
 public class SpawnConfigParser extends DefaultHandler {
@@ -73,7 +74,11 @@ public class SpawnConfigParser extends DefaultHandler {
   public static final String ELEMENT_FILTER = "biomeFilter";
   public static final String ELEMENT_BIOME = "biome";
 
+  public static final String ELEMENT_DIM_EXCLUDE = "dimensionExclude";
+
   public static final String ATT_ID = "id";
+  public static final String ATT_ID_START = "idStart";
+  public static final String ATT_ID_END = "idEnd";
   public static final String ATT_MOB_NAME = "mobName";
   public static final String ATT_CREATURE_TYPE = "creatureType";
   public static final String ATT_RATE = "rate";
@@ -161,7 +166,32 @@ public class SpawnConfigParser extends DefaultHandler {
       if(!invalidEntryElement && currentFilter != null) {
         parseBiomeType(attributes);
       }
+    } else if(ELEMENT_DIM_EXCLUDE.equals(localName)) {
+      if(!foundRoot) {
+        Log.warn("Element " + ELEMENT_DIM_EXCLUDE + " found before " + ELEMENT_ROOT);
+      }
+      if(currentEntry == null && !invalidEntryElement) {
+        Log.warn(ELEMENT_DIM_EXCLUDE + " found outside an " + ELEMENT_ENTRY + " and/or " + ELEMENT_FILTER + " element. It will be ignored");
+      } else if(currentEntry != null) {
+        parseDimExclude(attributes);
+      }
     }
+  }
+
+  private void parseDimExclude(Attributes attributes) {
+    String name = getStringValue(ATT_NAME, attributes, null);
+    if(name != null) {
+      currentEntry.addDimensioFilter(new DimensionFilter(name));
+      return;
+    }
+    int id = getIntValue(ATT_ID, attributes, Integer.MAX_VALUE);
+    if(id != Integer.MAX_VALUE) {
+      currentEntry.addDimensioFilter(new DimensionFilter(id));
+      return;
+    }
+    currentEntry.addDimensioFilter(new DimensionFilter(getIntValue(ATT_ID_START, attributes, Integer.MAX_VALUE), getIntValue(ATT_ID_END, attributes,
+        Integer.MAX_VALUE)));
+
   }
 
   @Override

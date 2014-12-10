@@ -1,4 +1,15 @@
 -------------------------------------------
+Version 1.0.6
+-------------------------------------------
+
+Changes
+- #27 Mobs can now be excluded from spawning in specific dimensions. Twilight Forest excluded by default.
+
+Bugs
+- #32 Crash when spawn config invalid
+
+
+-------------------------------------------
 Version 1.0.5 
 -------------------------------------------
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.World;
 import crazypants.enderzoo.spawn.IBiomeFilter;
 import crazypants.enderzoo.spawn.ISpawnEntry;
 
@@ -20,6 +21,8 @@ public class SpawnEntry implements ISpawnEntry {
   
   private final List<IBiomeFilter> filters = new ArrayList<IBiomeFilter>();
 
+  private final List<DimensionFilter> dimFilters = new ArrayList<DimensionFilter>();
+
   public SpawnEntry(String id, String mobName, int rate) {    
     this.id = id;
     this.mobName = mobName;
@@ -33,6 +36,10 @@ public class SpawnEntry implements ISpawnEntry {
   @Override
   public List<IBiomeFilter> getFilters() {
     return filters;
+  }
+
+  public void addDimensioFilter(DimensionFilter filter) {
+    dimFilters.add(filter);
   }
 
   @Override
@@ -84,6 +91,16 @@ public class SpawnEntry implements ISpawnEntry {
   @Override
   public int getRate() {
     return rate;
+  }
+
+  @Override
+  public boolean canSpawnInDimension(World world) {
+    for (DimensionFilter f : dimFilters) {
+      if(!f.canSpawnInDimension(world)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
