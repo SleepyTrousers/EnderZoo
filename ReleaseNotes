@@ -1,4 +1,10 @@
 -------------------------------------------
+Version 1.0.7
+-------------------------------------------
+
+- Fixed massive spawn rates due to debug settings included in the default SpawnConfig_User.xml file
+
+-------------------------------------------
 Version 1.0.6
 -------------------------------------------
 
