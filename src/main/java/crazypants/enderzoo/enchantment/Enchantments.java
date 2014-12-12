@@ -2,6 +2,7 @@ package crazypants.enderzoo.enchantment;
 
 import net.minecraft.enchantment.Enchantment;
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.config.Config;
 
 public class Enchantments {
 
@@ -19,14 +20,20 @@ public class Enchantments {
   private EnchantmentWitherWeapon witherWeapon;
 
   private void registerEnchantments() {
-    int id = getEmptyEnchantId();
+    int id = Config.enchantmentWitherArrowId;
+    if(id < 0) {
+      id = getEmptyEnchantId();
+    }
     if(id < 0) {
       Log.error("Could not find an empty enchantment ID to add enchanments");
       return;
     }
     witherArrow = new EnchantmentWitherArrow(id);
 
-    id = getEmptyEnchantId();
+    id = Config.enchantmentWitherWeaponId;
+    if(id < 0) {
+      id = getEmptyEnchantId();
+    }
     if(id < 0) {
       Log.error("Could not find an empty enchantment ID to add enchanments");
       return;

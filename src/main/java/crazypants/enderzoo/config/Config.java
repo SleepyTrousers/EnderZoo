@@ -131,11 +131,13 @@ public final class Config {
   public static double direWolfAggresiveRange = 4;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
+  public static int enchantmentWitherArrowId = -1;
   public static int enchantmentWitherArrowWeight = 2;
   public static int enchantmentWitherArrowDuration = 200;
   public static int enchantmentWitherArrowMinEnchantability = 20;
   public static int enchantmentWitherArrowMaxEnchantability = 50;
 
+  public static int enchantmentWitherWeaponId = -1;
   public static int enchantmentWitherWeaponWeight = 2;
   public static int enchantmentWitherWeaponDuration = 200;
   public static int enchantmentWitherWeaponMinEnchantability = 20;
@@ -161,6 +163,7 @@ public final class Config {
   public static float guardiansBowDamageBonus = 0f;
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
+
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -316,6 +319,9 @@ public final class Config {
     direWolfAggresiveRange = config.get(sectionDireWolf.name, "direWolfAggresiveRange", direWolfAggresiveRange,
         "If a player gets within this range they will be attacked").getDouble(direWolfAggresiveRange);
 
+    enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
+        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(
+        enchantmentWitherArrowId);
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
         enchantmentWitherArrowWeight);
@@ -327,6 +333,8 @@ public final class Config {
     enchantmentWitherArrowMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherArrowMaxEnchantability",
         enchantmentWitherArrowMaxEnchantability, "The maximum required level").getInt(enchantmentWitherArrowMaxEnchantability);
 
+    enchantmentWitherWeaponId = config.get(sectionEnchants.name, "enchantmentWitherWeaponId", enchantmentWitherWeaponId,
+        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherWeaponId);
     enchantmentWitherWeaponWeight = config.get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
         enchantmentWitherWeaponWeight);

@@ -94,9 +94,6 @@ public class EnderZoo {
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    DebugUtil.instance.setEnabled(true);
-          
-    //Register enchantments
-    Enchantments.getInstance();
 
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
   }
@@ -118,6 +115,10 @@ public class EnderZoo {
 
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
+
+    //Register enchantments
+    Enchantments.getInstance();
+
     MobSpawns.instance.loadSpawnConfig();
     addRecipes();
 
