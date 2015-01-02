@@ -159,7 +159,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
 
   @Override
   public boolean attackEntityFrom(DamageSource source, float amount) {
-    if(source.getEntity() == owner) {
+    if(owner!=null && source.getEntity() == owner) {
       return false;
     }
     boolean res = super.attackEntityFrom(source, amount);
@@ -247,6 +247,8 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       }
     }
   }
+
+
 
   protected void updateAttackDamage(float growthRatio) {
     IAttributeInstance att = EntityUtil.removeModifier(this, SharedMonsterAttributes.attackDamage, ATTACK_BOOST_MOD_UID);
