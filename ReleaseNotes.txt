@@ -1,4 +1,16 @@
 -------------------------------------------
+Version 1.0.9
+-------------------------------------------
+New
+- Add russion translation
+
+Changes
+- IEnderZooMob extends IMob now
+
+Bugs
+- Fixed wither cats being invincible to mob grinders
+
+-------------------------------------------
 Version 1.0.8
 -------------------------------------------
 
