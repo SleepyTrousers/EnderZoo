@@ -9,6 +9,7 @@ buildscript {
 
 apply plugin: 'forge'
 apply plugin: 'maven-publish'
+apply plugin: 'curseforge'
 
 ext.buildnumber = 0
 if (System.getenv('BUILD_NUMBER') != null)
