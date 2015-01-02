@@ -31,6 +31,8 @@ import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
 import crazypants.enderzoo.potion.BrewingUtil;
 import crazypants.enderzoo.vec.Point3i;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
@@ -259,8 +261,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     numCats = Math.max(numCats, Config.witherWitchMinCats);
     for (int i = 0; i < numCats; i++) {
       Point3i startPoint = EntityUtil.getEntityPositionI(this);
-      startPoint.x += 4 - rand.nextInt(6);
-      startPoint.z += 4 - rand.nextInt(6);
+      startPoint.x += 4 - rand.nextInt(9);
+      startPoint.z += 4 - rand.nextInt(9);
       Point3i spawnLoc = new Point3i();
       if(SpawnUtil.findClearGround(worldObj, startPoint, spawnLoc, 2, 10, true)) {
         spawnCat(spawnLoc);
@@ -275,6 +277,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     cat.onSpawnWithEgg(null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
+    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) return;
     cats.add(cat);
     worldObj.spawnEntityInWorld(cat);
   }
