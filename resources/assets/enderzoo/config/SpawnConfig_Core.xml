@@ -93,6 +93,7 @@ dimensionExclude attributes:
       <biome type="MUSHROOM" exclude="true" />
     </biomeFilter>   
     <dimensionExclude name="Twilight Forest"/>           
+    <dimensionExclude name="Dungeon"/>
   </entry>
 
   <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="30">
