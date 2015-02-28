@@ -1,6 +1,8 @@
 package crazypants.enderzoo.entity.render;
 
+import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -11,16 +13,17 @@ import crazypants.enderzoo.entity.EntityDireWolf;
 
 public class RenderDirewolf extends RenderLiving {
 
+  
+
   //private static final ResourceLocation wolfTextures = new ResourceLocation("enderzoo:entity/dire_wolf.png");
   private ResourceLocation wolfTextures = new ResourceLocation("enderzoo:entity/dire_wolf.png");
 
   private int debugCounter = 0;
 
-  public RenderDirewolf() {
-    super(new ModelDireWolf(), 0.5f);
-    //setRenderPassModel(renderpassModel);
+  public RenderDirewolf(RenderManager rm) {
+    super(rm, new ModelDireWolf(), 0.5f);
   }
-
+    
   protected float handleRotationFloat(EntityDireWolf wolf, float p_77044_2_) {
     return wolf.getTailRotation();
   }

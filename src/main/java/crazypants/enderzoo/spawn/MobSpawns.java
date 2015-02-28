@@ -7,7 +7,7 @@ import java.util.List;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.world.biome.BiomeGenBase;
-import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.config.SpawnConfig;

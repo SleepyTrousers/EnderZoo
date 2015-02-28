@@ -6,12 +6,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import crazypants.enderzoo.config.Config;
 
 public class EnchantmentWitherArrow extends Enchantment {
 
   protected EnchantmentWitherArrow(int id) {
-    super(id, Config.enchantmentWitherArrowWeight, EnumEnchantmentType.bow);
+    super(id, new ResourceLocation("enderzoo.witherArrow"), Config.enchantmentWitherArrowWeight, EnumEnchantmentType.BOW);
     setName("enderzoo.witherArrow");
   }
 
@@ -31,7 +32,8 @@ public class EnchantmentWitherArrow extends Enchantment {
   }
 
   @Override
-  public void func_151368_a(EntityLivingBase source, Entity entityHit, int p_151368_3_) {
+  //public void func_151368_a(EntityLivingBase source, Entity entityHit, int p_151368_3_) {
+  public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if(entityHit instanceof EntityLivingBase) {
       ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(Potion.wither.getId(), Config.enchantmentWitherArrowDuration));

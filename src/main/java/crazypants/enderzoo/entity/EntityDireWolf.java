@@ -14,11 +14,14 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideAggressive;
 import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
@@ -41,7 +44,8 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   public EntityDireWolf(World world) {
     super(world);
     setSize(0.8F, 1.2F);
-    getNavigator().setAvoidsWater(true);
+    //getNavigator().setAvoidsWater(true);
+    ((PathNavigateGround)this.getNavigator()).func_179690_a(true);
     tasks.addTask(1, new EntityAISwimming(this));
     tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
     tasks.addTask(4, new EntityAIAttackOnCollideAggressive(this, 1.1D, true).setAttackFrequency(20));
@@ -50,7 +54,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     tasks.addTask(9, new EntityAILookIdle(this));
     targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
     if(Config.direWolfAggresiveRange > 0) {
-      EntityAINearestAttackableTargetBounded nearTarg = new EntityAINearestAttackableTargetBounded(this, EntityPlayer.class, 0, true);
+      EntityAINearestAttackableTargetBounded nearTarg = new EntityAINearestAttackableTargetBounded(this, EntityPlayer.class, true);
       nearTarg.setMaxDistanceToTarget(Config.direWolfAggresiveRange);
       targetTasks.addTask(2, nearTarg);
     }
@@ -62,11 +66,6 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     super.entityInit();
     getDataWatcher().addObject(ANGRY_INDEX, (byte) 0);
     updateAngry();
-  }
-
-  @Override
-  protected boolean isAIEnabled() {
-    return true;
   }
 
   public boolean isAngry() {
@@ -98,11 +97,11 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     super.applyEntityAttributes();
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
     getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-    MobInfo.DIRE_WOLF.applyAttributes(this);
+    MobInfo.DIRE_WOLF.applyAttributes(this);       
   }
 
   @Override
-  protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_) {
+  protected void playStepSound(BlockPos bp, Block p_145780_4_) {
     playSound("mob.wolf.step", 0.15F, 1.0F);
   }
 
@@ -169,9 +168,10 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     double hw = width / 2.0F;
     double hd = hw * 2.25;
     float f1 = height;
-    boundingBox.setBounds(
-        x - hw, y - yOffset + ySize, z - hd,
-        x + hw, y - yOffset + ySize + f1, z + hd);
+    setEntityBoundingBox(new AxisAlignedBB(
+        x - hw, y, z - hd,
+        x + hw, y + f1, z + hd));
+    
   }
 
   @Override
@@ -192,7 +192,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
       return;
     }
     int range = 16;
-    AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+    AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
     List<EntityDireWolf> pack = worldObj.getEntitiesWithinAABB(EntityDireWolf.class, bb);
     if(pack != null && !pack.isEmpty()) {
       for (EntityDireWolf wolf : pack) {

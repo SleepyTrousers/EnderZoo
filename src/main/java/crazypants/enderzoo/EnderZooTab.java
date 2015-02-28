@@ -3,8 +3,8 @@ package crazypants.enderzoo;
 import static crazypants.enderzoo.EnderZoo.MODID;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EnderZooTab extends CreativeTabs {
 
@@ -28,7 +28,9 @@ public class EnderZooTab extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    return EnderZoo.itemForCreativeMenuIcon;
+    //TODO: 1.8
+    //return EnderZoo.itemForCreativeMenuIcon;
+    return EnderZoo.itemWitheringDust;
   }
 
 }

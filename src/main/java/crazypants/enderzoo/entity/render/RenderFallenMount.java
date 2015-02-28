@@ -2,15 +2,15 @@ package crazypants.enderzoo.entity.render;
 
 import java.util.Map;
 
-import com.google.common.collect.Maps;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelHorse;
 import net.minecraft.client.renderer.entity.RenderHorse;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.LayeredTexture;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.util.ResourceLocation;
+
+import com.google.common.collect.Maps;
 
 public class RenderFallenMount extends RenderHorse {
 
@@ -24,12 +24,13 @@ public class RenderFallenMount extends RenderHorse {
   private static final ResourceLocation zombieHorseTexture = new ResourceLocation(textureName);
   private static final Map<String, ResourceLocation> textureCache = Maps.newHashMap();
 
-  public RenderFallenMount() {
-    super(new ModelHorse(), 0.75F);
+  public RenderFallenMount(RenderManager rm) {
+    super(rm, new ModelHorse(), 0.75F);
   }
 
   
-  protected ResourceLocation getEntityTexture(EntityHorse horse) {
+  @Override
+  protected ResourceLocation func_180581_a(EntityHorse horse) {
     if(horse.getTotalArmorValue() == 0) {
       return zombieHorseTexture;
     } else {

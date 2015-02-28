@@ -21,18 +21,20 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
 import crazypants.enderzoo.potion.BrewingUtil;
 import crazypants.enderzoo.vec.Point3i;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
@@ -74,12 +76,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     tasks.addTask(3, new EntityAILookIdle(this));
     targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
-  }
-
-  @Override
-  protected boolean isAIEnabled() {
-    return true;
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
   }
 
   @Override
@@ -133,9 +130,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   @Override
-  public IEntityLivingData onSpawnWithEgg(IEntityLivingData p_110161_1_) {
+  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData livingData) {
     spawned = true;
-    return super.onSpawnWithEgg(p_110161_1_);
+    return super.func_180482_a(di, livingData);
   }
 
   @Override
@@ -274,7 +271,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   private void spawnCat(Point3i spawnLoc) {
     EntityWitherCat cat = new EntityWitherCat(worldObj);
-    cat.onSpawnWithEgg(null);
+    cat.func_180482_a(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
     if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) return;

@@ -32,7 +32,7 @@ public class DimensionFilter {
     if(name != null) {
       return !name.equals(world.provider.getDimensionName());
     }
-    int id = world.provider.dimensionId;
+    int id = world.provider.getDimensionId();
     if(isRange) {
       return id < minId || id > maxId;
     }

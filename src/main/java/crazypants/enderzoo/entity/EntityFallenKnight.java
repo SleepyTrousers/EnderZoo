@@ -1,6 +1,7 @@
 package crazypants.enderzoo.entity;
 
 
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,6 +18,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
@@ -46,7 +49,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   public EntityFallenKnight(World world) {
     super(world);
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, false));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
   }
 
   @Override
@@ -56,14 +59,17 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     MobInfo.FALLEN_KNIGHT.applyAttributes(this);
   }
 
-  @Override
-  protected void attackEntity(Entity target, float distance) {
-    if(attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY
-        && target.boundingBox.minY < boundingBox.maxY) {
-      attackTime = 20;
-      attackEntityAsMob(target);
-    }
-  }
+  
+  
+//  TODO:  
+//  @Override
+//  protected void attackEntity(Entity target, float distance) {
+//    if(attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY
+//        && target.boundingBox.minY < boundingBox.maxY) {
+//      attackTime = 20;
+//      attackEntityAsMob(target);
+//    }
+//  }
 
   private float getAttackRange() {
     if(isRiding()) {
@@ -168,7 +174,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
       mount = new EntityFallenMount(worldObj);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-      mount.onSpawnWithEgg((IEntityLivingData) null);
+
+      DifficultyInstance di = worldObj.getDifficultyForLocation(new BlockPos(mount));
+      mount.func_180482_a(di, null);
       //NB: don;t check for entity collisions as we know the knight will collide
       if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
         mount = null;
@@ -212,7 +220,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
         if(item != null) {
           ItemStack stack = new ItemStack(item);
           if(armorLevel == 0) {
-            ((ItemArmor) item).func_82813_b(stack, 0);
+            ((ItemArmor) item).setColor(stack, 0);
           }
           setCurrentItemOrArmor(slot, stack);
         }
@@ -267,7 +275,8 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  public IEntityLivingData onSpawnWithEgg(IEntityLivingData livingData) {
+  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData livingData) {  
+  //public IEntityLivingData onSpawnWithEgg(IEntityLivingData livingData) {
 
     spawned = true;
     
@@ -276,9 +285,12 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     setSkeletonType(0);
     addRandomArmor();
-    enchantEquipment();
+    //enchantEquipment();
+    func_180483_b(di);
     
-    float f = worldObj.func_147462_b(posX, posY, posZ);
+    float f = di.getClampedAdditionalDifficulty();
+    //float f = worldObj.func_147462_b(posX, posY, posZ);
+    this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);        
     setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
     setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
 
@@ -320,9 +332,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
   }
 
-  @Override
-  protected void dropRareDrop(int p_70600_1_) {
-  }
+//  @Override
+//  protected void dropRareDrop(int p_70600_1_) {
+//  }
 
   //public boolean attackEntityAsMob(Entity p_70652_1_)
   //  {

@@ -14,7 +14,7 @@ public class SpawnEntry implements ISpawnEntry {
   private final String mobName;
   private final int rate;
   
-  private EnumCreatureType creatureType = EnumCreatureType.monster;  
+  private EnumCreatureType creatureType = EnumCreatureType.MONSTER;  
   private int minGroupSize = 1;
   private int maxGroupSize = 3;
   private boolean isRemove = false;

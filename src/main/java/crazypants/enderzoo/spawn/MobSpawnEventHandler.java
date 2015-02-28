@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event.Result;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.IEnderZooMob;
 
@@ -123,11 +123,11 @@ public class MobSpawnEventHandler {
   }
 
   private void applyGloablModifiers(EntityLivingBase entity, World world) {
-    if(world == null || world.difficultySetting == null) {
+    if(world == null || world.getDifficulty() == null) {
       return;
     }
-    double attackModifier = otherAttackMods.get(world.difficultySetting);
-    double healthModifier = otherHealthMods.get(world.difficultySetting);
+    double attackModifier = otherAttackMods.get(world.getDifficulty());
+    double healthModifier = otherHealthMods.get(world.getDifficulty());
     if(attackModifier != 1) {
       adjustBaseAttack(entity, attackModifier);
     }
@@ -137,11 +137,11 @@ public class MobSpawnEventHandler {
   }
 
   private void applyEnderZooModifiers(EntityLivingBase entity, World world) {
-    if(world == null || world.difficultySetting == null) {
+    if(world == null || world.getDifficulty() == null) {
       return;
     }
-    double attackModifier = ezAttackMods.get(world.difficultySetting);
-    double healthModifier = ezHealthMods.get(world.difficultySetting);
+    double attackModifier = ezAttackMods.get(world.getDifficulty());
+    double healthModifier = ezHealthMods.get(world.getDifficulty());
     if(attackModifier != 1) {
       adjustBaseAttack(entity, attackModifier);
     }

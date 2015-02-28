@@ -75,7 +75,7 @@ public class EntityAIRangedAttack extends EntityAIBase {
 
   @Override
   public void updateTask() {
-    double distToTargetSq = entityHost.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+    double distToTargetSq = entityHost.getDistanceSq(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
     boolean canSee = entityHost.getEntitySenses().canSee(attackTarget);
 
     if(canSee) {

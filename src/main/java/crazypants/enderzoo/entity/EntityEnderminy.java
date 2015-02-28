@@ -18,22 +18,23 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
-
 
   public static String NAME = "enderzoo.Enderminy";
   public static final int EGG_BG_COL = 0x27624D;
@@ -46,7 +47,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   private static final UUID attackingSpeedBoostModifierUUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291B0");
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
       6.2, 0)).setSaved(false);
-  
+
   /**
    * Counter to delay the teleportation of an enderman towards the currently
    * attacked target
@@ -72,12 +73,12 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     stepHeight = 1.0F;
   }
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public float getShadowSize() {
-    return 0.01F;
-  }
- 
+  //  @Override
+  //  @SideOnly(Side.CLIENT)
+  //  public float getShadowSize() {
+  //    return 0.01F;
+  //  }
+
   @Override
   protected boolean isValidLightLevel() {
     return Config.enderminySpawnInLitAreas ? true : super.isValidLightLevel();
@@ -101,53 +102,51 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     boolean passedGrassCheck = true;
     if(Config.enderminySpawnOnlyOnGrass) {
       int i = MathHelper.floor_double(posX);
-      int j = MathHelper.floor_double(boundingBox.minY);
+      int j = MathHelper.floor_double(getEntityBoundingBox().minY);
       int k = MathHelper.floor_double(posZ);
-      passedGrassCheck = worldObj.getBlock(i, j - 1, k) == Blocks.grass;
+      passedGrassCheck = worldObj.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.grass;
     }
     return posY > Config.enderminyMinSpawnY && super.getCanSpawnHere();
   }
 
-  
-
-  @Override
-  protected Entity findPlayerToAttack() {
-
-    if(attackIfLookingAtPlayer) {
-      EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
-      if(entityplayer != null) {
-        if(shouldAttackPlayer(entityplayer)) {
-          isAggressive = true;
-
-          if(stareTimer == 0) {
-            worldObj.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "mob.endermen.stare", 1.0F, 1.0F);
-          }
-
-          if(stareTimer++ == 5) {
-            stareTimer = 0;
-            setScreaming(true);
-            return entityplayer;
-          }
-        } else {
-          stareTimer = 0;
-        }
-      }
-    }
-    if(attackCreepers) {
-      int range = 16;
-      AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-      List<EntityCreeper> creepers = worldObj.getEntitiesWithinAABB(EntityCreeper.class, bb);
-      if(creepers != null && !creepers.isEmpty()) {
-        Collections.sort(creepers, closestEntityComparator);
-        for (EntityCreeper creeper : creepers) {
-          if(creeper.canEntityBeSeen(this)) {
-            return creeper;
-          }
-        }
-      }
-    }
-    return null;
-  }
+  //  @Override
+  //  protected Entity findPlayerToAttack() {
+  //
+  //    if(attackIfLookingAtPlayer) {
+  //      EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
+  //      if(entityplayer != null) {
+  //        if(shouldAttackPlayer(entityplayer)) {
+  //          isAggressive = true;
+  //
+  //          if(stareTimer == 0) {
+  //            worldObj.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "mob.endermen.stare", 1.0F, 1.0F);
+  //          }
+  //
+  //          if(stareTimer++ == 5) {
+  //            stareTimer = 0;
+  //            setScreaming(true);
+  //            return entityplayer;
+  //          }
+  //        } else {
+  //          stareTimer = 0;
+  //        }
+  //      }
+  //    }
+  //    if(attackCreepers) {
+  //      int range = 16;
+  //      AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+  //      List<EntityCreeper> creepers = worldObj.getEntitiesWithinAABB(EntityCreeper.class, bb);
+  //      if(creepers != null && !creepers.isEmpty()) {
+  //        Collections.sort(creepers, closestEntityComparator);
+  //        for (EntityCreeper creeper : creepers) {
+  //          if(creeper.canEntityBeSeen(this)) {
+  //            return creeper;
+  //          }
+  //        }
+  //      }
+  //    }
+  //    return null;
+  //  }
 
   /**
    * Checks to see if this enderman should be attacking this player
@@ -159,9 +158,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       return false;
     } else {
 
-      Vec3 relativePlayerEyePos = Vec3.createVectorHelper(
+      Vec3 relativePlayerEyePos = new Vec3(
           posX - player.posX,
-          boundingBox.minY + height / 2.0F - (player.posY + player.getEyeHeight()),
+          getEntityBoundingBox().minY + height / 2.0F - (player.posY + player.getEyeHeight()),
           posZ - player.posZ);
 
       double distance = relativePlayerEyePos.lengthVector();
@@ -181,55 +180,56 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
    * required. For example, zombies and skeletons use this to react to sunlight
    * and start to burn.
    */
-  @Override
-  public void onLivingUpdate() {
-
-    if(lastEntityToAttack != entityToAttack) {
-      IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-      iattributeinstance.removeModifier(attackingSpeedBoostModifier);
-
-      if(entityToAttack != null) {
-        iattributeinstance.applyModifier(attackingSpeedBoostModifier);
-      }
-    }
-
-    lastEntityToAttack = entityToAttack;
-    for (int k = 0; k < 2; ++k) {
-      worldObj.spawnParticle("portal", posX + (rand.nextDouble() - 0.5D) * width, posY + rand.nextDouble()
-          * height - 0.25D, posZ + (rand.nextDouble() - 0.5D) * width, (rand.nextDouble() - 0.5D) * 2.0D,
-          -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
-    }
-
-    if(isBurning() || isInWater()) {
-      entityToAttack = null;
-      setScreaming(false);
-      isAggressive = false;
-      teleportRandomly();
-    }
-
-    if(isScreaming() && !isAggressive && rand.nextInt(100) == 0) {
-      setScreaming(false);
-    }
-
-    isJumping = false;
-
-    if(entityToAttack != null) {
-      faceEntity(entityToAttack, 100.0F, 100.0F);
-    }
-
-    if(!worldObj.isRemote && isEntityAlive()) {
-      if(entityToAttack != null) {
-        if(entityToAttack.getDistanceSqToEntity(this) > 256.0D && teleportDelay++ >= 30 && teleportToEntity(entityToAttack)) {
-          teleportDelay = 0;
-        }
-      } else {
-        setScreaming(false);
-        teleportDelay = 0;
-      }
-    }
-
-    super.onLivingUpdate();
-  }
+    // TODO
+//  @Override
+//  public void onLivingUpdate() {
+//
+//    if(lastEntityToAttack != entityToAttack) {
+//      IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+//      iattributeinstance.removeModifier(attackingSpeedBoostModifier);
+//
+//      if(entityToAttack != null) {
+//        iattributeinstance.applyModifier(attackingSpeedBoostModifier);
+//      }
+//    }
+//
+//    lastEntityToAttack = entityToAttack;
+//    for (int k = 0; k < 2; ++k) {
+//      worldObj.spawnParticle("portal", posX + (rand.nextDouble() - 0.5D) * width, posY + rand.nextDouble()
+//          * height - 0.25D, posZ + (rand.nextDouble() - 0.5D) * width, (rand.nextDouble() - 0.5D) * 2.0D,
+//          -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
+//    }
+//
+//    if(isBurning() || isInWater()) {
+//      entityToAttack = null;
+//      setScreaming(false);
+//      isAggressive = false;
+//      teleportRandomly();
+//    }
+//
+//    if(isScreaming() && !isAggressive && rand.nextInt(100) == 0) {
+//      setScreaming(false);
+//    }
+//
+//    isJumping = false;
+//
+//    if(entityToAttack != null) {
+//      faceEntity(entityToAttack, 100.0F, 100.0F);
+//    }
+//
+//    if(!worldObj.isRemote && isEntityAlive()) {
+//      if(entityToAttack != null) {
+//        if(entityToAttack.getDistanceSqToEntity(this) > 256.0D && teleportDelay++ >= 30 && teleportToEntity(entityToAttack)) {
+//          teleportDelay = 0;
+//        }
+//      } else {
+//        setScreaming(false);
+//        teleportDelay = 0;
+//      }
+//    }
+//
+//    super.onLivingUpdate();
+//  }
 
   protected boolean teleportRandomly(int distance) {
     double d0 = posX + (rand.nextDouble() - 0.5D) * distance;
@@ -243,7 +243,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   protected boolean teleportToEntity(Entity p_70816_1_) {
-    Vec3 vec3 = Vec3.createVectorHelper(posX - p_70816_1_.posX, boundingBox.minY + height / 2.0F - p_70816_1_.posY
+    Vec3 vec3 = new Vec3(posX - p_70816_1_.posX, getEntityBoundingBox().minY + height / 2.0F - p_70816_1_.posY
         + p_70816_1_.getEyeHeight(), posZ - p_70816_1_.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
@@ -271,11 +271,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     int zInt = MathHelper.floor_double(posZ);
 
     boolean flag = false;
-    if(worldObj.blockExists(xInt, yInt, zInt)) {
+    if(worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt))) {
 
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
-        Block block = worldObj.getBlock(xInt, yInt - 1, zInt);
+        Block block = worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt)).getBlock();
         if(block.getMaterial().blocksMovement()) {
           foundGround = true;
         } else {
@@ -286,7 +286,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       if(foundGround) {
         setPosition(posX, posY, posZ);
-        if(worldObj.getCollidingBoundingBoxes(this, boundingBox).isEmpty() && !worldObj.isAnyLiquid(boundingBox)) {
+        if(worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox())) {
           flag = true;
         }
       }
@@ -306,7 +306,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       double d7 = d3 + (posX - d3) * d6 + (rand.nextDouble() - 0.5D) * width * 2.0D;
       double d8 = d4 + (posY - d4) * d6 + rand.nextDouble() * height;
       double d9 = d5 + (posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * width * 2.0D;
-      worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
+      worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
     worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
@@ -354,7 +354,8 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
    */
   @Override
   public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-    if(isEntityInvulnerable()) {
+
+    if(isEntityInvulnerable(damageSource)) {
       return false;
     }
 
@@ -372,14 +373,15 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
     boolean res = super.attackEntityFrom(damageSource, p_70097_2_);
     if(damageSource instanceof EntityDamageSource && damageSource.getEntity() instanceof EntityPlayer &&
-        getHealth() > 0 
-        //&& !ItemDarkSteelSword.isEquippedAndPowered((EntityPlayer) damageSource.getEntity(), 1)) {
-        ) {
+        getHealth() > 0
+    //&& !ItemDarkSteelSword.isEquippedAndPowered((EntityPlayer) damageSource.getEntity(), 1)) {
+    ) {
       isAggressive = true;
       if(rand.nextInt(3) == 0) {
         for (int i = 0; i < 64; ++i) {
           if(teleportRandomly(16)) {
-            entityToAttack = damageSource.getEntity();
+            //TODO
+            //            entityToAttack = damageSource.getEntity();
             doGroupArgo();
             return true;
           }
@@ -398,18 +400,20 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     if(!groupAgroEnabled) {
       return;
     }
-    if(!(entityToAttack instanceof EntityPlayer)) {
-      return;
-    }
+    //TODO
+//    if(!(entityToAttack instanceof EntityPlayer)) {
+//      return;
+//    }
     int range = 16;
-    AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+    AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
     List<EntityEnderminy> minies = worldObj.getEntitiesWithinAABB(EntityEnderminy.class, bb);
     if(minies != null && !minies.isEmpty()) {
 
       for (EntityEnderminy miny : minies) {
-        if(miny.entityToAttack == null) { //&& miny.canEntityBeSeen(this)) {
-          miny.entityToAttack = entityToAttack;
-        }
+        //TODO:
+//        if(miny.entityToAttack == null) { //&& miny.canEntityBeSeen(this)) {
+//          miny.entityToAttack = entityToAttack;
+//        }
       }
     }
   }
@@ -423,18 +427,18 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
-    
-    Vec3 pos = Vec3.createVectorHelper(0, 0, 0);
+
+    Vec3 pos = new Vec3(0, 0, 0);
 
     @Override
     public int compare(EntityCreeper o1, EntityCreeper o2) {
-      VecUtil.set(pos, posX, posY, posZ);      
+      pos = new Vec3(posX, posY, posZ);
       double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
       double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
       return Double.compare(d1, d2);
     }
   }
-  
+
   public double distanceSquared(double x, double y, double z, Vec3 v2) {
     double dx, dy, dz;
     dx = x - v2.xCoord;

@@ -1,6 +1,5 @@
 package crazypants.enderzoo.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,26 +8,25 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.ArrowNockEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.config.Config;
 
 public class ItemGuardiansBow extends ItemBow {
 
-  private static final String NAME = "guardiansBow";
+  public static final String NAME = "guardiansBow";
 
   public static final String[] bowPullIconNameArray = new String[] { "pulling_0", "pulling_1", "pulling_2" };
-  @SideOnly(Side.CLIENT)
-  private IIcon[] iconArray;
+//  @SideOnly(Side.CLIENT)
+//  private IIcon[] iconArray;
 
   private int drawTime = Config.guardiansBowDrawTime;
   private float damageBonus = Config.guardiansBowDamageBonus;
@@ -45,7 +43,7 @@ public class ItemGuardiansBow extends ItemBow {
   protected ItemGuardiansBow() {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    setTextureName("enderzoo:guardiansBow");
+    //setTextureName("enderzoo:guardiansBow");
     setMaxDamage(800);
     setHasSubtypes(false);
   }
@@ -126,10 +124,10 @@ public class ItemGuardiansBow extends ItemBow {
 
   }
 
-  @Override
-  public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
-    return stack;
-  }
+//  @Override
+//  public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
+//    return stack;
+//  }
 
   @Override
   public int getMaxItemUseDuration(ItemStack p_77626_1_) {
@@ -142,26 +140,8 @@ public class ItemGuardiansBow extends ItemBow {
    */
   @Override
   public EnumAction getItemUseAction(ItemStack p_77661_1_) {
-    return EnumAction.bow;
+    return EnumAction.BOW;
   }
-
-  @Override
-  public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
-    int useTime = stack.getMaxItemUseDuration() - useRemaining;
-    IIcon iicon = itemIcon;
-    if(usingItem == null) {
-      return iicon;
-    }
-    if(useTime >= drawTime - 2) {
-      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(2);
-    } else if(useTime > drawTime * 2 / 3f) {
-      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(1);
-    } else if(useTime > 0) {
-      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(0);
-    }
-    return iicon;
-  }
-
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
@@ -181,21 +161,38 @@ public class ItemGuardiansBow extends ItemBow {
     return 1;
   }
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public void registerIcons(IIconRegister p_94581_1_) {
-    itemIcon = p_94581_1_.registerIcon(getIconString() + "_standby");
-    iconArray = new IIcon[bowPullIconNameArray.length];
-
-    for (int i = 0; i < iconArray.length; ++i) {
-      iconArray[i] = p_94581_1_.registerIcon(getIconString() + "_" + bowPullIconNameArray[i]);
-    }
-  }
-
-  @Override
-  @SideOnly(Side.CLIENT)
-  public IIcon getItemIconForUseDuration(int useDuration) {
-    return iconArray[useDuration];
-  }
+//  @Override
+//  public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
+//    int useTime = stack.getMaxItemUseDuration() - useRemaining;
+//    IIcon iicon = itemIcon;
+//    if(usingItem == null) {
+//      return iicon;
+//    }
+//    if(useTime >= drawTime - 2) {
+//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(2);
+//    } else if(useTime > drawTime * 2 / 3f) {
+//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(1);
+//    } else if(useTime > 0) {
+//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(0);
+//    }
+//    return iicon;
+//  }
+//  
+//  @Override
+//  @SideOnly(Side.CLIENT)
+//  public void registerIcons(IIconRegister p_94581_1_) {
+//    itemIcon = p_94581_1_.registerIcon(getIconString() + "_standby");
+//    iconArray = new IIcon[bowPullIconNameArray.length];
+//
+//    for (int i = 0; i < iconArray.length; ++i) {
+//      iconArray[i] = p_94581_1_.registerIcon(getIconString() + "_" + bowPullIconNameArray[i]);
+//    }
+//  }
+//
+//  @Override
+//  @SideOnly(Side.CLIENT)
+//  public IIcon getItemIconForUseDuration(int useDuration) {
+//    return iconArray[useDuration];
+//  }
 
 }

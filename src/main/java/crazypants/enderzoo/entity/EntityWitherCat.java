@@ -2,6 +2,7 @@ package crazypants.enderzoo.entity;
 
 import java.util.UUID;
 
+import net.minecraft.block.BlockBed.EnumPartType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideOwned;
@@ -129,11 +132,6 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   @Override
-  protected boolean isAIEnabled() {
-    return true;
-  }
-
-  @Override
   public void setAttackTarget(EntityLivingBase target) {
     if(getAttackTarget() != target) {
       EntityUtil.cancelCurrentTasks(this);
@@ -159,7 +157,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
 
   @Override
   public boolean attackEntityFrom(DamageSource source, float amount) {
-    if(owner!=null && source.getEntity() == owner) {
+    if(owner != null && source.getEntity() == owner) {
       return false;
     }
     boolean res = super.attackEntityFrom(source, amount);
@@ -248,8 +246,6 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     }
   }
 
-
-
   protected void updateAttackDamage(float growthRatio) {
     IAttributeInstance att = EntityUtil.removeModifier(this, SharedMonsterAttributes.attackDamage, ATTACK_BOOST_MOD_UID);
     if(growthRatio == 0) {
@@ -287,7 +283,9 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       double xOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
       double yOffset = offsetScale / 3 + rand.nextFloat() * offsetScale / 3 * 2F;
       double zOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
-      EntityFX fx = Minecraft.getMinecraft().renderGlobal.doSpawnParticle("spell", startX + xOffset, startY + yOffset, startZ + zOffset, 0.0D, 0.0D, 0.0D);
+      //EntityFX fx = Minecraft.getMinecraft().renderGlobal.doSpawnParticle("spell", startX + xOffset, startY + yOffset, startZ + zOffset, 0.0D, 0.0D, 0.0D);            
+      EntityFX fx = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), startX + xOffset, startY + yOffset,
+          startZ + zOffset, 0.0D, 0.0D, 0.0D);
       if(fx != null) {
         fx.setRBGColorF(0.8f, 0.2f, 0.2f);
         fx.motionY *= 0.025f;
@@ -309,9 +307,12 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     double hw = width / 2.0F;
     double hd = hw * 2.75;
     float f1 = height;
-    boundingBox.setBounds(
-        x - hw, y - yOffset + ySize, z - hd,
-        x + hw, y - yOffset + ySize + f1, z + hd);
+//    boundingBox.setBounds(
+//        x - hw, y - yOffset + ySize, z - hd,
+//        x + hw, y - yOffset + ySize + f1, z + hd);
+    setEntityBoundingBox(new AxisAlignedBB(
+        x - hw, y, z - hd,
+        x + hw, y + f1, z + hd));
   }
 
   //TODO: New sounds

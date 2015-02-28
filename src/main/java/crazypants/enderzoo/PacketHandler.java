@@ -1,10 +1,10 @@
 package crazypants.enderzoo;
 
 import net.minecraft.entity.Entity;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 
 public class PacketHandler {
 
@@ -17,7 +17,7 @@ public class PacketHandler {
   }
 
   public static void sendToAllAround(IMessage message, Entity e, int range) {
-    INSTANCE.sendToAllAround(message, new TargetPoint(e.worldObj.provider.dimensionId, e.posX, e.posY, e.posZ, range));
+    INSTANCE.sendToAllAround(message, new TargetPoint(e.worldObj.provider.getDimensionId(), e.posX, e.posY, e.posZ, range));
   }
 
   public static void sendToAllAround(IMessage message, Entity e) {

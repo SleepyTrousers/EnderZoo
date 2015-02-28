@@ -20,16 +20,17 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityUtil {
 
   public static boolean isHardDifficulty(World worldObj) {
-    return worldObj.difficultySetting == EnumDifficulty.HARD;
+    return worldObj.getDifficulty() == EnumDifficulty.HARD;
   }
 
   public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {
     //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied
-    float occupiedDiffcultyMultiplier = world.func_147462_b(x, y, z);
+    float occupiedDiffcultyMultiplier = world.getDifficultyForLocation(VecUtil.bpos(x, y, z)).getClampedAdditionalDifficulty();
     occupiedDiffcultyMultiplier /= 1.5f; // normalize
     return occupiedDiffcultyMultiplier;
   }
@@ -39,7 +40,8 @@ public class EntityUtil {
   }
 
   public static Vec3 getEntityPosition(Entity entity) {
-    return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
+	  
+    return new Vec3(entity.posX, entity.posY, entity.posZ);
   }
 
   public static AxisAlignedBB getBoundsAround(Entity entity, double range) {
@@ -51,7 +53,7 @@ public class EntityUtil {
   }
 
   public static AxisAlignedBB getBoundsAround(double x, double y, double z, double range) {
-    return AxisAlignedBB.getBoundingBox(
+    return new AxisAlignedBB(
         x - range, y - range, z - range,
         x + range, y + range, z + range);
   }

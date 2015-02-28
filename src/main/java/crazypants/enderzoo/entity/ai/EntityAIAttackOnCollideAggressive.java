@@ -81,8 +81,7 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
   {
     EntityLivingBase entitylivingbase = attacker.getAttackTarget();
     return entitylivingbase == null ? false : (!entitylivingbase.isEntityAlive() ? false : (!longMemory ? !attacker.getNavigator().noPath() : attacker
-        .isWithinHomeDistance(MathHelper.floor_double(entitylivingbase.posX), MathHelper.floor_double(entitylivingbase.posY),
-            MathHelper.floor_double(entitylivingbase.posZ))));
+        .isWithinHomeDistanceCurrentPosition()));
   }
 
   @Override
@@ -104,7 +103,7 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
 
     EntityLivingBase entitylivingbase = attacker.getAttackTarget();
     attacker.getLookHelper().setLookPositionWithEntity(entitylivingbase, 30.0F, 30.0F);
-    double distToTargetSq = attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ);
+    double distToTargetSq = attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
     double attachRange = attacker.width * 2.0F * attacker.width * 2.0F + entitylivingbase.width;
     --ticksUntilNextPathingAttempt;
 
@@ -114,7 +113,7 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
             || entitylivingbase.getDistanceSq(targetX, targetY, targetZ) >= 1.0D || attacker.getRNG().nextFloat() < 0.05F)) {
 
       targetX = entitylivingbase.posX;
-      targetY = entitylivingbase.boundingBox.minY;
+      targetY = entitylivingbase.getEntityBoundingBox().minY;
       targetZ = entitylivingbase.posZ;
 
       //ticksUntilNextPathingAttempt = failedPathFindingPenalty + 4 + attacker.getRNG().nextInt(7);

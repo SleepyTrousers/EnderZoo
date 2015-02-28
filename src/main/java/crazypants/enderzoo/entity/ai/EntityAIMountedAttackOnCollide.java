@@ -81,8 +81,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   public boolean continueExecuting() {
     EntityLivingBase entitylivingbase = attacker.getAttackTarget();
     return entitylivingbase == null ? false : (!entitylivingbase.isEntityAlive() ? false : (!longMemory ? !getNavigator().noPath()
-        : attacker.isWithinHomeDistance(MathHelper.floor_double(entitylivingbase.posX), MathHelper.floor_double(entitylivingbase.posY),
-            MathHelper.floor_double(entitylivingbase.posZ))));
+        : attacker.isWithinHomeDistanceCurrentPosition()));
   }
 
   /**
@@ -109,14 +108,14 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
     attacker.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);        
     --pathUpdateTimer;
 
-    double distanceFromAttackerSq = attacker.getDistanceSq(target.posX, target.boundingBox.minY, target.posZ);
+    double distanceFromAttackerSq = attacker.getDistanceSq(target.posX, target.getEntityBoundingBox().minY, target.posZ);
     if((longMemory || attacker.getEntitySenses().canSee(target))
         && pathUpdateTimer <= 0
         && (targetPosX == 0.0D && targetPosY == 0.0D && targetPosZ == 0.0D
             || target.getDistanceSq(targetPosX, targetPosY, targetPosZ) >= 1.0D || attacker.getRNG().nextFloat() < 0.05F)) {
       
       targetPosX = target.posX;
-      targetPosY = target.boundingBox.minY;
+      targetPosY = target.getEntityBoundingBox().minY;
       targetPosZ = target.posZ;
       pathUpdateTimer = failedPathFindingPenalty + 4 + attacker.getRNG().nextInt(7);
 

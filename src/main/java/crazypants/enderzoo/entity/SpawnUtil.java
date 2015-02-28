@@ -3,12 +3,14 @@ package crazypants.enderzoo.entity;
 import java.util.List;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class SpawnUtil {
 
@@ -40,7 +42,7 @@ public class SpawnUtil {
   public static boolean seachYForClearGround(Point3i target, World world, int searchRange, boolean checkForLivingEntities) {
     boolean foundY = false;
     for (int i = 0; i < searchRange && !foundY; i++) {
-      if(world.isAirBlock(target.x, target.y, target.z)) {
+      if(world.isAirBlock(VecUtil.bpos(target.x, target.y, target.z))) {
         foundY = true;
       } else {
         target.y++;
@@ -49,7 +51,7 @@ public class SpawnUtil {
     boolean onGround = false;
     if(foundY) {
       for (int i = 0; i < searchRange && !onGround; i++) {
-        onGround = !world.isAirBlock(target.x, target.y - 1, target.z) && !isLiquid(world, target.x, target.y - 1, target.z);
+        onGround = !world.isAirBlock(VecUtil.bpos(target.x, target.y - 1, target.z)) && !isLiquid(world, target.x, target.y - 1, target.z);
         if(!onGround) {
           target.y--;
         } else if(checkForLivingEntities && containsLiving(world, target)) {
@@ -61,13 +63,17 @@ public class SpawnUtil {
   }
 
   public static boolean containsLiving(World world, Point3i blockCoord) {
-    AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(blockCoord.x, blockCoord.y, blockCoord.z, blockCoord.x + 1, blockCoord.y + 1, blockCoord.z + 1);
+    AxisAlignedBB bb = new AxisAlignedBB(blockCoord.x, blockCoord.y, blockCoord.z, blockCoord.x + 1, blockCoord.y + 1, blockCoord.z + 1);
     List ents = world.getEntitiesWithinAABB(EntityLivingBase.class, bb);
     return ents != null && !ents.isEmpty();
   }
 
   public static boolean isLiquid(World world, int x, int y, int z) {
-    Block block = world.getBlock(x, y, z);
+	IBlockState bs = world.getBlockState(VecUtil.bpos(x, y, z));
+	if(bs == null || bs.getBlock() == null) {
+		return false;
+	}
+    Block block = bs.getBlock();
     if(block.getMaterial().isLiquid()) {
       return true;
     }
@@ -76,19 +82,19 @@ public class SpawnUtil {
 
   public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
     int i = MathHelper.floor_double(entity.posX);
-    int j = MathHelper.floor_double(entity.boundingBox.minY);
+    int j = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
     int k = MathHelper.floor_double(entity.posZ);
     
-    if(entity.getBlockPathWeight(i, j, k) < 0) {
+    if(entity.func_180484_a(VecUtil.bpos(i, j, k)) < 0) {
       return false;
     }
-    if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.boundingBox)) {
+    if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.getEntityBoundingBox())) {
       return false;
     }
-    if(!worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty()) {
+    if(!worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty()) {
       return false;
     }    
-    if(!canSpawnInLiquid && worldObj.isAnyLiquid(entity.boundingBox)) {
+    if(!canSpawnInLiquid && worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
       return false;
     }    
     return true;

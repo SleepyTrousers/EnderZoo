@@ -42,8 +42,9 @@ public class Enchantments {
   }
 
   private int getEmptyEnchantId() {
-    for (int i = 0; i < Enchantment.enchantmentsList.length; i++) {
-      if(Enchantment.enchantmentsList[i] == null) {
+    for (int i = 0; i < 256; i++) {
+      if(Enchantment.getEnchantmentById(i) == null) {
+    	  
         return i;
       }
     }

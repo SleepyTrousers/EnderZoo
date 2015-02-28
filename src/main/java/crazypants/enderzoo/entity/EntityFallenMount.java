@@ -17,8 +17,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
@@ -48,7 +50,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(8, new EntityAILookIdle(this));
 
-    findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);
+    findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
     updateAttackAI(); 
   }
@@ -96,14 +98,15 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   @Override
   public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {    
-    if(type == EnumCreatureType.monster) {      
+    if(type == EnumCreatureType.MONSTER) {      
       return true;
     }
     return false;    
   }
 
   @Override
-  public IEntityLivingData onSpawnWithEgg(IEntityLivingData data) {
+  //public IEntityLivingData onSpawnWithEgg(IEntityLivingData data) {
+  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData data) {  
     setHorseType(3);
     setHorseSaddled(true);    
     setGrowingAge(0);
@@ -112,14 +115,18 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());
     
-    float chanceOfArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
+    float chanceOfArmor = worldObj.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
         : Config.fallenMountChanceArmored;
     if(rand.nextFloat() <= chanceOfArmor) {
 
       //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied and the moon phase
-      float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
+      
+      //float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
+      
+      float occupiedDiffcultyMultiplier = di.getClampedAdditionalDifficulty();
+      //TODO: Do I need this normalised still?
       occupiedDiffcultyMultiplier /= 1.5f; // normalize
-      float chanceImprovedArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
+      float chanceImprovedArmor = worldObj.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
           : Config.fallenMountChanceArmorUpgrade;
       chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
 
@@ -139,7 +146,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
         break;
       }
       armor = new ItemStack(armorItem);
-      func_146086_d(armor);
+      setHorseArmorStack(armor);
     }
     return data;
   }
@@ -147,7 +154,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void onUpdate() {
     super.onUpdate();
-    if(!worldObj.isRemote && worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
+    if(!worldObj.isRemote && worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
       setDead();
     }
   }
@@ -161,7 +168,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
       if(burnInSun() && worldObj.getTotalWorldTime() % 20 == 0) {
         float f = getBrightness(1.0F);
         if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
-            && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) {
+            && worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)))) {
           setFire(8);
         }
       }
@@ -237,7 +244,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     if(root.hasKey("armor")) {
       NBTTagCompound armTag = root.getCompoundTag("armor");
       armor = ItemStack.loadItemStackFromNBT(armTag);
-      func_146086_d(armor);
+      setHorseArmorStack(armor);
     }
   }
 

@@ -22,7 +22,7 @@ public class CommonProxy {
   }
 
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
-    ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, true));    
+    ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, false, true));    
   }
   
 

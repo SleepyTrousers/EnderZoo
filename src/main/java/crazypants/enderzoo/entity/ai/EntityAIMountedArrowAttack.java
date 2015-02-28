@@ -84,7 +84,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
    */
   @Override
   public void updateTask() {
-    double distToTargetSq = entityHost.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+    double distToTargetSq = entityHost.getDistanceSq(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
     boolean canSeeTarget = entityHost.getEntitySenses().canSee(attackTarget);
 
     if(canSeeTarget) {
@@ -150,7 +150,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     }
     
     runAwayTimer = 40;
-    Vec3 targetDir = Vec3.createVectorHelper(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+    Vec3 targetDir = new Vec3(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
     Vec3 entityPos = EntityUtil.getEntityPosition(entityHost);
     targetDir = VecUtil.subtract(targetDir, entityPos);        
     targetDir = VecUtil.scale(targetDir, -1);

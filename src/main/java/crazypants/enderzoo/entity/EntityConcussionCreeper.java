@@ -9,8 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
@@ -51,7 +52,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
         setTimeSinceIgnited(0);
 
         int range = Config.concussionCreeperExplosionRange;
-        AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+        AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
         List<EntityLivingBase> ents = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
         for (EntityLivingBase ent : ents) {
           if(ent != this) {
@@ -70,7 +71,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
 
         worldObj.playSoundEffect(posX, posY, posZ, "random.explode", 4.0F,
             (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-        worldObj.spawnParticle("hugeexplosion", posX, posY, posZ, 1.0D, 0.0D, 0.0D);
+        worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, posX, posY, posZ, 1.0D, 0.0D, 0.0D);
         setDead();
       }
     }

@@ -3,8 +3,11 @@ package crazypants.enderzoo.entity;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +30,7 @@ public class TeleportHelper {
   }
 
   public static boolean teleportToEntity(EntityLivingBase entity, Entity toEntity) {
-    Vec3 vec3 = Vec3.createVectorHelper(entity.posX - toEntity.posX, entity.boundingBox.minY + (double) (entity.height / 2.0F) - toEntity.posY
+    Vec3 vec3 = new Vec3(entity.posX - toEntity.posX, entity.getEntityBoundingBox().minY + (double) (entity.height / 2.0F) - toEntity.posY
         + (double) toEntity.getEyeHeight(), entity.posZ - toEntity.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
@@ -58,12 +61,13 @@ public class TeleportHelper {
     int zInt = MathHelper.floor_double(entity.posZ);
 
     boolean flag = false;
-    if(entity.worldObj.blockExists(xInt, yInt, zInt)) {
+    if(entity.worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt), true)) {
 
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
-        Block block = entity.worldObj.getBlock(xInt, yInt - 1, zInt);
-        if(block.getMaterial().blocksMovement()) {
+        //Block block = entity.worldObj.getBlock(xInt, yInt - 1, zInt);
+    	IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
+    	if(bs != null && bs.getBlock() != null && bs.getBlock().getMaterial().blocksMovement()) {
           foundGround = true;
         } else {
           --entity.posY;
@@ -73,7 +77,7 @@ public class TeleportHelper {
 
       if(foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
-        if(entity.worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox)) {
+        if(entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty() && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
           flag = true;
         }
       }
@@ -95,7 +99,7 @@ public class TeleportHelper {
       double d7 = d3 + (entity.posX - d3) * d6 + (rand.nextDouble() - 0.5D) * (double) entity.width * 2.0D;
       double d8 = d4 + (entity.posY - d4) * d6 + rand.nextDouble() * (double) entity.height;
       double d9 = d5 + (entity.posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * (double) entity.width * 2.0D;
-      entity.worldObj.spawnParticle("portal", d7, d8, d9, (double) f, (double) f1, (double) f2);
+      entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, (double) f, (double) f1, (double) f2);
     }
 
     entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
