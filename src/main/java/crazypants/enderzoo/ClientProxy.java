@@ -31,6 +31,9 @@ import crazypants.enderzoo.entity.render.RenderFallenMount;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
 import crazypants.enderzoo.item.GuardiansBowModelLoader;
+import crazypants.enderzoo.item.ItemConfusingDust;
+import crazypants.enderzoo.item.ItemEnderFragment;
+import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemWitheringDust;
 
@@ -75,6 +78,9 @@ public class ClientProxy extends CommonProxy {
     //    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
 
     regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
+    regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
+    regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);
+    regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
 
     if(Config.guardiansBowEnabled) {
       regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);

@@ -48,9 +48,9 @@ public class EnderZoo {
 
 //  public static ItemSpawnEgg itemSpawnEgg;
   public static ItemWitheringDust itemWitheringDust;
-//  public static ItemConfusingDust itemConfusingDust;
-//  public static ItemEnderFragment itemEnderFragment;
-//  public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
+  public static ItemConfusingDust itemConfusingDust;
+  public static ItemEnderFragment itemEnderFragment;
+  public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
   public static ItemGuardiansBow itemGuardiansBow;
   
   
@@ -63,7 +63,7 @@ public class EnderZoo {
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
 
-//    itemForCreativeMenuIcon = ItemForCreativeMenuIcon.create();
+    itemForCreativeMenuIcon = ItemForCreativeMenuIcon.create();
 
     Config.load(event);
     for (MobInfo mob : MobInfo.values()) {
@@ -71,8 +71,8 @@ public class EnderZoo {
     }    
 //    itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
-//    itemConfusingDust = ItemConfusingDust.create();
-//    itemEnderFragment = ItemEnderFragment.create();
+    itemConfusingDust = ItemConfusingDust.create();
+    itemEnderFragment = ItemEnderFragment.create();
     itemGuardiansBow = ItemGuardiansBow.create();    
 
 //    if(Config.confusingChargeEnabled) {
@@ -145,7 +145,7 @@ public class EnderZoo {
 //      ItemStack cc = new ItemStack(blockConcussionCharge);
 //      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
 //    }
-//    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
+    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
 
   }
 

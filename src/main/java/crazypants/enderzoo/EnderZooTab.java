@@ -28,9 +28,7 @@ public class EnderZooTab extends CreativeTabs {
 
   @Override
   public Item getTabIconItem() {
-    //TODO: 1.8
-    //return EnderZoo.itemForCreativeMenuIcon;
-    return EnderZoo.itemWitheringDust;
+    return EnderZoo.itemForCreativeMenuIcon;    
   }
 
 }

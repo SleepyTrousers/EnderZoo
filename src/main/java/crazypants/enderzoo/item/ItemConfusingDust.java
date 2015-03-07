@@ -13,7 +13,7 @@ import crazypants.enderzoo.Log;
 
 public class ItemConfusingDust extends Item {
 
-  private static final String NAME = "confusingDust";
+  public static final String NAME = "confusingDust";
 
   public static ItemConfusingDust create() {
     ItemConfusingDust res = new ItemConfusingDust();
@@ -23,8 +23,7 @@ public class ItemConfusingDust extends Item {
 
   private ItemConfusingDust() {
     setUnlocalizedName(NAME);
-    setCreativeTab(EnderZooTab.tabEnderZoo);
-    setTextureName("enderzoo:itemConfusingDust");
+    setCreativeTab(EnderZooTab.tabEnderZoo);    
     setHasSubtypes(false);
   }
 

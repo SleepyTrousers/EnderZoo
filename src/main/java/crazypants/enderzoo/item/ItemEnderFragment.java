@@ -6,7 +6,7 @@ import crazypants.enderzoo.EnderZooTab;
 
 public class ItemEnderFragment extends Item {
 
-  private static final String NAME = "enderFragment";
+  public static final String NAME = "enderFragment";
 
   public static ItemEnderFragment create() {
     ItemEnderFragment res = new ItemEnderFragment();
@@ -16,8 +16,7 @@ public class ItemEnderFragment extends Item {
 
   private ItemEnderFragment() {
     setUnlocalizedName(NAME);
-    setCreativeTab(EnderZooTab.tabEnderZoo);
-    setTextureName("enderzoo:itemEnderFragment");
+    setCreativeTab(EnderZooTab.tabEnderZoo);    
     setHasSubtypes(false);
   }
 

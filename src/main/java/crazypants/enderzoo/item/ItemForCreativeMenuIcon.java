@@ -5,7 +5,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemForCreativeMenuIcon extends Item {
 
-  private static final String NAME = "enderZooIcon";
+  public static final String NAME = "enderZooIcon";
 
   public static ItemForCreativeMenuIcon create() {
     ItemForCreativeMenuIcon res = new ItemForCreativeMenuIcon();
@@ -15,8 +15,7 @@ public class ItemForCreativeMenuIcon extends Item {
 
   private ItemForCreativeMenuIcon() {
     setUnlocalizedName(NAME);
-    setCreativeTab(null);
-    setTextureName("enderzoo:enderZooIcon");
+    setCreativeTab(null);    
     setHasSubtypes(false);
   }
 
