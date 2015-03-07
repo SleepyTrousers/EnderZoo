@@ -23,6 +23,7 @@ import crazypants.enderzoo.entity.EntityFallenKnight;
 import crazypants.enderzoo.entity.EntityFallenMount;
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherWitch;
+import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.entity.render.RenderConcussionCreeper;
 import crazypants.enderzoo.entity.render.RenderDirewolf;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
@@ -35,6 +36,7 @@ import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemGuardiansBow;
+import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 
 public class ClientProxy extends CommonProxy {
@@ -81,6 +83,14 @@ public class ClientProxy extends CommonProxy {
     regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
     regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);
     regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
+    
+    for(MobInfo inf : MobInfo.values()) {
+      if(inf.isEnabled()) {
+        regRenderer(EnderZoo.itemSpawnEgg, inf.ordinal(), ItemSpawnEgg.NAME);
+      }
+    }
+    
+
 
     if(Config.guardiansBowEnabled) {
       regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
@@ -90,9 +100,18 @@ public class ClientProxy extends CommonProxy {
   }
 
   private void regRenderer(Item item, int meta, String name) {
+    regRenderer(item, meta, EnderZoo.MODID, name); 
+  }
+  private void regRenderer(Item item, int meta, String modId, String name) {
     RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
     ItemMeshDefinition d;
-    renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(EnderZoo.MODID + ":" + name, "inventory"));
+    String resourceName;
+    if(modId != null) {
+      resourceName = modId + ":" + name;
+    } else {
+      resourceName = name;
+    }
+    renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(resourceName, "inventory"));
   }
 
   private void regRenderer(Item item, String name) {

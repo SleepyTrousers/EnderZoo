@@ -46,7 +46,7 @@ public class EnderZoo {
   @SidedProxy(clientSide = "crazypants.enderzoo.ClientProxy", serverSide = "crazypants.enderzoo.CommonProxy")
   public static CommonProxy proxy;
 
-//  public static ItemSpawnEgg itemSpawnEgg;
+  public static ItemSpawnEgg itemSpawnEgg;
   public static ItemWitheringDust itemWitheringDust;
   public static ItemConfusingDust itemConfusingDust;
   public static ItemEnderFragment itemEnderFragment;
@@ -69,7 +69,7 @@ public class EnderZoo {
     for (MobInfo mob : MobInfo.values()) {
       registerEntity(mob);
     }    
-//    itemSpawnEgg = ItemSpawnEgg.create();       
+    itemSpawnEgg = ItemSpawnEgg.create();       
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
     itemEnderFragment = ItemEnderFragment.create();
