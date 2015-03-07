@@ -1,5 +1,7 @@
 package crazypants.enderzoo.item;
 
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,9 +26,8 @@ public class ItemGuardiansBow extends ItemBow {
 
   public static final String NAME = "guardiansBow";
 
-  public static final String[] bowPullIconNameArray = new String[] { "pulling_0", "pulling_1", "pulling_2" };
-//  @SideOnly(Side.CLIENT)
-//  private IIcon[] iconArray;
+//  public static final String[] bowPullIconNameArray = new String[] { "pulling_0", "pulling_1", "pulling_2" };
+
 
   private int drawTime = Config.guardiansBowDrawTime;
   private float damageBonus = Config.guardiansBowDamageBonus;
@@ -43,7 +44,6 @@ public class ItemGuardiansBow extends ItemBow {
   protected ItemGuardiansBow() {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    //setTextureName("enderzoo:guardiansBow");
     setMaxDamage(800);
     setHasSubtypes(false);
   }
@@ -52,7 +52,6 @@ public class ItemGuardiansBow extends ItemBow {
     GameRegistry.registerItem(this, NAME);
   }
 
-
   @Override
   public void onPlayerStoppedUsing(ItemStack stack, World world, EntityPlayer player, int itemInUseCount) {
 
@@ -60,7 +59,7 @@ public class ItemGuardiansBow extends ItemBow {
     boolean infiniteArrows = player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
     if(infiniteArrows || player.inventory.hasItem(Items.arrow)) {
 
-      float force = drawDuration / (float) drawTime;
+      float force = drawDuration / (float) getDrawTime();
       force = (force * force + force * 2.0F) / 3.0F;
 
       if(force < 0.2D) {
@@ -113,7 +112,7 @@ public class ItemGuardiansBow extends ItemBow {
     }
 
     int drawDuration = getMaxItemUseDuration(currentItem) - fovEvt.entity.getItemInUseCount();
-    float ratio = drawDuration / (float) drawTime;
+    float ratio = drawDuration / (float) getDrawTime();
 
     if(ratio > 1.0F) {
       ratio = 1.0F;
@@ -123,11 +122,6 @@ public class ItemGuardiansBow extends ItemBow {
     fovEvt.newfov = (1.0F - ratio * fovMultiplier);
 
   }
-
-//  @Override
-//  public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player) {
-//    return stack;
-//  }
 
   @Override
   public int getMaxItemUseDuration(ItemStack p_77626_1_) {
@@ -161,38 +155,19 @@ public class ItemGuardiansBow extends ItemBow {
     return 1;
   }
 
-//  @Override
-//  public IIcon getIcon(ItemStack stack, int renderPass, EntityPlayer player, ItemStack usingItem, int useRemaining) {
-//    int useTime = stack.getMaxItemUseDuration() - useRemaining;
-//    IIcon iicon = itemIcon;
-//    if(usingItem == null) {
-//      return iicon;
-//    }
-//    if(useTime >= drawTime - 2) {
-//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(2);
-//    } else if(useTime > drawTime * 2 / 3f) {
-//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(1);
-//    } else if(useTime > 0) {
-//      iicon = EnderZoo.itemGuardiansBow.getItemIconForUseDuration(0);
-//    }
-//    return iicon;
-//  }
-//  
-//  @Override
-//  @SideOnly(Side.CLIENT)
-//  public void registerIcons(IIconRegister p_94581_1_) {
-//    itemIcon = p_94581_1_.registerIcon(getIconString() + "_standby");
-//    iconArray = new IIcon[bowPullIconNameArray.length];
-//
-//    for (int i = 0; i < iconArray.length; ++i) {
-//      iconArray[i] = p_94581_1_.registerIcon(getIconString() + "_" + bowPullIconNameArray[i]);
-//    }
-//  }
-//
-//  @Override
-//  @SideOnly(Side.CLIENT)
-//  public IIcon getItemIconForUseDuration(int useDuration) {
-//    return iconArray[useDuration];
-//  }
+  @Override
+  @SideOnly(Side.CLIENT)
+  public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
+    // TODO Auto-generated method stub
+    return GuardiansBowModelLoader.getModel(stack, player, useRemaining);//super.getModel(stack, player, useRemaining);
+  }
+
+  public int getDrawTime() {
+    return drawTime;
+  }
+
+  public void setDrawTime(int drawTime) {
+    this.drawTime = drawTime;
+  }
 
 }

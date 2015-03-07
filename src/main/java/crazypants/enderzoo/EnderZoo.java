@@ -73,7 +73,7 @@ public class EnderZoo {
     itemWitheringDust = ItemWitheringDust.create();
 //    itemConfusingDust = ItemConfusingDust.create();
 //    itemEnderFragment = ItemEnderFragment.create();
-    itemGuardiansBow = ItemGuardiansBow.create();
+    itemGuardiansBow = ItemGuardiansBow.create();    
 
 //    if(Config.confusingChargeEnabled) {
 //      blockConfusingCharge = BlockConfusingCharge.create();

@@ -1,6 +1,7 @@
 package crazypants.enderzoo;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -29,10 +30,9 @@ import crazypants.enderzoo.entity.render.RenderFallenKnight;
 import crazypants.enderzoo.entity.render.RenderFallenMount;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
-import crazypants.enderzoo.item.GuardiansBowRenderer;
+import crazypants.enderzoo.item.GuardiansBowModelLoader;
 import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemWitheringDust;
-
 
 public class ClientProxy extends CommonProxy {
 
@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 
   @Override
   public void load() {
-    super.load(); 
+    super.load();
     RenderManager rm = Minecraft.getMinecraft().getRenderManager();
     if(Config.enderminyEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityEnderminy.class, new RenderEnderminy(rm));
@@ -57,14 +57,14 @@ public class ClientProxy extends CommonProxy {
       RenderingRegistry.registerEntityRenderingHandler(EntityConcussionCreeper.class, new RenderConcussionCreeper(rm));
     }
     if(Config.fallenKnightEnabled) {
-      RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new RenderFallenKnight(rm));      
+      RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new RenderFallenKnight(rm));
     }
     if(Config.fallenMountEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityFallenMount.class, new RenderFallenMount(rm));
     }
     if(Config.witherWitchEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherWitch.class, new RenderWitherWitch(rm));
-    } 
+    }
     if(Config.witherCatEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherCat.class, new RenderWitherCat(rm));
     }
@@ -72,26 +72,28 @@ public class ClientProxy extends CommonProxy {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new RenderDirewolf(rm));
     }
 
-//    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
+    //    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
 
-
-//    if(Config.guardiansBowEnabled) {
-//      MinecraftForgeClient.registerItemRenderer(EnderZoo.itemGuardiansBow, new GuardiansBowRenderer());
-//    }
-
-    
-        
     regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
-    regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
-    
-    
+
+    if(Config.guardiansBowEnabled) {
+      regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
+      GuardiansBowModelLoader.registerVariants();
+    }
+
+  }
+
+  private void regRenderer(Item item, int meta, String name) {
+    RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
+    ItemMeshDefinition d;
+    renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(EnderZoo.MODID + ":" + name, "inventory"));
   }
 
   private void regRenderer(Item item, String name) {
-    RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();  
-    renderItem.getItemModelMesher().register(item, 0, new ModelResourceLocation(EnderZoo.MODID + ":" + name, "inventory"));
+    regRenderer(item, 0, name);
+
   }
-  
+
   @Override
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
     ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, false, true));
