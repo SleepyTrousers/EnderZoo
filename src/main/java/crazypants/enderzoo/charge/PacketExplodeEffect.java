@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import crazypants.enderzoo.EnderZoo;
 
 public class PacketExplodeEffect implements IMessage, IMessageHandler<PacketExplodeEffect, IMessage> {
@@ -41,6 +42,7 @@ public class PacketExplodeEffect implements IMessage, IMessageHandler<PacketExpl
     int chargeID = buf.readInt();
     charge = ChargeRegister.instance.getCharge(chargeID);
   }
+
 
   @Override
   public IMessage onMessage(PacketExplodeEffect message, MessageContext ctx) {

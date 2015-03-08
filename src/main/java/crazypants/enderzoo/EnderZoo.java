@@ -52,11 +52,10 @@ public class EnderZoo {
   public static ItemEnderFragment itemEnderFragment;
   public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
   public static ItemGuardiansBow itemGuardiansBow;
-  
-  
-//  public static BlockConfusingCharge blockConfusingCharge;
-//  public static BlockEnderCharge blockEnderCharge;
-//  public static BlockConcussionCharge blockConcussionCharge;
+    
+  public static BlockConfusingCharge blockConfusingCharge;
+  public static BlockEnderCharge blockEnderCharge;
+  public static BlockConcussionCharge blockConcussionCharge;
   
   public static MobSpawnEventHandler spawnEventHandler;
 
@@ -75,9 +74,9 @@ public class EnderZoo {
     itemEnderFragment = ItemEnderFragment.create();
     itemGuardiansBow = ItemGuardiansBow.create();    
 
-//    if(Config.confusingChargeEnabled) {
-//      blockConfusingCharge = BlockConfusingCharge.create();
-//    }
+    if(Config.confusingChargeEnabled) {
+      blockConfusingCharge = BlockConfusingCharge.create();
+    }
 //    if(Config.enderChargeEnabled) {
 //      blockEnderCharge = BlockEnderCharge.create();
 //    }

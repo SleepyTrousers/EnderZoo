@@ -4,13 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityPrimedCharge extends Entity {
 
   private static final int CHARGE_ID_KEY = 2;
 
-  private int fuse = 80;
+  int fuse = 80;
   private EntityLivingBase chargePlacedBy;
   private ICharge charge;
 
@@ -18,7 +19,8 @@ public class EntityPrimedCharge extends Entity {
     super(world);
     preventEntitySpawning = true;
     setSize(0.98F, 0.98F);
-    yOffset = height / 2.0F;
+    //TODO: 1.8
+    //yOffset = height / 2.0F;
     dataWatcher.addObjectByDataType(CHARGE_ID_KEY, 2);
   }
 
@@ -65,7 +67,7 @@ public class EntityPrimedCharge extends Entity {
   public void onUpdate() {
 
     if(worldObj.isRemote && isDead) {
-      System.out.println("EntityPrimedCharge.onUpdate: Dead");
+//      System.out.println("EntityPrimedCharge.onUpdate: Dead");
     }
 
     prevPosX = posX;
@@ -96,7 +98,8 @@ public class EntityPrimedCharge extends Entity {
       //        }
       //      }
     } else {
-      worldObj.spawnParticle("smoke", posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
+      //worldObj.spawnParticle("smoke", posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
+      worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
     }
   }
 
@@ -119,10 +122,10 @@ public class EntityPrimedCharge extends Entity {
     }
   }
 
-  @Override
-  public float getShadowSize() {
-    return 0.0F;
-  }
+//  @Override
+//  public float getShadowSize() {
+//    return 0.0F;
+//  }
 
   public EntityLivingBase getPlacedBy() {
     return chargePlacedBy;

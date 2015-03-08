@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityPortalFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -42,7 +44,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
   @Override
   @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
-    world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
+    world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0D, 0.0D, 0.0D);
     doTeleportEffect(world, x, y, z);
   }
 
@@ -72,8 +74,9 @@ public class BlockEnderCharge extends BlockConfusingCharge {
       double motionX = (0.5 - random.nextDouble()) * mag * d;
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
-      EntityPortalFX entityfx = new EntityPortalFX(world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
-          motionZ);
+      EntityFX entityfx = new EntityPortalFX.Factory().getEntityFX
+          (i, world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
+          motionZ, (int[])null);
       Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
     }
   }
