@@ -13,7 +13,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import crazypants.enderzoo.charge.BlockConcussionCharge;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
+import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.charge.EntityPrimedCharge;
 import crazypants.enderzoo.charge.RenderPrimedCharge;
 import crazypants.enderzoo.config.Config;
@@ -78,14 +80,14 @@ public class ClientProxy extends CommonProxy {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new RenderDirewolf(rm));
     }
 
-    //    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge());
+    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge(rm));
 
     regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
     regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
     regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);
     regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
-    
-    for(MobInfo inf : MobInfo.values()) {
+
+    for (MobInfo inf : MobInfo.values()) {
       if(inf.isEnabled()) {
         regRenderer(EnderZoo.itemSpawnEgg, inf.ordinal(), ItemSpawnEgg.NAME);
       }
@@ -95,19 +97,25 @@ public class ClientProxy extends CommonProxy {
       regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
       GuardiansBowModelLoader.registerVariants();
     }
-    
+
     if(Config.confusingChargeEnabled) {
-      regRenderer(Item.getItemFromBlock(EnderZoo.blockConfusingCharge), BlockConfusingCharge.NAME);  
+      regRenderer(Item.getItemFromBlock(EnderZoo.blockConfusingCharge), BlockConfusingCharge.NAME);
     }
-    
-    
+    if(Config.concussionChargeEnabled) {
+      regRenderer(Item.getItemFromBlock(EnderZoo.blockConcussionCharge), BlockConcussionCharge.NAME);
+    }
+    if(Config.enderChargeEnabled) {
+      regRenderer(Item.getItemFromBlock(EnderZoo.blockEnderCharge), BlockEnderCharge.NAME);
+    }
+
     //renderItem.getItemModelMesher().register(Item.getItemFromBlock(tutorialBlock), 0, new ModelResourceLocation(Reference.MODID + ":" + ((BlockTutorial) tutorialBlock).getName(), "inventory")); - See more at: http://www.wuppy29.com/minecraft/1-8-tutorial/updating-1-7-to-1-8-part-3-basic-blocks/#sthash.SbmEziF9.oH7EPdaT.dpuf
 
   }
 
   private void regRenderer(Item item, int meta, String name) {
-    regRenderer(item, meta, EnderZoo.MODID, name); 
+    regRenderer(item, meta, EnderZoo.MODID, name);
   }
+
   private void regRenderer(Item item, int meta, String modId, String name) {
     RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
     ItemMeshDefinition d;
@@ -116,8 +124,7 @@ public class ClientProxy extends CommonProxy {
       resourceName = modId + ":" + name;
     } else {
       resourceName = name;
-    }
-    System.out.println("ClientProxy.regRenderer: " + item + " : " + meta + " : " + resourceName);
+    }    
     renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(resourceName, "inventory"));
   }
 

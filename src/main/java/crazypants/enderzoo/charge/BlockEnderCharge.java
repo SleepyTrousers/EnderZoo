@@ -19,7 +19,7 @@ import crazypants.enderzoo.entity.TeleportHelper;
 
 public class BlockEnderCharge extends BlockConfusingCharge {
 
-  private static final String NAME = "blockEnderCharge";
+  public static final String NAME = "blockEnderCharge";
 
   public static BlockEnderCharge create() {
     if(!Config.enderChargeEnabled) {

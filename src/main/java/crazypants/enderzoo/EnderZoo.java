@@ -77,12 +77,12 @@ public class EnderZoo {
     if(Config.confusingChargeEnabled) {
       blockConfusingCharge = BlockConfusingCharge.create();
     }
-//    if(Config.enderChargeEnabled) {
-//      blockEnderCharge = BlockEnderCharge.create();
-//    }
-//    if(Config.concussionChargeEnabled) {
-//      blockConcussionCharge = BlockConcussionCharge.create();
-//    }
+    if(Config.enderChargeEnabled) {
+      blockEnderCharge = BlockEnderCharge.create();
+    }
+    if(Config.concussionChargeEnabled) {
+      blockConcussionCharge = BlockConcussionCharge.create();
+    }
 
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
