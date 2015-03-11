@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public class EntityPrimedCharge extends Entity {
 
-  private static final int CHARGE_ID_KEY = 2;
+  private static final int CHARGE_ID_KEY = 5;
 
   int fuse = 80;
   private EntityLivingBase chargePlacedBy;
@@ -19,8 +19,6 @@ public class EntityPrimedCharge extends Entity {
     super(world);
     preventEntitySpawning = true;
     setSize(0.98F, 0.98F);
-    //TODO: 1.8
-    //yOffset = height / 2.0F;
     dataWatcher.addObjectByDataType(CHARGE_ID_KEY, 2);
   }
 
@@ -92,13 +90,7 @@ public class EntityPrimedCharge extends Entity {
           charge.explode(this);
         }
       }
-      //      } else {
-      //        if(charge != null) {
-      //          charge.explodeClient(this);
-      //        }
-      //      }
     } else {
-      //worldObj.spawnParticle("smoke", posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
       worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
     }
   }
@@ -121,11 +113,6 @@ public class EntityPrimedCharge extends Entity {
       charge = ChargeRegister.instance.getCharge(id);
     }
   }
-
-//  @Override
-//  public float getShadowSize() {
-//    return 0.0F;
-//  }
 
   public EntityLivingBase getPlacedBy() {
     return chargePlacedBy;

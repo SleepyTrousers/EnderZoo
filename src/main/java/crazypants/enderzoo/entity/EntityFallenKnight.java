@@ -49,7 +49,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   public EntityFallenKnight(World world) {
     super(world);
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));    
   }
 
   @Override
@@ -58,18 +58,6 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Config.fallenKnightFollowRange);
     MobInfo.FALLEN_KNIGHT.applyAttributes(this);
   }
-
-  
-  
-//  TODO:  
-//  @Override
-//  protected void attackEntity(Entity target, float distance) {
-//    if(attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY
-//        && target.boundingBox.minY < boundingBox.maxY) {
-//      attackTime = 20;
-//      attackEntityAsMob(target);
-//    }
-//  }
 
   private float getAttackRange() {
     if(isRiding()) {
@@ -276,20 +264,15 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   @Override
   public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData livingData) {  
-  //public IEntityLivingData onSpawnWithEgg(IEntityLivingData livingData) {
-
     spawned = true;
     
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
-
     setSkeletonType(0);
-    addRandomArmor();
-    //enchantEquipment();
-    func_180483_b(di);
+    addRandomArmor();    
+    func_180483_b(di); //enchantEquipment();
     
     float f = di.getClampedAdditionalDifficulty();
-    //float f = worldObj.func_147462_b(posX, posY, posZ);
     this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);        
     setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
     setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
@@ -332,41 +315,4 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
   }
 
-//  @Override
-//  protected void dropRareDrop(int p_70600_1_) {
-//  }
-
-  //public boolean attackEntityAsMob(Entity p_70652_1_)
-  //  {
-  //      if (super.attackEntityAsMob(p_70652_1_))
-  //      {
-  //          if (this.getSkeletonType() == 1 && p_70652_1_ instanceof EntityLivingBase)
-  //          {
-  //              ((EntityLivingBase)p_70652_1_).addPotionEffect(new PotionEffect(Potion.wither.id, 200));
-  //          }
-  //
-  //          return true;
-  //      }
-  //      else
-  //      {
-  //          return false;
-  //      }
-  //  }
-
-  //  public boolean attackEntityAsMob(Entity p_70652_1_)
-  //  {
-  //      boolean flag = super.attackEntityAsMob(p_70652_1_);
-  //
-  //      if (flag)
-  //      {
-  //          int i = this.worldObj.difficultySetting.getDifficultyId();
-  //
-  //          if (this.getHeldItem() == null && this.isBurning() && this.rand.nextFloat() < (float)i * 0.3F)
-  //          {
-  //              p_70652_1_.setFire(2 * i);
-  //          }
-  //      }
-  //
-  //      return flag;
-  //  }
 }

@@ -158,8 +158,7 @@ public class ItemGuardiansBow extends ItemBow {
   @Override
   @SideOnly(Side.CLIENT)
   public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
-    // TODO Auto-generated method stub
-    return GuardiansBowModelLoader.getModel(stack, player, useRemaining);//super.getModel(stack, player, useRemaining);
+    return GuardiansBowModelLoader.getModel(stack, player, useRemaining);
   }
 
   public int getDrawTime() {

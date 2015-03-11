@@ -102,11 +102,7 @@ public class ItemSpawnEgg extends Item {
 
   public static EntityLiving activateSpawnEgg(ItemStack stack, World world, double posX, double posY, double posZ, int side) {
     Block i1 = world.getBlockState(new BlockPos((int) posX, (int) posY, (int) posZ)).getBlock();
-    //TODO: 1.8
-    //    posX += Facing.offsetsXForSide[side];
-    //    posY += Facing.offsetsYForSide[side];
-    //    posZ += Facing.offsetsZForSide[side];
-
+   
     posX += offsetsXForSide[side];
     posY += offsetsYForSide[side];
     posZ += offsetsZForSide[side];

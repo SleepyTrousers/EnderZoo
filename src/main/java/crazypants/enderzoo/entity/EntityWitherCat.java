@@ -307,9 +307,6 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     double hw = width / 2.0F;
     double hd = hw * 2.75;
     float f1 = height;
-//    boundingBox.setBounds(
-//        x - hw, y - yOffset + ySize, z - hd,
-//        x + hw, y - yOffset + ySize + f1, z + hd);
     setEntityBoundingBox(new AxisAlignedBB(
         x - hw, y, z - hd,
         x + hw, y + f1, z + hd));
