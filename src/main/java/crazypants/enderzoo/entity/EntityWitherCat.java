@@ -192,6 +192,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       if(lastScale != scale) {
         spawnParticles();
         lastScale = scale;
+        setSize(DEF_WIDTH * scale, DEF_HEIGHT * scale);
       }
       return;
     }
@@ -199,7 +200,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     if(owner != null && owner.isDead) {
       setOwner(null);
     }
-    if(getOwner() != null && getAttackTarget() != null && !isAngry() && getGrowthMode() != GrowthMode.GROW) {
+    if(/* getOwner() != null && */getAttackTarget() != null && !isAngry() && getGrowthMode() != GrowthMode.GROW) {
       setGrowthMode(GrowthMode.GROW);
     }
 
@@ -208,7 +209,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     float scale = getScale();
     if(lastScale != scale) {
       lastScale = scale;
-      setSize(DEF_WIDTH * scale, DEF_HEIGHT * scale);
+      setSize(DEF_WIDTH * scale, DEF_HEIGHT * scale);     
       float growthRatio = (lastScale - 1) / (ANGRY_SCALE - 1);
       updateAttackDamage(growthRatio);
       updateHealth(growthRatio);
@@ -223,6 +224,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   public void updateScale() {
+
     GrowthMode curMode = getGrowthMode();
     if(curMode == GrowthMode.NONE) {
       return;
@@ -231,14 +233,14 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     float scale = getScale();
     if(curMode == GrowthMode.GROW) {
       if(scale < ANGRY_SCALE) {
-        setScale(scale + SCALE_INC);
+        setScale(Math.min(scale + SCALE_INC, ANGRY_SCALE));
       } else {
         setScale(ANGRY_SCALE);
         setGrowthMode(GrowthMode.NONE);
       }
     } else {
       if(scale > 1) {
-        setScale(scale - SCALE_INC);
+        setScale(Math.max(1, scale - SCALE_INC));
       } else {
         setScale(1);
         setGrowthMode(GrowthMode.NONE);
@@ -283,7 +285,6 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       double xOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
       double yOffset = offsetScale / 3 + rand.nextFloat() * offsetScale / 3 * 2F;
       double zOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
-      //EntityFX fx = Minecraft.getMinecraft().renderGlobal.doSpawnParticle("spell", startX + xOffset, startY + yOffset, startZ + zOffset, 0.0D, 0.0D, 0.0D);            
       EntityFX fx = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), startX + xOffset, startY + yOffset,
           startZ + zOffset, 0.0D, 0.0D, 0.0D);
       if(fx != null) {
@@ -304,12 +305,29 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     posX = x;
     posY = y;
     posZ = z;
+    
+    updateBounds();
+    
+    
+  }
+
+  @Override
+  protected void setSize(float width, float height) {
+    if(width != this.width || height != this.height) {
+      float f2 = this.width;
+      this.width = width;
+      this.height = height;
+      updateBounds(); 
+    }
+  }
+  
+  private void updateBounds() {
     double hw = width / 2.0F;
     double hd = hw * 2.75;
     float f1 = height;
     setEntityBoundingBox(new AxisAlignedBB(
-        x - hw, y, z - hd,
-        x + hw, y + f1, z + hd));
+        posX - hw, posY, posZ - hd,
+        posX + hw, posY + f1, posZ + hd));
   }
 
   //TODO: New sounds

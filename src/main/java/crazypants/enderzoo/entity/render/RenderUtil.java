@@ -17,6 +17,8 @@ public final class RenderUtil {
     AxisAlignedBB bb = entity.getEntityBoundingBox();
     if(bb != null) {
 
+//      System.out.println("RenderUtil.renderEntityBoundingBox: w= " + (bb.maxX - bb.minX) + " d=" + (bb.maxZ - bb.minZ));
+      
       GL11.glDisable(GL11.GL_TEXTURE_2D);
       GL11.glDisable(GL11.GL_LIGHTING);
       GL11.glDisable(GL11.GL_CULL_FACE);
