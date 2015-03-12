@@ -28,18 +28,17 @@ public class RenderFallenMount extends RenderHorse {
     super(rm, new ModelHorse(), 0.75F);
   }
 
-  
   @Override
-  protected ResourceLocation func_180581_a(EntityHorse horse) {
+  protected ResourceLocation getHorseTexture(EntityHorse horse) {
     if(horse.getTotalArmorValue() == 0) {
       return zombieHorseTexture;
     } else {
       return getArmoredTexture(horse);
-    }    
+    }
   }
 
   private ResourceLocation getArmoredTexture(EntityHorse horse) {
-    String s = horseArmorTextures[horse.func_110241_cb()];
+    String s = horseArmorTextures[horse.getHorseArmorIndexSynced()];
     ResourceLocation resourcelocation = textureCache.get(s);
     if(resourcelocation == null) {
       resourcelocation = new ResourceLocation("Layered:" + s);

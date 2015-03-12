@@ -121,7 +121,7 @@ public class ItemSpawnEgg extends Item {
   public static void spawnEntity(double x, double y, double z, EntityLiving entity, World world) {
     if(!world.isRemote) {
       entity.setPosition(x, y, z);
-      entity.func_180482_a(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
+      entity.onSpawnFirstTime(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
       world.spawnEntityInWorld(entity);
     }
   }

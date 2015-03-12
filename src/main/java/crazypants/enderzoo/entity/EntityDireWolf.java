@@ -45,7 +45,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     super(world);
     setSize(0.8F, 1.2F);
     //getNavigator().setAvoidsWater(true);
-    ((PathNavigateGround)this.getNavigator()).func_179690_a(true);
+    ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
     tasks.addTask(1, new EntityAISwimming(this));
     tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
     tasks.addTask(4, new EntityAIAttackOnCollideAggressive(this, 1.1D, true).setAttackFrequency(20));
@@ -97,7 +97,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     super.applyEntityAttributes();
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
     getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
-    MobInfo.DIRE_WOLF.applyAttributes(this);       
+    MobInfo.DIRE_WOLF.applyAttributes(this);
   }
 
   @Override
@@ -171,7 +171,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     setEntityBoundingBox(new AxisAlignedBB(
         x - hw, y, z - hd,
         x + hw, y + f1, z + hd));
-    
+
   }
 
   @Override

@@ -105,8 +105,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   }
 
   @Override
-  //public IEntityLivingData onSpawnWithEgg(IEntityLivingData data) {
-  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData data) {  
+  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData data) {  
     setHorseType(3);
     setHorseSaddled(true);    
     setGrowingAge(0);
