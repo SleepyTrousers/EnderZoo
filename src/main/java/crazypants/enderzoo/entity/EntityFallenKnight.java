@@ -1,6 +1,5 @@
 package crazypants.enderzoo.entity;
 
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -44,12 +43,12 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   private boolean firstUpdate = true;
   private boolean isMounted = false;
-  
+
   private boolean spawned = false;
 
   public EntityFallenKnight(World world) {
     super(world);
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));    
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
   }
 
   @Override
@@ -157,19 +156,19 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     if(ridingEntity != null || !spawned) {
       return;
     }
-    
+
     EntityFallenMount mount = null;
     if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
       mount = new EntityFallenMount(worldObj);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
 
       DifficultyInstance di = worldObj.getDifficultyForLocation(new BlockPos(mount));
-      mount.func_180482_a(di, null);
+      mount.onSpawnFirstTime(di, null);
       //NB: don;t check for entity collisions as we know the knight will collide
-      if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
+      if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
         mount = null;
       }
-    } 
+    }
     if(mount != null) {
       setCanPickUpLoot(false);
       setCanBreakDoors(false);
@@ -183,10 +182,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     return itemstack != null && itemstack.getItem() == Items.bow;
   }
 
-
-
-  @Override
-  protected void addRandomArmor() {
+  private void addRandomArmor() {
 
     float occupiedDiffcultyMultiplier = EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ);
 
@@ -263,19 +259,19 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData livingData) {  
+  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData livingData) {
     spawned = true;
-    
+
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
     setSkeletonType(0);
-    addRandomArmor();    
-    func_180483_b(di); //enchantEquipment();
-    
+    addRandomArmor();
+    setEnchantmentBasedOnDifficulty(di); //enchantEquipment();
+
     float f = di.getClampedAdditionalDifficulty();
-    this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);        
+    this.setCanPickUpLoot(this.rand.nextFloat() < 0.55F * f);
     setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
-    setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
+    setCanBreakDoors(rand.nextFloat() < f * 0.1F);
 
     return livingData;
   }

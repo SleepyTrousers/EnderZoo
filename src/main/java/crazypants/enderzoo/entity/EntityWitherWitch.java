@@ -130,9 +130,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   @Override
-  public IEntityLivingData func_180482_a(DifficultyInstance di, IEntityLivingData livingData) {
+  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData livingData) {
     spawned = true;
-    return super.func_180482_a(di, livingData);
+    return super.onSpawnFirstTime(di, livingData);
   }
 
   @Override
@@ -271,7 +271,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   private void spawnCat(Point3i spawnLoc) {
     EntityWitherCat cat = new EntityWitherCat(worldObj);
-    cat.func_180482_a(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
+    cat.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
     if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) return;

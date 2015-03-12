@@ -85,7 +85,7 @@ public class SpawnUtil {
     int j = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
     int k = MathHelper.floor_double(entity.posZ);
     
-    if(entity.func_180484_a(VecUtil.bpos(i, j, k)) < 0) {
+    if(entity.getBlockPathWeight(VecUtil.bpos(i, j, k)) < 0) {
       return false;
     }
     if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.getEntityBoundingBox())) {
