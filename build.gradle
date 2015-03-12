@@ -26,6 +26,9 @@ if (project.hasProperty('mod_appendix'))
 
 minecraft {
     version = "${minecraft_version}-${forge_version}"
+
+    mappings = "snapshot_20141130"
+
     runDir = 'run'
 
     replace "@VERSION@", project.version
