@@ -32,13 +32,13 @@ public class RenderEnderminy extends RenderLiving {
 
   public void doRender(EntityEnderminy p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 
-    this.endermanModel.isAttacking = p_76986_1_.isScreaming();
+    endermanModel.isAttacking = p_76986_1_.isScreaming();
     if(p_76986_1_.isScreaming()) {
       double d3 = 0.02D;
-      p_76986_2_ += this.rnd.nextGaussian() * d3;
-      p_76986_6_ += this.rnd.nextGaussian() * d3;
+      p_76986_2_ += rnd.nextGaussian() * d3;
+      p_76986_6_ += rnd.nextGaussian() * d3;
     }
-    super.doRender((EntityLiving) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+    super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
 
   protected ResourceLocation getEntityTexture(EntityEnderminy p_110775_1_) {
@@ -49,7 +49,7 @@ public class RenderEnderminy extends RenderLiving {
     if(p_77032_2_ != 0) {
       return -1;
     } else {
-      this.bindTexture(endermanEyesTexture);
+      bindTexture(endermanEyesTexture);
       float f1 = 1.0F;
       GL11.glEnable(GL11.GL_BLEND);
       GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -65,7 +65,7 @@ public class RenderEnderminy extends RenderLiving {
       char c0 = 61680;
       int j = c0 % 65536;
       int k = c0 / 65536;
-      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j / 1.0F, (float) k / 1.0F);
+      OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
       GL11.glEnable(GL11.GL_LIGHTING);
       GL11.glColor4f(1.0F, 1.0F, 1.0F, f1);
       return 1;
@@ -77,22 +77,27 @@ public class RenderEnderminy extends RenderLiving {
     GL11.glScalef(0.5F, 0.25F, 0.5F);
   }
 
+  @Override
   public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
 
+  @Override
   protected int shouldRenderPass(EntityLivingBase p_77032_1_, int p_77032_2_, float p_77032_3_) {
     return this.shouldRenderPass((EntityEnderminy) p_77032_1_, p_77032_2_, p_77032_3_);
   }
 
+  @Override
   public void doRender(EntityLivingBase p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
 
+  @Override
   protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
     return this.getEntityTexture((EntityEnderminy) p_110775_1_);
   }
 
+  @Override
   public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }

@@ -1,4 +1,14 @@
 -------------------------------------------
+Version 1.0.10
+-------------------------------------------
+New
+
+- #62 Prevent teleporting the player in Runic Dungeons (HenryLoenwind)
+- #68 Added fr_FR.lang (Milobe115 )
+- #71 Added French Canadian language (DragonsLover)        
+
+
+-------------------------------------------
 Version 1.0.9
 -------------------------------------------
 New
