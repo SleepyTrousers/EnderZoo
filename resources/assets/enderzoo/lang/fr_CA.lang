@@ -1,0 +1,39 @@
+//**** Ender Zoo ****//
+
+//Items
+item.itemSpawnEggEnderZoo.name=Spawner un(e)
+item.witheringDust.name=Poudre décomposée
+item.confusingDust.name=Poudre de confusion
+item.enderFragment.name=Fragment des limbes
+item.guardiansBow.name=Arc des Gardiens
+
+item.enderZooIcon.name=Icône d'EnderZoo
+
+//Mobs
+entity.enderzoo.Enderminy.name=Endermini
+entity.enderzoo.ConcussionCreeper.name=Creeper à secousse
+entity.enderzoo.FallenKnight.name=Chevalier déchu
+entity.enderzoo.FallenMount.name=Destrier déchu
+entity.enderzoo.WitherWitch.name=Wither sorcière
+entity.enderzoo.WitherCat.name=Wither minou
+entity.enderzoo.DireWolf.name=Loup sinistre
+
+//Waila
+entity.enderzoo.Enderminy.desc.1=Mob neutre qui
+entity.enderzoo.Enderminy.desc.2=attaque les Creepers.
+
+entity.enderzoo.ConcussionCreeper.desc.1=Ne fait aucun dégât aux blocs.
+entity.enderzoo.ConcussionCreeper.desc.2=Téléporte les entités à
+entity.enderzoo.ConcussionCreeper.desc.3=proximité quand il explose.
+
+entity.enderzoo.FallenKnight.desc.1=Zombie en armure qui attaque à distance.
+entity.enderzoo.WitherWitch.desc.1=Jette des potions de décomposition.
+
+//Enchants
+enchantment.enderzoo.witherArrow=Décomposition (flèche)
+enchantment.enderzoo.witherWeapon=Décomposition (arme)
+
+//Blocks
+tile.blockConfusingCharge.name=Charge de confusion
+tile.blockEnderCharge.name=Charge des limbes
+tile.blockConcussionCharge.name=Charge de secousse
