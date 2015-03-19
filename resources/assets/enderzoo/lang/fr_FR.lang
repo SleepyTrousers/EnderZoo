@@ -1,0 +1,38 @@
+//***  Ender Zoo *****//
+
+//Items
+item.itemSpawnEggEnderZoo.name=Invoquer
+item.witheringDust.name=Poudre Déssicante
+item.confusingDust.name=Poudre Désorientante
+item.enderFragment.name=Fragment de l'Ender
+item.guardiansBow.name=Arc des Gardiens
+
+
+//Mobs
+entity.enderzoo.Enderminy.name=Enderminus
+entity.enderzoo.ConcussionCreeper.name=Creeper à Concussion
+entity.enderzoo.FallenKnight.name=Chevalier Déchu
+entity.enderzoo.FallenMount.name=Étalon Déchu
+entity.enderzoo.WitherWitch.name=Sorcière du Wither
+entity.enderzoo.WitherCat.name=Chat du Wither
+entity.enderzoo.DireWolf.name=Loup Désespéré
+
+//Waila
+entity.enderzoo.Enderminy.desc.1=Monstre neutre,
+entity.enderzoo.Enderminy.desc.2=Attaque les creepers
+
+entity.enderzoo.ConcussionCreeper.desc.1=Ne fait pas de dégats aux blocs.
+entity.enderzoo.ConcussionCreeper.desc.2=Téléporte les entités proches
+entity.enderzoo.ConcussionCreeper.desc.3=Quand il explose.
+
+entity.enderzoo.FallenKnight.desc.1=Zombie Blindé À distance
+entity.enderzoo.WitherWitch.desc.1=Envoie des Potions de Déssechement
+
+//Enchants
+enchantment.enderzoo.witherArrow=Déssechement 
+enchantment.enderzoo.witherWeapon=Flétrissure
+
+//Blocks
+tile.blockConfusingCharge.name=Charge Désorientante
+tile.blockEnderCharge.name=Charge de l'Ender
+tile.blockConcussionCharge.name=Charge Concussive
