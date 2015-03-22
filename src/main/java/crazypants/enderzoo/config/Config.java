@@ -164,6 +164,7 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
+  public static boolean useAltWitherPotionEffectMask = false;
 
   public static void load(FMLPreInitializationEvent event) {
 
@@ -409,6 +410,9 @@ public final class Config {
         "Effects the speed with which arrows leave the bow. A 'vanilla' bow has a multiplier of 2.").getDouble(guardiansBowForceMultiplier);
     guardiansBowFovMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowFovMultiplier", guardiansBowFovMultiplier,
         "The reduction in FOV when the bow is fullen drawn (the zoom level). A 'vanilla' bow has a value of 0.15").getDouble(guardiansBowFovMultiplier);
+
+    useAltWitherPotionEffectMask = config.getBoolean("useAltWitherPotionEffectMask", sectionEnchants.name, useAltWitherPotionEffectMask,
+        "Set this to true if the wither effect is conflicting with another potion (e.g. leaping)");
 
   }
 

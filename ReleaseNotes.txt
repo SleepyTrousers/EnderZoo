@@ -5,7 +5,11 @@ New
 
 - #62 Prevent teleporting the player in Runic Dungeons (HenryLoenwind)
 - #68 Added fr_FR.lang (Milobe115 )
-- #71 Added French Canadian language (DragonsLover)        
+- #71 Added French Canadian language (DragonsLover)
+
+Bugs
+
+- #48 Added config option to resolve conflict with wither potion effect        
 
 
 -------------------------------------------
