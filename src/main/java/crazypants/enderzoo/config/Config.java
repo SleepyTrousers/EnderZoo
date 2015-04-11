@@ -131,7 +131,7 @@ public final class Config {
   public static double direWolfAttackDamage = 10;
   public static double direWolfHardAttackModifier = 1;
   public static double direWolfAggresiveRange = 4;
-  public static double direWolfHowlVolumeMult = 12;
+  public static double direWolfHowlVolumeMult = 8;
   public static double direWolfHowlChance = 0.05;
   public static double direWolfPackHowlChance = 0.5;
   public static int direWolfPackHowlAmount = 8;

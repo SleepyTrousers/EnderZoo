@@ -13,8 +13,10 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideAggressive;
@@ -69,6 +71,21 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   @Override
   protected boolean isAIEnabled() {
     return true;
+  }
+  
+  @Override
+  public float getBlockPathWeight(int x, int y, int z) {
+    // Impl from EntityAnimal
+    return this.worldObj.getBlock(x, y - 1, z) == Blocks.grass ? 10f : this.worldObj.getLightBrightness(x, y, z) - 0.5F;
+  }
+
+  @Override
+  public boolean getCanSpawnHere() {
+    // Impl from EntityAnimal
+    int i = MathHelper.floor_double(this.posX);
+    int j = MathHelper.floor_double(this.boundingBox.minY);
+    int k = MathHelper.floor_double(this.posZ);
+    return this.worldObj.getBlock(i, j - 1, k) == Blocks.grass && this.worldObj.getFullBlockLightValue(i, j, k) > 8 && super.getCanSpawnHere();
   }
 
   public boolean isAngry() {
