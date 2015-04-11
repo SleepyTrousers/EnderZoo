@@ -71,6 +71,7 @@ public final class Config {
   public static boolean enderminySpawnInLitAreas = false;
   public static boolean enderminySpawnOnlyOnGrass = true;
   public static int enderminyMinSpawnY = 0;
+  public static boolean enderminyOldTexture = false;
 
   public static final Section sectionConCreeper = new Section("Concussion Creeper", "concussionCreeper");
   public static boolean concussionCreeperEnabled = true;
@@ -78,6 +79,7 @@ public final class Config {
   public static int concussionCreeperConfusionDuration = 100;
   public static int concussionCreeperExplosionRange = 5;
   public static double concussionCreeperHealth = 20;
+  public static boolean concussionCreeperOldTexture = false;
 
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
   public static boolean fallenKnightEnabled = true;
@@ -164,7 +166,6 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
-
   public static void load(FMLPreInitializationEvent event) {
 
     FMLCommonHandler.instance().bus().register(new Config());
@@ -218,8 +219,10 @@ public final class Config {
         "When true enderminies will spawn in well lit areas, when false they will only spawn in dark areas.");
     enderminySpawnOnlyOnGrass = config.getBoolean("enderminySpawnOnlyOnGrass", sectionEnderminy.name, enderminySpawnOnlyOnGrass,
         "When true enderminies will spawn only on grass blocks.");
-    enderminyMinSpawnY = config.get(sectionEnderminy.name, "enderminyMinSpawnY", enderminyMinSpawnY,
-        "The minimum Y level at which enderminies will spawn").getInt(enderminyMinSpawnY);
+    enderminyMinSpawnY = config.get(sectionEnderminy.name, "enderminyMinSpawnY", enderminyMinSpawnY, "The minimum Y level at which enderminies will spawn")
+        .getInt(enderminyMinSpawnY);
+    enderminyOldTexture = config.get(sectionEnderminy.name, "enderminyOldTexture", enderminyOldTexture, "If true, uses the old texture for the Enderminy.")
+        .getBoolean();
 
     concussionCreeperEnabled = config.getBoolean("concussionCreeperEnabled", sectionConCreeper.name, concussionCreeperEnabled,
         "Wether ConcussionCreepers are enabled");
@@ -231,6 +234,8 @@ public final class Config {
         "The range of the 'teleport explosion'").getInt(concussionCreeperExplosionRange);
     concussionCreeperHealth = config.get(sectionConCreeper.name, "concussionCreeperHealth", concussionCreeperHealth,
         "Health of Concussion Creeper. 40=Enderman health, 20=Zombie health").getDouble(concussionCreeperHealth);
+    concussionCreeperOldTexture = config.get(sectionConCreeper.name, "concussionCreeperOldTexture", concussionCreeperOldTexture,
+        "If true, uses the old texture for the Concussion Creeper.").getBoolean();
 
     fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(

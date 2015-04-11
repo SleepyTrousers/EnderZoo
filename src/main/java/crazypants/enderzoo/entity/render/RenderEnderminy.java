@@ -12,13 +12,15 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityEnderminy;
 
 
 public class RenderEnderminy extends RenderLiving {
   
-  private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:entity/enderminy_eyes.png");
-  private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:entity/enderminy.png");
+  private static final String PATH = Config.enderminyOldTexture ? "entity/old/" : "entity/";
+  private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:" + PATH + "enderminy_eyes.png");
+  private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:" + PATH + "enderminy.png");
   
   private ModelEnderman endermanModel;
   private Random rnd = new Random();
