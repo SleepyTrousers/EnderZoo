@@ -10,6 +10,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.config.Config;
 
 public class ItemWitheringDust extends Item {
 
@@ -32,7 +33,11 @@ public class ItemWitheringDust extends Item {
     GameRegistry.registerItem(this, NAME);    
     try {
       HashMap myPotionRequirements = (HashMap)ReflectionHelper.getPrivateValue(PotionHelper.class, null, "potionRequirements", "field_77927_l");      
-      myPotionRequirements.put(Integer.valueOf(Potion.wither.getId()), "0 & 1 & !2 &  3 & 0+6");
+      String mask = "0 & 1 & !2 &  3 & 0+6";
+      if(Config.useAltWitherPotionEffectMask) {
+        mask = "0 & 1 & 2 &  3 & 0+6";
+      }
+      myPotionRequirements.put(Integer.valueOf(Potion.wither.getId()), mask);
     } catch (Exception e) {
       Log.error("ItemWitheringDust: Could not register wither potion recipe " + e);
     }    
@@ -40,6 +45,9 @@ public class ItemWitheringDust extends Item {
   
   @Override
   public String getPotionEffect(ItemStack p_150896_1_) {
+    if(Config.useAltWitherPotionEffectMask) {
+      return "+0+1+2+3&4-4+13";
+    }
     return "+0+1-2+3&4-4+13";
   }
   
