@@ -131,7 +131,11 @@ public final class Config {
   public static double direWolfAttackDamage = 10;
   public static double direWolfHardAttackModifier = 1;
   public static double direWolfAggresiveRange = 4;
-
+  public static double direWolfHowlVolumeMult = 12;
+  public static double direWolfHowlChance = 0.05;
+  public static double direWolfPackHowlChance = 0.5;
+  public static int direWolfPackHowlAmount = 8;
+  
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
   public static int enchantmentWitherArrowWeight = 2;
@@ -165,7 +169,6 @@ public final class Config {
   public static float guardiansBowDamageBonus = 0f;
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
-
 
   public static boolean useAltWitherPotionEffectMask = false;
 
@@ -321,15 +324,21 @@ public final class Config {
         "Base health of the Dire Wolf").getDouble(direWolfHealth);
     direWolfAttackDamage = config.get(sectionDireWolf.name, "direWolfAttackDamage", direWolfAttackDamage,
         "Base attack damage of the dire wolf").getDouble(direWolfAttackDamage);
-    direWolfHardAttackModifier = config.get(sectionDireWolf.name, "direWolfHardAttackModifier",
-        direWolfHardAttackModifier,
+    direWolfHardAttackModifier = config.get(sectionDireWolf.name, "direWolfHardAttackModifier", direWolfHardAttackModifier,
         "The increase to damage when playing on hard").getDouble(direWolfHardAttackModifier);
     direWolfAggresiveRange = config.get(sectionDireWolf.name, "direWolfAggresiveRange", direWolfAggresiveRange,
         "If a player gets within this range they will be attacked").getDouble(direWolfAggresiveRange);
+    direWolfHowlVolumeMult = config.get(sectionDireWolf.name, "direWolfHowlVolumeMult", direWolfHowlVolumeMult,
+        "The volume multiplier for the dire wolf's howl. 12 is default.").getDouble();
+    direWolfHowlChance = config.get(sectionDireWolf.name, "direWolfHowlChance", direWolfHowlChance,
+        "The chance a dire wolf will howl when it is asked to play a sound. Defaults to 0.1 (10%)").getDouble();
+    direWolfPackHowlChance = config.get(sectionDireWolf.name, "direWolfPackHowlChance", direWolfPackHowlChance,
+        "The chance that when a dire wolf howls, nearby dire wolves will \"join in\" to a pack howl. Defaults to 0.6 (60%)").getDouble();
+    direWolfPackHowlAmount = config.get(sectionDireWolf.name, "direWolfPackHowlAmount", direWolfPackHowlAmount,
+        "The amount of other dire wolves that will \"join in\" with the initial howl, per pack howl.").getInt();
 
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
-        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(
-        enchantmentWitherArrowId);
+        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
         "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
         enchantmentWitherArrowWeight);

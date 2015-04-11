@@ -37,6 +37,9 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   private static final float DEF_WIDTH = 0.6F;
 
   private EntityLivingBase previsousAttackTarget;
+  
+  private static int packHowl = 0;
+  private static long lastHowl = 0;
 
   public EntityDireWolf(World world) {
     super(world);
@@ -54,7 +57,6 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
       nearTarg.setMaxDistanceToTarget(Config.direWolfAggresiveRange);
       targetTasks.addTask(2, nearTarg);
     }
-
   }
 
   @Override
@@ -114,15 +116,23 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     if(EntityUtil.isPlayerWithinRange(this, 12)) {
       return SND_GROWL;
     }
-
-    boolean howl = rand.nextFloat() > 0.95;
-    return howl ? SND_HOWL : SND_GROWL;
+    boolean howl = (packHowl > 0 || rand.nextFloat() <= Config.direWolfHowlChance) && worldObj.getTotalWorldTime() > (lastHowl + 10);
+    if(howl) {
+      if(packHowl <= 0 && rand.nextFloat() <= 0.6) {
+        packHowl = Config.direWolfPackHowlAmount;
+      }
+      lastHowl = worldObj.getTotalWorldTime();
+      packHowl = Math.max(packHowl - 1, 0);
+      return SND_HOWL;
+    } else {
+      return SND_GROWL;
+    }
   }
 
   @Override
   public void playSound(String name, float volume, float pitch) {
     if(SND_HOWL.equals(name)) {
-      volume = 5;
+      volume *= (float) Config.direWolfHowlVolumeMult;
       pitch *= 0.8f;
     }
     worldObj.playSoundAtEntity(this, name, volume, pitch);
