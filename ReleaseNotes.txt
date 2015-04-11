@@ -1,4 +1,24 @@
 -------------------------------------------
+Version 1.0.11
+-------------------------------------------
+New
+
+- #74 Improve Dire Wolf howl sounds
+  - Add pack howls, where howls will group together
+  - Add configs for all howl sound parameters
+  - Limit the minimum time between howls globally
+
+Changes
+
+- New textures for enderminy and concussion creeper. Can be changed back in the config.
+
+Bugs
+
+- #72 Fix dire wolves spawning in lit bases, now follow normal wolf rules
+- #69 Fix concussion creepers teleporting you below bedrock
+- #78 Fix strange rendering on wither cats
+
+-------------------------------------------
 Version 1.0.10
 -------------------------------------------
 New
