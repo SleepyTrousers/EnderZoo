@@ -54,7 +54,7 @@ public class TeleportHelper {
     entity.posZ = event.targetZ;
 
     int xInt = MathHelper.floor_double(entity.posX);
-    int yInt = MathHelper.floor_double(entity.posY);
+    int yInt = Math.max(1, MathHelper.floor_double(entity.posY));
     int zInt = MathHelper.floor_double(entity.posZ);
 
     boolean flag = false;
