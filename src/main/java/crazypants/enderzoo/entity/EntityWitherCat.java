@@ -56,6 +56,8 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   private EntityAIFollowOwner followTask;
   private boolean firstUpdate = true;
 
+  private boolean attackTargetChanged = false;
+
   public EntityWitherCat(World world) {
     super(world);
 
@@ -136,13 +138,9 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   @Override
   public void setAttackTarget(EntityLivingBase target) {
     if(getAttackTarget() != target) {
-      EntityUtil.cancelCurrentTasks(this);
+      attackTargetChanged = true;
     }
     super.setAttackTarget(target);
-    tasks.removeTask(followTask);
-    if(target == null) {
-      tasks.addTask(3, followTask);
-    }
   }
 
   @Override
@@ -196,6 +194,15 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
         lastScale = scale;
       }
       return;
+    }
+
+    if(!worldObj.isRemote && attackTargetChanged) {
+      EntityUtil.cancelCurrentTasks(this);
+      tasks.removeTask(followTask);
+      if(getAttackTarget() == null) {
+        tasks.addTask(3, followTask);
+      }
+      attackTargetChanged = false;
     }
 
     if(owner != null && owner.isDead) {
