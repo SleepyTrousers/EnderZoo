@@ -25,14 +25,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
 import crazypants.enderzoo.potion.BrewingUtil;
 import crazypants.enderzoo.vec.Point3i;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
@@ -277,7 +277,12 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     cat.onSpawnWithEgg(null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
-    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) return;
+    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) {
+      return;
+    }
+    if(!cat.getCanSpawnHere()) {
+      return;
+    }
     cats.add(cat);
     worldObj.spawnEntityInWorld(cat);
   }

@@ -5,6 +5,7 @@ Version 1.0.12
 Bugs
 
 - #57 Server wither cat crash
+- #70 Wither Cat Spawning in dark areas
 - #81 Fixed rendering artifacts on items / blocks
 - Fixed rendering of enderminy
  
