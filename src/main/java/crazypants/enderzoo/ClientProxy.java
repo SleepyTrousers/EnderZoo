@@ -12,6 +12,7 @@ import crazypants.enderzoo.charge.EntityPrimedCharge;
 import crazypants.enderzoo.charge.RenderPrimedCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityConcussionCreeper;
+import crazypants.enderzoo.entity.EntityDireSlime;
 import crazypants.enderzoo.entity.EntityDireWolf;
 import crazypants.enderzoo.entity.EntityEnderminy;
 import crazypants.enderzoo.entity.EntityFallenKnight;
@@ -19,6 +20,7 @@ import crazypants.enderzoo.entity.EntityFallenMount;
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherWitch;
 import crazypants.enderzoo.entity.render.RenderConcussionCreeper;
+import crazypants.enderzoo.entity.render.RenderDireSlime;
 import crazypants.enderzoo.entity.render.RenderDirewolf;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
 import crazypants.enderzoo.entity.render.RenderFallenKnight;
@@ -70,7 +72,9 @@ public class ClientProxy extends CommonProxy {
     if(Config.guardiansBowEnabled) {
       MinecraftForgeClient.registerItemRenderer(EnderZoo.itemGuardiansBow, new GuardiansBowRenderer());
     }
-
+    if(Config.direSlimeEnabled) {
+      RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, new RenderDireSlime());
+    }
   }
   
   @Override
