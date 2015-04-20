@@ -21,6 +21,8 @@ import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
+import crazypants.enderzoo.gen.BlockStructureMarker;
+import crazypants.enderzoo.gen.TestGen;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
@@ -58,6 +60,8 @@ public class EnderZoo {
   public static BlockEnderCharge blockEnderCharge;
   public static BlockConcussionCharge blockConcussionCharge;
   
+  public static BlockStructureMarker blockStructureMarker;
+
   public static MobSpawnEventHandler spawnEventHandler;
 
   @EventHandler
@@ -85,6 +89,8 @@ public class EnderZoo {
       blockConcussionCharge = BlockConcussionCharge.create();
     }
 
+    blockStructureMarker = BlockStructureMarker.create();
+
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -111,6 +117,7 @@ public class EnderZoo {
   public void load(FMLInitializationEvent event) {
     instance = this;
     proxy.load();
+    GameRegistry.registerWorldGenerator(new TestGen(), 50000);
   }
 
   @EventHandler
