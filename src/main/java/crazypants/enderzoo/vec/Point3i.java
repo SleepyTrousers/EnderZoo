@@ -24,6 +24,15 @@ public class Point3i {
     z = other.z;
   }
 
-  
-  
+  public void add(Point3i other) {
+    x += other.x;
+    y += other.y;
+    z += other.z;
+  }
+
+  @Override
+  public String toString() {
+    return "Point3i [x=" + x + ", y=" + y + ", z=" + z + "]";
+  }
+
 }

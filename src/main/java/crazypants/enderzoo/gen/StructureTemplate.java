@@ -1,134 +1,136 @@
 package crazypants.enderzoo.gen;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
+import crazypants.enderzoo.vec.Point3i;
 
 public class StructureTemplate {
 
-  private int xSize;
-  private int ySize;
-  private int zSize;
+  private final AxisAlignedBB bb;
 
-  private BlockInfo[][][] data;
+  private final Map<StructureBlock, List<Point3i>> data = new HashMap<StructureBlock, List<Point3i>>();
 
-  public StructureTemplate(IBlockAccess ba, int x, int y, int z, int xSize, int ySize, int zSize) {
-    this.xSize = xSize;
-    this.ySize = ySize;
-    this.zSize = zSize;
+  private final String name;
 
-    data = new BlockInfo[xSize][ySize][zSize];
+  public StructureTemplate(String name, IBlockAccess world, AxisAlignedBB worldBnds) {
 
-    for (int xCoord = 0; xCoord < xSize; xCoord++) {
-      for (int yCoord = 0; yCoord < ySize; yCoord++) {
-        for (int zCoord = 0; zCoord < zSize; zCoord++) {
-          data[xCoord][yCoord][zCoord] = new BlockInfo(ba, xCoord + x, yCoord + y, zCoord + z);
+    this.name = name;
+
+    bb = worldBnds.getOffsetBoundingBox(-worldBnds.minX, -worldBnds.minY, -worldBnds.minZ);
+
+    Point3i size = new Point3i((int) Math.abs(worldBnds.maxX - worldBnds.minX), (int) Math.abs(worldBnds.maxY - worldBnds.minY), (int) Math.abs(worldBnds.maxZ
+        - worldBnds.minZ));
+    for (short xIndex = 0; xIndex < size.x; xIndex++) {
+      for (short yIndex = 0; yIndex < size.y; yIndex++) {
+        for (short zIndex = 0; zIndex < size.z; zIndex++) {
+          addBlock(new StructureBlock(world, (int) worldBnds.minX + xIndex, (int) worldBnds.minY + yIndex, (int) worldBnds.minZ + zIndex), xIndex, yIndex,
+              zIndex);
         }
       }
     }
 
   }
 
+  public String getName() {
+    return name;
+  }
+
+  private void addBlock(StructureBlock block, short x, short y, short z) {
+    if(block.isAir()) {
+      return;
+    }
+    if(!data.containsKey(block)) {
+      data.put(block, new ArrayList<Point3i>());
+    }
+    data.get(block).add(new Point3i(x, y, z));
+  }
+
   public StructureTemplate(InputStream is) throws IOException {
-    NBTTagCompound root = CompressedStreamTools.readCompressed(is);
-
-    xSize = root.getInteger("xSize");
-    ySize = root.getInteger("ySize");
-    zSize = root.getInteger("zSize");
-
-    data = new BlockInfo[xSize][ySize][zSize];
+    NBTTagCompound root = CompressedStreamTools.read(new DataInputStream(is));
+    name = root.getString("name");
 
     NBTTagList dataList = (NBTTagList) root.getTag("data");
-    int index = 0;
-    for (int xCoord = 0; xCoord < xSize; xCoord++) {
-      for (int yCoord = 0; yCoord < ySize; yCoord++) {
-        for (int zCoord = 0; zCoord < zSize; zCoord++) {
-          NBTTagCompound dataTag = dataList.getCompoundTagAt(index);
-          data[xCoord][yCoord][zCoord] = new BlockInfo(dataTag);
-          index++;
-        }
+    for (int i = 0; i < dataList.tagCount(); i++) {
+      NBTTagCompound entryTag = dataList.getCompoundTagAt(i);
+      NBTTagCompound blockTag = entryTag.getCompoundTag("block");
+      StructureBlock sb = new StructureBlock(blockTag);
+
+      List<Point3i> coords = new ArrayList<Point3i>();
+      NBTTagList coordList = (NBTTagList) entryTag.getTag("coords");
+      for (int j = 0; j < coordList.tagCount(); j++) {
+        NBTTagCompound coordTag = coordList.getCompoundTagAt(j);
+        coords.add(new Point3i(coordTag.getShort("x"), coordTag.getShort("y"), coordTag.getShort("z")));
       }
+
+      data.put(sb, coords);
+
+    }
+
+    bb = AxisAlignedBB.getBoundingBox(root.getInteger("minX"), root.getInteger("minY"), root.getInteger("minZ"),
+        root.getInteger("maxX"), root.getInteger("maxY"), root.getInteger("maxZ"));
+
+  }
+
+  public void writeToNBT(NBTTagCompound root) {
+
+    root.setString("name", name);
+
+    root.setInteger("minX", (int) bb.minX);
+    root.setInteger("minY", (int) bb.minY);
+    root.setInteger("minZ", (int) bb.minZ);
+    root.setInteger("maxX", (int) bb.maxX);
+    root.setInteger("maxY", (int) bb.maxY);
+    root.setInteger("maxZ", (int) bb.maxZ);
+
+    NBTTagList entryList = new NBTTagList();
+    root.setTag("data", entryList);
+
+    for (Entry<StructureBlock, List<Point3i>> entry : data.entrySet()) {
+
+      NBTTagList coordList = new NBTTagList();
+      for (Point3i coord : entry.getValue()) {
+        NBTTagCompound coordTag = new NBTTagCompound();
+        coordTag.setShort("x", (short) coord.x);
+        coordTag.setShort("y", (short) coord.y);
+        coordTag.setShort("z", (short) coord.z);
+        coordList.appendTag(coordTag);
+      }
+
+      NBTTagCompound entryTag = new NBTTagCompound();
+      entryTag.setTag("block", entry.getKey().asNbt());
+      entryTag.setTag("coords", coordList);
+
+      entryList.appendTag(entryTag);
     }
 
   }
 
   public void write(OutputStream os) throws IOException {
     NBTTagCompound root = new NBTTagCompound();
-    root.setInteger("xSize", xSize);
-    root.setInteger("ySize", ySize);
-    root.setInteger("zSize", zSize);
-
-    NBTTagList dataList = new NBTTagList();
-    root.setTag("data", dataList);
-
-    for (int xCoord = 0; xCoord < xSize; xCoord++) {
-      for (int yCoord = 0; yCoord < ySize; yCoord++) {
-        for (int zCoord = 0; zCoord < zSize; zCoord++) {
-          NBTTagCompound dataTag = data[xCoord][yCoord][zCoord].asNbt();
-          dataList.appendTag(dataTag);
-        }
-      }
-    }
-    CompressedStreamTools.writeCompressed(root, os);
+    writeToNBT(root);
+    CompressedStreamTools.write(root, new DataOutputStream(os));
   }
 
-  private static class BlockInfo {
+  public AxisAlignedBB getBounds() {
+    return bb;
+  }
 
-    String modId;
-    String blockName;
-    short blockMeta;
-
-    private BlockInfo(NBTTagCompound tag) {
-      if(tag == null) {
-        modId = "minecraft";
-        blockName = "air";
-        blockMeta = 0;
-      } else {
-        UniqueIdentifier uid = new UniqueIdentifier(tag.getString("uid"));
-        modId = uid.modId;
-        blockName = uid.name;
-        blockMeta = tag.getShort("meta");
-      }
-    }
-
-    private BlockInfo(IBlockAccess ba, int x, int y, int z) {
-      Block b = ba.getBlock(x, y, z);
-      if(b == null) {
-        b = Blocks.air;
-      }
-      UniqueIdentifier uid = GameRegistry.findUniqueIdentifierFor(b);
-      if(uid == null) {
-        modId = "minecraft";
-        blockName = "air";
-      } else {
-        modId = uid.modId;
-        blockName = uid.name;
-      }
-      blockMeta = (short) ba.getBlockMetadata(x, y, z);
-    }
-
-    private BlockInfo(String modId, String blockName, short blockMeta) {
-      this.modId = modId;
-      this.blockName = blockName;
-      this.blockMeta = blockMeta;
-    }
-
-    NBTTagCompound asNbt() {
-      NBTTagCompound res = new NBTTagCompound();
-      res.setString("uid", modId + ":" + blockName);
-      res.setShort("meta", blockMeta);
-      return res;
-    }
-
+  public Map<StructureBlock, List<Point3i>> getBlocks() {
+    return data;
   }
 
 }
