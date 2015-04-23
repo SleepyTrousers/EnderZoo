@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen;
+package crazypants.enderzoo.gen.structure;
 
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;

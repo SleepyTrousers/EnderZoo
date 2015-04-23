@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen;
+package crazypants.enderzoo.gen.structure;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -18,7 +18,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import crazypants.enderzoo.vec.Point3i;
 
-public class StructureTemplate {
+public class StructureData {
 
   private final AxisAlignedBB bb;
 
@@ -26,7 +26,7 @@ public class StructureTemplate {
 
   private final String name;
 
-  public StructureTemplate(String name, IBlockAccess world, AxisAlignedBB worldBnds) {
+  public StructureData(String name, IBlockAccess world, AxisAlignedBB worldBnds) {
 
     this.name = name;
 
@@ -45,21 +45,7 @@ public class StructureTemplate {
 
   }
 
-  public String getName() {
-    return name;
-  }
-
-  private void addBlock(StructureBlock block, short x, short y, short z) {
-    if(block.isAir()) {
-      return;
-    }
-    if(!data.containsKey(block)) {
-      data.put(block, new ArrayList<Point3i>());
-    }
-    data.get(block).add(new Point3i(x, y, z));
-  }
-
-  public StructureTemplate(InputStream is) throws IOException {
+  public StructureData(InputStream is) throws IOException {
     NBTTagCompound root = CompressedStreamTools.read(new DataInputStream(is));
     name = root.getString("name");
 
@@ -125,12 +111,26 @@ public class StructureTemplate {
     CompressedStreamTools.write(root, new DataOutputStream(os));
   }
 
+  public String getName() {
+    return name;
+  }
+
   public AxisAlignedBB getBounds() {
     return bb;
   }
 
   public Map<StructureBlock, List<Point3i>> getBlocks() {
     return data;
+  }
+
+  private void addBlock(StructureBlock block, short x, short y, short z) {
+    if(block.isAir()) {
+      return;
+    }
+    if(!data.containsKey(block)) {
+      data.put(block, new ArrayList<Point3i>());
+    }
+    data.get(block).add(new Point3i(x, y, z));
   }
 
 }

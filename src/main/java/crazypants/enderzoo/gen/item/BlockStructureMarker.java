@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen;
+package crazypants.enderzoo.gen.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -13,6 +13,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.gen.StructureUtil;
+import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.vec.Point3i;
 
 public class BlockStructureMarker extends Block {
@@ -55,7 +57,7 @@ public class BlockStructureMarker extends Block {
       return true;
     }
 
-    StructureTemplate st = generateTemplate("test", world, x, y, z, entityPlayer);
+    StructureData st = generateTemplate("test", world, x, y, z, entityPlayer);
     if(st != null) {
       StructureUtil.writeToFile(entityPlayer, st);
     }
@@ -105,14 +107,14 @@ public class BlockStructureMarker extends Block {
         xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y, z);
   }
 
-  public static StructureTemplate generateTemplate(String name, IBlockAccess world, int x, int y, int z, EntityPlayer entityPlayer) {
+  public static StructureData generateTemplate(String name, IBlockAccess world, int x, int y, int z, EntityPlayer entityPlayer) {
     AxisAlignedBB bb = getStructureBounds(world, x, y, z);
     if(bb == null) {
       entityPlayer.addChatComponentMessage(new ChatComponentText("Could not find matching markers"));
       return null;
     }
 
-    return new StructureTemplate(name, world, bb);
+    return new StructureData(name, world, bb);
   }
 
   private static short getDistance(IBlockAccess world, int x, int y, int z, short scanDistance, Point3i axis) {

@@ -6,19 +6,39 @@ import java.io.FileOutputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.gen.structure.StructureBlock;
+import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureUtil {
 
-  public static void generateStructure(StructureTemplate st, World world, int x, int y, int z) {
+  public static final Random random = new Random();
+
+  public static Point3i getRandomSurfaceBlock(IBlockAccess world, int chunkX, int chunkZ) {
+    int x = chunkX * 16 + random.nextInt(16);
+    int z = chunkZ * 16 + random.nextInt(16);
+
+    int y = 200;
+    while (world.isAirBlock(x, y, z) && y > 2) {
+      --y;
+    }
+    if(y < 1) {
+      return null;
+    }
+    return new Point3i(x, y, z);
+  }
+
+  public static void generateStructure(StructureData st, World world, int x, int y, int z) {
     Map<StructureBlock, List<Point3i>> blks = st.getBlocks();
     for (Entry<StructureBlock, List<Point3i>> entry : blks.entrySet()) {
 
@@ -26,16 +46,23 @@ public class StructureUtil {
       List<Point3i> coords = entry.getValue();
 
       Block block = GameRegistry.findBlock(sb.getModId(), sb.getBlockName());
+
       if(block == null) {
         Log.error("Could not find block " + sb.getModId() + ":" + sb.getBlockName() + " when generating structure: " + st.getName());
       } else {
         for (Point3i coord : coords) {
-          world.setBlock(x + coord.x, y + coord.y, z + coord.z, block, sb.getMetaData(), 2);
+          Point3i bc = new Point3i(x + coord.x, y + coord.y, z + coord.z);
+          world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
+
           if(sb.getTileEntity() != null) {
             TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
             if(te != null) {
-              world.setTileEntity(x + coord.x, y + coord.y, z + coord.z, te);
+              world.setTileEntity(bc.x, bc.y, bc.z, te);
             }
+          }
+          //Chest will change the meta on block placed, so need to set it back
+          if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
+            world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
           }
         }
 
@@ -44,7 +71,7 @@ public class StructureUtil {
     }
   }
 
-  public static void writeToFile(EntityPlayer entityPlayer, StructureTemplate st) {
+  public static void writeToFile(EntityPlayer entityPlayer, StructureData st) {
     File f = new File("ezStructures");
     f.mkdir();
     if(!f.exists()) {
@@ -62,10 +89,10 @@ public class StructureUtil {
 
   }
 
-  public static StructureTemplate readFromFile() {
+  public static StructureData readFromFile() {
     try {
       File f = new File("ezStructures", "test.nbt");
-      return new StructureTemplate(new FileInputStream(f));
+      return new StructureData(new FileInputStream(f));
     } catch (Exception e) {
       e.printStackTrace();
       return null;

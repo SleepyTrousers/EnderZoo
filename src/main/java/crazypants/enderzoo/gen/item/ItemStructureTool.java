@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen;
+package crazypants.enderzoo.gen.item;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -8,6 +8,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.gen.StructureUtil;
+import crazypants.enderzoo.gen.structure.StructureData;
 
 public class ItemStructureTool extends Item {
 
@@ -42,7 +44,7 @@ public class ItemStructureTool extends Item {
       return true;
     }
 
-    StructureTemplate st = BlockStructureMarker.generateTemplate("test", world, x, y, z, player);
+    StructureData st = BlockStructureMarker.generateTemplate("test", world, x, y, z, player);
     if(st != null) {
       StructureUtil.writeToFile(player, st);
     }
@@ -53,7 +55,7 @@ public class ItemStructureTool extends Item {
   private void placeStructure(World world, int x, int y, int z) {
 
     //StructureTemplate st = new StructureTemplate(new FileInputStream(file));
-    StructureTemplate st = StructureUtil.readFromFile();
+    StructureData st = StructureUtil.readFromFile();
     if(st != null) {
       StructureUtil.generateStructure(st, world, x, y, z);
     }

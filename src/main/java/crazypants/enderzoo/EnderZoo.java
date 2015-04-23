@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.charge.BlockConcussionCharge;
@@ -21,9 +22,9 @@ import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
-import crazypants.enderzoo.gen.BlockStructureMarker;
-import crazypants.enderzoo.gen.ItemStructureTool;
-import crazypants.enderzoo.gen.TestGen;
+import crazypants.enderzoo.gen.StructureManager;
+import crazypants.enderzoo.gen.item.BlockStructureMarker;
+import crazypants.enderzoo.gen.item.ItemStructureTool;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
@@ -63,6 +64,7 @@ public class EnderZoo {
   
   public static BlockStructureMarker blockStructureMarker;
   public static ItemStructureTool itemStructureTool;
+  public static StructureManager structureManager;
 
   public static MobSpawnEventHandler spawnEventHandler;
 
@@ -93,6 +95,7 @@ public class EnderZoo {
 
     blockStructureMarker = BlockStructureMarker.create();
     itemStructureTool = ItemStructureTool.create();
+    structureManager = StructureManager.create();
 
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -105,6 +108,12 @@ public class EnderZoo {
     //    DebugUtil.instance.setEnabled(true);
 
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
+  }
+
+
+  @EventHandler
+  public void serverStopped(FMLServerStoppedEvent event) {
+    structureManager.serverStopped(event);
   }
 
   private void registerEntity(MobInfo mob) {
@@ -120,7 +129,6 @@ public class EnderZoo {
   public void load(FMLInitializationEvent event) {
     instance = this;
     proxy.load();
-    GameRegistry.registerWorldGenerator(new TestGen(), 50000);
   }
 
   @EventHandler
