@@ -38,7 +38,16 @@ public class StructureUtil {
     return new Point3i(x, y, z);
   }
 
-  public static void generateStructure(StructureData st, World world, int x, int y, int z) {
+  public static void buildStructure(StructureData st, World world, int x, int y, int z) {
+    buildStructure(st, world, x, y, z, null);
+  }
+
+  public static void buildStructure(StructureData st, World world, int x, int y, int z, int chunkX, int chunkZ) {
+    ChunkBounds genBounds = new ChunkBounds(chunkX, chunkZ, chunkX, chunkZ);
+    buildStructure(st, world, x, y, z, genBounds);
+  }
+
+  public static void buildStructure(StructureData st, World world, int x, int y, int z, ChunkBounds genBounds) {
     Map<StructureBlock, List<Point3i>> blks = st.getBlocks();
     for (Entry<StructureBlock, List<Point3i>> entry : blks.entrySet()) {
 
@@ -52,17 +61,19 @@ public class StructureUtil {
       } else {
         for (Point3i coord : coords) {
           Point3i bc = new Point3i(x + coord.x, y + coord.y, z + coord.z);
-          world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
+          if(genBounds == null || genBounds.isBlockInBounds(bc.x, bc.z)) {
+            world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
 
-          if(sb.getTileEntity() != null) {
-            TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
-            if(te != null) {
-              world.setTileEntity(bc.x, bc.y, bc.z, te);
+            if(sb.getTileEntity() != null) {
+              TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
+              if(te != null) {
+                world.setTileEntity(bc.x, bc.y, bc.z, te);
+              }
             }
-          }
-          //Chest will change the meta on block placed, so need to set it back
-          if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
-            world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
+            //Chest will change the meta on block placed, so need to set it back
+            if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
+              world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
+            }
           }
         }
 

@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ import org.apache.commons.io.IOUtils;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.structure.Structure;
 
-public class WorldManager {
+public class WorldStructures {
 
   //  private int dimensionId;
 
@@ -31,17 +33,60 @@ public class WorldManager {
 
   private File structFile;
 
-  public WorldManager(World world) {
+  public WorldStructures(World world) {
     //    this.dimensionId = dimensionId;
     structFile = getWorldSaveFile(world);
   }
 
-  public void addStructure(Structure s) {
+  public void add(Structure s) {
     ChunkCoordIntPair key = s.getChunkCoord();
     if(!structures.containsKey(key)) {
       structures.put(key, new ArrayList<Structure>(2));
     }
     structures.get(key).add(s);
+  }
+
+  public void addAll(Collection<Structure> structures) {
+    for (Structure s : structures) {
+      add(s);
+    }
+  }
+
+  public List<Structure> getStructures(ChunkCoordIntPair chunkPos) {
+
+    List<Structure> res = structures.get(chunkPos);
+    if(res == null) {
+      return Collections.emptyList();
+    }
+    return res;
+  }
+
+  public void getStructures(ChunkCoordIntPair chunkPos, String templateUid, List<Structure> result) {
+    List<Structure> all = structures.get(chunkPos);
+    if(all == null) {
+      return;
+    }
+    for (Structure s : all) {
+      if(templateUid == null || templateUid.equals(s.getTemplate().getUid())) {
+        result.add(s);
+      }
+    }
+  }
+
+  public Collection<Structure> getStructures(ChunkCoordIntPair chunkPos, String templateUid) {
+    List<Structure> res = new ArrayList<Structure>();
+    getStructures(chunkPos, templateUid, res);
+    return res;
+  }
+
+  public Collection<Structure> getStructures(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ, String templateUid) {
+    List<Structure> res = new ArrayList<Structure>();
+    for (int x = minChunkX; x <= maxChunkX; x++) {
+      for (int z = minChunkZ; z <= maxChunkZ; z++) {
+        getStructures(new ChunkCoordIntPair(x, z), templateUid, res);
+      }
+    }
+    return res;
   }
 
   public void writeToNBT(NBTTagCompound root) {
@@ -66,7 +111,7 @@ public class WorldManager {
         NBTTagCompound structTag = structTags.getCompoundTagAt(i);
         Structure s = new Structure(structTag);
         if(s.isValid()) {
-          addStructure(s);
+          add(s);
         } else {
           Log.warn("WorldManager: Could not load structure " + s);
         }
@@ -129,9 +174,6 @@ public class WorldManager {
 
   private File getWorldSaveDir(World world) {
     File dir = new File(world.getSaveHandler().getWorldDirectory(), "enderzoo");
-    
-    //File dir = new File(DimensionManager.getCurrentSaveRootDirectory(), "enderzoo");
-//    File dir = new File("testStruct");
     if(!dir.exists()) {
       if(!dir.mkdir()) {
         Log.error("WorldManager: Could not create structures directory: " + dir.getAbsolutePath());

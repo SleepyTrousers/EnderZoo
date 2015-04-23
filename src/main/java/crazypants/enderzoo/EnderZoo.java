@@ -22,7 +22,7 @@ import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
-import crazypants.enderzoo.gen.StructureManager;
+import crazypants.enderzoo.gen.StructureGenerator;
 import crazypants.enderzoo.gen.item.BlockStructureMarker;
 import crazypants.enderzoo.gen.item.ItemStructureTool;
 import crazypants.enderzoo.item.ItemConfusingDust;
@@ -64,7 +64,7 @@ public class EnderZoo {
   
   public static BlockStructureMarker blockStructureMarker;
   public static ItemStructureTool itemStructureTool;
-  public static StructureManager structureManager;
+  public static StructureGenerator structureManager;
 
   public static MobSpawnEventHandler spawnEventHandler;
 
@@ -95,7 +95,7 @@ public class EnderZoo {
 
     blockStructureMarker = BlockStructureMarker.create();
     itemStructureTool = ItemStructureTool.create();
-    structureManager = StructureManager.create();
+    structureManager = StructureGenerator.create();
 
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //    System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");

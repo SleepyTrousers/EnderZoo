@@ -57,7 +57,7 @@ public class ItemStructureTool extends Item {
     //StructureTemplate st = new StructureTemplate(new FileInputStream(file));
     StructureData st = StructureUtil.readFromFile();
     if(st != null) {
-      StructureUtil.generateStructure(st, world, x, y, z);
+      StructureUtil.buildStructure(st, world, x, y, z);
     }
 
   }
