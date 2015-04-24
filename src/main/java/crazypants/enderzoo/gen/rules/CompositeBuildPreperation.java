@@ -22,7 +22,7 @@ public class CompositeBuildPreperation implements IBuildPreperation {
   @Override
   public boolean prepareLocation(Structure structure, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     for (IBuildPreperation rule : preps) {
-      if(!prepareLocation(structure, structures, world, random, chunkX, chunkZ)) {
+      if(!rule.prepareLocation(structure, structures, world, random, chunkX, chunkZ)) {
         return false;
       }
     }

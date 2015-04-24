@@ -21,6 +21,10 @@ public class ChunkBounds {
     this.maxChunkZ = maxChunkZ;
   }
 
+  public ChunkBounds(int chunkX, int chunkZ) {
+    this(chunkX, chunkZ, chunkX, chunkZ);
+  }
+
   public boolean isChunkInBounds(int chunkX, int chunkZ) {
     return chunkX >= minChunkX && chunkX <= maxChunkX && chunkZ >= minChunkZ && chunkZ <= maxChunkZ;
   }

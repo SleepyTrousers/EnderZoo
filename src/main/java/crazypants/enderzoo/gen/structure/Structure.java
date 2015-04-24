@@ -1,6 +1,7 @@
 package crazypants.enderzoo.gen.structure;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.vec.Point3i;
@@ -18,6 +19,10 @@ public class Structure {
   public Structure(NBTTagCompound root) {
     template = TemplateRegister.instance.getTemplate(root.getString("structure"));
     origin = new Point3i(root.getInteger("x"), root.getInteger("y"), root.getInteger("z"));
+  }
+
+  public AxisAlignedBB getBounds() {
+    return template.getBounds().getOffsetBoundingBox(origin.x, origin.y, origin.z);
   }
 
   public StructureTemplate getTemplate() {
@@ -54,7 +59,7 @@ public class Structure {
   }
 
   public boolean isChunkBoundaryCrossed() {
-    return template.canSpanChunks() && getChunkBounds().getNumChunks() > 1;
+    return getChunkBounds().getNumChunks() > 1;
   }
 
   public StructureData getData() {

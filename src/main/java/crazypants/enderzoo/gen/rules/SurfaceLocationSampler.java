@@ -2,19 +2,21 @@ package crazypants.enderzoo.gen.rules;
 
 import java.util.Random;
 
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
+import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
-public class VerticalLocationSampler implements ILocationSampler {
+public class SurfaceLocationSampler implements ILocationSampler {
 
   private static final Random rnd = new Random();
   
   private final int distanceFromSurface;
 
-  public VerticalLocationSampler(int distanceFromSurface) {
+  public SurfaceLocationSampler(int distanceFromSurface) {
     this.distanceFromSurface = distanceFromSurface;
   }
 
@@ -36,15 +38,21 @@ public class VerticalLocationSampler implements ILocationSampler {
     return candidate;
   }
 
-  protected Point3i getRandomBlock(IBlockAccess world, int chunkX, int chunkZ, int maxOffsetX, int maxOffsetZ, int distanceFromSurface,
+  protected Point3i getRandomBlock(World world, int chunkX, int chunkZ, int maxOffsetX, int maxOffsetZ, int distanceFromSurface,
       int requiredVerticalSpace) {
     int x = chunkX * 16 + rnd.nextInt(maxOffsetX);
     int z = chunkZ * 16 + rnd.nextInt(maxOffsetZ);
 
     //Find the surface y
     int y = 256;
-    while (world.isAirBlock(x, y, z) && y > 0) {
+    Block blk = world.getBlock(x, y, z);
+    while (isIgnored(world, x, z, y, blk) && y > 0) {
       --y;
+      blk = world.getBlock(x, y, z);
+    }
+
+    if(blk != world.getBiomeGenForCoords(x, z).topBlock) {
+      return null;
     }
 
     //Correct for distance from surface
@@ -54,5 +62,10 @@ public class VerticalLocationSampler implements ILocationSampler {
     }
     return null;
   }
+
+  protected boolean isIgnored(World world, int x, int z, int y, Block blk) {
+    return blk == Blocks.snow_layer || blk == Blocks.web || blk.isAir(world, x, y, z) || StructureUtil.isPlant(blk, world, x, y, z);
+  }
+
 
 }

@@ -13,12 +13,13 @@ import net.minecraft.world.chunk.IChunkProvider;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.rules.ChanceRule;
+import crazypants.enderzoo.gen.rules.ClearPreperation;
 import crazypants.enderzoo.gen.rules.CompositeBuildPreperation;
 import crazypants.enderzoo.gen.rules.CompositeBuildRule;
+import crazypants.enderzoo.gen.rules.FillPreperation;
 import crazypants.enderzoo.gen.rules.ILocationSampler;
 import crazypants.enderzoo.gen.rules.SpacingRule;
-import crazypants.enderzoo.gen.rules.VerticalLocationSampler;
+import crazypants.enderzoo.gen.rules.SurfaceLocationSampler;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureTemplate {
@@ -30,24 +31,31 @@ public class StructureTemplate {
   private final BoundingCircle bc;
 
   private final boolean canSpanChunks = false;
-  private final int attemptsPerChunk = 5;
+
 
   private final ILocationSampler locSampler;
   private final CompositeBuildRule buildRules = new CompositeBuildRule();
   private final CompositeBuildPreperation buildPrep = new CompositeBuildPreperation();
 
+  private final int attemptsPerChunk = 5;
   //Max number of structures of this type that be generated in a single chunk
   private final int maxInChunk = 1;
+  private final int yOffset = 0;
 
   public StructureTemplate(StructureData data) {
     this.data = data;
     uid = data.getName();
     bc = new BoundingCircle(data.getBounds());
 
-    buildRules.add(new ChanceRule(0.05f));
-    buildRules.add(new SpacingRule(200, this));
+    //    buildRules.add(new ChanceRule(0.05f));
+    //    buildRules.add(new SpacingRule(200, this));        
+
     buildRules.add(new SpacingRule(20, null));
-    locSampler = new VerticalLocationSampler(0);
+
+    locSampler = new SurfaceLocationSampler(0);
+
+    buildPrep.add(new ClearPreperation());
+    buildPrep.add(new FillPreperation());
   }
 
   public AxisAlignedBB getBounds() {
@@ -98,6 +106,8 @@ public class StructureTemplate {
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
       Point3i origin = locSampler.generateCandidateLocation(this, structures, world, random, chunkX, chunkZ);
       if(origin != null && buildRules.isValidLocation(origin, this, structures, world, random, chunkX, chunkZ)) {
+
+        origin.y -= yOffset;
         Structure s = new Structure(this, origin);
         if(buildStructure(s, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {
           res.add(s);

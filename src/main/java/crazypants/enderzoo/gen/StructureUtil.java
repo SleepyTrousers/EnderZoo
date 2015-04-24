@@ -13,6 +13,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.IShearable;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.structure.Structure;
@@ -23,6 +25,11 @@ import crazypants.enderzoo.vec.Point3i;
 public class StructureUtil {
 
   public static final Random random = new Random();
+
+  public static boolean isPlant(Block block, World world, int x, int y, int z) {
+    return block instanceof IShearable || block instanceof IPlantable || block.isLeaves(world, x, y, z)
+        || block.isWood(world, x, y, z);
+  }
 
   public static void buildStructure(Structure s, World world) {
     buildStructure(s, world, null);
