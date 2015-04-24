@@ -24,17 +24,16 @@ import org.apache.commons.io.IOUtils;
 
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureTemplate;
 
 public class WorldStructures {
 
-  //  private int dimensionId;
-
   private final Map<ChunkCoordIntPair, List<Structure>> structures = new HashMap<ChunkCoordIntPair, List<Structure>>();
+  private final Map<ChunkCoordIntPair, List<Structure>> structureCoverage = new HashMap<ChunkCoordIntPair, List<Structure>>();
 
   private File structFile;
 
   public WorldStructures(World world) {
-    //    this.dimensionId = dimensionId;
     structFile = getWorldSaveFile(world);
   }
 
@@ -44,6 +43,14 @@ public class WorldStructures {
       structures.put(key, new ArrayList<Structure>(2));
     }
     structures.get(key).add(s);
+
+    for (ChunkCoordIntPair chunk : s.getChunkBounds().getChunks()) {
+      if(!structureCoverage.containsKey(chunk)) {
+        structureCoverage.put(chunk, new ArrayList<Structure>(2));
+      }
+      structureCoverage.get(chunk).add(s);
+    }
+
   }
 
   public void addAll(Collection<Structure> structures) {
@@ -52,8 +59,7 @@ public class WorldStructures {
     }
   }
 
-  public List<Structure> getStructures(ChunkCoordIntPair chunkPos) {
-
+  public Collection<Structure> getStructuresWithOriginInChunk(ChunkCoordIntPair chunkPos) {
     List<Structure> res = structures.get(chunkPos);
     if(res == null) {
       return Collections.emptyList();
@@ -61,7 +67,13 @@ public class WorldStructures {
     return res;
   }
 
-  public void getStructures(ChunkCoordIntPair chunkPos, String templateUid, List<Structure> result) {
+  public Collection<Structure> getStructuresWithOriginInChunk(ChunkCoordIntPair chunkPos, String templateUid) {
+    List<Structure> res = new ArrayList<Structure>();
+    getStructuresWithOriginInChunk(chunkPos, templateUid, res);
+    return res;
+  }
+
+  public void getStructuresWithOriginInChunk(ChunkCoordIntPair chunkPos, String templateUid, Collection<Structure> result) {
     List<Structure> all = structures.get(chunkPos);
     if(all == null) {
       return;
@@ -73,25 +85,19 @@ public class WorldStructures {
     }
   }
 
-  public Collection<Structure> getStructures(ChunkCoordIntPair chunkPos, String templateUid) {
-    List<Structure> res = new ArrayList<Structure>();
-    getStructures(chunkPos, templateUid, res);
-    return res;
-  }
-
-  public Collection<Structure> getStructures(int minChunkX, int minChunkZ, int maxChunkX, int maxChunkZ, String templateUid) {
-    List<Structure> res = new ArrayList<Structure>();
-    for (int x = minChunkX; x <= maxChunkX; x++) {
-      for (int z = minChunkZ; z <= maxChunkZ; z++) {
-        getStructures(new ChunkCoordIntPair(x, z), templateUid, res);
+  public void getStructuresIntersectingChunk(ChunkCoordIntPair chunk, StructureTemplate structureTemplate, Collection<Structure> res) {
+    List<Structure> all = structureCoverage.get(chunk);
+    if(all == null) {
+      return;
+    }
+    for (Structure s : all) {
+      if(structureTemplate == null || structureTemplate.getUid().equals(s.getTemplate().getUid())) {
+        res.add(s);
       }
     }
-    return res;
   }
 
   public void writeToNBT(NBTTagCompound root) {
-    //    root.setInteger("dimensionId", dimensionId);
-
     NBTTagList structTags = new NBTTagList();
     for (List<Structure> structs : structures.values()) {
       for (Structure s : structs) {
@@ -117,6 +123,9 @@ public class WorldStructures {
         }
       }
     }
+
+    //    System.out.println("WorldStructures.loadStructuresFromNBT: ******************************* On Load: " + structures.size() + " : "
+    //        + structureCoverage.size());
 
   }
 

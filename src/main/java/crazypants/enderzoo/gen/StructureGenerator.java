@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.MinecraftForge;
@@ -39,7 +40,6 @@ public class StructureGenerator implements IWorldGenerator {
   }
 
   private void init() {
-    //FMLCommonHandler.instance().bus().register(this);
     MinecraftForge.EVENT_BUS.register(this);
     TemplateRegister.instance.loadDefaultTemplates();
     GameRegistry.registerWorldGenerator(this, 50000);
@@ -49,8 +49,6 @@ public class StructureGenerator implements IWorldGenerator {
   public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
     Point3i p = new Point3i(world.provider.dimensionId, chunkX, chunkZ);
     if(generating.contains(p)) {
-      //      System.out.println("StructureManager.generate: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      //      Log.info("StructureManager.generate: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return;
     }
     generating.add(p);
@@ -61,11 +59,19 @@ public class StructureGenerator implements IWorldGenerator {
         Collection<Structure> s = template.generate(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         if(s != null) {
           structures.addAll(s);
-          //            wm.save();
         }
       }
     } finally {
       generating.remove(p);
+    }
+  }
+
+  public void generate(World world, Structure s) {
+    StructureTemplate tp = s.getTemplate();
+    ChunkCoordIntPair cc = s.getChunkCoord();
+    WorldStructures structures = getWorldManOrCreate(world);
+    if(tp.buildStructure(s, structures, world.rand, cc.chunkXPos, cc.chunkZPos, world, world.getChunkProvider(), world.getChunkProvider())) {
+      structures.add(s);
     }
   }
 
@@ -77,7 +83,6 @@ public class StructureGenerator implements IWorldGenerator {
 
   @SubscribeEvent
   public void eventWorldSave(WorldEvent.Save evt) {
-    //WorldManager wm = getWorldMan(evt.world);
     WorldStructures wm = getWorldManOrCreate(evt.world);
     if(wm != null) {
       wm.save();

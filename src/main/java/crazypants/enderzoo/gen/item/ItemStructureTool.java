@@ -9,7 +9,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.gen.StructureUtil;
+import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureData;
+import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.vec.Point3i;
 
 public class ItemStructureTool extends Item {
 
@@ -54,11 +57,9 @@ public class ItemStructureTool extends Item {
 
   private void placeStructure(World world, int x, int y, int z) {
 
-    //StructureTemplate st = new StructureTemplate(new FileInputStream(file));
-    StructureData st = StructureUtil.readFromFile();
-    if(st != null) {
-      StructureUtil.buildStructure(st, world, x, y, z);
-    }
+    StructureTemplate st = new StructureTemplate(StructureUtil.readFromFile());
+    Structure s = new Structure(st, new Point3i(x, y, z));
+    EnderZoo.structureManager.generate(world, s);
 
   }
 

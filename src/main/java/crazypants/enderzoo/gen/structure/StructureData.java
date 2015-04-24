@@ -22,6 +22,8 @@ public class StructureData {
 
   private final AxisAlignedBB bb;
 
+  private final Point3i size;
+
   private final Map<StructureBlock, List<Point3i>> data = new HashMap<StructureBlock, List<Point3i>>();
 
   private final String name;
@@ -32,8 +34,9 @@ public class StructureData {
 
     bb = worldBnds.getOffsetBoundingBox(-worldBnds.minX, -worldBnds.minY, -worldBnds.minZ);
 
-    Point3i size = new Point3i((int) Math.abs(worldBnds.maxX - worldBnds.minX), (int) Math.abs(worldBnds.maxY - worldBnds.minY), (int) Math.abs(worldBnds.maxZ
+    size = new Point3i((int) Math.abs(worldBnds.maxX - worldBnds.minX), (int) Math.abs(worldBnds.maxY - worldBnds.minY), (int) Math.abs(worldBnds.maxZ
         - worldBnds.minZ));
+
     for (short xIndex = 0; xIndex < size.x; xIndex++) {
       for (short yIndex = 0; yIndex < size.y; yIndex++) {
         for (short zIndex = 0; zIndex < size.z; zIndex++) {
@@ -68,6 +71,9 @@ public class StructureData {
 
     bb = AxisAlignedBB.getBoundingBox(root.getInteger("minX"), root.getInteger("minY"), root.getInteger("minZ"),
         root.getInteger("maxX"), root.getInteger("maxY"), root.getInteger("maxZ"));
+
+    size = new Point3i((int) Math.abs(bb.maxX - bb.minX), (int) Math.abs(bb.maxY - bb.minY), (int) Math.abs(bb.maxZ
+        - bb.minZ));
 
   }
 
@@ -131,6 +137,10 @@ public class StructureData {
       data.put(block, new ArrayList<Point3i>());
     }
     data.get(block).add(new Point3i(x, y, z));
+  }
+
+  public Point3i getSize() {
+    return size;
   }
 
 }

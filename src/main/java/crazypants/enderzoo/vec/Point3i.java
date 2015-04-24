@@ -1,5 +1,6 @@
 package crazypants.enderzoo.vec;
 
+
 public class Point3i {
 
   public int x;
@@ -28,6 +29,18 @@ public class Point3i {
     x += other.x;
     y += other.y;
     z += other.z;
+  }
+
+  public double distanceSquared(Point3i v) {
+    double dx, dy, dz;
+    dx = x - v.x;
+    dy = y - v.y;
+    dz = z - v.z;
+    return (dx * dx + dy * dy + dz * dz);
+  }
+
+  public double distance(Point3i v) {
+    return Math.sqrt(distanceSquared(v));
   }
 
   @Override

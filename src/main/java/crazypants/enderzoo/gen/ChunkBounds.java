@@ -32,7 +32,7 @@ public class ChunkBounds {
   public Collection<ChunkCoordIntPair> getChunks() {
     List<ChunkCoordIntPair> res = new ArrayList<ChunkCoordIntPair>();
     for (int x = minChunkX; x <= maxChunkX; x++) {
-      for (int z = minChunkX; z <= maxChunkX; z++) {
+      for (int z = minChunkZ; z <= maxChunkZ; z++) {
         res.add(new ChunkCoordIntPair(x, z));
       }
     }
@@ -42,7 +42,7 @@ public class ChunkBounds {
   public int getNumChunks() {
     int res = 0;
     for (int x = minChunkX; x <= maxChunkX; x++) {
-      for (int z = minChunkX; z <= maxChunkX; z++) {
+      for (int z = minChunkZ; z <= maxChunkZ; z++) {
         res++;
       }
     }

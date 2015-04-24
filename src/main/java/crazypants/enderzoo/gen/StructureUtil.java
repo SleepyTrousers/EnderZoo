@@ -12,10 +12,10 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureBlock;
 import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.vec.Point3i;
@@ -24,31 +24,17 @@ public class StructureUtil {
 
   public static final Random random = new Random();
 
-  public static Point3i getRandomSurfaceBlock(IBlockAccess world, int chunkX, int chunkZ) {
-    int x = chunkX * 16 + random.nextInt(16);
-    int z = chunkZ * 16 + random.nextInt(16);
-
-    int y = 200;
-    while (world.isAirBlock(x, y, z) && y > 2) {
-      --y;
-    }
-    if(y < 1) {
-      return null;
-    }
-    return new Point3i(x, y, z);
+  public static void buildStructure(Structure s, World world) {
+    buildStructure(s, world, null);
   }
 
-  public static void buildStructure(StructureData st, World world, int x, int y, int z) {
-    buildStructure(st, world, x, y, z, null);
-  }
-
-  public static void buildStructure(StructureData st, World world, int x, int y, int z, int chunkX, int chunkZ) {
+  public static void buildStructure(Structure s, World world, int chunkX, int chunkZ) {
     ChunkBounds genBounds = new ChunkBounds(chunkX, chunkZ, chunkX, chunkZ);
-    buildStructure(st, world, x, y, z, genBounds);
+    buildStructure(s, world, genBounds);
   }
 
-  public static void buildStructure(StructureData st, World world, int x, int y, int z, ChunkBounds genBounds) {
-    Map<StructureBlock, List<Point3i>> blks = st.getBlocks();
+  public static void buildStructure(Structure s, World world, ChunkBounds genBounds) {
+    Map<StructureBlock, List<Point3i>> blks = s.getData().getBlocks();
     for (Entry<StructureBlock, List<Point3i>> entry : blks.entrySet()) {
 
       StructureBlock sb = entry.getKey();
@@ -57,10 +43,10 @@ public class StructureUtil {
       Block block = GameRegistry.findBlock(sb.getModId(), sb.getBlockName());
 
       if(block == null) {
-        Log.error("Could not find block " + sb.getModId() + ":" + sb.getBlockName() + " when generating structure: " + st.getName());
+        Log.error("Could not find block " + sb.getModId() + ":" + sb.getBlockName() + " when generating structure: " + s.getTemplate().getUid());
       } else {
         for (Point3i coord : coords) {
-          Point3i bc = new Point3i(x + coord.x, y + coord.y, z + coord.z);
+          Point3i bc = new Point3i(s.getOrigin().x + coord.x, s.getOrigin().y + coord.y, s.getOrigin().z + coord.z);
           if(genBounds == null || genBounds.isBlockInBounds(bc.x, bc.z)) {
             world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
 
