@@ -19,6 +19,13 @@ public class Point3i {
     this.z = z;
   }
 
+  public void set(int x, int y, int z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
+  }
+
   public Point3i(Point3i other) {
     x = other.x;
     y = other.y;

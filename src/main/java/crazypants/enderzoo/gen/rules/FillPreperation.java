@@ -1,7 +1,5 @@
 package crazypants.enderzoo.gen.rules;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -19,38 +17,23 @@ public class FillPreperation implements IBuildPreperation {
   private Block fillBlock;
   private int fillMeta = 0;
 
+  private Block surfaceBlock;
+  private int surfaceMeta = 0;
+
   private int yOffset = -1;
   private boolean useBiomeFillerBlock = true;
   private boolean clearPlants = true;
 
-  private final Map<ForgeDirection, Integer> border = new HashMap<ForgeDirection, Integer>();
+  private final Border border = new Border();
 
   public FillPreperation() {
-  }
-
-  public void setBorder(int size) {
-    setBorder(size, size, size, size);
-  }
-
-  public void setBorder(int north, int south, int east, int west) {
-    border.put(ForgeDirection.EAST, east);
-    border.put(ForgeDirection.WEST, west);
-    border.put(ForgeDirection.NORTH, north);
-    border.put(ForgeDirection.SOUTH, south);
-  }
-
-  public int getBorder(ForgeDirection dir) {
-    Integer res = border.get(dir);
-    if(res == null) {
-      return 0;
-    }
-    return res;
+    border.setSideBorder(1);
   }
 
   @Override
   public boolean prepareLocation(Structure structure, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     Block fill = fillBlock;
-    Block surf = fillBlock;
+    Block surf = surfaceBlock;
     if(useBiomeFillerBlock) {
       fill = world.getBiomeGenForCoords(structure.getOrigin().x, structure.getOrigin().z).fillerBlock;
       surf = world.getBiomeGenForCoords(structure.getOrigin().x, structure.getOrigin().z).topBlock;
@@ -62,7 +45,6 @@ public class FillPreperation implements IBuildPreperation {
       surf = fill;
     }
 
-    setBorder(1);
     ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);
 
     AxisAlignedBB bb = structure.getBounds();
@@ -76,8 +58,9 @@ public class FillPreperation implements IBuildPreperation {
     int maxY = (int) bb.minY - 1;
 
     Block curBlk;
-    for (int x = minX - getBorder(ForgeDirection.WEST); x < maxX + getBorder(ForgeDirection.EAST); x++) {
-      for (int z = minZ - getBorder(ForgeDirection.NORTH); z < maxZ + getBorder(ForgeDirection.SOUTH); z++) {
+    int curMeta;
+    for (int x = minX - border.get(ForgeDirection.WEST); x < maxX + border.get(ForgeDirection.EAST); x++) {
+      for (int z = minZ - border.get(ForgeDirection.NORTH); z < maxZ + border.get(ForgeDirection.SOUTH); z++) {
 
         int startY = maxY;
         if(x < minX || x >= maxX || z < minZ || z >= maxZ) {
@@ -89,10 +72,12 @@ public class FillPreperation implements IBuildPreperation {
             if(world.isAirBlock(x, y, z) || (clearPlants && StructureUtil.isPlant(world.getBlock(x, y, z), world, x, y, z))) {
               if(y > maxY && world.isAirBlock(x, y + 1, z)) {
                 curBlk = surf;
+                curMeta = surfaceMeta;
               } else {
                 curBlk = fill;
+                curMeta = fillMeta;
               }
-              world.setBlock(x, y, z, curBlk, fillMeta, 2);
+              world.setBlock(x, y, z, curBlk, curMeta, 2);
             } else {
               y = 0; //done for the x,z
             }

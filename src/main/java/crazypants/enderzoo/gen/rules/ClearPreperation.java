@@ -1,7 +1,5 @@
 package crazypants.enderzoo.gen.rules;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.util.AxisAlignedBB;
@@ -14,7 +12,7 @@ import crazypants.enderzoo.gen.structure.Structure;
 
 public class ClearPreperation implements IBuildPreperation {
 
-  private final Map<ForgeDirection, Integer> border = new HashMap<ForgeDirection, Integer>();
+  private final Border border = new Border();
 
   private boolean clearPlants = true;
 
@@ -22,25 +20,8 @@ public class ClearPreperation implements IBuildPreperation {
     setBorder(1);
   }
 
-  public int getBorder(ForgeDirection dir) {
-    Integer res = border.get(dir);
-    if(res == null) {
-      return 0;
-    }
-    return res;
-  }
-
   public void setBorder(int size) {
-    setBorder(size, size, size, size, 0, -1);
-  }
-
-  public void setBorder(int north, int south, int east, int west, int up, int down) {
-    border.put(ForgeDirection.DOWN, down);
-    border.put(ForgeDirection.UP, up);
-    border.put(ForgeDirection.EAST, east);
-    border.put(ForgeDirection.WEST, west);
-    border.put(ForgeDirection.NORTH, north);
-    border.put(ForgeDirection.SOUTH, south);
+    border.setBorder(size, size, size, size, 0, -1);
   }
 
   @Override
@@ -49,12 +30,12 @@ public class ClearPreperation implements IBuildPreperation {
     ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);
 
     AxisAlignedBB bb = structure.getBounds();
-    int minX = (int) bb.minX - getBorder(ForgeDirection.WEST);
-    int maxX = (int) bb.maxX + getBorder(ForgeDirection.EAST);
-    int minY = (int) bb.minY - getBorder(ForgeDirection.DOWN);
-    int maxY = (int) bb.maxY + getBorder(ForgeDirection.UP);
-    int minZ = (int) bb.minZ - getBorder(ForgeDirection.NORTH);
-    int maxZ = (int) bb.maxZ + getBorder(ForgeDirection.SOUTH);
+    int minX = (int) bb.minX - border.get(ForgeDirection.WEST);
+    int maxX = (int) bb.maxX + border.get(ForgeDirection.EAST);
+    int minY = (int) bb.minY - border.get(ForgeDirection.DOWN);
+    int maxY = (int) bb.maxY + border.get(ForgeDirection.UP);
+    int minZ = (int) bb.minZ - border.get(ForgeDirection.NORTH);
+    int maxZ = (int) bb.maxZ + border.get(ForgeDirection.SOUTH);
 
     for (int x = minX; x < maxX; x++) {
       for (int y = minY; y < maxY; y++) {

@@ -47,16 +47,28 @@ public class StructureGenerator implements IWorldGenerator {
 
   @Override
   public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+
+    if(!world.getWorldInfo().isMapFeaturesEnabled()) {
+      return;
+    }
+
     Point3i p = new Point3i(world.provider.dimensionId, chunkX, chunkZ);
     if(generating.contains(p)) {
       return;
     }
     generating.add(p);
 
+    long worldSeed = world.getSeed();
+    Random fmlRandom = new Random(worldSeed);
+    long xSeed = fmlRandom.nextLong() >> 2 + 1L;
+    long zSeed = fmlRandom.nextLong() >> 2 + 1L;
+    long chunkSeed = (xSeed * chunkX + zSeed * chunkZ) ^ worldSeed;
+
     WorldStructures structures = getWorldManOrCreate(world);
     try {
       for (StructureTemplate template : TemplateRegister.instance.getTemplates()) {
-        Collection<Structure> s = template.generate(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+        Random r = new Random(chunkSeed ^ template.getUid().hashCode());
+        Collection<Structure> s = template.generate(structures, r, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         if(s != null) {
           structures.addAll(s);
         }
@@ -89,14 +101,14 @@ public class StructureGenerator implements IWorldGenerator {
     }
   }
 
-  private WorldStructures getWorldMan(World world) {
+  public WorldStructures getWorldMan(World world) {
     if(world == null) {
       return null;
     }
     return worldManagers.get(world.provider.dimensionId);
   }
 
-  private WorldStructures getWorldManOrCreate(World world) {
+  public WorldStructures getWorldManOrCreate(World world) {
     WorldStructures res = getWorldMan(world);
     if(res == null) {
       res = new WorldStructures(world);

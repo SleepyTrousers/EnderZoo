@@ -11,13 +11,13 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import crazypants.enderzoo.gen.BoundingCircle;
-import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.rules.ClearPreperation;
 import crazypants.enderzoo.gen.rules.CompositeBuildPreperation;
 import crazypants.enderzoo.gen.rules.CompositeBuildRule;
 import crazypants.enderzoo.gen.rules.FillPreperation;
 import crazypants.enderzoo.gen.rules.ILocationSampler;
+import crazypants.enderzoo.gen.rules.LevelGroundRule;
 import crazypants.enderzoo.gen.rules.SpacingRule;
 import crazypants.enderzoo.gen.rules.SurfaceLocationSampler;
 import crazypants.enderzoo.vec.Point3i;
@@ -51,6 +51,7 @@ public class StructureTemplate {
     //    buildRules.add(new SpacingRule(200, this));        
 
     buildRules.add(new SpacingRule(20, null));
+    buildRules.add(new LevelGroundRule());
 
     locSampler = new SurfaceLocationSampler(0);
 
@@ -102,6 +103,7 @@ public class StructureTemplate {
       return Collections.emptyList();
     }
 
+
     List<Structure> res = new ArrayList<Structure>();
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
       Point3i origin = locSampler.generateCandidateLocation(this, structures, world, random, chunkX, chunkZ);
@@ -128,13 +130,13 @@ public class StructureTemplate {
       //      System.out.println("StructureTemplate.generateExisting: Added new multichunk structure");
       if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
         res = true;
-        StructureUtil.buildStructure(s, world, chunkX, chunkZ);
+        s.build(world, chunkX, chunkZ);
         //and already created ones      
         Collection<ChunkCoordIntPair> chunks = s.getChunkBounds().getChunks();
         for (ChunkCoordIntPair c : chunks) {
           if(!(c.chunkXPos == chunkX && c.chunkZPos == chunkZ) && chunkGenerator.chunkExists(c.chunkXPos, c.chunkZPos)) {
             buildPrep.prepareLocation(s, structures, world, random, c.chunkXPos, c.chunkZPos);
-            StructureUtil.buildStructure(s, world, c.chunkXPos, c.chunkZPos);
+            s.build(world, c.chunkXPos, c.chunkZPos);
             //          System.out.println("StructureTemplate.generateExisting: build structure onto existng chunk");
           }
         }
@@ -143,7 +145,7 @@ public class StructureTemplate {
     } else {
       //      System.out.println("StructureTemplate.generateExisting: Added new structure");
       if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
-        StructureUtil.buildStructure(s, world);
+        s.build(world);
         res = true;
       }
     }
@@ -158,7 +160,7 @@ public class StructureTemplate {
 
     for (Structure s : existing) {
       if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
-        StructureUtil.buildStructure(s, world, chunkX, chunkZ);
+        s.build(world, chunkX, chunkZ);
       }
     }
     return !existing.isEmpty();

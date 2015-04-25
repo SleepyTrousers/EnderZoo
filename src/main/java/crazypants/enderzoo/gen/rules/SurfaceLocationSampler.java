@@ -3,7 +3,6 @@ package crazypants.enderzoo.gen.rules;
 import java.util.Random;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
@@ -15,6 +14,8 @@ public class SurfaceLocationSampler implements ILocationSampler {
   private static final Random rnd = new Random();
   
   private final int distanceFromSurface;
+
+  private boolean canPlaceInFluid = false;
 
   public SurfaceLocationSampler(int distanceFromSurface) {
     this.distanceFromSurface = distanceFromSurface;
@@ -38,34 +39,25 @@ public class SurfaceLocationSampler implements ILocationSampler {
     return candidate;
   }
 
-  protected Point3i getRandomBlock(World world, int chunkX, int chunkZ, int maxOffsetX, int maxOffsetZ, int distanceFromSurface,
-      int requiredVerticalSpace) {
+  protected Point3i getRandomBlock(World world, int chunkX, int chunkZ, int maxOffsetX, int maxOffsetZ, int distanceFromSurface, int requiredVerticalSpace) {
     int x = chunkX * 16 + rnd.nextInt(maxOffsetX);
     int z = chunkZ * 16 + rnd.nextInt(maxOffsetZ);
 
     //Find the surface y
-    int y = 256;
-    Block blk = world.getBlock(x, y, z);
-    while (isIgnored(world, x, z, y, blk) && y > 0) {
-      --y;
-      blk = world.getBlock(x, y, z);
-    }
+    Block blk;
+    Point3i loc = new Point3i();
 
-    if(blk != world.getBiomeGenForCoords(x, z).topBlock) {
+    blk = StructureUtil.getSurfaceBlock(world, x, z, loc, true, !canPlaceInFluid);
+    if(blk != world.getBiomeGenForCoords(x, z).topBlock && blk != world.getBiomeGenForCoords(x, z).fillerBlock) {
       return null;
     }
 
     //Correct for distance from surface
-    y += distanceFromSurface;
-    if(y > 0 && y < 256 + requiredVerticalSpace) {
-      return new Point3i(x, y, z);
+    loc.y += distanceFromSurface;
+    if(loc.y > 0 && loc.y < 256 + requiredVerticalSpace) {
+      return loc;
     }
     return null;
   }
-
-  protected boolean isIgnored(World world, int x, int z, int y, Block blk) {
-    return blk == Blocks.snow_layer || blk == Blocks.web || blk.isAir(world, x, y, z) || StructureUtil.isPlant(blk, world, x, y, z);
-  }
-
 
 }

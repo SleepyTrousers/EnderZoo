@@ -59,7 +59,7 @@ public class BlockStructureMarker extends Block {
 
     StructureData st = generateTemplate("test", world, x, y, z, entityPlayer);
     if(st != null) {
-      StructureUtil.writeToFile(entityPlayer, st);
+      StructureUtil.writeToFile(entityPlayer, st, ItemStructureTool.EXPORT_DIR);
     }
     return true;
   }
