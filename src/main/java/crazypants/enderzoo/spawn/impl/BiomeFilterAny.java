@@ -1,7 +1,9 @@
 package crazypants.enderzoo.spawn.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
@@ -14,22 +16,30 @@ public class BiomeFilterAny extends AbstractBiomeFilter {
     if(types.isEmpty() && names.isEmpty()) {
       return new BiomeGenBase[0];
     }
-
-    List<BiomeGenBase> passedBiomes = new ArrayList<BiomeGenBase>();
-    for (BiomeDictionary.Type type : types) {
-      BiomeGenBase[] biomes = BiomeDictionary.getBiomesForType(type);
-      for (BiomeGenBase candidate : biomes) {
-        if(!isExcluded(candidate)) {
-          passedBiomes.add(candidate);
-        }
-      }
-    }
+    Set<BiomeGenBase> passedBiomes = new HashSet<BiomeGenBase>();
     for (BiomeGenBase candidate : BiomeGenBase.getBiomeGenArray()) {
-      if(candidate != null && names.contains(candidate.biomeName) & !isExcluded(candidate)) {
+      if(isMatchingBiome(candidate)) {
         passedBiomes.add(candidate);
       }
     }
+    
     return passedBiomes.toArray(new BiomeGenBase[passedBiomes.size()]);
+  }
+
+  @Override
+  public boolean isMatchingBiome(BiomeGenBase biome) {
+    if(isExcluded(biome)) {
+      return false;
+    }
+    if(names.contains(biome.biomeName)) {
+      return true;
+    }
+    for(BiomeDictionary.Type type : types) {
+      if(BiomeDictionary.isBiomeOfType(biome, type)) {
+        return true;
+      }
+    }   
+    return false;        
   }
 
 

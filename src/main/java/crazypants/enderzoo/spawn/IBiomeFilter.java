@@ -8,4 +8,6 @@ public interface IBiomeFilter {
 
   BiomeGenBase[] getMatchedBiomes();
 
+  boolean isMatchingBiome(BiomeGenBase bgb);
+
 }
