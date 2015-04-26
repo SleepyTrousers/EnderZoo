@@ -1,0 +1,86 @@
+{
+    "StructureTemplate" : {
+            
+        "uid" : "test",
+        "dataUid" : "test",
+        "canSpanChunks" :  "false",
+        "maxAttemptsPerChunk" : 5,
+        "maxGeneratedPerChunk" : 1,
+        
+        "LocationSampler" : {
+            "surfaceSampler" : {
+              "heightAboveGround" : 0,
+              "canSpawnOnWater" : "false"
+            }
+        },
+        
+        "locationValidators" : {
+                    
+            "ChanceValidator" : {                
+                "chancePerChunk" : 0.05
+            },
+            
+            "BiomeValidator" : {                
+                "type" : "any",
+                "biomes" : {
+                    "types" : [ "MESA", "FOREST", "PLAINS", "MOUNTAIN", "HILLS", "SWAMP", "SANDY", "SNOWY", "WASTELAND" ],
+                    "typesExcluded" : [ "BEACH", "MUSHROOM", "OCEAN", "RIVER", "NETHER", "END"],
+                    "names" : [],
+                    "namesExcluded" : []                    
+                }
+            },
+            
+            "DimensionValidator" : {
+                "names" : [],
+                "namesExcluded" : ["Twilight Forest", "Dungeon"]
+            },
+            
+            "SpacingValidator" : {
+                "minSpacing" : 20,
+                "templates" : [],
+                "approximateTest" : "false",
+                "accurateTest" : "true"
+            },
+            
+            "SpacingValidator" : {
+                "minSpacing" : 200,
+                "templates" : [ "test" ],
+                "approximateTest" : "true",
+                "accurateTest" : "false"
+            },
+            
+            "LevelGroundValidator" : {
+                "canSpawnOnWater" : "false",
+                "tolerance" : 2,
+                "sampleSpacing" : 4,
+                "maxSamples" : 100,
+                "Border" : {
+                    "size" : 1
+                }                
+                
+            }                                               
+       },
+       
+       "sitePreperations" : {
+                  
+           "ClearPreperation" : {
+               "clearPlants" : "true",           
+               "Border" : {
+                    "up" : 3,
+                    "down" : -1,
+                    "north" : 1,
+                    "south" : 1,
+                    "east" : 1,
+                    "west" : 1
+                }
+           },
+           
+           "FillPreperation" : {
+               "clearPlants" : "true",
+               "Border" : {
+                    "size" : 1
+                }
+           }
+       }
+   }
+}

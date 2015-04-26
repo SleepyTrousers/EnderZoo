@@ -51,7 +51,7 @@ public class StructureTemplate {
     //    buildRules.add(new ChanceRule(0.05f));
     //    buildRules.add(new SpacingRule(200, this));        
 
-//    buildRules.add(new SpacingRule(20, null));
+    buildRules.add(new SpacingValidator(20, null));
     buildRules.add(new LevelGroundValidator());
 
     locSampler = new SurfaceLocationSampler(0);

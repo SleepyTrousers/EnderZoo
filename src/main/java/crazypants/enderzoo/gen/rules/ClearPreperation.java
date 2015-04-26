@@ -21,7 +21,7 @@ public class ClearPreperation implements ISitePreperation {
   }
 
   public void setBorder(int size) {
-    border.setBorder(size, size, size, size, 0, -1);
+    border.setBorder(size, size, size, size, 3, -1);
   }
 
   @Override
