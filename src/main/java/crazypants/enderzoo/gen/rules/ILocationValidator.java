@@ -7,7 +7,7 @@ import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
-public interface IBuildRule {
+public interface ILocationValidator {
 
   boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ);
 

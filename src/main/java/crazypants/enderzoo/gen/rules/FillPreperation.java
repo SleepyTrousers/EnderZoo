@@ -12,7 +12,7 @@ import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Structure;
 
-public class FillPreperation implements IBuildPreperation {
+public class FillPreperation implements ISitePreperation {
 
   private Block fillBlock;
   private int fillMeta = 0;
@@ -44,6 +44,11 @@ public class FillPreperation implements IBuildPreperation {
     if(surf == null) {
       surf = fill;
     }
+    
+    //TODO
+//    fill = Blocks.glass;
+//    surf = Blocks.glass;
+//    surfaceMeta = 4;
 
     ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);
 

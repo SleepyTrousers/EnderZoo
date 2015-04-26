@@ -14,12 +14,12 @@ import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.rules.ClearPreperation;
-import crazypants.enderzoo.gen.rules.CompositeBuildPreperation;
-import crazypants.enderzoo.gen.rules.CompositeBuildRule;
+import crazypants.enderzoo.gen.rules.CompositePreperation;
+import crazypants.enderzoo.gen.rules.CompositeValidator;
 import crazypants.enderzoo.gen.rules.FillPreperation;
 import crazypants.enderzoo.gen.rules.ILocationSampler;
-import crazypants.enderzoo.gen.rules.LevelGroundRule;
-import crazypants.enderzoo.gen.rules.SpacingRule;
+import crazypants.enderzoo.gen.rules.LevelGroundValidator;
+import crazypants.enderzoo.gen.rules.SpacingValidator;
 import crazypants.enderzoo.gen.rules.SurfaceLocationSampler;
 import crazypants.enderzoo.vec.Point3i;
 
@@ -35,8 +35,8 @@ public class StructureTemplate {
 
 
   private final ILocationSampler locSampler;
-  private final CompositeBuildRule buildRules = new CompositeBuildRule();
-  private final CompositeBuildPreperation buildPrep = new CompositeBuildPreperation();
+  private final CompositeValidator buildRules = new CompositeValidator();
+  private final CompositePreperation buildPrep = new CompositePreperation();
 
   private final int attemptsPerChunk = 5;
   //Max number of structures of this type that be generated in a single chunk
@@ -51,8 +51,8 @@ public class StructureTemplate {
     //    buildRules.add(new ChanceRule(0.05f));
     //    buildRules.add(new SpacingRule(200, this));        
 
-    buildRules.add(new SpacingRule(20, null));
-    buildRules.add(new LevelGroundRule());
+//    buildRules.add(new SpacingRule(20, null));
+    buildRules.add(new LevelGroundValidator());
 
     locSampler = new SurfaceLocationSampler(0);
 
@@ -100,10 +100,11 @@ public class StructureTemplate {
     }
 
 
+    //TODO: If we can span chunks, we need to check the validators against the other chunks it crosses
+    //as well. If those chunks havent been created yet then maybe consider defering the checks until they are
     if(!buildRules.isValidChunk(this, structures, world, random, chunkX, chunkZ)) {
       return Collections.emptyList();
     }
-
 
     List<Structure> res = new ArrayList<Structure>();
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {

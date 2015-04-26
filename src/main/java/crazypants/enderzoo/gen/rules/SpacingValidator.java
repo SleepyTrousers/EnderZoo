@@ -14,7 +14,7 @@ import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.Vector2d;
 
-public class SpacingRule implements IBuildRule {
+public class SpacingValidator implements ILocationValidator {
 
   private static final double CHUNK_RADIUS = new Vector2d().distance(new Vector2d(8, 8));
   
@@ -23,11 +23,11 @@ public class SpacingRule implements IBuildRule {
   private final boolean checkChunkDistance;
   private final boolean checkPointDistance;
 
-  public SpacingRule(int minSpacing, StructureTemplate templateType) {
+  public SpacingValidator(int minSpacing, StructureTemplate templateType) {
     this(minSpacing, templateType, minSpacing >= 32, minSpacing < 32);
   }
 
-  public SpacingRule(int minSpacing, StructureTemplate templateType, boolean checkChunkDistance, boolean checkPointDistance) {
+  public SpacingValidator(int minSpacing, StructureTemplate templateType, boolean checkChunkDistance, boolean checkPointDistance) {
     this.minSpacing = minSpacing;
     this.templateType = templateType;
     this.checkChunkDistance = checkChunkDistance;

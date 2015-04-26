@@ -7,11 +7,11 @@ import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
-public class ChanceRule implements IBuildRule {
+public class RandomValidator implements ILocationValidator {
 
   private final float chancePerChunk;
 
-  public ChanceRule(float chancePerChunk) {
+  public RandomValidator(float chancePerChunk) {
     this.chancePerChunk = chancePerChunk;
   }
 

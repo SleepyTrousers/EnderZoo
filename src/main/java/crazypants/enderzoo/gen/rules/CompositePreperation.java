@@ -8,20 +8,20 @@ import net.minecraft.world.World;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Structure;
 
-public class CompositeBuildPreperation implements IBuildPreperation {
+public class CompositePreperation implements ISitePreperation {
 
-  private final List<IBuildPreperation> preps = new ArrayList<IBuildPreperation>();
+  private final List<ISitePreperation> preps = new ArrayList<ISitePreperation>();
 
-  public CompositeBuildPreperation() {
+  public CompositePreperation() {
   }
 
-  public void add(IBuildPreperation prep) {
+  public void add(ISitePreperation prep) {
     preps.add(prep);
   }
 
   @Override
   public boolean prepareLocation(Structure structure, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    for (IBuildPreperation rule : preps) {
+    for (ISitePreperation rule : preps) {
       if(!rule.prepareLocation(structure, structures, world, random, chunkX, chunkZ)) {
         return false;
       }

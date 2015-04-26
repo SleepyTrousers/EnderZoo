@@ -13,7 +13,7 @@ import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
-public class LevelGroundRule implements IBuildRule {
+public class LevelGroundValidator implements ILocationValidator {
 
   private boolean canSpawnOnWater = false;
 
@@ -25,7 +25,7 @@ public class LevelGroundRule implements IBuildRule {
 
   private Border border = new Border();
 
-  public LevelGroundRule() {
+  public LevelGroundValidator() {
     border.setBorderXZ(1);
   }
 
@@ -36,14 +36,13 @@ public class LevelGroundRule implements IBuildRule {
 
   @Override
   public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    
+
     boolean clipOnChunkBounds = true;
     ChunkBounds clip = null;
     if(clipOnChunkBounds) {
       clip = new ChunkBounds(chunkX, chunkZ);
     }
 
-    
     AxisAlignedBB bb = template.getBounds().getOffsetBoundingBox(loc.x, loc.y, loc.z);
     int minX = (int) bb.minX;
     int maxX = (int) bb.maxX;
@@ -65,8 +64,7 @@ public class LevelGroundRule implements IBuildRule {
 
     int xSpacing = Math.round(Math.max(1, (float) size.x / (numSamsX + 1)));
     int zSpacing = Math.round(Math.max(1, (float) size.z / (numSamsZ + 1)));
-    
-    
+
     int[] minMax = new int[] { Integer.MAX_VALUE, -Integer.MAX_VALUE };
     Point3i sampleLoc = new Point3i(loc);
     Point3i surfacePos = new Point3i();
@@ -99,7 +97,18 @@ public class LevelGroundRule implements IBuildRule {
       return false;
     }
 
-    return (minMax[1] - minMax[0]) <= tolerance;
+    int heightRange = (minMax[1] - minMax[0]);
+    if(heightRange > tolerance) {
+      return false;
+    }
+
+    int oldY = loc.y;
+    if(heightRange > 2) {
+      //TODO: relying on this change to be repsected is asking for trouble
+      loc.y = minMax[0] + ((heightRange - 1) / 2);      
+    }
+
+    return true;
   }
 
   protected boolean testLocation(Point3i sampleLocation, World world, int[] minMax, Point3i surfacePos) {

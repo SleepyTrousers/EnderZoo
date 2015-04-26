@@ -9,17 +9,17 @@ import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
-public class CompositeBuildRule implements IBuildRule {
+public class CompositeValidator implements ILocationValidator {
 
-  private final List<IBuildRule> rules = new ArrayList<IBuildRule>();
+  private final List<ILocationValidator> rules = new ArrayList<ILocationValidator>();
   
-  public void add(IBuildRule rule) {
+  public void add(ILocationValidator rule) {
     rules.add(rule);
   }
 
   @Override
   public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    for (IBuildRule rule : rules) {
+    for (ILocationValidator rule : rules) {
       if(!rule.isValidLocation(loc, template, structures, world, random, chunkX, chunkZ)) {
         return false;
       }
@@ -29,7 +29,7 @@ public class CompositeBuildRule implements IBuildRule {
 
   @Override
   public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    for (IBuildRule rule : rules) {
+    for (ILocationValidator rule : rules) {
       if(!rule.isValidChunk(template, structures, world, random, chunkX, chunkZ)) {
         return false;
       }

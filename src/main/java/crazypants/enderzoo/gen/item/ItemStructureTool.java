@@ -13,7 +13,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.gen.StructureUtil;
-import crazypants.enderzoo.gen.rules.LevelGroundRule;
+import crazypants.enderzoo.gen.rules.LevelGroundValidator;
 import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
@@ -106,7 +106,7 @@ public class ItemStructureTool extends Item {
     }
 
     Structure s = new Structure(st, new Point3i(x, y, z));
-    boolean res = new LevelGroundRule().isValidLocation(new Point3i(x, y, z), st, EnderZoo.structureManager.getWorldManOrCreate(world), world, world.rand,
+    boolean res = new LevelGroundValidator().isValidLocation(new Point3i(x, y, z), st, EnderZoo.structureManager.getWorldManOrCreate(world), world, world.rand,
         x >> 4, z >> 4);
     System.out.println("ItemStructureTool.placeStructure: " + res);
     EnderZoo.structureManager.generate(world, s);

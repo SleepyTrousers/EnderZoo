@@ -10,7 +10,7 @@ import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Structure;
 
-public class ClearPreperation implements IBuildPreperation {
+public class ClearPreperation implements ISitePreperation {
 
   private final Border border = new Border();
 
