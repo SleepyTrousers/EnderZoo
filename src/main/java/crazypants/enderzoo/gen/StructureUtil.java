@@ -45,14 +45,23 @@ public class StructureUtil {
     //Find the surface y
     Block blk;
 
+    boolean foundAir = false;
     int y = maxY;
     blk = world.getBlock(x, y, z);
-    while (StructureUtil.isIgnoredAsSurface(world, x, z, y, blk, ignorePlants, ignoreFluids) && y > minY) {
+    while (StructureUtil.isIgnoredAsSurface(world, x, z, y, blk, ignorePlants, ignoreFluids)) {
       --y;
+      if(y < minY) {
+        return null;
+      }
       blk = world.getBlock(x, y, z);
     }
 
-    if(y < 0 || blk == null) {
+    if(blk == null) {
+      return null;
+    }
+    
+    if(y == maxY && !StructureUtil.isIgnoredAsSurface(world, x, z, y + 1, blk, ignorePlants, ignoreFluids)) {
+      //found a solid block in the first sample, so need to check if it has 'air/ignored' block above it
       return null;
     }
 

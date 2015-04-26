@@ -13,11 +13,14 @@ import crazypants.enderzoo.config.Config;
 
 public class TemplateRegister {
 
+  public static final File ROOT_DIR = new File(Config.configDirectory + "/structures/");
+  public static final String RESOURCE_PATH = "/assets/enderzoo/config/structures/";
+
   public static final TemplateRegister instance = new TemplateRegister();
 
   private final Map<String, StructureTemplate> templates = new HashMap<String, StructureTemplate>();
 
-  private TemplateRegister() {
+  private TemplateRegister() {  
   }
 
   public void registerTemplate(String uid) throws IOException {
@@ -52,12 +55,20 @@ public class TemplateRegister {
     return templates.values();
   }
 
-  private InputStream getStreamForStructureData(String uid) throws IOException {
-    File f = new File(Config.configDirectory + "/structures/" + uid + ".nbt");
+  public static InputStream getStreamForTemplate(String uid) throws IOException {
+    File f = new File(ROOT_DIR, uid + ".ezs");
     if(f.exists()) {
       return new FileInputStream(f);
     }
-    return StructureTemplate.class.getResourceAsStream("/assets/enderzoo/structures/" + uid + ".nbt");
+    return StructureTemplate.class.getResourceAsStream(RESOURCE_PATH + uid + ".ezs");
+  }
+
+  public static InputStream getStreamForStructureData(String uid) throws IOException {
+    File f = new File(ROOT_DIR, uid + ".nbt");
+    if(f.exists()) {
+      return new FileInputStream(f);
+    }
+    return StructureTemplate.class.getResourceAsStream(RESOURCE_PATH + uid + ".nbt");
   }
 
 }

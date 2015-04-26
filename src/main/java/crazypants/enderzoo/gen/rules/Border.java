@@ -9,7 +9,7 @@ public class Border {
 
   private final Map<ForgeDirection, Integer> border = new HashMap<ForgeDirection, Integer>();
 
-  public void setSideBorder(int size) {
+  public void setBorderXZ(int size) {
     setBorder(size, size, size, size);
   }
 

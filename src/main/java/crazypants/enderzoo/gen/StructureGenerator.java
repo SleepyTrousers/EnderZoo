@@ -29,6 +29,8 @@ public class StructureGenerator implements IWorldGenerator {
     sm.init();
     return sm;
   }
+  
+  public static boolean GEN_ENABLED_DEBUG = true;
 
   private final Map<Integer, WorldStructures> worldManagers = new HashMap<Integer, WorldStructures>();
 
@@ -48,6 +50,10 @@ public class StructureGenerator implements IWorldGenerator {
   @Override
   public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 
+    if(!GEN_ENABLED_DEBUG) {
+      return;
+    }    
+    
     if(!world.getWorldInfo().isMapFeaturesEnabled()) {
       return;
     }
@@ -69,7 +75,7 @@ public class StructureGenerator implements IWorldGenerator {
       for (StructureTemplate template : TemplateRegister.instance.getTemplates()) {
         Random r = new Random(chunkSeed ^ template.getUid().hashCode());
         Collection<Structure> s = template.generate(structures, r, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-        if(s != null) {
+        if(s != null) {          
           structures.addAll(s);
         }
       }

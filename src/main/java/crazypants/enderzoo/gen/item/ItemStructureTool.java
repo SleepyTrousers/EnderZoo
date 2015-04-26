@@ -46,6 +46,27 @@ public class ItemStructureTool extends Item {
   }
 
   @Override
+  public ItemStack onItemRightClick(ItemStack p_77659_1_, World world, EntityPlayer player) {
+    
+    if(!world.isRemote) {
+//      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true; 
+//      EnderZoo.structureManager.generate(world.rand, (int)player.posX >> 4, (int)player.posZ >> 4, world, world.getChunkProvider(), world.getChunkProvider());
+////      EnderZoo.structureManager.generate(world.rand, 21, 27, world, world.getChunkProvider(), world.getChunkProvider());
+//      EnderZoo.structureManager.GEN_ENABLED_DEBUG = false;
+//      System.out.println("ItemStructureTool.onItemRightClick: Did gen");
+      
+//      boolean valid = new LevelGroundRule().isValidLocation(new Point3i(186, 61, 128), TemplateRegister.instance.getTemplate("test"), null, world, null, 186 >> 4, 128 >> 4);
+//      System.out.println("ItemStructureTool.onItemRightClick: " + valid);
+//      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true; 
+    }
+    
+    
+    
+    
+    return super.onItemRightClick(p_77659_1_, world, player);
+  }
+
+  @Override
   public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 
     if(world.isRemote) {

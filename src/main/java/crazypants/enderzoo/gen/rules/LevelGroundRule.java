@@ -18,14 +18,15 @@ public class LevelGroundRule implements IBuildRule {
   private boolean canSpawnOnWater = false;
 
   private int maxSampleCount = 100;
+
   private int sampleSpacing = 4;
+
+  private int tolerance = 2;
 
   private Border border = new Border();
 
-  private int tolerance = 3;
-
   public LevelGroundRule() {
-    border.setSideBorder(1);
+    border.setBorderXZ(1);
   }
 
   @Override
@@ -35,9 +36,14 @@ public class LevelGroundRule implements IBuildRule {
 
   @Override
   public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+    
+    boolean clipOnChunkBounds = true;
+    ChunkBounds clip = null;
+    if(clipOnChunkBounds) {
+      clip = new ChunkBounds(chunkX, chunkZ);
+    }
 
-    ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);
-
+    
     AxisAlignedBB bb = template.getBounds().getOffsetBoundingBox(loc.x, loc.y, loc.z);
     int minX = (int) bb.minX;
     int maxX = (int) bb.maxX;
@@ -59,21 +65,22 @@ public class LevelGroundRule implements IBuildRule {
 
     int xSpacing = Math.round(Math.max(1, (float) size.x / (numSamsX + 1)));
     int zSpacing = Math.round(Math.max(1, (float) size.z / (numSamsZ + 1)));
-
-
+    
+    
     int[] minMax = new int[] { Integer.MAX_VALUE, -Integer.MAX_VALUE };
     Point3i sampleLoc = new Point3i(loc);
     Point3i surfacePos = new Point3i();
     for (int x = minX - border.get(ForgeDirection.WEST); x <= maxX + border.get(ForgeDirection.EAST); x += xSpacing) {
       for (int z = minZ - border.get(ForgeDirection.NORTH); z <= maxZ + border.get(ForgeDirection.SOUTH); z += zSpacing) {
 
-        if(clip.isBlockInBounds(x, z)) {
+        if(clip == null || clip.isBlockInBounds(x, z)) {
           sampleLoc.set(x, loc.y, z);
           if(!testLocation(sampleLoc, world, minMax, surfacePos)) {
             return false;
           }
         }
 
+        //TODO:  The is not taking into acount that this point migt be clipped due to the border
         //make sure we always get the corners
         if(z < maxZ && z + zSpacing > maxZ) {
           z = maxZ - zSpacing;

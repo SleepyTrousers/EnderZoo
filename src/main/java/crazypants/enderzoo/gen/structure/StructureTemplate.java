@@ -10,6 +10,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.rules.ClearPreperation;
@@ -112,9 +113,10 @@ public class StructureTemplate {
         origin.y -= yOffset;
         Structure s = new Structure(this, origin);
         if(buildStructure(s, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {
-          res.add(s);
+          res.add(s);          
+          Log.debug("StructureTemplate.generate: Added " +  s);
         }
-      }
+      } 
     }
     return res;
   }

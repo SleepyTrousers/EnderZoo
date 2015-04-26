@@ -27,7 +27,7 @@ public class FillPreperation implements IBuildPreperation {
   private final Border border = new Border();
 
   public FillPreperation() {
-    border.setSideBorder(1);
+    border.setBorderXZ(1);
   }
 
   @Override
@@ -68,8 +68,8 @@ public class FillPreperation implements IBuildPreperation {
           startY = maxY + 1;
         }
         for (int y = startY; y > minY; y--) {
-          if(clip.isBlockInBounds(x, z)) {
-            if(world.isAirBlock(x, y, z) || (clearPlants && StructureUtil.isPlant(world.getBlock(x, y, z), world, x, y, z))) {
+          if(clip.isBlockInBounds(x, z)) {            
+            if(StructureUtil.isIgnoredAsSurface(world, x, z, y, world.getBlock(x, y, z), true, true)) {
               if(y > maxY && world.isAirBlock(x, y + 1, z)) {
                 curBlk = surf;
                 curMeta = surfaceMeta;

@@ -42,6 +42,7 @@ public final class Config {
   public static Configuration config;
 
   public static File configDirectory;
+  public static final String CONFIG_RESOURCE_PATH = "/assets/enderzoo/config/";
 
   public static final Section sectionDifficulty = new Section("Difficulty", "difficulty");
   public static boolean enderZooDifficultyModifierEnabled = true;
