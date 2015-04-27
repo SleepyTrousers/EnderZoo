@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.ChunkBounds;
+import crazypants.enderzoo.gen.TemplateRegister;
 import crazypants.enderzoo.vec.Point3i;
 
 public class Structure {

@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.rules;
+package crazypants.enderzoo.gen.structure.rules;
 
 import java.util.ArrayList;
 import java.util.List;

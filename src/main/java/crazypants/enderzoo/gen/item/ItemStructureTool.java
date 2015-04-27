@@ -13,11 +13,11 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.gen.StructureUtil;
-import crazypants.enderzoo.gen.rules.LevelGroundValidator;
+import crazypants.enderzoo.gen.TemplateRegister;
 import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.gen.structure.TemplateRegister;
+import crazypants.enderzoo.gen.structure.rules.LevelGroundValidator;
 import crazypants.enderzoo.vec.Point3i;
 
 public class ItemStructureTool extends Item {

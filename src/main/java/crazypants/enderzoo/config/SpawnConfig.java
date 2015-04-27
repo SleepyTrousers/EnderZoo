@@ -17,7 +17,7 @@ public class SpawnConfig {
 
   public static List<SpawnEntry> loadSpawnConfig() {
     File coreFile = new File(Config.configDirectory, CONFIG_NAME_CORE);
-
+    
     String defaultVals = null;
     try {
       defaultVals = IoUtil.readConfigFile(coreFile, Config.CONFIG_RESOURCE_PATH + CONFIG_NAME_CORE, true);

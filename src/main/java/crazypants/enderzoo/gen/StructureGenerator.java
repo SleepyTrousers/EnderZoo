@@ -19,7 +19,6 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.gen.structure.TemplateRegister;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureGenerator implements IWorldGenerator {
@@ -42,8 +41,7 @@ public class StructureGenerator implements IWorldGenerator {
   }
 
   private void init() {
-    MinecraftForge.EVENT_BUS.register(this);
-    TemplateRegister.instance.loadDefaultTemplates();
+    MinecraftForge.EVENT_BUS.register(this);    
     GameRegistry.registerWorldGenerator(this, 50000);
   }
 

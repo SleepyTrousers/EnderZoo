@@ -18,7 +18,7 @@ public class BiomeFilterAny extends AbstractBiomeFilter {
     }
     Set<BiomeGenBase> passedBiomes = new HashSet<BiomeGenBase>();
     for (BiomeGenBase candidate : BiomeGenBase.getBiomeGenArray()) {
-      if(isMatchingBiome(candidate)) {
+      if(candidate != null && isMatchingBiome(candidate)) {
         passedBiomes.add(candidate);
       }
     }

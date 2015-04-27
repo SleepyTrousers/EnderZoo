@@ -49,7 +49,10 @@ public class StructureData {
   }
 
   public StructureData(InputStream is) throws IOException {
-    NBTTagCompound root = CompressedStreamTools.read(new DataInputStream(is));
+    this(CompressedStreamTools.read(new DataInputStream(is)));
+  }
+
+  public StructureData(NBTTagCompound root) throws IOException {
     name = root.getString("name");
 
     NBTTagList dataList = (NBTTagList) root.getTag("data");
@@ -74,7 +77,10 @@ public class StructureData {
 
     size = new Point3i((int) Math.abs(bb.maxX - bb.minX), (int) Math.abs(bb.maxY - bb.minY), (int) Math.abs(bb.maxZ
         - bb.minZ));
-
+    
+    if(name == null || bb == null || data.isEmpty()) {
+      throw new IOException("Invalid NBT");
+    }
   }
 
   public void writeToNBT(NBTTagCompound root) {

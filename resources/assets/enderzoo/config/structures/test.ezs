@@ -8,10 +8,10 @@
         "maxGeneratedPerChunk" : 1,
         
         "LocationSampler" : {
-            "surfaceSampler" : {
-              "heightAboveGround" : 0,
-              "canSpawnOnWater" : "false"
-            }
+              "uid" : "SurfaceSampler",
+              "distanceFromSurface" : 0,
+              "canGenerateOnFluid" : "false"
+            
         },
         
         "locationValidators" : {

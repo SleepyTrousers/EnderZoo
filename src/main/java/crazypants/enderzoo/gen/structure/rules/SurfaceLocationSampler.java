@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.rules;
+package crazypants.enderzoo.gen.structure.rules;
 
 import java.util.Random;
 
@@ -12,13 +12,27 @@ import crazypants.enderzoo.vec.Point3i;
 public class SurfaceLocationSampler implements ILocationSampler {
 
   private static final Random rnd = new Random();
-  
-  private final int distanceFromSurface;
 
+  private int distanceFromSurface = 0;
   private boolean canPlaceInFluid = false;
 
-  public SurfaceLocationSampler(int distanceFromSurface) {
+  public SurfaceLocationSampler() {
+  }
+
+  public int getDistanceFromSurface() {
+    return distanceFromSurface;
+  }
+
+  public void setDistanceFromSurface(int distanceFromSurface) {
     this.distanceFromSurface = distanceFromSurface;
+  }
+
+  public boolean isCanPlaceInFluid() {
+    return canPlaceInFluid;
+  }
+
+  public void setCanGenerateOnFluid(boolean canPlaceInFluid) {
+    this.canPlaceInFluid = canPlaceInFluid;
   }
 
   @Override
@@ -27,7 +41,7 @@ public class SurfaceLocationSampler implements ILocationSampler {
 
     return findStartPos(template, chunkX, chunkZ, world);
   }
-  
+
   protected Point3i findStartPos(StructureTemplate template, int chunkX, int chunkZ, World world) {
     Point3i candidate;
     if(template.canSpanChunks()) {

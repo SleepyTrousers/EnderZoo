@@ -11,19 +11,24 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.io.IOUtils;
 
+import crazypants.enderzoo.gen.structure.StructureTemplate;
+
 public class IoUtil {
-
-
-  public static String readConfigFile(File copyTo, String resource, boolean replaceIfExists) throws IOException {
+  
+  public static String readConfigFile(File copyTo, String resourcePath, boolean replaceIfExists) throws IOException {
+    return readConfigFile(copyTo, IoUtil.class.getResourceAsStream(resourcePath), replaceIfExists);
+  }
+  
+  public static String readConfigFile(File copyTo, InputStream in, boolean replaceIfExists) throws IOException {
     if(!replaceIfExists && copyTo.exists()) {
       return readStream(new FileInputStream(copyTo));
     }
-    //InputStream in = IoUtil.class.getResourceAsStream(CONFIG_PATH + fileName);
-    InputStream in = IoUtil.class.getResourceAsStream(resource);
-    if(in == null) {
-      throw new IOException("Could not load resource " + resource + " form classpath. ");
-    }
-    String output = readStream(in);
+    String output = copyTextTo(copyTo, in);
+    return output.toString();
+  }
+
+  public static String copyTextTo(File copyTo, InputStream from) throws IOException {
+    String output = readStream(from);
     BufferedWriter writer = null;
     try {
       makePath(copyTo);
@@ -32,7 +37,7 @@ public class IoUtil {
     } finally {
       IOUtils.closeQuietly(writer);
     }
-    return output.toString();
+    return output;
   }
 
   public static void makePath(File copyTo) throws IOException {

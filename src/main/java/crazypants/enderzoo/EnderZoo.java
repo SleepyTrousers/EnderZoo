@@ -22,6 +22,7 @@ import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
+import crazypants.enderzoo.gen.EnderZooStructures;
 import crazypants.enderzoo.gen.StructureGenerator;
 import crazypants.enderzoo.gen.item.BlockStructureMarker;
 import crazypants.enderzoo.gen.item.ItemStructureTool;
@@ -144,6 +145,8 @@ public class EnderZoo {
       spawnEventHandler = new MobSpawnEventHandler();
       spawnEventHandler.init();
     }
+    
+    EnderZooStructures.registerStructures();
 
   }
 
