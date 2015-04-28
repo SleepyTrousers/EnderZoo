@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +13,7 @@ public class Border {
     setBorder(size, size, size, size);
   }
 
-  public void setVerticalBorder(int down, int up) {
+  public void setBorderY(int down, int up) {
     border.put(ForgeDirection.DOWN, down);
     border.put(ForgeDirection.UP, up);
   }
@@ -34,6 +34,10 @@ public class Border {
     border.put(ForgeDirection.SOUTH, south);
   }
 
+  public void set(ForgeDirection dir, int val) {
+    border.put(dir, val);
+  }
+  
   public int get(ForgeDirection dir) {
     Integer res = border.get(dir);
     if(res == null) {

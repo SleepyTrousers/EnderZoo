@@ -20,18 +20,33 @@ public class EnderZooStructures {
     reg.getResourceManager().addResourcePath(ROOT_DIR);
     reg.getResourceManager().addResourcePath(RESOURCE_PATH);
 
+    String fileName = "README.txt";
+    copyText(fileName, fileName);
+
     register("test");
   }
 
-  private static void register(String uid) {
+  private static void copyText(String resourceName, String fileName) {
     try {
-      File copyTo = new File(ROOT_DIR, uid + StructureResourceManager.TEMPLATE_EXT);
-      String str = IoUtil.readConfigFile(copyTo, RESOURCE_PATH + uid + StructureResourceManager.TEMPLATE_EXT, false);
-      TemplateRegister.instance.registerJsonTemplate(str);
-    } catch (Exception e) {
-      Log.error("EnderZooStructures: Error occured loading template: " + uid + " Ex: " + e);
-      e.printStackTrace();
+      IoUtil.copyTextTo(new File(ROOT_DIR, fileName), EnderZooStructures.class.getResourceAsStream(RESOURCE_PATH + resourceName));
+    } catch (IOException e) {
+      Log.warn("EnderZooStructures: Could not copy " + RESOURCE_PATH + resourceName + " from jar to " + ROOT_DIR.getAbsolutePath() + fileName + " Ex:" + e);
     }
+  }
+
+  private static void register(String uid) {
+    
+      String name = uid + StructureResourceManager.TEMPLATE_EXT;
+      copyText(name, name + ".defaultValues");
+
+      TemplateRegister reg = TemplateRegister.instance;
+      try {
+        reg.registerTemplate(reg.getResourceManager().loadTemplate(uid));
+      } catch (Exception e) {
+        Log.error("EnderZooStructures: Could not load structure template " + uid + StructureResourceManager.TEMPLATE_EXT);
+        e.printStackTrace();
+      }
+    
 
   }
 

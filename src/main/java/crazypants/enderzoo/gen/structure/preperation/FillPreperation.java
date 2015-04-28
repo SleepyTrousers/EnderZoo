@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.preperation;
 
 import java.util.Random;
 
@@ -10,6 +10,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
+import crazypants.enderzoo.gen.structure.Border;
 import crazypants.enderzoo.gen.structure.Structure;
 
 public class FillPreperation implements ISitePreperation {
@@ -24,7 +25,7 @@ public class FillPreperation implements ISitePreperation {
   private boolean useBiomeFillerBlock = true;
   private boolean clearPlants = true;
 
-  private final Border border = new Border();
+  private Border border = new Border();
 
   public FillPreperation() {
     border.setBorderXZ(1);
@@ -44,11 +45,11 @@ public class FillPreperation implements ISitePreperation {
     if(surf == null) {
       surf = fill;
     }
-    
+
     //TODO
-//    fill = Blocks.glass;
-//    surf = Blocks.glass;
-//    surfaceMeta = 4;
+    //    fill = Blocks.glass;
+    //    surf = Blocks.glass;
+    //    surfaceMeta = 4;
 
     ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);
 
@@ -73,7 +74,7 @@ public class FillPreperation implements ISitePreperation {
           startY = maxY + 1;
         }
         for (int y = startY; y > minY; y--) {
-          if(clip.isBlockInBounds(x, z)) {            
+          if(clip.isBlockInBounds(x, z)) {
             if(StructureUtil.isIgnoredAsSurface(world, x, z, y, world.getBlock(x, y, z), true, true)) {
               if(y > maxY && world.isAirBlock(x, y + 1, z)) {
                 curBlk = surf;
@@ -91,6 +92,22 @@ public class FillPreperation implements ISitePreperation {
       }
     }
     return true;
+  }
+
+  public boolean isClearPlants() {
+    return clearPlants;
+  }
+
+  public void setClearPlants(boolean clearPlants) {
+    this.clearPlants = clearPlants;
+  }
+
+  public Border getBorder() {
+    return border;
+  }
+
+  public void setBorder(Border border) {
+    this.border = border;
   }
 
 }

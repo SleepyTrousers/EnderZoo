@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,7 @@ public class CompositeValidator implements ILocationValidator {
   public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     for (ILocationValidator rule : rules) {
       if(!rule.isValidLocation(loc, template, structures, world, random, chunkX, chunkZ)) {
+//        System.out.println("CompositeValidator.isValidLocation: Failed rule: " + rule);
         return false;
       }
     }
@@ -31,6 +32,7 @@ public class CompositeValidator implements ILocationValidator {
   public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     for (ILocationValidator rule : rules) {
       if(!rule.isValidChunk(template, structures, world, random, chunkX, chunkZ)) {
+//        System.out.println("CompositeValidator.isValidChunk: Failed rule: " + rule);
         return false;
       }
     }

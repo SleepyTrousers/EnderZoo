@@ -11,19 +11,22 @@ import com.google.gson.JsonObject;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.rules.ClearPreperation;
-import crazypants.enderzoo.gen.structure.rules.CompositePreperation;
-import crazypants.enderzoo.gen.structure.rules.CompositeValidator;
-import crazypants.enderzoo.gen.structure.rules.FillPreperation;
-import crazypants.enderzoo.gen.structure.rules.ILocationSampler;
-import crazypants.enderzoo.gen.structure.rules.LevelGroundValidator;
-import crazypants.enderzoo.gen.structure.rules.RandomValidator;
-import crazypants.enderzoo.gen.structure.rules.SpacingValidator;
-import crazypants.enderzoo.gen.structure.rules.SurfaceLocationSampler;
+import crazypants.enderzoo.gen.structure.preperation.ClearPreperation;
+import crazypants.enderzoo.gen.structure.preperation.CompositePreperation;
+import crazypants.enderzoo.gen.structure.preperation.FillPreperation;
+import crazypants.enderzoo.gen.structure.preperation.ISitePreperation;
+import crazypants.enderzoo.gen.structure.sampler.ILocationSampler;
+import crazypants.enderzoo.gen.structure.sampler.SurfaceLocationSampler;
+import crazypants.enderzoo.gen.structure.validator.CompositeValidator;
+import crazypants.enderzoo.gen.structure.validator.ILocationValidator;
+import crazypants.enderzoo.gen.structure.validator.LevelGroundValidator;
+import crazypants.enderzoo.gen.structure.validator.RandomValidator;
+import crazypants.enderzoo.gen.structure.validator.SpacingValidator;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureTemplate {
@@ -34,8 +37,8 @@ public class StructureTemplate {
   private final String uid;
   private final BoundingCircle bc;
 
-  private final CompositeValidator buildRules = new CompositeValidator();
-  private final CompositePreperation buildPrep = new CompositePreperation();
+  private final CompositeValidator validators = new CompositeValidator();
+  private final CompositePreperation sitePreps = new CompositePreperation();
 
   private ILocationSampler locSampler;
   private boolean canSpanChunks = false;
@@ -56,38 +59,34 @@ public class StructureTemplate {
     uid = data.getName();
     bc = new BoundingCircle(data.getBounds());
 
-    buildRules.add(new RandomValidator(0.05f));
-    buildRules.add(new SpacingValidator(200, this));
-    buildRules.add(new SpacingValidator(20, null));
-    buildRules.add(new LevelGroundValidator());
+    validators.add(new RandomValidator(0.05f));
+    validators.add(new SpacingValidator(200, uid));
+    validators.add(new SpacingValidator(20, (String[])null));
+    validators.add(new LevelGroundValidator());
 
     locSampler = new SurfaceLocationSampler();
 
-    buildPrep.add(new ClearPreperation());
-    buildPrep.add(new FillPreperation());
+    sitePreps.add(new ClearPreperation());
+    sitePreps.add(new FillPreperation());
   }
 
-  public boolean isValid() {
-    return uid != null && !uid.trim().isEmpty() && data != null && locSampler != null;
-  }
-  
   public Collection<Structure> generate(WorldStructures structures, Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
       IChunkProvider chunkProvider) {
-
+    
     if(canSpanChunks) { //Generate any bits that where started in a different
       generateExisting(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
     }
 
     //TODO: If we can span chunks, we need to check the validators against the other chunks it crosses
     //as well. If those chunks havent been created yet then maybe consider defering the checks until they are
-    if(!buildRules.isValidChunk(this, structures, world, random, chunkX, chunkZ)) {
+    if(!validators.isValidChunk(this, structures, world, random, chunkX, chunkZ)) {
       return Collections.emptyList();
     }
 
     List<Structure> res = new ArrayList<Structure>();
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
       Point3i origin = locSampler.generateCandidateLocation(this, structures, world, random, chunkX, chunkZ);
-      if(origin != null && buildRules.isValidLocation(origin, this, structures, world, random, chunkX, chunkZ)) {
+      if(origin != null && validators.isValidLocation(origin, this, structures, world, random, chunkX, chunkZ)) {
 
         origin.y -= yOffset;
         Structure s = new Structure(this, origin);
@@ -108,14 +107,14 @@ public class StructureTemplate {
     if(s.isChunkBoundaryCrossed()) {
       //Only build in the chunk
       //      System.out.println("StructureTemplate.generateExisting: Added new multichunk structure");
-      if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
+      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
         res = true;
         s.build(world, chunkX, chunkZ);
         //and already created ones      
         Collection<ChunkCoordIntPair> chunks = s.getChunkBounds().getChunks();
         for (ChunkCoordIntPair c : chunks) {
           if(!(c.chunkXPos == chunkX && c.chunkZPos == chunkZ) && chunkGenerator.chunkExists(c.chunkXPos, c.chunkZPos)) {
-            buildPrep.prepareLocation(s, structures, world, random, c.chunkXPos, c.chunkZPos);
+            sitePreps.prepareLocation(s, structures, world, random, c.chunkXPos, c.chunkZPos);
             s.build(world, c.chunkXPos, c.chunkZPos);
             //          System.out.println("StructureTemplate.generateExisting: build structure onto existng chunk");
           }
@@ -124,7 +123,7 @@ public class StructureTemplate {
 
     } else {
       //      System.out.println("StructureTemplate.generateExisting: Added new structure");
-      if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
+      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
         s.build(world);
         res = true;
       }
@@ -136,15 +135,31 @@ public class StructureTemplate {
       IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 
     Collection<Structure> existing = new ArrayList<Structure>();
-    structures.getStructuresIntersectingChunk(new ChunkCoordIntPair(chunkX, chunkZ), this, existing);
+    structures.getStructuresIntersectingChunk(new ChunkCoordIntPair(chunkX, chunkZ), uid, existing);
 
     for (Structure s : existing) {
-      if(buildPrep.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
+      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
         s.build(world, chunkX, chunkZ);
       }
     }
     return !existing.isEmpty();
 
+  }
+  
+  public boolean isValid() {
+    return uid != null && !uid.trim().isEmpty() && data != null && locSampler != null;
+  }
+  
+  public void addLocationValidator(ILocationValidator val) {
+    if(val != null) {
+      validators.add(val);
+    }    
+  }
+  
+  public void addSitePreperation(ISitePreperation val) {
+    if(val != null) {
+      sitePreps.add(val);
+    }    
   }
   
   public AxisAlignedBB getBounds() {

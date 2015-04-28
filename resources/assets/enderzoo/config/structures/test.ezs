@@ -14,73 +14,63 @@
             
         },
         
-        "locationValidators" : {
+        "locationValidators" : [
                     
-            "ChanceValidator" : {                
-                "chancePerChunk" : 0.05
-            },
+            { "uid" : "RandomValidator", 
+                      "chancePerChunk" : 0.05 },
+                                  
+            { "uid" : "BiomeValidator", 
+                      "type" : "any",                
+                      "types" : [ "MESA", "FOREST", "PLAINS", "MOUNTAIN", "HILLS", "SWAMP", "SANDY", "SNOWY", "WASTELAND" ],
+                      "typesExcluded" : [ "BEACH", "MUSHROOM", "OCEAN", "RIVER", "NETHER", "END"],
+                      "names" : [],
+                      "namesExcluded" : [] },                                    
             
-            "BiomeValidator" : {                
-                "type" : "any",
-                "biomes" : {
-                    "types" : [ "MESA", "FOREST", "PLAINS", "MOUNTAIN", "HILLS", "SWAMP", "SANDY", "SNOWY", "WASTELAND" ],
-                    "typesExcluded" : [ "BEACH", "MUSHROOM", "OCEAN", "RIVER", "NETHER", "END"],
-                    "names" : [],
-                    "namesExcluded" : []                    
-                }
-            },
             
-            "DimensionValidator" : {
-                "names" : [],
-                "namesExcluded" : ["Twilight Forest", "Dungeon"]
-            },
+            { "uid" : "DimensionValidator",                               
+                      "names" : [],
+                      "namesExcluded" : ["Twilight Forest", "Dungeon"] },
             
-            "SpacingValidator" : {
-                "minSpacing" : 20,
-                "templates" : [],
-                "approximateTest" : "false",
-                "accurateTest" : "true"
-            },
             
-            "SpacingValidator" : {
-                "minSpacing" : 200,
-                "templates" : [ "test" ],
-                "approximateTest" : "true",
-                "accurateTest" : "false"
-            },
+            { "uid" : "SpacingValidator", 
+                      "minSpacing" : 20,
+                      "templateFilter" : [],
+                      "validateChunk" : "false",
+                      "validateLocation" : "true" },
             
-            "LevelGroundValidator" : {
-                "canSpawnOnWater" : "false",
-                "tolerance" : 2,
-                "sampleSpacing" : 4,
-                "maxSamples" : 100,
-                "Border" : {
-                    "size" : 1
-                }                
-                
-            }                                               
-       },
+            
+            { "uid" : "SpacingValidator",
+                      "minSpacing" : 200,
+                      "templateFilter" : [ "test" ],
+                      "validateChunk" : "true",
+                      "validateLocation" : "false" },
+            
+            
+            { "uid" : "LevelGroundValidator",
+                      "canSpawnOnWater" : "false",
+                      "tolerance" : 2,
+                      "sampleSpacing" : 4,
+                      "maxSamples" : 100,
+                      "Border" : {
+                        "sizeXZ" : 1
+                      }}                                
+                                                           
+       ],
        
-       "sitePreperations" : {
+       "sitePreperations" : [
                   
-           "ClearPreperation" : {
-               "clearPlants" : "true",           
-               "Border" : {
-                    "up" : 3,
-                    "down" : -1,
-                    "north" : 1,
-                    "south" : 1,
-                    "east" : 1,
-                    "west" : 1
-                }
-           },
+            { "uid" : "ClearPreperation", 
+                      "clearPlants" : "true",           
+                      "Border" : {
+                          "up" : 3, "down" : 0, "north" : 1, "south" : 1, "east" : 1, "west" : 1
+                      }
+            },
            
-           "FillPreperation" : {
-               "clearPlants" : "true",
-               "Border" : {
-                    "size" : 1
-                }
-           }
-       }
+            { "uid" : "FillPreperation",
+                      "clearPlants" : "true",
+                      "Border" : {
+                          "sizeXZ" : 1
+                      }}           
+       ]
    }
 }

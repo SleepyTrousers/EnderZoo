@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.validator;
 
 import java.util.Random;
 

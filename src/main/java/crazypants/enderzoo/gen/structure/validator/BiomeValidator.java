@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.validator;
 
 import java.util.Random;
 
@@ -12,14 +12,15 @@ import crazypants.enderzoo.vec.Point3i;
 
 public class BiomeValidator implements ILocationValidator {
 
-  private IBiomeFilter filter = new BiomeFilterAny();
+  private final IBiomeFilter filter;
   
-  public BiomeValidator() {    
+  public BiomeValidator(IBiomeFilter filter) {
+    this.filter = filter;
   }
 
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    BiomeGenBase bgb = world.getBiomeGenForCoords(chunkX, chunkZ);    
+  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {                
+    BiomeGenBase bgb = world.getBiomeGenForCoords((chunkX << 4) + 1, (chunkZ << 4) + 1);            
     return filter.isMatchingBiome(bgb);
   }
 

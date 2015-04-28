@@ -38,6 +38,7 @@ public class WorldStructures {
   }
 
   public void add(Structure s) {
+//    System.out.println("WorldStructures.add: " + s);
     ChunkCoordIntPair key = s.getChunkCoord();
     if(!structures.containsKey(key)) {
       structures.put(key, new ArrayList<Structure>(2));
@@ -85,13 +86,13 @@ public class WorldStructures {
     }
   }
 
-  public void getStructuresIntersectingChunk(ChunkCoordIntPair chunk, StructureTemplate structureTemplate, Collection<Structure> res) {
+  public void getStructuresIntersectingChunk(ChunkCoordIntPair chunk, String structureUid, Collection<Structure> res) {
     List<Structure> all = structureCoverage.get(chunk);
     if(all == null) {
       return;
     }
     for (Structure s : all) {
-      if(structureTemplate == null || structureTemplate.getUid().equals(s.getTemplate().getUid())) {
+      if(structureUid == null || structureUid.equals(s.getTemplate().getUid())) {
         res.add(s);
       }
     }

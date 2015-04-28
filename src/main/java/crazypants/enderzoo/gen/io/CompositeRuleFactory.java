@@ -7,9 +7,9 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
-import crazypants.enderzoo.gen.structure.rules.ILocationSampler;
-import crazypants.enderzoo.gen.structure.rules.ILocationValidator;
-import crazypants.enderzoo.gen.structure.rules.ISitePreperation;
+import crazypants.enderzoo.gen.structure.preperation.ISitePreperation;
+import crazypants.enderzoo.gen.structure.sampler.ILocationSampler;
+import crazypants.enderzoo.gen.structure.validator.ILocationValidator;
 
 public class CompositeRuleFactory implements IRuleFactory {
 

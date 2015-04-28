@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.validator;
 
 import java.util.Random;
 
@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
+import crazypants.enderzoo.gen.structure.Border;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
@@ -127,4 +128,46 @@ public class LevelGroundValidator implements ILocationValidator {
     }
     return false;
   }
+
+  public boolean isCanSpawnOnWater() {
+    return canSpawnOnWater;
+  }
+
+  public void setCanSpawnOnWater(boolean canSpawnOnWater) {
+    this.canSpawnOnWater = canSpawnOnWater;
+  }
+
+  public int getMaxSampleCount() {
+    return maxSampleCount;
+  }
+
+  public void setMaxSampleCount(int maxSampleCount) {
+    this.maxSampleCount = maxSampleCount;
+  }
+
+  public int getSampleSpacing() {
+    return sampleSpacing;
+  }
+
+  public void setSampleSpacing(int sampleSpacing) {
+    this.sampleSpacing = sampleSpacing;
+  }
+
+  public int getTolerance() {
+    return tolerance;
+  }
+
+  public void setTolerance(int tolerance) {
+    this.tolerance = tolerance;
+  }
+
+  public Border getBorder() {
+    return border;
+  }
+
+  public void setBorder(Border border) {
+    this.border = border;
+  }
+  
+  
 }

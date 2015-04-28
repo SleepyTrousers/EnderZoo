@@ -1,4 +1,4 @@
-package crazypants.enderzoo.gen.structure.rules;
+package crazypants.enderzoo.gen.structure.preperation;
 
 import java.util.Random;
 
@@ -8,20 +8,17 @@ import net.minecraftforge.common.util.ForgeDirection;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
+import crazypants.enderzoo.gen.structure.Border;
 import crazypants.enderzoo.gen.structure.Structure;
 
 public class ClearPreperation implements ISitePreperation {
 
-  private final Border border = new Border();
+  private Border border = new Border();
 
   private boolean clearPlants = true;
 
   public ClearPreperation() {
-    setBorder(1);
-  }
-
-  public void setBorder(int size) {
-    border.setBorder(size, size, size, size, 3, -1);
+    border.setBorder(1, 1, 1, 1, 3, 0);
   }
 
   @Override
@@ -50,6 +47,22 @@ public class ClearPreperation implements ISitePreperation {
     }
 
     return true;
+  }
+
+  public Border getBorder() {
+    return border;
+  }
+
+  public void setBorder(Border border) {
+    this.border = border;
+  }
+
+  public boolean isClearPlants() {
+    return clearPlants;
+  }
+
+  public void setClearPlants(boolean clearPlants) {
+    this.clearPlants = clearPlants;
   }
 
 }

@@ -3,6 +3,8 @@ package crazypants.enderzoo.gen.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -14,14 +16,15 @@ import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.TemplateRegister;
 import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.gen.structure.rules.ILocationSampler;
+import crazypants.enderzoo.gen.structure.preperation.ISitePreperation;
+import crazypants.enderzoo.gen.structure.sampler.ILocationSampler;
+import crazypants.enderzoo.gen.structure.validator.ILocationValidator;
 
 public class TemplateParser {
 
-  private final CompositeRuleFactory ruleFact = new CompositeRuleFactory();
-  
+  private final CompositeRuleFactory ruleFact = new DefaultRuleFactory();
+
   public TemplateParser() {
-    ruleFact.add(new DefaultRuleFactory());
   }
 
   public CompositeRuleFactory getRuleFactory() {
@@ -59,10 +62,39 @@ public class TemplateParser {
           throw new Exception("Could not parse location sampler for " + uid);
         }
       }
-      
-      
+
+      if(to.has("locationValidators")) {
+        JsonArray arr = to.getAsJsonArray("locationValidators");
+        for (JsonElement e : arr) {
+          JsonObject valObj = e.getAsJsonObject();
+          String id = valObj.get("uid").getAsString();
+          ILocationValidator val = ruleFact.createValidator(id, valObj);
+          if(val != null) {
+            res.addLocationValidator(val);
+          } else {
+            throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+          }
+        }           
+      }
+
+      if(to.has("sitePreperations")) {
+        
+        JsonArray arr = to.getAsJsonArray("sitePreperations");
+        for (JsonElement e : arr) {
+          JsonObject valObj = e.getAsJsonObject();
+          String id = valObj.get("uid").getAsString();
+          ISitePreperation val = ruleFact.createPreperation(id, valObj);
+          if(val != null) {
+            res.addSitePreperation(val);
+          } else {
+            throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+          }
+        }
+                
+      }
+
       return res;
-      
+
     } catch (Exception e) {
       throw new Exception("TemplateParser: Could not parse template " + uid, e);
     }
