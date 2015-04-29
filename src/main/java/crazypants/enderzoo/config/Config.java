@@ -136,7 +136,15 @@ public final class Config {
   public static double direWolfHowlChance = 0.05;
   public static double direWolfPackHowlChance = 0.5;
   public static int direWolfPackHowlAmount = 8;
-  
+
+  public static final Section sectionDireSlime = new Section("Dire Slime", "direSlime");
+  public static boolean direSlimeEnabled = true;
+  public static double direSlimeHealth = 3; // + SlimeSize*SlimeSize
+  public static double direSlimeAttackDamage = 3; // + SlimeSize
+  public static int direSlimeChance = 65; // %
+  public static int direSlimeBigPercentage = 2;
+  public static int direSlimeMediumPercentage = 8; // Rest will be small
+
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
   public static int enchantmentWitherArrowWeight = 2;
@@ -337,6 +345,18 @@ public final class Config {
         "The chance that when a dire wolf howls, nearby dire wolves will \"join in\" to a pack howl. Defaults to 0.6 (60%)").getDouble();
     direWolfPackHowlAmount = config.get(sectionDireWolf.name, "direWolfPackHowlAmount", direWolfPackHowlAmount,
         "The amount of other dire wolves that will \"join in\" with the initial howl, per pack howl.").getInt();
+
+    direSlimeEnabled = config.getBoolean("direSlimeEnabled", sectionDireSlime.name, direSlimeEnabled, "If false Dire Slime will be disabled");
+    direSlimeAttackDamage = config.get(sectionDireSlime.name, "direSlimeAttackDamage", direSlimeAttackDamage,
+            "Base attack damage of the dire slime. Slime size will be added to this.").getDouble(direSlimeAttackDamage);
+    direSlimeHealth = config.get(sectionDireSlime.name, "direSlimeHealth", direSlimeHealth,
+            "Base health of the Dire Slime. Squared slime size will be added to this.").getDouble(direSlimeHealth);
+    direSlimeChance = config.get(sectionDireSlime.name, "direSlimeChance", direSlimeChance,
+            "The chance that a Dire Slime will be spawned (in percent; 0..100).").getInt(direSlimeChance);
+    direSlimeBigPercentage = config.get(sectionDireSlime.name, "direSlimeBigPercentage", direSlimeBigPercentage,
+            "The percentage of Dire Slimes that will be big.").getInt(direSlimeBigPercentage);
+    direSlimeMediumPercentage = config.get(sectionDireSlime.name, "direSlimeMediumPercentage", direSlimeMediumPercentage,
+            "The percentage of Dire Slimes that will be medium.").getInt(direSlimeMediumPercentage);
 
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);

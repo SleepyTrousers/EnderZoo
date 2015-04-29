@@ -19,7 +19,9 @@ public enum MobInfo {
   WITHER_CAT(EntityWitherCat.class, EntityWitherCat.NAME, EntityWitherCat.EGG_BG_COL, EntityWitherCat.EGG_FG_COL, 
       Config.witherCatEnabled, Config.witherCatHealth, Config.witherCatAttackDamage),
   DIRE_WOLF(EntityDireWolf.class, EntityDireWolf.NAME, EntityDireWolf.EGG_BG_COL, EntityDireWolf.EGG_FG_COL, 
-      Config.direWolfEnabled, Config.direWolfHealth, Config.direWolfAttackDamage);
+      Config.direWolfEnabled, Config.direWolfHealth, Config.direWolfAttackDamage),
+  DIRE_SLIME(EntityDireSlime.class, EntityDireSlime.NAME, EntityDireSlime.EGG_BG_COL, EntityDireSlime.EGG_FG_COL, 
+      Config.direSlimeEnabled, Config.direSlimeHealth, Config.direSlimeAttackDamage);
 
   final Class<? extends EntityLiving> clz;
   final String name;

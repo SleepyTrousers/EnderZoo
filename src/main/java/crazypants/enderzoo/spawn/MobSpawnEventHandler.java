@@ -5,22 +5,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityDireSlime;
 import crazypants.enderzoo.entity.IEnderZooMob;
 
 public class MobSpawnEventHandler {
@@ -183,4 +192,30 @@ public class MobSpawnEventHandler {
     //    System.out.println("MobSpawnEventHandler.adjustBaseAttack: base attack changed from " + curValue + " to " + newValue);
   }
 
+  @SubscribeEvent
+  public void onBlockHarvest(HarvestDropsEvent event) {
+    if (Config.direSlimeEnabled && !event.isCanceled() && (event.block instanceof BlockDirt || event.block instanceof BlockGrass) && 
+        event.harvester != null && !event.harvester.capabilities.isCreativeMode && 
+        event.world != null && !event.world.isRemote &&
+        event.harvester.getCurrentEquippedItem() != null && 
+        !ForgeHooks.isToolEffective(event.harvester.getCurrentEquippedItem(), event.block, event.blockMetadata) &&
+        Config.direSlimeChance > event.world.rand.nextInt(100)) {
+      EntityDireSlime direSlime = new EntityDireSlime(event.world);
+      direSlime.setPosition(event.x + 0.5, event.y + 0.0, event.z + 0.5);
+      event.world.spawnEntityInWorld(direSlime);
+      direSlime.playLivingSound();
+      for (ItemStack drop : event.drops) {
+        if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.dirt)) {
+          if (drop.stackSize > 1) {
+            drop.stackSize--;
+          } else if (event.drops.size() == 1) {
+            event.drops.clear();
+          } else {
+            event.drops.remove(drop);
+          }
+          return;
+        }
+      }
+    }
+  }
 }
