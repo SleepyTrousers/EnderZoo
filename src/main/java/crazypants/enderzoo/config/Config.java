@@ -139,11 +139,15 @@ public final class Config {
 
   public static final Section sectionDireSlime = new Section("Dire Slime", "direSlime");
   public static boolean direSlimeEnabled = true;
-  public static double direSlimeHealth = 3; // + SlimeSize*SlimeSize
-  public static double direSlimeAttackDamage = 3; // + SlimeSize
-  public static int direSlimeChance = 65; // %
-  public static int direSlimeBigPercentage = 2;
-  public static int direSlimeMediumPercentage = 8; // Rest will be small
+  public static double direSlimeHealth = 4; 
+  public static double direSlimeHealthMedium = 8;
+  public static double direSlimeHealthLarge = 20;
+  public static double direSlimeAttackDamage = 3; 
+  public static double direSlimeAttackDamageMedium = 5; 
+  public static double direSlimeAttackDamageLarge = 8;
+  public static double direSlimeChance = 0.65; 
+  public static double direSlimeChanceLarge = 0.2;
+  public static double direSlimeChanceMedium = 0.4; 
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
@@ -348,16 +352,26 @@ public final class Config {
 
     direSlimeEnabled = config.getBoolean("direSlimeEnabled", sectionDireSlime.name, direSlimeEnabled, "If false Dire Slime will be disabled");
     direSlimeAttackDamage = config.get(sectionDireSlime.name, "direSlimeAttackDamage", direSlimeAttackDamage,
-            "Base attack damage of the dire slime. Slime size will be added to this.").getDouble(direSlimeAttackDamage);
+            "Base attack damage of the dire slime.").getDouble(direSlimeAttackDamage);
+    direSlimeAttackDamageMedium = config.get(sectionDireSlime.name, "direSlimeAttackDamageMedium", direSlimeAttackDamageMedium,
+        "Base attack damage of the medium dire slime.").getDouble(direSlimeAttackDamageMedium);    
+    direSlimeAttackDamageLarge = config.get(sectionDireSlime.name, "direSlimeAttackDamageLarge", direSlimeAttackDamageLarge,
+        "Base attack damage of the large dire slime.").getDouble(direSlimeAttackDamageLarge);    
     direSlimeHealth = config.get(sectionDireSlime.name, "direSlimeHealth", direSlimeHealth,
-            "Base health of the Dire Slime. Squared slime size will be added to this.").getDouble(direSlimeHealth);
+            "Base health of the Dire Slime. ").getDouble(direSlimeHealth);
+    direSlimeHealthMedium = config.get(sectionDireSlime.name, "direSlimeHealthMedium", direSlimeHealthMedium,
+        "Base health of the medium Dire Slime. ").getDouble(direSlimeHealthMedium);
+    direSlimeHealthLarge = config.get(sectionDireSlime.name, "direSlimeHealthLarge", direSlimeHealthLarge,
+        "Base health of the medium Dire Slime. ").getDouble(direSlimeHealthLarge);
+                
     direSlimeChance = config.get(sectionDireSlime.name, "direSlimeChance", direSlimeChance,
-            "The chance that a Dire Slime will be spawned (in percent; 0..100).").getInt(direSlimeChance);
-    direSlimeBigPercentage = config.get(sectionDireSlime.name, "direSlimeBigPercentage", direSlimeBigPercentage,
-            "The percentage of Dire Slimes that will be big.").getInt(direSlimeBigPercentage);
-    direSlimeMediumPercentage = config.get(sectionDireSlime.name, "direSlimeMediumPercentage", direSlimeMediumPercentage,
-            "The percentage of Dire Slimes that will be medium.").getInt(direSlimeMediumPercentage);
-
+            "The chance that a Dire Slime will be spawned (0 = never, 1 = always).").getDouble(direSlimeChance);
+    direSlimeChanceMedium = config.get(sectionDireSlime.name, "direSlimeChanceMedium", direSlimeChanceMedium,
+        "The chance a medium will spawn when a small Dire Slimes is killed (eg 0.12 for a 12% chance).").getDouble(direSlimeChanceMedium);
+    direSlimeChanceLarge = config.get(sectionDireSlime.name, "direSlimeChanceLarge", direSlimeChanceLarge,
+            "The chance a large will spawn when a medium Dire Slimes is killed (eg 0.02 for a 2% chance)").getDouble(direSlimeChanceLarge);
+    
+    
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
     enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,

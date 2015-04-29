@@ -1,20 +1,16 @@
 package crazypants.enderzoo.entity.render;
 
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
+
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.entity.EntityDireSlime;
-import net.minecraft.client.model.ModelMagmaCube;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderMagmaCube;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMagmaCube;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
 public class RenderDireSlime extends RenderLiving {
@@ -25,11 +21,13 @@ public class RenderDireSlime extends RenderLiving {
     super(new ModelDireSlime(), 0.25F);
   }
 
-  protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_){
-    EntityDireSlime direSlime = (EntityDireSlime)p_77041_1_;
-    float f1 = (direSlime.prevSquishFactor + (direSlime.squishFactor - direSlime.prevSquishFactor) * p_77041_2_) / 1.5F + 1.0F;
-    float f2 = 1.0F / f1;
-    GL11.glScalef(f2, f1, f2);
+  protected void preRenderCallback(EntityLivingBase p_77041_1_, float partialTick){
+    EntityDireSlime direSlime = (EntityDireSlime)p_77041_1_;    
+    int i = direSlime.getSlimeSize();
+    float f1 = (direSlime.prevSquishFactor + (direSlime.squishFactor - direSlime.prevSquishFactor) * partialTick) / ((float)i * 0.5F + 1.0F);
+    float f2 = 1.0F / (f1 + 1.0F);
+    float f3 = (float)i;
+    GL11.glScalef(f2 * f3, 1.0F / f2 * f3, f2 * f3);
   }
 
   protected ResourceLocation getEntityTexture(Entity p_110775_1_) {

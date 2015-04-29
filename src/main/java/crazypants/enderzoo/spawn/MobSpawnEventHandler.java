@@ -199,7 +199,7 @@ public class MobSpawnEventHandler {
         event.world != null && !event.world.isRemote &&
         event.harvester.getCurrentEquippedItem() != null && 
         !ForgeHooks.isToolEffective(event.harvester.getCurrentEquippedItem(), event.block, event.blockMetadata) &&
-        Config.direSlimeChance > event.world.rand.nextInt(100)) {
+        Config.direSlimeChance >= event.world.rand.nextFloat()) {
       EntityDireSlime direSlime = new EntityDireSlime(event.world);
       direSlime.setPosition(event.x + 0.5, event.y + 0.0, event.z + 0.5);
       event.world.spawnEntityInWorld(direSlime);

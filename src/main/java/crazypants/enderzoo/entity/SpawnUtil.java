@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -74,12 +75,12 @@ public class SpawnUtil {
     return false;
   }
 
-  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
+  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityLiving entity, EntityCreature asCreature, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
     int i = MathHelper.floor_double(entity.posX);
     int j = MathHelper.floor_double(entity.boundingBox.minY);
     int k = MathHelper.floor_double(entity.posZ);
     
-    if(entity.getBlockPathWeight(i, j, k) < 0) {
+    if(asCreature != null  && asCreature.getBlockPathWeight(i, j, k) < 0) {
       return false;
     }
     if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.boundingBox)) {
@@ -95,7 +96,11 @@ public class SpawnUtil {
   }
 
   public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entity, boolean checkEntityCollisions) {
-    return isSpaceAvailableForSpawn(worldObj, entity, checkEntityCollisions, false);
+    return isSpaceAvailableForSpawn(worldObj, entity, entity, checkEntityCollisions, false);
+  }
+  
+  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityLiving entity, boolean checkEntityCollisions) {
+    return isSpaceAvailableForSpawn(worldObj, entity, null, checkEntityCollisions, false);
   }
 
   

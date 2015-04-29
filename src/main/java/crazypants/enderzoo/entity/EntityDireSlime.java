@@ -1,18 +1,19 @@
 package crazypants.enderzoo.entity;
 
-import cpw.mods.fml.common.registry.GameData;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import crazypants.enderzoo.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderzoo.config.Config;
 
 public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
@@ -20,10 +21,77 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   public static final int EGG_BG_COL = 0xb9855c;
   public static final int EGG_FG_COL = 0x593d29;
 
-  public EntityDireSlime(World p_i1737_1_) {
-    super(p_i1737_1_);
-    int i = this.rand.nextInt(100);
-    setSlimeSize(i < (100 - Config.direSlimeBigPercentage - Config.direSlimeMediumPercentage) ? 1 : i < (100 - Config.direSlimeBigPercentage) ? 2 : 4);
+  public enum SlimeConf {
+
+    SMALL(1, Config.direSlimeHealth, Config.direSlimeAttackDamage, 1 - (Config.direSlimeChanceLarge - Config.direSlimeChanceMedium)),
+    MEDIUM(2, Config.direSlimeHealthMedium, Config.direSlimeAttackDamageMedium, Config.direSlimeChanceMedium),
+    LARGE(4, Config.direSlimeHealthLarge, Config.direSlimeAttackDamageLarge, Config.direSlimeChanceLarge);
+
+    public final int size;
+    public final double health;
+    public final double attackDamage;
+    public final double chance;
+
+    private SlimeConf(int size, double health, double attackDamage, double chance) {
+      this.size = size;
+      this.health = health;
+      this.attackDamage = attackDamage;
+      this.chance = chance;
+    }
+
+    static SlimeConf getConfForSize(int size) {
+      for(SlimeConf conf : values()) {
+        if(conf.size == size) {
+          return conf;
+        }
+      }
+      return SMALL;
+    }
+    
+    SlimeConf bigger() {
+      int index = ordinal() + 1;
+      if(index >= values().length) {
+        return null;
+      }
+      return values()[index];
+    }
+  }
+
+  public EntityDireSlime(World world) {
+    super(world);    
+    setSlimeSize(1);        
+  }
+
+  @Override
+  public void setSlimeSize(int size) {
+    super.setSlimeSize(size);
+    SlimeConf conf = SlimeConf.getConfForSize(size);
+    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(conf.attackDamage);
+    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(conf.health);
+    setHealth(getMaxHealth());
+  }
+
+  @Override
+  public void onDeath(DamageSource damageSource) {
+    super.onDeath(damageSource);
+    if(!worldObj.isRemote && damageSource != null && damageSource.getEntity() instanceof EntityPlayer) {
+      SlimeConf nextConf = SlimeConf.getConfForSize(getSlimeSize()).bigger();
+      if(nextConf != null && worldObj.rand.nextFloat() <= nextConf.chance) {
+        EntityDireSlime spawn = new EntityDireSlime(worldObj);
+        spawn.setSlimeSize(nextConf.size);
+        spawn.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0);
+        spawn.onSpawnWithEgg(null);               
+        if(SpawnUtil.isSpaceAvailableForSpawn(worldObj, spawn, false)) {
+          worldObj.spawnEntityInWorld(spawn);
+        }
+      }
+    }    
+  }
+  
+  @Override
+  public void setDead() {
+    //Override to prevent smaller slimes spawning
+    isDead = true;    
   }
 
   protected String getSlimeParticle() {
@@ -43,7 +111,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
     int i = MathHelper.floor_double(this.posX);
     int j = MathHelper.floor_double(this.posZ);
 
-    if (this.worldObj.blockExists(i, 0, j)) {
+    if(this.worldObj.blockExists(i, 0, j)) {
       double d0 = (this.boundingBox.maxY - this.boundingBox.minY) * 0.66D;
       int k = MathHelper.floor_double(this.posY - (double) this.yOffset + d0);
       return this.worldObj.getLightBrightnessForSkyBlocks(i, k, j, 0);
@@ -56,7 +124,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
     int i = MathHelper.floor_double(this.posX);
     int j = MathHelper.floor_double(this.posZ);
 
-    if (this.worldObj.blockExists(i, 0, j)) {
+    if(this.worldObj.blockExists(i, 0, j)) {
       double d0 = (this.boundingBox.maxY - this.boundingBox.minY) * 0.66D;
       int k = MathHelper.floor_double(this.posY - (double) this.yOffset + d0);
       return this.worldObj.getLightBrightness(i, k, j);
@@ -67,30 +135,14 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   protected void applyEntityAttributes() {
-    super.applyEntityAttributes();
-    this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+    super.applyEntityAttributes();    
+    getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);    
   }
 
   @Override
   protected int getAttackStrength() {
-    return (int) (this.getSlimeSize() + this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue());
-  }
-
-  @Override
-  protected void setSlimeSize(int p_70799_1_) {
-    super.setSlimeSize(p_70799_1_);
-    this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.direSlimeHealth + (double) (p_70799_1_ * p_70799_1_));
-    this.setHealth(this.getMaxHealth());
-    this.setSize(1f, 1f);
-    this.setPosition(this.posX, this.posY, this.posZ);
-  }
-
-  @Override
-  public void onUpdate() {
-    super.onUpdate();
-    if (this.worldObj.isRemote) {
-      this.setSize(1f, 1f);
-    }
+    int res = (int) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    return res; 
   }
 
 }
