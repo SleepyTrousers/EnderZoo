@@ -1,16 +1,18 @@
 package crazypants.enderzoo.entity.render;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMagmaCube;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelDireSlime extends ModelBase {
   ModelRenderer[] sliceRenderers = new ModelRenderer[16];
+  ModelRenderer[] coreRenderers = new ModelRenderer[24];
+  ModelRenderer coreRendererClay;
   ModelRenderer coreRenderer;
 
   public ModelDireSlime() {
@@ -20,21 +22,37 @@ public class ModelDireSlime extends ModelBase {
       this.sliceRenderers[i].addBox(-8.0F, (float) (8 + i), -8.0F, 16, 1, 16);
     }
 
-    this.coreRenderer = new ModelRenderer(this, 0, 32);
-    this.coreRenderer.setTextureSize(64, 64);
-    this.coreRenderer.addBox(-2.0F, 18.0F, -2.0F, 4, 4, 4);
+    this.coreRendererClay = new ModelRenderer(this, 0, 32);
+    this.coreRendererClay.setTextureSize(64, 64);
+    this.coreRendererClay.addBox(-3.0F, 13.0F, -3.0F, 6, 6, 6);
+    
+    for (int i = 0; i < this.coreRenderers.length; ++i) {
+      this.coreRenderers[i] = new ModelRenderer(this, 32, 32 + i);
+      this.coreRenderers[i].setTextureSize(64, 64);
+      this.coreRenderers[i].addBox(-3.0F, 13.0F, -3.0F, 6, 6, 6);
+    }
   }
 
   public void setLivingAnimations(EntityLivingBase p_78086_1_, float p_78086_2_, float p_78086_3_, float p_78086_4_) {
     EntityMagmaCube entitymagmacube = (EntityMagmaCube) p_78086_1_;
     float f3 = entitymagmacube.prevSquishFactor + (entitymagmacube.squishFactor - entitymagmacube.prevSquishFactor) * p_78086_4_;
-
+    int size = entitymagmacube.getSlimeSize();
+    
     if (f3 < 0.0F) {
       f3 = 0.0F;
     }
 
+    if (size > 1) {
+      int i = (int) ((p_78086_1_.ticksExisted >> 2) % 8);
+      coreRenderer = coreRenderers[i];
+    } else {
+      coreRenderer = coreRendererClay;
+    }
+    
+    coreRenderer.rotationPointY = f3 * 1.7F;
+    
     for (int i = 0; i < this.sliceRenderers.length; ++i) {
-      this.sliceRenderers[i].rotationPointY = (float) (-(8 - i)) * f3 * 1.7F;
+      this.sliceRenderers[i].rotationPointY = (float) (-(4 - i)) * f3 * 1.7F;
     }
   }
 

@@ -59,7 +59,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   public EntityDireSlime(World world) {
     super(world);    
-    setSlimeSize(1);        
+    setSlimeSize(1);
   }
 
   @Override
@@ -143,6 +143,22 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   protected int getAttackStrength() {
     int res = (int) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
     return res; 
+  }
+
+  // This is called every tick on onUpdate(), so avoid moving the slime around twice per tick.
+  protected void setSize(float p_70105_1_, float p_70105_2_) {
+    int i = this.getSlimeSize();
+    super.setSize(i, i);
+  }
+  
+  public void onCollideWithPlayer(EntityPlayer p_70100_1_) {
+    int i = this.getSlimeSize();
+
+    if (this.canEntityBeSeen(p_70100_1_) && 
+        this.getDistanceSqToEntity(p_70100_1_) < (double)i * (double)i && 
+        p_70100_1_.attackEntityFrom(DamageSource.causeMobDamage(this), (float)this.getAttackStrength())) {
+      this.playSound("mob.attack", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+    }
   }
 
 }
