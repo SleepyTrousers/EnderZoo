@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Random;
 
+import org.apache.commons.io.IOUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -13,7 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.fluids.FluidRegistry;
-import crazypants.enderzoo.gen.structure.StructureData;
+import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureUtil {
@@ -71,27 +73,42 @@ public class StructureUtil {
     return blk;
   }
 
-  public static void writeToFile(EntityPlayer entityPlayer, StructureData st, File dir) {
+  public static void writeToFile(EntityPlayer entityPlayer, StructureTemplate st, File dir) {
     dir.mkdir();
     if(!dir.exists()) {
       entityPlayer.addChatComponentMessage(new ChatComponentText("Could not make folder " + dir.getAbsolutePath()));
       return;
     }
-    dir = new File(dir, st.getName() + ".nbt");
+    File file = new File(dir, st.getUid() + ".nbt");
+    int num = 1;
+    while(file.exists() && num < 100) {
+      file = new File(dir, st.getUid() + "_" + num +".nbt");
+      num++;
+    }
+    
+    FileOutputStream fos = null;
     try {
-      st.write(new FileOutputStream(dir, false));
-      entityPlayer.addChatComponentMessage(new ChatComponentText("Saved to " + dir.getAbsolutePath()));
+      fos = new FileOutputStream(file, false);
+      st.write(fos);
+      fos.flush();
+      fos.close();
+      entityPlayer.addChatComponentMessage(new ChatComponentText("Saved to " + file.getAbsolutePath()));
     } catch (Exception e) {
       e.printStackTrace();
-      entityPlayer.addChatComponentMessage(new ChatComponentText("Could not save to " + dir.getAbsolutePath()));
+      entityPlayer.addChatComponentMessage(new ChatComponentText("Could not save to " + file.getAbsolutePath()));
+    } finally {
+      IOUtils.closeQuietly(fos);
     }
 
   }
 
-  public static StructureData readFromFile(File dir, String name) {
+  public static StructureTemplate readFromFile(File dir, String name) {
     try {
       File f = new File(dir, name + ".nbt");
-      return new StructureData(new FileInputStream(f));
+      if(!f.exists()) {
+        return null;
+      }
+      return new StructureTemplate(new FileInputStream(f));
     } catch (Exception e) {
       e.printStackTrace();
       return null;

@@ -37,6 +37,12 @@ public class Point3i {
     y += other.y;
     z += other.z;
   }
+  
+  public void add(int x2, int y2, int z2) {
+    x += x2;
+    y += y2;
+    z += z2;    
+  }
 
   public double distanceSquared(Point3i v) {
     double dx, dy, dz;
@@ -88,5 +94,7 @@ public class Point3i {
     }
     return true;
   }
+
+  
 
 }

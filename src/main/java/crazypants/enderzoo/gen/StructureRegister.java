@@ -18,25 +18,25 @@ import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.gen.io.StructureResourceManager;
-import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
-public class TemplateRegister {
+public class StructureRegister {
 
-  public static final TemplateRegister instance = createInstance();
+  public static final StructureRegister instance = createInstance();
 
-  private static TemplateRegister createInstance() {
-    TemplateRegister reg = new TemplateRegister();
+  private static StructureRegister createInstance() {
+    StructureRegister reg = new StructureRegister();
     reg.init();
     return reg;
   }
   
-  private final Map<String, StructureTemplate> templates = new HashMap<String, StructureTemplate>();
-  private final Map<String, StructureData> data = new HashMap<String, StructureData>();
+  private final Map<String, StructureGenerator> configs = new HashMap<String, StructureGenerator>();
+  private final Map<String, StructureTemplate> data = new HashMap<String, StructureTemplate>();
   
   private StructureResourceManager resourceManager;
 
-  private TemplateRegister() {
+  private StructureRegister() {
   }
 
   private void init() {
@@ -47,36 +47,36 @@ public class TemplateRegister {
     return resourceManager;
   }
   
-  public void registerJsonTemplate(String json) throws Exception {    
-    StructureTemplate tp = resourceManager.parseJsonTemplate(json);
-    registerTemplate(tp);    
+  public void registerJsonConfig(String json) throws Exception {    
+    StructureGenerator tp = resourceManager.parseJsonTemplate(json);
+    registerConfig(tp);    
   }
 
-  public void registerTemplate(StructureTemplate template) {
-    templates.put(template.getUid(), template);
+  public void registerConfig(StructureGenerator template) {
+    configs.put(template.getUid(), template);
   }
 
-  public StructureTemplate getTemplate(String uid) {
-    return templates.get(uid);
+  public StructureGenerator getConfig(String uid) {
+    return configs.get(uid);
   }
 
-  public Collection<StructureTemplate> getTemplates() {
-    return templates.values();
+  public Collection<StructureGenerator> getConfigs() {
+    return configs.values();
   }
 
   public void registerStructureData(String uid, NBTTagCompound nbt) throws IOException {
-    data.put(uid, new StructureData(nbt));
+    data.put(uid, new StructureTemplate(nbt));
   }
 
-  public void registerStructureData(String uid, StructureData sd) {
+  public void registerStructureData(String uid, StructureTemplate sd) {
     data.put(uid, sd);
   }
 
-  public StructureData getStructureData(String uid) {    
+  public StructureTemplate getStructureData(String uid) {    
     if(data.containsKey(uid)) {
       return data.get(uid);
     }
-    StructureData sd = null;
+    StructureTemplate sd = null;
     try {
       sd = resourceManager.loadStructureData(uid);
     } catch (IOException e) {

@@ -4,8 +4,8 @@ import java.util.Random;
 
 import net.minecraft.world.World;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class RandomValidator implements ILocationValidator {
 
@@ -28,7 +28,7 @@ public class RandomValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {        
+  public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {        
     chancePerChunk = 1;
     if(random.nextFloat() <= chancePerChunk) {
       return true;
@@ -37,7 +37,7 @@ public class RandomValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
     return true;
   }
 

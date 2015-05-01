@@ -11,8 +11,7 @@ import net.minecraft.world.World;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Structure;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.vec.Vector2d;
 
 public class SpacingValidator implements ILocationValidator {
@@ -46,7 +45,7 @@ public class SpacingValidator implements ILocationValidator {
   }
   
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
 
     if(!validateChunk) {
       return true;
@@ -67,20 +66,20 @@ public class SpacingValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
 
     if(!validateLocation) {
       return true;
     }
 
-    BoundingCircle bc = new BoundingCircle(loc.x, loc.z, (int) (template.getBoundingRadius() + minSpacing));
+    BoundingCircle bc = new BoundingCircle(structure.getOrigin().x, structure.getOrigin().z, (int) (structure.getBoundingRadius() + minSpacing));
     List<Structure> res = new ArrayList<Structure>();
     Collection<ChunkCoordIntPair> chunks = bc.getChunks();
     for (ChunkCoordIntPair chunk : chunks) {
-      getStructuresIntersectingChunk(chunk, structures, res);
+      getStructuresIntersectingChunk(chunk, existingStructures, res);
       if(!res.isEmpty()) {
         for (Structure s : res) {
-          if(s.getOrigin().distance(loc) - s.getTemplate().getBoundingRadius() - template.getBoundingRadius() < minSpacing) {
+          if(s.getOrigin().distance(structure.getOrigin()) - s.getBoundingRadius() - structure.getBoundingRadius() < minSpacing) {
             return false;
           }
         }

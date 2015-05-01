@@ -11,7 +11,8 @@ import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Border;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.vec.Point3i;
 
 public class LevelGroundValidator implements ILocationValidator {
@@ -31,12 +32,12 @@ public class LevelGroundValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     return true;
   }
 
   @Override
-  public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
 
     boolean clipOnChunkBounds = true;
     ChunkBounds clip = null;
@@ -44,13 +45,13 @@ public class LevelGroundValidator implements ILocationValidator {
       clip = new ChunkBounds(chunkX, chunkZ);
     }
 
-    AxisAlignedBB bb = template.getBounds().getOffsetBoundingBox(loc.x, loc.y, loc.z);
+    AxisAlignedBB bb = structure.getBounds();
     int minX = (int) bb.minX;
     int maxX = (int) bb.maxX;
     int minZ = (int) bb.minZ;
     int maxZ = (int) bb.maxZ;
 
-    Point3i size = template.getSize();
+    Point3i size = structure.getSize();
 
     int numSamsX = Math.max(1, (size.x / sampleSpacing));
     int numSamsZ = Math.max(1, (size.z / sampleSpacing));
@@ -67,13 +68,13 @@ public class LevelGroundValidator implements ILocationValidator {
     int zSpacing = Math.round(Math.max(1, (float) size.z / (numSamsZ + 1)));
 
     int[] minMax = new int[] { Integer.MAX_VALUE, -Integer.MAX_VALUE };
-    Point3i sampleLoc = new Point3i(loc);
+    Point3i sampleLoc = new Point3i(structure.getOrigin());
     Point3i surfacePos = new Point3i();
     for (int x = minX - border.get(ForgeDirection.WEST); x <= maxX + border.get(ForgeDirection.EAST); x += xSpacing) {
       for (int z = minZ - border.get(ForgeDirection.NORTH); z <= maxZ + border.get(ForgeDirection.SOUTH); z += zSpacing) {
 
         if(clip == null || clip.isBlockInBounds(x, z)) {
-          sampleLoc.set(x, loc.y, z);
+          sampleLoc.set(x, structure.getOrigin().y, z);
           if(!testLocation(sampleLoc, world, minMax, surfacePos)) {
             return false;
           }
@@ -103,10 +104,10 @@ public class LevelGroundValidator implements ILocationValidator {
       return false;
     }
 
-    int oldY = loc.y;
+    int oldY = structure.getOrigin().y;
     if(heightRange > 2) {
       //TODO: relying on this change to be repsected is asking for trouble
-      loc.y = minMax[0] + ((heightRange - 1) / 2);      
+      structure.getOrigin().y = minMax[0] + ((heightRange - 1) / 2);      
     }
 
     return true;

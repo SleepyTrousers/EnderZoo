@@ -13,10 +13,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.gen.StructureUtil;
-import crazypants.enderzoo.gen.TemplateRegister;
+import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.structure.Structure;
-import crazypants.enderzoo.gen.structure.StructureData;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.gen.structure.validator.LevelGroundValidator;
 import crazypants.enderzoo.vec.Point3i;
 
@@ -60,9 +60,6 @@ public class ItemStructureTool extends Item {
 //      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true; 
     }
     
-    
-    
-    
     return super.onItemRightClick(p_77659_1_, world, player);
   }
 
@@ -78,7 +75,7 @@ public class ItemStructureTool extends Item {
       return true;
     }
 
-    StructureData st = BlockStructureMarker.generateTemplate(STRUCT_NAME, world, x, y, z, player);
+    StructureTemplate st = BlockStructureMarker.generateTemplate(STRUCT_NAME, world, x, y, z, player);
     if(st != null) {
       StructureUtil.writeToFile(player, st, EXPORT_DIR);
     }
@@ -88,11 +85,11 @@ public class ItemStructureTool extends Item {
 
   private void placeStructure(EntityPlayer player, World world, int x, int y, int z) {
 
-    StructureData sd = StructureUtil.readFromFile(EXPORT_DIR, STRUCT_NAME);
-    StructureTemplate st;
+    StructureTemplate sd = StructureUtil.readFromFile(EXPORT_DIR, STRUCT_NAME);
+    StructureGenerator st;
     if(sd == null) {
 
-      Collection<StructureTemplate> tmps = TemplateRegister.instance.getTemplates();
+      Collection<StructureGenerator> tmps = StructureRegister.instance.getConfigs();
       if(tmps != null && !tmps.isEmpty()) {
         st = tmps.iterator().next();
         player.addChatComponentMessage(new ChatComponentText("Could not load structure: " + STRUCT_NAME + " using default: " + st.getUid()));
@@ -102,12 +99,13 @@ public class ItemStructureTool extends Item {
       }
 
     } else {
-      st = new StructureTemplate(sd);
+      st = new StructureGenerator(sd.getUid(), sd);
     }
 
-    Structure s = new Structure(st, new Point3i(x, y, z));
-    boolean res = new LevelGroundValidator().isValidLocation(new Point3i(x, y, z), st, EnderZoo.structureManager.getWorldManOrCreate(world), world, world.rand,
-        x >> 4, z >> 4);
+    Structure s = st.createStructure();
+    s.setOrigin(new Point3i(x, y, z));
+    boolean res = new LevelGroundValidator().isValidLocation(s, EnderZoo.structureManager.getWorldManOrCreate(world), world, world.rand, x >> 4,
+        z >> 4);
     System.out.println("ItemStructureTool.placeStructure: " + res);
     EnderZoo.structureManager.generate(world, s);
 

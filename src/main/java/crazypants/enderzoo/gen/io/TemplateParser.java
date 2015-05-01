@@ -13,9 +13,9 @@ import com.google.gson.JsonParser;
 
 import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.Log;
-import crazypants.enderzoo.gen.TemplateRegister;
-import crazypants.enderzoo.gen.structure.StructureData;
+import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.gen.structure.preperation.ISitePreperation;
 import crazypants.enderzoo.gen.structure.sampler.ILocationSampler;
 import crazypants.enderzoo.gen.structure.validator.ILocationValidator;
@@ -31,7 +31,7 @@ public class TemplateParser {
     return ruleFact;
   }
 
-  public StructureTemplate parseTemplate(TemplateRegister reg, String json) throws Exception {
+  public StructureGenerator parseTemplate(StructureRegister reg, String json) throws Exception {
     String uid = null;
     try {
       JsonObject to = new JsonParser().parse(json).getAsJsonObject();
@@ -39,9 +39,9 @@ public class TemplateParser {
 
       uid = to.get("uid").getAsString();
       String dataUid = to.get("dataUid").getAsString();
-      StructureData sd = reg.getStructureData(dataUid);
+      StructureTemplate sd = reg.getStructureData(dataUid);
 
-      StructureTemplate res = new StructureTemplate(uid, sd);
+      StructureGenerator res = new StructureGenerator(uid, sd);
       if(to.has("canSpanChunks")) {
         res.setCanSpanChunks(to.get("canSpanChunks").getAsBoolean());
       }

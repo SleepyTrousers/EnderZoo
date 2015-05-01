@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.io.IOUtils;
 
-import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class IoUtil {
   

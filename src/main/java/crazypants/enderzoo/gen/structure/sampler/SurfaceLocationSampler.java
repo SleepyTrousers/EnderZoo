@@ -6,7 +6,8 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.vec.Point3i;
 
 public class SurfaceLocationSampler implements ILocationSampler {
@@ -36,20 +37,19 @@ public class SurfaceLocationSampler implements ILocationSampler {
   }
 
   @Override
-  public Point3i generateCandidateLocation(StructureTemplate template, WorldStructures structures, World world,
+  public Point3i generateCandidateLocation(Structure structure, WorldStructures structures, World world,
       Random random, int chunkX, int chunkZ) {
 
-    return findStartPos(template, chunkX, chunkZ, world);
+    return findStartPos(structure, chunkX, chunkZ, world);
   }
 
-  protected Point3i findStartPos(StructureTemplate template, int chunkX, int chunkZ, World world) {
+  protected Point3i findStartPos(Structure structure, int chunkX, int chunkZ, World world) {
     Point3i candidate;
-    if(template.canSpanChunks()) {
-      candidate = getRandomBlock(world, chunkX, chunkZ, 16, 16, distanceFromSurface, template.getSize().y);
+    if(structure.getGenerator().canSpanChunks()) {
+      candidate = getRandomBlock(world, chunkX, chunkZ, 16, 16, distanceFromSurface, structure.getSize().y);
     } else {
-      candidate = getRandomBlock(world, chunkX, chunkZ, 16 - template.getSize().x, 16 - template.getSize().z, distanceFromSurface, template.getSize().y);
+      candidate = getRandomBlock(world, chunkX, chunkZ, 16 - structure.getSize().x, 16 - structure.getSize().z, distanceFromSurface, structure.getSize().y);
     }
-
     return candidate;
   }
 

@@ -10,37 +10,81 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.Log;
+import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.ChunkBounds;
-import crazypants.enderzoo.gen.TemplateRegister;
+import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.vec.Point3i;
 
 public class Structure {
 
-  private final StructureTemplate template;
+  public static enum Rotation {
+    DEG_0,
+    DEG_90,
+    DEG_180,
+    DEG_270;   
+    
+    //Keeps all point +'ve
+    public void rotate(Point3i bc, int maxX, int maxZ) {
+      if(this == Rotation.DEG_0) {
+        return;
+      }
+      if(this == Rotation.DEG_90) {
+        bc.set(maxZ-bc.z, bc.y, bc.x);
+      } else if(this == Rotation.DEG_180) {
+        bc.set(maxX-bc.x, bc.y, maxZ-bc.z);
+      } else if(this == Rotation.DEG_270) {
+        bc.set(bc.z, bc.y, maxX-bc.x);
+      }
+    }
+  }
+  
+  private final StructureGenerator generator;
   private final Point3i origin;
+  private final StructureTemplate template;
 
-  public Structure(StructureTemplate template, Point3i origin) {
+  private BoundingCircle bc;
+  private Rotation rotation;
+  
+
+  public Structure(StructureGenerator generator, StructureTemplate template, Point3i origin, Rotation rotation) {
+    this.generator = generator;    
     this.template = template;
     this.origin = origin;
+    if(rotation == null) {
+      this.rotation = Rotation.DEG_0; 
+    } else {
+      this.rotation = rotation;
+    }
   }
 
   public Structure(NBTTagCompound root) {
-    template = TemplateRegister.instance.getTemplate(root.getString("structure"));
+    generator = StructureRegister.instance.getConfig(root.getString("structure"));
+    template = StructureRegister.instance.getStructureData(root.getString("data"));
     origin = new Point3i(root.getInteger("x"), root.getInteger("y"), root.getInteger("z"));
+    rotation = Rotation.values()[root.getShort("rotation")];
   }
 
   public AxisAlignedBB getBounds() {
     return template.getBounds().getOffsetBoundingBox(origin.x, origin.y, origin.z);
   }
 
-  public StructureTemplate getTemplate() {
-    return template;
+  public StructureGenerator getGenerator() {
+    return generator;
   }
 
   public Point3i getOrigin() {
     return origin;
+  }
+
+  public void setOrigin(Point3i origin) {
+    this.origin.set(origin.x, origin.y, origin.z);
+  }
+
+  public Point3i getSize() {
+    return template.getSize();
   }
 
   public ChunkCoordIntPair getChunkCoord() {
@@ -56,24 +100,30 @@ public class Structure {
     root.setInteger("x", origin.x);
     root.setInteger("y", origin.y);
     root.setInteger("z", origin.z);
-    root.setString("structure", template.getUid());
+    root.setString("generator", generator.getUid());
+    root.setString("template", template.getUid());    
+    root.setShort("rotation", (short)rotation.ordinal());
   }
 
   public boolean isValid() {
-    return template != null && origin != null;
+    return generator != null && origin != null && template != null;
   }
 
   @Override
   public String toString() {
-    return "Structure [template=" + template + ", origin=" + origin + "]";
+    if(isValid()) {
+      return "Structure [generator=" + generator.getUid() + ", template=" + template.getUid() + ", origin=" + origin + "]";
+    } else {
+      return "Structure [generator=" + generator + ", template=" + template + ", origin=" + origin + "]";
+    }
   }
 
   public boolean isChunkBoundaryCrossed() {
     return getChunkBounds().getNumChunks() > 1;
   }
 
-  public StructureData getData() {
-    return template.getData();
+  public StructureTemplate getTemplate() {
+    return template;
   }
 
   public void build(World world) {
@@ -86,38 +136,12 @@ public class Structure {
   }
 
   public void build(World world, ChunkBounds genBounds) {
-    Map<StructureBlock, List<Point3i>> blks = getData().getBlocks();
-    for (Entry<StructureBlock, List<Point3i>> entry : blks.entrySet()) {
+    template.build(world, origin.x, origin.y, origin.z, rotation, genBounds);
+  }
 
-      StructureBlock sb = entry.getKey();
-      List<Point3i> coords = entry.getValue();
-
-      Block block = GameRegistry.findBlock(sb.getModId(), sb.getBlockName());
-
-      if(block == null) {
-        Log.error("Could not find block " + sb.getModId() + ":" + sb.getBlockName() + " when generating structure: " + getTemplate().getUid());
-      } else {
-        for (Point3i coord : coords) {
-          Point3i bc = new Point3i(getOrigin().x + coord.x, getOrigin().y + coord.y, getOrigin().z + coord.z);
-          if(genBounds == null || genBounds.isBlockInBounds(bc.x, bc.z)) {
-            world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
-
-            if(sb.getTileEntity() != null) {
-              TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
-              if(te != null) {
-                world.setTileEntity(bc.x, bc.y, bc.z, te);
-              }
-            }
-            //Chest will change the meta on block placed, so need to set it back
-            if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
-              world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
-            }
-          }
-        }
-
-      }
-
-    }
+  public double getBoundingRadius() {
+    // TODO Auto-generated method stub
+    return 0;
   }
 
 }

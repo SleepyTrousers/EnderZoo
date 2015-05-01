@@ -1,242 +1,201 @@
 package crazypants.enderzoo.gen.structure;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import com.google.gson.JsonObject;
-
+import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
 import crazypants.enderzoo.Log;
-import crazypants.enderzoo.gen.BoundingCircle;
-import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.preperation.ClearPreperation;
-import crazypants.enderzoo.gen.structure.preperation.CompositePreperation;
-import crazypants.enderzoo.gen.structure.preperation.FillPreperation;
-import crazypants.enderzoo.gen.structure.preperation.ISitePreperation;
-import crazypants.enderzoo.gen.structure.sampler.ILocationSampler;
-import crazypants.enderzoo.gen.structure.sampler.SurfaceLocationSampler;
-import crazypants.enderzoo.gen.structure.validator.CompositeValidator;
-import crazypants.enderzoo.gen.structure.validator.ILocationValidator;
-import crazypants.enderzoo.gen.structure.validator.LevelGroundValidator;
-import crazypants.enderzoo.gen.structure.validator.RandomValidator;
-import crazypants.enderzoo.gen.structure.validator.SpacingValidator;
+import crazypants.enderzoo.gen.ChunkBounds;
+import crazypants.enderzoo.gen.structure.Structure.Rotation;
 import crazypants.enderzoo.vec.Point3i;
 
 public class StructureTemplate {
 
-  private static final Random rnd = new Random();
+  private final AxisAlignedBB bb;
 
-  private final StructureData data;
+  private final Point3i size;
+
+  private final Map<StructureBlock, List<Point3i>> blocks = new HashMap<StructureBlock, List<Point3i>>();
+
   private final String uid;
-  private final BoundingCircle bc;
 
-  private final CompositeValidator validators = new CompositeValidator();
-  private final CompositePreperation sitePreps = new CompositePreperation();
+  public StructureTemplate(String uid, IBlockAccess world, AxisAlignedBB worldBnds) {
 
-  private ILocationSampler locSampler;
-  private boolean canSpanChunks = false;
-  private int attemptsPerChunk = 5;
-  //Max number of structures of this type that be generated in a single chunk
-  private int maxInChunk = 1;
-  private int yOffset = 0;
-
-  public StructureTemplate(String uid, StructureData data) {
     this.uid = uid;
-    this.data = data;
-    bc = new BoundingCircle(data.getBounds());
-    locSampler = new SurfaceLocationSampler();
-  }
 
-  public StructureTemplate(StructureData data) {
-    this.data = data;
-    uid = data.getName();
-    bc = new BoundingCircle(data.getBounds());
+    bb = worldBnds.getOffsetBoundingBox(-worldBnds.minX, -worldBnds.minY, -worldBnds.minZ);
 
-    validators.add(new RandomValidator(0.05f));
-    validators.add(new SpacingValidator(200, uid));
-    validators.add(new SpacingValidator(20, (String[])null));
-    validators.add(new LevelGroundValidator());
+    size = new Point3i((int) Math.abs(worldBnds.maxX - worldBnds.minX), (int) Math.abs(worldBnds.maxY - worldBnds.minY), (int) Math.abs(worldBnds.maxZ
+        - worldBnds.minZ));
 
-    locSampler = new SurfaceLocationSampler();
-
-    sitePreps.add(new ClearPreperation());
-    sitePreps.add(new FillPreperation());
-  }
-
-  public Collection<Structure> generate(WorldStructures structures, Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
-      IChunkProvider chunkProvider) {
-    
-    if(canSpanChunks) { //Generate any bits that where started in a different
-      generateExisting(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-    }
-
-    //TODO: If we can span chunks, we need to check the validators against the other chunks it crosses
-    //as well. If those chunks havent been created yet then maybe consider defering the checks until they are
-    if(!validators.isValidChunk(this, structures, world, random, chunkX, chunkZ)) {
-      return Collections.emptyList();
-    }
-
-    List<Structure> res = new ArrayList<Structure>();
-    for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
-      Point3i origin = locSampler.generateCandidateLocation(this, structures, world, random, chunkX, chunkZ);
-      if(origin != null && validators.isValidLocation(origin, this, structures, world, random, chunkX, chunkZ)) {
-
-        origin.y -= yOffset;
-        Structure s = new Structure(this, origin);
-        if(buildStructure(s, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {
-          res.add(s);
-          Log.debug("StructureTemplate.generate: Added " + s);
+    for (short xIndex = 0; xIndex < size.x; xIndex++) {
+      for (short yIndex = 0; yIndex < size.y; yIndex++) {
+        for (short zIndex = 0; zIndex < size.z; zIndex++) {
+          addBlock(new StructureBlock(world, (int) worldBnds.minX + xIndex, (int) worldBnds.minY + yIndex, (int) worldBnds.minZ + zIndex), xIndex, yIndex,
+              zIndex);
         }
       }
     }
-    return res;
+
   }
 
-  public boolean buildStructure(Structure s, WorldStructures structures, Random random, int chunkX, int chunkZ, World world,
-      IChunkProvider chunkGenerator,
-      IChunkProvider chunkProvider) {
+  public StructureTemplate(InputStream is) throws IOException {
+    this(CompressedStreamTools.read(new DataInputStream(is)));
+  }
 
-    boolean res = false;
-    if(s.isChunkBoundaryCrossed()) {
-      //Only build in the chunk
-      //      System.out.println("StructureTemplate.generateExisting: Added new multichunk structure");
-      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
-        res = true;
-        s.build(world, chunkX, chunkZ);
-        //and already created ones      
-        Collection<ChunkCoordIntPair> chunks = s.getChunkBounds().getChunks();
-        for (ChunkCoordIntPair c : chunks) {
-          if(!(c.chunkXPos == chunkX && c.chunkZPos == chunkZ) && chunkGenerator.chunkExists(c.chunkXPos, c.chunkZPos)) {
-            sitePreps.prepareLocation(s, structures, world, random, c.chunkXPos, c.chunkZPos);
-            s.build(world, c.chunkXPos, c.chunkZPos);
-            //          System.out.println("StructureTemplate.generateExisting: build structure onto existng chunk");
-          }
-        }
+  public StructureTemplate(NBTTagCompound root) throws IOException {
+    uid = root.getString("uid");
+
+    NBTTagList dataList = (NBTTagList) root.getTag("data");
+    for (int i = 0; i < dataList.tagCount(); i++) {
+      NBTTagCompound entryTag = dataList.getCompoundTagAt(i);
+      NBTTagCompound blockTag = entryTag.getCompoundTag("block");
+      StructureBlock sb = new StructureBlock(blockTag);
+
+      List<Point3i> coords = new ArrayList<Point3i>();
+      NBTTagList coordList = (NBTTagList) entryTag.getTag("coords");
+      for (int j = 0; j < coordList.tagCount(); j++) {
+        NBTTagCompound coordTag = coordList.getCompoundTagAt(j);
+        coords.add(new Point3i(coordTag.getShort("x"), coordTag.getShort("y"), coordTag.getShort("z")));
       }
 
-    } else {
-      //      System.out.println("StructureTemplate.generateExisting: Added new structure");
-      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
-        s.build(world);
-        res = true;
-      }
+      blocks.put(sb, coords);
+
     }
-    return res;
-  }
 
-  protected boolean generateExisting(WorldStructures structures, Random random, int chunkX, int chunkZ, World world,
-      IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+    bb = AxisAlignedBB.getBoundingBox(root.getInteger("minX"), root.getInteger("minY"), root.getInteger("minZ"),
+        root.getInteger("maxX"), root.getInteger("maxY"), root.getInteger("maxZ"));
 
-    Collection<Structure> existing = new ArrayList<Structure>();
-    structures.getStructuresIntersectingChunk(new ChunkCoordIntPair(chunkX, chunkZ), uid, existing);
+    size = new Point3i((int) Math.abs(bb.maxX - bb.minX), (int) Math.abs(bb.maxY - bb.minY), (int) Math.abs(bb.maxZ
+        - bb.minZ));
 
-    for (Structure s : existing) {
-      if(sitePreps.prepareLocation(s, structures, world, random, chunkX, chunkZ)) {
-        s.build(world, chunkX, chunkZ);
-      }
+    if(uid == null || bb == null || blocks.isEmpty()) {
+      throw new IOException("Invalid NBT");
     }
-    return !existing.isEmpty();
-
-  }
-  
-  public boolean isValid() {
-    return uid != null && !uid.trim().isEmpty() && data != null && locSampler != null;
-  }
-  
-  public void addLocationValidator(ILocationValidator val) {
-    if(val != null) {
-      validators.add(val);
-    }    
-  }
-  
-  public void addSitePreperation(ISitePreperation val) {
-    if(val != null) {
-      sitePreps.add(val);
-    }    
-  }
-  
-  public AxisAlignedBB getBounds() {
-    return data.getBounds();
   }
 
-  public double getBoundingRadius() {
-    return bc.getRadius();
+  public void writeToNBT(NBTTagCompound root) {
+
+    root.setString("uid", uid);
+
+    root.setInteger("minX", (int) bb.minX);
+    root.setInteger("minY", (int) bb.minY);
+    root.setInteger("minZ", (int) bb.minZ);
+    root.setInteger("maxX", (int) bb.maxX);
+    root.setInteger("maxY", (int) bb.maxY);
+    root.setInteger("maxZ", (int) bb.maxZ);
+
+    NBTTagList entryList = new NBTTagList();
+    root.setTag("data", entryList);
+
+    for (Entry<StructureBlock, List<Point3i>> entry : blocks.entrySet()) {
+
+      NBTTagList coordList = new NBTTagList();
+      for (Point3i coord : entry.getValue()) {
+        NBTTagCompound coordTag = new NBTTagCompound();
+        coordTag.setShort("x", (short) coord.x);
+        coordTag.setShort("y", (short) coord.y);
+        coordTag.setShort("z", (short) coord.z);
+        coordList.appendTag(coordTag);
+      }
+
+      NBTTagCompound entryTag = new NBTTagCompound();
+      entryTag.setTag("block", entry.getKey().asNbt());
+      entryTag.setTag("coords", coordList);
+
+      entryList.appendTag(entryTag);
+    }
+
   }
 
-  public BoundingCircle getBoundingCircle() {
-    return bc;
+  public void write(OutputStream os) throws IOException {
+    NBTTagCompound root = new NBTTagCompound();
+    writeToNBT(root);
+    CompressedStreamTools.write(root, new DataOutputStream(os));
   }
 
   public String getUid() {
     return uid;
   }
 
-  public boolean canSpanChunks() {
-    return canSpanChunks;
+  public void build(World world, int x, int y, int z, Rotation rot, ChunkBounds genBounds) {
+
+    if(rot == null) {
+      rot = Rotation.DEG_0;
+    }
+
+    Map<StructureBlock, List<Point3i>> blks = getBlocks();
+    for (Entry<StructureBlock, List<Point3i>> entry : blks.entrySet()) {
+
+      StructureBlock sb = entry.getKey();
+      List<Point3i> coords = entry.getValue();
+
+      Block block = GameRegistry.findBlock(sb.getModId(), sb.getBlockName());
+
+      if(block == null) {
+        Log.error("Could not find block " + sb.getModId() + ":" + sb.getBlockName() + " when generating structure: " + uid);
+      } else {
+        for (Point3i coord : coords) {
+          //Point3i bc = new Point3i(x + coord.x, y + coord.y, z + coord.z);
+          Point3i bc = new Point3i(coord);
+          rot.rotate(bc, size.x, size.z);
+          bc.add(x, y, z);
+
+          if(genBounds == null || genBounds.isBlockInBounds(bc.x, bc.z)) {
+            world.setBlock(bc.x, bc.y, bc.z, block, sb.getMetaData(), 2);
+
+            if(sb.getTileEntity() != null) {
+              TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
+              if(te != null) {
+                world.setTileEntity(bc.x, bc.y, bc.z, te);
+              }
+            }
+            //Chest will change the meta on block placed, so need to set it back
+            if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
+              world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
+            }
+          }
+        }
+      }
+    }
   }
 
-  public int getMaxAttemptsPerChunk() {
-    return attemptsPerChunk;
+  public AxisAlignedBB getBounds() {
+    return bb;
   }
 
   public Point3i getSize() {
-    return data.getSize();
+    return size;
   }
 
-  public StructureData getData() {
-    return data;
+  private Map<StructureBlock, List<Point3i>> getBlocks() {
+    return blocks;
   }
 
-  public ILocationSampler getLocationSampler() {
-    return locSampler;
-  }
-
-  public void setLocationSampler(ILocationSampler locSampler) {
-    this.locSampler = locSampler;
-  }
-
-  public boolean isCanSpanChunks() {
-    return canSpanChunks;
-  }
-
-  public void setCanSpanChunks(boolean canSpanChunks) {
-    this.canSpanChunks = canSpanChunks;
-  }
-
-  public int getAttemptsPerChunk() {
-    return attemptsPerChunk;
-  }
-
-  public void setAttemptsPerChunk(int attemptsPerChunk) {
-    this.attemptsPerChunk = attemptsPerChunk;
-  }
-
-  public int getMaxInChunk() {
-    return maxInChunk;
-  }
-
-  public void setMaxInChunk(int maxInChunk) {
-    this.maxInChunk = maxInChunk;
-  }
-
-  public int getyOffset() {
-    return yOffset;
-  }
-
-  public void setyOffset(int yOffset) {
-    this.yOffset = yOffset;
-  }
-
-  @Override
-  public String toString() {
-    return "StructureTemplate [uid=" + uid + "]";
+  private void addBlock(StructureBlock block, short x, short y, short z) {
+    if(block.isAir()) {
+      return;
+    }
+    if(!blocks.containsKey(block)) {
+      blocks.put(block, new ArrayList<Point3i>());
+    }
+    blocks.get(block).add(new Point3i(x, y, z));
   }
 
 }

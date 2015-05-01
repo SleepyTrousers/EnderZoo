@@ -18,13 +18,13 @@ import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.gen.structure.Structure;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.vec.Point3i;
 
-public class StructureGenerator implements IWorldGenerator {
+public class WorldGenerator implements IWorldGenerator {
 
-  public static StructureGenerator create() {
-    StructureGenerator sm = new StructureGenerator();
+  public static WorldGenerator create() {
+    WorldGenerator sm = new WorldGenerator();
     sm.init();
     return sm;
   }
@@ -37,7 +37,7 @@ public class StructureGenerator implements IWorldGenerator {
 
   private final Set<Point3i> generating = new HashSet<Point3i>();
 
-  private StructureGenerator() {
+  private WorldGenerator() {
   }
 
   private void init() {
@@ -70,7 +70,7 @@ public class StructureGenerator implements IWorldGenerator {
 
     WorldStructures structures = getWorldManOrCreate(world);
     try {
-      for (StructureTemplate template : TemplateRegister.instance.getTemplates()) {
+      for (StructureGenerator template : StructureRegister.instance.getConfigs()) {
         Random r = new Random(chunkSeed ^ template.getUid().hashCode());
         Collection<Structure> s = template.generate(structures, r, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         if(s != null) {          
@@ -83,10 +83,10 @@ public class StructureGenerator implements IWorldGenerator {
   }
 
   public void generate(World world, Structure s) {
-    StructureTemplate tp = s.getTemplate();
+    StructureGenerator gen = s.getGenerator();
     ChunkCoordIntPair cc = s.getChunkCoord();
     WorldStructures structures = getWorldManOrCreate(world);
-    if(tp.buildStructure(s, structures, world.rand, cc.chunkXPos, cc.chunkZPos, world, world.getChunkProvider(), world.getChunkProvider())) {
+    if(gen.buildStructure(s, structures, world.rand, cc.chunkXPos, cc.chunkZPos, world, world.getChunkProvider(), world.getChunkProvider())) {
       structures.add(s);
     }
   }

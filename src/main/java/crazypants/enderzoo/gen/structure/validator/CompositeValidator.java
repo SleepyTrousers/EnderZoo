@@ -1,26 +1,27 @@
 package crazypants.enderzoo.gen.structure.validator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.world.World;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class CompositeValidator implements ILocationValidator {
 
-  private final List<ILocationValidator> rules = new ArrayList<ILocationValidator>();
+  private final List<ILocationValidator> validators = new ArrayList<ILocationValidator>();
   
   public void add(ILocationValidator rule) {
-    rules.add(rule);
+    validators.add(rule);
   }
 
   @Override
-  public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    for (ILocationValidator rule : rules) {
-      if(!rule.isValidLocation(loc, template, structures, world, random, chunkX, chunkZ)) {
+  public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
+    for (ILocationValidator rule : validators) {
+      if(!rule.isValidLocation(structure, existingStructures, world, random, chunkX, chunkZ)) {
 //        System.out.println("CompositeValidator.isValidLocation: Failed rule: " + rule);
         return false;
       }
@@ -29,14 +30,18 @@ public class CompositeValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
-    for (ILocationValidator rule : rules) {
+  public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+    for (ILocationValidator rule : validators) {
       if(!rule.isValidChunk(template, structures, world, random, chunkX, chunkZ)) {
 //        System.out.println("CompositeValidator.isValidChunk: Failed rule: " + rule);
         return false;
       }
     }
     return true;
+  }
+
+  public Collection<ILocationValidator> getValidators() {
+    return validators;
   }
 
 }

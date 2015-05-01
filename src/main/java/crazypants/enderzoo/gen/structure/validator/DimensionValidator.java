@@ -7,8 +7,8 @@ import java.util.Set;
 
 import net.minecraft.world.World;
 import crazypants.enderzoo.gen.WorldStructures;
-import crazypants.enderzoo.gen.structure.StructureTemplate;
-import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class DimensionValidator implements ILocationValidator {
 
@@ -39,7 +39,7 @@ public class DimensionValidator implements ILocationValidator {
   }
   
   @Override
-  public boolean isValidChunk(StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
     String bName = world.getBiomeGenForCoords(chunkX, chunkZ).biomeName;
     if(!includes.isEmpty() && !includes.contains(bName)) {
       return false;
@@ -48,7 +48,7 @@ public class DimensionValidator implements ILocationValidator {
   }
 
   @Override
-  public boolean isValidLocation(Point3i loc, StructureTemplate template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
+  public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
     return true;
   }
 

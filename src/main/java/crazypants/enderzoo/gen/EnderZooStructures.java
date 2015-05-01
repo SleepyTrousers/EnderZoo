@@ -16,7 +16,7 @@ public class EnderZooStructures {
   public static final String RESOURCE_PATH = "/assets/enderzoo/config/structures/";
 
   public static void registerStructures() {
-    TemplateRegister reg = TemplateRegister.instance;
+    StructureRegister reg = StructureRegister.instance;
     reg.getResourceManager().addResourcePath(ROOT_DIR);
     reg.getResourceManager().addResourcePath(RESOURCE_PATH);
 
@@ -36,14 +36,14 @@ public class EnderZooStructures {
 
   private static void register(String uid) {
     
-      String name = uid + StructureResourceManager.TEMPLATE_EXT;
+      String name = uid + StructureResourceManager.CONFIG_EXT;
       copyText(name, name + ".defaultValues");
 
-      TemplateRegister reg = TemplateRegister.instance;
+      StructureRegister reg = StructureRegister.instance;
       try {
-        reg.registerTemplate(reg.getResourceManager().loadTemplate(uid));
+        reg.registerConfig(reg.getResourceManager().loadTemplate(uid));
       } catch (Exception e) {
-        Log.error("EnderZooStructures: Could not load structure template " + uid + StructureResourceManager.TEMPLATE_EXT);
+        Log.error("EnderZooStructures: Could not load structure template " + uid + StructureResourceManager.CONFIG_EXT);
         e.printStackTrace();
       }
     

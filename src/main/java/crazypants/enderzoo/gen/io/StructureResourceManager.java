@@ -12,20 +12,20 @@ import org.apache.commons.io.IOUtils;
 
 import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.Log;
-import crazypants.enderzoo.gen.TemplateRegister;
-import crazypants.enderzoo.gen.structure.StructureData;
+import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class StructureResourceManager {
 
-  public static final String TEMPLATE_EXT = ".ezs";
-  public static final String DATA_EXT = ".nbt";
+  public static final String CONFIG_EXT = ".cfg";
+  public static final String TEMPLATE_EXT = ".nbt";
   
   private final List<ResourcePath> resourcePaths = new ArrayList<ResourcePath>();
   private final TemplateParser parser = new TemplateParser();
-  private final TemplateRegister register;
+  private final StructureRegister register;
   
-  public StructureResourceManager(TemplateRegister register) {  
+  public StructureResourceManager(StructureRegister register) {  
     this.register = register;       
   }
 
@@ -41,11 +41,11 @@ public class StructureResourceManager {
     parser.getRuleFactory().add(fact);
   }
 
-  public StructureTemplate loadTemplate(String uid) throws Exception {
+  public StructureGenerator loadTemplate(String uid) throws Exception {
     return parseJsonTemplate(loadTemplateText(uid));
   }
   
-  public StructureTemplate parseJsonTemplate(String json) throws Exception {
+  public StructureGenerator parseJsonTemplate(String json) throws Exception {
     return parser.parseTemplate(register, json);
   }
   
@@ -53,22 +53,25 @@ public class StructureResourceManager {
     return IoUtil.readStream(getStreamForTemplate(uid));
   }
 
-  public StructureData loadStructureData(String uid) throws IOException {
+  public StructureTemplate loadStructureData(String uid) throws IOException {
     InputStream stream = null;
     try {
       stream = getStreamForStructureData(uid);
-      return new StructureData(stream);
+      if(stream == null) {
+        throw new IOException("StructureResourceManager: Could find resources for template " + uid);        
+      }
+      return new StructureTemplate(stream);
     } finally {
       IOUtils.closeQuietly(stream);
     }
   }
 
   private InputStream getStreamForTemplate(String uid) {
-    return getStream(uid + TEMPLATE_EXT);
+    return getStream(uid + CONFIG_EXT);
   }
 
   private InputStream getStreamForStructureData(String uid) {
-    return getStream(uid + DATA_EXT);
+    return getStream(uid + TEMPLATE_EXT);
   }
 
   private InputStream getStream(String resourceName) {
@@ -111,7 +114,7 @@ public class StructureResourceManager {
           return null;
         }
       } else {
-        return TemplateRegister.class.getResourceAsStream(root + name);
+        return StructureRegister.class.getResourceAsStream(root + name);
       }
     }
 
