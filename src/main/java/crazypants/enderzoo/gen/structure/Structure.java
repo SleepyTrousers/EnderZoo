@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -16,6 +19,7 @@ import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.StructureRegister;
+import crazypants.enderzoo.gen.structure.Structure.Rotation;
 import crazypants.enderzoo.vec.Point3i;
 
 public class Structure {
@@ -24,51 +28,79 @@ public class Structure {
     DEG_0,
     DEG_90,
     DEG_180,
-    DEG_270;   
-    
+    DEG_270;
+
     //Keeps all point +'ve
     public void rotate(Point3i bc, int maxX, int maxZ) {
       if(this == Rotation.DEG_0) {
         return;
       }
       if(this == Rotation.DEG_90) {
-        bc.set(maxZ-bc.z, bc.y, bc.x);
+        bc.set(maxZ - bc.z, bc.y, bc.x);
       } else if(this == Rotation.DEG_180) {
-        bc.set(maxX-bc.x, bc.y, maxZ-bc.z);
+        bc.set(maxX - bc.x, bc.y, maxZ - bc.z);
       } else if(this == Rotation.DEG_270) {
-        bc.set(bc.z, bc.y, maxX-bc.x);
+        bc.set(bc.z, bc.y, maxX - bc.x);
       }
     }
+
+    //must have an x/z origin of o 
+    public AxisAlignedBB rotate(AxisAlignedBB bb) {
+      if(this == Rotation.DEG_0 || this == Rotation.DEG_180) {
+        return bb;
+      }
+      Point3i sz = Structure.size(bb);      
+      return AxisAlignedBB.getBoundingBox(0,0,0,sz.z, sz.y,sz.x);
+    }
+
+    public Rotation next() {
+      int ord = ordinal() + 1;
+      if(ord > values().length - 1) {
+        ord = 0;
+      }
+      return values()[ord];
+    }
   }
-  
+
   private final StructureGenerator generator;
   private final Point3i origin;
   private final StructureTemplate template;
 
   private BoundingCircle bc;
-  private Rotation rotation;
-  
+  private final Rotation rotation;
+  private AxisAlignedBB bb;
+  private Point3i size;
 
   public Structure(StructureGenerator generator, StructureTemplate template, Point3i origin, Rotation rotation) {
-    this.generator = generator;    
+    this.generator = generator;
     this.template = template;
+    if(origin == null) {
+      origin = new Point3i();
+    }
     this.origin = origin;
+
     if(rotation == null) {
-      this.rotation = Rotation.DEG_0; 
+      this.rotation = Rotation.DEG_0;
     } else {
       this.rotation = rotation;
     }
+    updateBounds();
   }
 
   public Structure(NBTTagCompound root) {
-    generator = StructureRegister.instance.getConfig(root.getString("structure"));
-    template = StructureRegister.instance.getStructureData(root.getString("data"));
+    generator = StructureRegister.instance.getConfig(root.getString("generator"));
+    template = StructureRegister.instance.getStructureData(root.getString("template"));
     origin = new Point3i(root.getInteger("x"), root.getInteger("y"), root.getInteger("z"));
-    rotation = Rotation.values()[root.getShort("rotation")];
+    rotation = Rotation.values()[MathHelper.clamp_int(root.getShort("rotation"), 0, Rotation.values().length - 1)];
+    updateBounds();
   }
 
   public AxisAlignedBB getBounds() {
-    return template.getBounds().getOffsetBoundingBox(origin.x, origin.y, origin.z);
+    return bb;
+  }
+
+  public Point3i getSize() {
+    return size;
   }
 
   public StructureGenerator getGenerator() {
@@ -81,10 +113,18 @@ public class Structure {
 
   public void setOrigin(Point3i origin) {
     this.origin.set(origin.x, origin.y, origin.z);
+    updateBounds();
   }
 
-  public Point3i getSize() {
-    return template.getSize();
+  private void updateBounds() {
+    bb = rotation.rotate(template.getBounds());    
+    bb = bb.getOffsetBoundingBox(origin.x, origin.y, origin.z);    
+    size = size(bb);
+    bc = new BoundingCircle(bb);
+  }
+
+  public static Point3i size(AxisAlignedBB bb) {
+    return new Point3i((int) Math.abs(bb.maxX - bb.minX), (int) Math.abs(bb.maxY - bb.minY), (int) Math.abs(bb.maxZ - bb.minZ));
   }
 
   public ChunkCoordIntPair getChunkCoord() {
@@ -101,8 +141,8 @@ public class Structure {
     root.setInteger("y", origin.y);
     root.setInteger("z", origin.z);
     root.setString("generator", generator.getUid());
-    root.setString("template", template.getUid());    
-    root.setShort("rotation", (short)rotation.ordinal());
+    root.setString("template", template.getUid());
+    root.setShort("rotation", (short) rotation.ordinal());
   }
 
   public boolean isValid() {
@@ -140,8 +180,11 @@ public class Structure {
   }
 
   public double getBoundingRadius() {
-    // TODO Auto-generated method stub
-    return 0;
+    return bc.getRadius();
+  }
+
+  public BoundingCircle getBoundingCircle() {
+    return bc;
   }
 
 }

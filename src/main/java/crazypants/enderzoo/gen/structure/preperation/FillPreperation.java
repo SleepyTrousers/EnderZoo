@@ -46,9 +46,8 @@ public class FillPreperation implements ISitePreperation {
       surf = fill;
     }
 
-    //TODO
-    //    fill = Blocks.glass;
-    //    surf = Blocks.glass;
+//        fill = Blocks.glass;
+//        surf = Blocks.glass;
     //    surfaceMeta = 4;
 
     ChunkBounds clip = new ChunkBounds(chunkX, chunkZ);

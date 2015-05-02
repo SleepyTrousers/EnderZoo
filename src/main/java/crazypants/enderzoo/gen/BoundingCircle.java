@@ -4,22 +4,28 @@ import java.util.Collection;
 
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.ChunkCoordIntPair;
+import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.Vector2d;
 
 public class BoundingCircle {
 
   private final Vector2d origin = new Vector2d();
   private final double radius;
+  private final double radius2;
 
   public BoundingCircle(AxisAlignedBB bb) {
-    origin.x = bb.maxX - bb.minX;
-    origin.y = bb.maxZ - bb.minZ;
-    radius = origin.distance(new Vector2d(bb.minX, bb.maxX));
+    Point3i size = Structure.size(bb);
+    origin.x = (int)bb.minX + (size.x/2);
+    origin.y = (int)bb.minZ + (size.z/2);
+    radius = origin.distance(new Vector2d(bb.minX, bb.minZ));
+    radius2 = radius * radius;
   }
 
-  public BoundingCircle(int x, int y, int radius) {
+  public BoundingCircle(double x, double y, double radius) {
     origin.set(x, y);
     this.radius = radius;
+    radius2 = radius * radius;
   }
 
   public double distanceToPoint(double x, double z) {
@@ -44,6 +50,14 @@ public class BoundingCircle {
     int maxChunkZ = (int) (origin.y + radius) >> 4;
     ChunkBounds cb = new ChunkBounds(minChunkX, minChunkZ, maxChunkX, maxChunkZ);
     return cb.getChunks();
+  }
+
+  public boolean containsPoint(int x, int z) {    
+    return origin.distanceSquared(x, z) <= radius2;
+  }
+  
+  public boolean intersects(BoundingCircle other) {
+    return origin.distanceSquared(other.origin.x, other.origin.y) <= radius2 + other.radius2;
   }
 
 }

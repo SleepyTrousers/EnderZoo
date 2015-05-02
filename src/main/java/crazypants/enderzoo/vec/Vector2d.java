@@ -63,7 +63,7 @@ public class Vector2d {
   }
 
   public double distanceSquared(Vector2d v) {
-    double dx, dy, dz;
+    double dx, dy;
     dx = x - v.x;
     dy = y - v.y;
     return (dx * dx + dy * dy);
@@ -76,6 +76,14 @@ public class Vector2d {
   @Override
   public String toString() {
     return "Vector2d(" + x + ", " + y + ")";
+  }
+
+  public double distanceSquared(double x2, double y2) {
+    double dx, dy;
+    dx = x - x2;
+    dy = y - y2;
+    return (dx * dx + dy * dy);
+    
   }
 
 }

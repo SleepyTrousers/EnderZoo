@@ -53,14 +53,18 @@ public class StructureGenerator {
     locSampler = new SurfaceLocationSampler();
   }
 
+//  Rotation rot = Rotation.DEG_0;
   public Structure createStructure() {
-    return new Structure(this, data, new Point3i(), Rotation.DEG_0);
+//    rot = rot.next();
+    //return new Structure(this, data, new Point3i(), Rotation.DEG_0);
+    return new Structure(this, data, new Point3i(), Rotation.values()[rnd.nextInt(4)]);
+//    return new Structure(this, data, new Point3i(), rot);
   }
 
   public Collection<Structure> generate(WorldStructures structures, Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
       IChunkProvider chunkProvider) {
-
-    if(canSpanChunks) { //Generate any bits that where started in a different
+    
+    if(canSpanChunks) { //Generate any structures that where started in a different chunk
       generateExisting(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
     }
 
@@ -80,11 +84,11 @@ public class StructureGenerator {
           if(yOffset != 0) {
             Point3i o = new Point3i(struct.getOrigin());
             o.y += yOffset;
-            struct.setOrigin(origin);
+            struct.setOrigin(o);
           }                    
           if(buildStructure(struct, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {
             res.add(struct);
-            Log.debug("StructureTemplate.generate: Added " + struct);
+            Log.debug("StructureGenerator.generate: Added " + struct);
           }
         }
       }

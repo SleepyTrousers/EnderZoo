@@ -20,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.ChunkBounds;
 import crazypants.enderzoo.gen.structure.Structure.Rotation;
@@ -154,7 +155,7 @@ public class StructureTemplate {
         for (Point3i coord : coords) {
           //Point3i bc = new Point3i(x + coord.x, y + coord.y, z + coord.z);
           Point3i bc = new Point3i(coord);
-          rot.rotate(bc, size.x, size.z);
+          rot.rotate(bc, size.x - 1, size.z - 1);
           bc.add(x, y, z);
 
           if(genBounds == null || genBounds.isBlockInBounds(bc.x, bc.z)) {
@@ -163,12 +164,18 @@ public class StructureTemplate {
             if(sb.getTileEntity() != null) {
               TileEntity te = TileEntity.createAndLoadEntity(sb.getTileEntity());
               if(te != null) {
+                te.xCoord = bc.x;
+                te.yCoord = bc.y;
+                te.zCoord = bc.z;
                 world.setTileEntity(bc.x, bc.y, bc.z, te);
               }
             }
             //Chest will change the meta on block placed, so need to set it back
             if(world.getBlockMetadata(bc.x, bc.y, bc.z) != sb.getMetaData()) {
               world.setBlockMetadataWithNotify(bc.x, bc.y, bc.z, sb.getMetaData(), 3);
+            }
+            for (int i = 0; i < rot.ordinal(); i++) {
+              block.rotateBlock(world, bc.x, bc.y, bc.z, ForgeDirection.UP);
             }
           }
         }

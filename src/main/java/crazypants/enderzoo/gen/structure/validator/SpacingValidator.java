@@ -12,57 +12,48 @@ import crazypants.enderzoo.gen.BoundingCircle;
 import crazypants.enderzoo.gen.WorldStructures;
 import crazypants.enderzoo.gen.structure.Structure;
 import crazypants.enderzoo.gen.structure.StructureGenerator;
+import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.Vector2d;
 
 public class SpacingValidator implements ILocationValidator {
 
   private static final double CHUNK_RADIUS = new Vector2d().distance(new Vector2d(8, 8));
-  
+
   private int minSpacing;
   private final List<String> templateFilter = new ArrayList<String>();
   private boolean validateChunk = false;
   private boolean validateLocation = true;
 
-  public SpacingValidator() {    
-    this(20, (String[])null);
+  public SpacingValidator() {
+    this(20, (String[]) null);
   }
-  
+
   public SpacingValidator(int minSpacing, String... templateType) {
     this(minSpacing, minSpacing >= 32, minSpacing < 32, templateType);
   }
 
   public SpacingValidator(int minSpacing, boolean checkChunkDistance, boolean checkPointDistance, String... matchTypes) {
-    this.minSpacing = minSpacing;    
+    this.minSpacing = minSpacing;
     this.validateChunk = checkChunkDistance;
     this.validateLocation = checkPointDistance;
     if(matchTypes != null) {
-      for(String tmp : matchTypes) {
+      for (String tmp : matchTypes) {
         if(tmp != null) {
           templateFilter.add(tmp);
         }
       }
     }
   }
-  
+
   @Override
   public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {
 
     if(!validateChunk) {
       return true;
     }
-
     ChunkCoordIntPair cc = new ChunkCoordIntPair(chunkX, chunkZ);
-    BoundingCircle bc = new BoundingCircle(cc.getCenterXPos(), cc.getCenterZPosition(), (int) (CHUNK_RADIUS + minSpacing));
-    
-    List<Structure> res = new ArrayList<Structure>();
-    for (ChunkCoordIntPair chunk : bc.getChunks()) {
-      getStructuresIntersectingChunk(chunk, structures, res); 
-      if(!res.isEmpty()) {
-        return false;
-      }
-    }
-    
-    return true;
+    BoundingCircle bc = new BoundingCircle(cc.getCenterXPos(), cc.getCenterZPosition(), minSpacing + CHUNK_RADIUS);
+    return areMatchingStructuresInBounds(structures, bc);
   }
 
   @Override
@@ -71,29 +62,34 @@ public class SpacingValidator implements ILocationValidator {
     if(!validateLocation) {
       return true;
     }
+    BoundingCircle bc = new BoundingCircle(structure.getOrigin().x + structure.getSize().x / 2, structure.getOrigin().z + structure.getSize().z / 2,
+        (int) (structure.getBoundingRadius() + minSpacing));
+    return areMatchingStructuresInBounds(existingStructures, bc);
+  }
 
-    BoundingCircle bc = new BoundingCircle(structure.getOrigin().x, structure.getOrigin().z, (int) (structure.getBoundingRadius() + minSpacing));
-    List<Structure> res = new ArrayList<Structure>();
-    Collection<ChunkCoordIntPair> chunks = bc.getChunks();
-    for (ChunkCoordIntPair chunk : chunks) {
-      getStructuresIntersectingChunk(chunk, existingStructures, res);
-      if(!res.isEmpty()) {
-        for (Structure s : res) {
-          if(s.getOrigin().distance(structure.getOrigin()) - s.getBoundingRadius() - structure.getBoundingRadius() < minSpacing) {
-            return false;
+  private boolean areMatchingStructuresInBounds(WorldStructures existingStructures, BoundingCircle bc) {
+    List<Structure> res = new ArrayList<Structure>();    
+    for (ChunkCoordIntPair chunk : bc.getChunks()) {
+      if(bc.intersects(new BoundingCircle(chunk.getCenterXPos(), chunk.getCenterZPosition(), CHUNK_RADIUS))) {
+        getStructuresIntersectingChunk(chunk, existingStructures, res);
+        if(!res.isEmpty()) {
+          for (Structure s : res) {
+            if(s.getBoundingCircle().intersects(bc)) {
+              return false;
+            }
           }
+          res.clear();
         }
-        res.clear();
       }
     }
     return true;
   }
-  
+
   private void getStructuresIntersectingChunk(ChunkCoordIntPair chunk, WorldStructures structures, List<Structure> res) {
     structures.getStructuresIntersectingChunk(chunk, null, res);
     if(!templateFilter.isEmpty() && !res.isEmpty()) {
       ListIterator<Structure> iter = res.listIterator();
-      while(iter.hasNext()) {
+      while (iter.hasNext()) {
         Structure match = iter.next();
         if(!templateFilter.contains(match.getTemplate().getUid())) {
           iter.remove();
@@ -101,7 +97,7 @@ public class SpacingValidator implements ILocationValidator {
       }
     }
   }
-  
+
   public int getMinSpacing() {
     return minSpacing;
   }
@@ -129,7 +125,7 @@ public class SpacingValidator implements ILocationValidator {
   public List<String> getTemplateFilter() {
     return templateFilter;
   }
-  
+
   public void setTemplateFilter(Collection<String> filter) {
     templateFilter.clear();
     templateFilter.addAll(filter);
