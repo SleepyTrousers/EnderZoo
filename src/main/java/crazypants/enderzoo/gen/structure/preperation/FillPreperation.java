@@ -59,8 +59,9 @@ public class FillPreperation implements ISitePreperation {
     int minZ = (int) bb.minZ;
     int maxZ = (int) bb.maxZ;
 
+    
     int minY = 0;
-    int maxY = (int) bb.minY - 1;
+    int maxY = (int) bb.minY + structure.getTemplate().getSurfaceOffset();
 
     Block curBlk;
     int curMeta;
@@ -68,14 +69,14 @@ public class FillPreperation implements ISitePreperation {
       for (int z = minZ - border.get(ForgeDirection.NORTH); z < maxZ + border.get(ForgeDirection.SOUTH); z++) {
 
         int startY = maxY;
-        if(x < minX || x >= maxX || z < minZ || z >= maxZ) {
-          //border, so need to make it back to ground level 
-          startY = maxY + 1;
-        }
+//        if(x < minX || x >= maxX || z < minZ || z >= maxZ) {
+//          //border, so need to make it back to ground level 
+//          startY = maxY + 1;
+//        }
         for (int y = startY; y > minY; y--) {
           if(clip.isBlockInBounds(x, z)) {
             if(StructureUtil.isIgnoredAsSurface(world, x, z, y, world.getBlock(x, y, z), true, true)) {
-              if(y > maxY && world.isAirBlock(x, y + 1, z)) {
+              if(y >= maxY && world.isAirBlock(x, y + 1, z)) {
                 curBlk = surf;
                 curMeta = surfaceMeta;
               } else {

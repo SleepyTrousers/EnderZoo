@@ -1,6 +1,7 @@
 package crazypants.enderzoo.gen.structure;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ public class StructureGenerator {
 
   private static final Random rnd = new Random();
 
-  private final StructureTemplate data;
+//  private final StructureTemplate data;
   private final String uid;
 
   private final CompositeValidator validators = new CompositeValidator();
@@ -42,28 +43,54 @@ public class StructureGenerator {
 
   private ILocationSampler locSampler;
   private boolean canSpanChunks = false;
-  private int attemptsPerChunk = 5;
+  private int attemptsPerChunk = 2;
   //Max number of structures of this type that be generated in a single chunk
   private int maxInChunk = 1;
   private int yOffset = 0;
+  
+  private final List<InstanceGen> instanceGens = new ArrayList<InstanceGen>();
 
-  public StructureGenerator(String uid, StructureTemplate data) {
+  public StructureGenerator(String uid) {
+    this(uid, (InstanceGen)null);
+  }
+  
+  public StructureGenerator(String uid, InstanceGen... gens) {
+    this(uid, gens == null ? (Collection<InstanceGen>)null : Arrays.asList(gens));
+  }
+  
+  public StructureGenerator(String uid, Collection<InstanceGen> gens) {
     this.uid = uid;
-    this.data = data;
+    if(gens != null) {
+      for(InstanceGen gen : gens) {
+        if(gen != null) {
+          instanceGens.add(gen);
+        }
+      }      
+    }
     locSampler = new SurfaceLocationSampler();
+  }
+  
+  public void addInstanceGen(InstanceGen instanceGen) {
+    if(instanceGen != null) {
+      instanceGens.add(instanceGen);
+    }
   }
 
 //  Rotation rot = Rotation.DEG_0;
   public Structure createStructure() {
+    if(instanceGens.isEmpty()) {
+      return null;
+    }
+    return instanceGens.get(rnd.nextInt(instanceGens.size())).createInstance(this);        
 //    rot = rot.next();
     //return new Structure(this, data, new Point3i(), Rotation.DEG_0);
-    return new Structure(this, data, new Point3i(), Rotation.values()[rnd.nextInt(4)]);
+//    return new Structure(this, data, new Point3i(), Rotation.values()[rnd.nextInt(4)]);
 //    return new Structure(this, data, new Point3i(), rot);
   }
 
   public Collection<Structure> generate(WorldStructures structures, Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator,
       IChunkProvider chunkProvider) {
-    
+        
     if(canSpanChunks) { //Generate any structures that where started in a different chunk
       generateExisting(structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
     }
@@ -75,17 +102,15 @@ public class StructureGenerator {
     }
 
     Structure struct = createStructure();
+    if(struct == null) {
+      return Collections.emptyList();
+    }
     List<Structure> res = new ArrayList<Structure>();
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
       Point3i origin = locSampler.generateCandidateLocation(struct, structures, world, random, chunkX, chunkZ);      
       if(origin != null) {
         struct.setOrigin(origin);
-        if(validators.isValidLocation(struct, structures, world, random, chunkX, chunkZ)) {
-          if(yOffset != 0) {
-            Point3i o = new Point3i(struct.getOrigin());
-            o.y += yOffset;
-            struct.setOrigin(o);
-          }                    
+        if(validators.isValidLocation(struct, structures, world, random, chunkX, chunkZ)) {            
           if(buildStructure(struct, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {
             res.add(struct);
             Log.debug("StructureGenerator.generate: Added " + struct);
@@ -93,7 +118,7 @@ public class StructureGenerator {
         }
       }
 
-    }
+    }    
     return res;
   }
 
@@ -142,7 +167,7 @@ public class StructureGenerator {
   }
 
   public boolean isValid() {
-    return uid != null && !uid.trim().isEmpty() && data != null && locSampler != null;
+    return uid != null && !uid.trim().isEmpty() && !instanceGens.isEmpty() && locSampler != null;
   }
 
   public void addLocationValidator(ILocationValidator val) {
@@ -208,10 +233,40 @@ public class StructureGenerator {
   public void setyOffset(int yOffset) {
     this.yOffset = yOffset;
   }
+  
+  public List<InstanceGen> getInstanceGens() {
+    return instanceGens;
+  }
 
   @Override
   public String toString() {
     return "StructureTemplate [uid=" + uid + "]";
   }
+  
+  public static class InstanceGen {
+    
+    private final StructureTemplate template;
+    private final List<Rotation> rots;
+
+    public InstanceGen(StructureTemplate template, List<Rotation> rots) {
+      super();
+      this.template = template;
+      if(rots == null) {
+        rots = new ArrayList<Structure.Rotation>();
+      }
+      if(rots.isEmpty()) {
+        rots.add(Rotation.DEG_0);
+      }
+      this.rots = rots;
+      
+    }
+
+    public Structure createInstance(StructureGenerator gen) {
+      return new Structure(gen, template, new Point3i(), rots.get(rnd.nextInt(rots.size())));
+    }
+    
+  }
+
+  
 
 }

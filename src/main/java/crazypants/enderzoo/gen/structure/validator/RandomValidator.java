@@ -29,7 +29,6 @@ public class RandomValidator implements ILocationValidator {
 
   @Override
   public boolean isValidChunk(StructureGenerator template, WorldStructures structures, World world, Random random, int chunkX, int chunkZ) {        
-    chancePerChunk = 1;
     if(random.nextFloat() <= chancePerChunk) {
       return true;
     }

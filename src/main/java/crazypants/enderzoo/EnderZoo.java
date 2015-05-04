@@ -13,6 +13,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -23,6 +24,7 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.gen.EnderZooStructures;
+import crazypants.enderzoo.gen.ReloadConfigCommand;
 import crazypants.enderzoo.gen.WorldGenerator;
 import crazypants.enderzoo.gen.item.BlockStructureMarker;
 import crazypants.enderzoo.gen.item.ItemStructureTool;
@@ -115,6 +117,11 @@ public class EnderZoo {
   @EventHandler
   public void serverStopped(FMLServerStoppedEvent event) {
     structureManager.serverStopped(event);
+  }
+  
+  @EventHandler
+  public void serverLoad(FMLServerStartingEvent event) {
+    event.registerServerCommand(new ReloadConfigCommand());
   }
 
   private void registerEntity(MobInfo mob) {

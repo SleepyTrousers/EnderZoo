@@ -1,9 +1,11 @@
 package crazypants.enderzoo.gen;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
@@ -28,7 +30,7 @@ public class WorldGenerator implements IWorldGenerator {
     sm.init();
     return sm;
   }
-  
+
   public static boolean GEN_ENABLED_DEBUG = true;
 
   private final Map<Integer, WorldStructures> worldManagers = new HashMap<Integer, WorldStructures>();
@@ -36,12 +38,13 @@ public class WorldGenerator implements IWorldGenerator {
   private File saveDir;
 
   private final Set<Point3i> generating = new HashSet<Point3i>();
+  private final Set<Point3i> deffered = new HashSet<Point3i>();
 
   private WorldGenerator() {
   }
 
   private void init() {
-    MinecraftForge.EVENT_BUS.register(this);    
+    MinecraftForge.EVENT_BUS.register(this);
     GameRegistry.registerWorldGenerator(this, 50000);
   }
 
@@ -50,35 +53,48 @@ public class WorldGenerator implements IWorldGenerator {
 
     if(!GEN_ENABLED_DEBUG) {
       return;
-    }    
-    
+    }
+
     if(!world.getWorldInfo().isMapFeaturesEnabled()) {
       return;
     }
 
     Point3i p = new Point3i(world.provider.dimensionId, chunkX, chunkZ);
     if(generating.contains(p)) {
+      //guard against recurse gen
+      return;
+    }
+    if(!generating.isEmpty()) {
+      //Only allow one chunk to have structures added at a time. 
+      //If building a structure forces a new chunk to be generated, catch that here and defer
+      //structure gen on them until we are done
+      deffered.add(p);
       return;
     }
     generating.add(p);
-
-    long worldSeed = world.getSeed();
-    Random fmlRandom = new Random(worldSeed);
-    long xSeed = fmlRandom.nextLong() >> 2 + 1L;
-    long zSeed = fmlRandom.nextLong() >> 2 + 1L;
-    long chunkSeed = (xSeed * chunkX + zSeed * chunkZ) ^ worldSeed;
-
-    WorldStructures structures = getWorldManOrCreate(world);
     try {
+      long worldSeed = world.getSeed();
+      Random fmlRandom = new Random(worldSeed);
+      long xSeed = fmlRandom.nextLong() >> 2 + 1L;
+      long zSeed = fmlRandom.nextLong() >> 2 + 1L;
+      long chunkSeed = (xSeed * chunkX + zSeed * chunkZ) ^ worldSeed;
+
+      WorldStructures structures = getWorldManOrCreate(world);
+
       for (StructureGenerator template : StructureRegister.instance.getConfigs()) {
         Random r = new Random(chunkSeed ^ template.getUid().hashCode());
         Collection<Structure> s = template.generate(structures, r, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-        if(s != null) {          
+        if(s != null) {
           structures.addAll(s);
         }
       }
     } finally {
       generating.remove(p);
+    }
+    if(!deffered.isEmpty()) {
+      Point3i chk = deffered.iterator().next();
+      deffered.remove(chk);
+      generate(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
     }
   }
 

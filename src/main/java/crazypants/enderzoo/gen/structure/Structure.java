@@ -25,10 +25,16 @@ import crazypants.enderzoo.vec.Point3i;
 public class Structure {
 
   public static enum Rotation {
-    DEG_0,
-    DEG_90,
-    DEG_180,
-    DEG_270;
+    DEG_0(0),
+    DEG_90(90),
+    DEG_180(180),
+    DEG_270(270);
+
+    final int val;
+
+    private Rotation(int val) {
+      this.val = val;
+    }
 
     //Keeps all point +'ve
     public void rotate(Point3i bc, int maxX, int maxZ) {
@@ -49,8 +55,8 @@ public class Structure {
       if(this == Rotation.DEG_0 || this == Rotation.DEG_180) {
         return bb;
       }
-      Point3i sz = Structure.size(bb);      
-      return AxisAlignedBB.getBoundingBox(0,0,0,sz.z, sz.y,sz.x);
+      Point3i sz = Structure.size(bb);
+      return AxisAlignedBB.getBoundingBox(0, 0, 0, sz.z, sz.y, sz.x);
     }
 
     public Rotation next() {
@@ -59,6 +65,15 @@ public class Structure {
         ord = 0;
       }
       return values()[ord];
+    }
+
+    public static Rotation get(int deg) {
+      for (Rotation r : values()) {
+        if(r.val == deg) {
+          return r;
+        }
+      }
+      return null;
     }
   }
 
@@ -89,7 +104,7 @@ public class Structure {
 
   public Structure(NBTTagCompound root) {
     generator = StructureRegister.instance.getConfig(root.getString("generator"));
-    template = StructureRegister.instance.getStructureData(root.getString("template"));
+    template = StructureRegister.instance.getStructureTemplate(root.getString("template"));
     origin = new Point3i(root.getInteger("x"), root.getInteger("y"), root.getInteger("z"));
     rotation = Rotation.values()[MathHelper.clamp_int(root.getShort("rotation"), 0, Rotation.values().length - 1)];
     updateBounds();
@@ -117,8 +132,8 @@ public class Structure {
   }
 
   private void updateBounds() {
-    bb = rotation.rotate(template.getBounds());    
-    bb = bb.getOffsetBoundingBox(origin.x, origin.y, origin.z);    
+    bb = rotation.rotate(template.getBounds());
+    bb = bb.getOffsetBoundingBox(origin.x, origin.y, origin.z);
     size = size(bb);
     bc = new BoundingCircle(bb);
   }

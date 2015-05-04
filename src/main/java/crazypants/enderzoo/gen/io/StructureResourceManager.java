@@ -18,11 +18,11 @@ import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class StructureResourceManager {
 
-  public static final String CONFIG_EXT = ".cfg";
+  public static final String CONFIG_EXT = ".gen";
   public static final String TEMPLATE_EXT = ".nbt";
   
   private final List<ResourcePath> resourcePaths = new ArrayList<ResourcePath>();
-  private final TemplateParser parser = new TemplateParser();
+  private final GeneratorParser parser = new GeneratorParser();
   private final StructureRegister register;
   
   public StructureResourceManager(StructureRegister register) {  
@@ -42,10 +42,10 @@ public class StructureResourceManager {
   }
 
   public StructureGenerator loadTemplate(String uid) throws Exception {
-    return parseJsonTemplate(loadTemplateText(uid));
+    return parseJsonGenerator(loadTemplateText(uid));
   }
   
-  public StructureGenerator parseJsonTemplate(String json) throws Exception {
+  public StructureGenerator parseJsonGenerator(String json) throws Exception {
     return parser.parseTemplate(register, json);
   }
   

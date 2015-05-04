@@ -38,7 +38,7 @@ public class LevelGroundValidator implements ILocationValidator {
 
   @Override
   public boolean isValidLocation(Structure structure, WorldStructures existingStructures, World world, Random random, int chunkX, int chunkZ) {
-
+    
     boolean clipOnChunkBounds = true;
     ChunkBounds clip = null;
     if(clipOnChunkBounds) {
@@ -74,7 +74,7 @@ public class LevelGroundValidator implements ILocationValidator {
       for (int z = minZ - border.get(ForgeDirection.NORTH); z <= maxZ + border.get(ForgeDirection.SOUTH); z += zSpacing) {
 
         if(clip == null || clip.isBlockInBounds(x, z)) {
-          sampleLoc.set(x, structure.getOrigin().y, z);
+          sampleLoc.set(x, structure.getOrigin().y + structure.getTemplate().getSurfaceOffset(), z);
           if(!testLocation(sampleLoc, world, minMax, surfacePos)) {
             return false;
           }
@@ -107,7 +107,7 @@ public class LevelGroundValidator implements ILocationValidator {
     int oldY = structure.getOrigin().y;
     if(heightRange > 2) {
       //TODO: relying on this change to be repsected is asking for trouble
-      structure.getOrigin().y = minMax[0] + ((heightRange - 1) / 2);      
+      structure.getOrigin().y = minMax[0] + ((heightRange - 1) / 2) - structure.getTemplate().getSurfaceOffset();      
     }
 
     return true;

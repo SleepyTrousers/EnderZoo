@@ -1,20 +1,15 @@
 {
-    "StructureTemplate" : {
+    "StructureGenerator" : {
             
-        "uid" : "test",
-        "dataUid" : "test",
-        "canSpanChunks" :  "false",
+        "uid" : "test",        
+        "canSpanChunks" :  "true",
         "maxAttemptsPerChunk" : 5,
         "maxGeneratedPerChunk" : 1,
-        "rotation" : 0,
         
-        "variations" : [
-            { "uid" : "Rotation",
-              "variarions" : ["0","90","180","270"] },
-              
-            { "uid" : "data",
-              "variarions" : ["test", "test2"] }
-              
+        "templates" : [
+          {"uid" : "test",
+           "rotations" : [0,90,180,270]},
+          {"uid" : "test2"}    
         ],
         
         "LocationSampler" : {
@@ -51,7 +46,7 @@
             
             { "uid" : "SpacingValidator",
                       "minSpacing" : 200,
-                      "templateFilter" : [ "test" ],
+                      "templateFilter" : [ "test", "test2" ],
                       "validateChunk" : "true",
                       "validateLocation" : "false" },
             

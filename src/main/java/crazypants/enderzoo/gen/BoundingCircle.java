@@ -42,6 +42,14 @@ public class BoundingCircle {
     return radius;
   }
 
+  public Vector2d getOrigin() {
+    return origin;
+  }
+
+  public double getRadiusSquared() {
+    return radius2;
+  }
+
   public Collection<ChunkCoordIntPair> getChunks() {
     //This will get some chunks on the 'corners' that arn't in range with larger radius's, but good enough for now
     int minChunkX = (int) (origin.x - radius) >> 4;
@@ -57,7 +65,12 @@ public class BoundingCircle {
   }
   
   public boolean intersects(BoundingCircle other) {
-    return origin.distanceSquared(other.origin.x, other.origin.y) <= radius2 + other.radius2;
+    return origin.distanceSquared(other.origin.x, other.origin.y) <=  (radius + other.radius) * (radius + other.radius);
+  }
+
+  @Override
+  public String toString() {
+    return "BoundingCircle [origin=" + origin + ", radius=" + radius + "]";
   }
 
 }

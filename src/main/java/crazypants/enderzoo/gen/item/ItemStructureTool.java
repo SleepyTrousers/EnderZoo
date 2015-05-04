@@ -2,6 +2,7 @@ package crazypants.enderzoo.gen.item;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -15,6 +16,7 @@ import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.structure.Structure;
+import crazypants.enderzoo.gen.structure.Structure.Rotation;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.gen.structure.validator.LevelGroundValidator;
@@ -99,7 +101,7 @@ public class ItemStructureTool extends Item {
       }
 
     } else {
-      st = new StructureGenerator(sd.getUid(), sd);
+      st = new StructureGenerator(sd.getUid(), Collections.singletonList(new StructureGenerator.InstanceGen(sd, null)));
     }
 
     Structure s = st.createStructure();

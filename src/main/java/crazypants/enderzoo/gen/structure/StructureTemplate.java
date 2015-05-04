@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -35,6 +36,7 @@ public class StructureTemplate {
   private final Map<StructureBlock, List<Point3i>> blocks = new HashMap<StructureBlock, List<Point3i>>();
 
   private final String uid;
+  private final int surfaceOffset;
 
   public StructureTemplate(String uid, IBlockAccess world, AxisAlignedBB worldBnds) {
 
@@ -53,6 +55,7 @@ public class StructureTemplate {
         }
       }
     }
+    surfaceOffset = 0;
 
   }
 
@@ -86,6 +89,8 @@ public class StructureTemplate {
     size = new Point3i((int) Math.abs(bb.maxX - bb.minX), (int) Math.abs(bb.maxY - bb.minY), (int) Math.abs(bb.maxZ
         - bb.minZ));
 
+    surfaceOffset = root.getInteger("surfaceOffset");
+    
     if(uid == null || bb == null || blocks.isEmpty()) {
       throw new IOException("Invalid NBT");
     }
@@ -133,6 +138,10 @@ public class StructureTemplate {
 
   public String getUid() {
     return uid;
+  }
+
+  public int getSurfaceOffset() {
+    return surfaceOffset;
   }
 
   public void build(World world, int x, int y, int z, Rotation rot, ChunkBounds genBounds) {
@@ -197,6 +206,13 @@ public class StructureTemplate {
 
   private void addBlock(StructureBlock block, short x, short y, short z) {
     if(block.isAir()) {
+      return;
+    }
+    //TODO: Exclude list?
+    if("minecraft".equals(block.getModId()) && "dirt".equals(block.getBlockName())) {
+      return;
+    }
+    if("minecraft".equals(block.getModId()) && "grass".equals(block.getBlockName())) {
       return;
     }
     if(!blocks.containsKey(block)) {

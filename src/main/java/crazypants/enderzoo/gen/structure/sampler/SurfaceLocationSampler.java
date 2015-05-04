@@ -43,12 +43,12 @@ public class SurfaceLocationSampler implements ILocationSampler {
     return findStartPos(structure, chunkX, chunkZ, world);
   }
 
-  protected Point3i findStartPos(Structure structure, int chunkX, int chunkZ, World world) {
+  protected Point3i findStartPos(Structure structure, int chunkX, int chunkZ, World world) {    
     Point3i candidate;
     if(structure.getGenerator().canSpanChunks()) {
-      candidate = getRandomBlock(world, chunkX, chunkZ, 16, 16, distanceFromSurface, structure.getSize().y);
+      candidate = getRandomBlock(world, chunkX, chunkZ, 16, 16, distanceFromSurface - structure.getTemplate().getSurfaceOffset(), structure.getSize().y);
     } else {
-      candidate = getRandomBlock(world, chunkX, chunkZ, 16 - structure.getSize().x, 16 - structure.getSize().z, distanceFromSurface, structure.getSize().y);
+      candidate = getRandomBlock(world, chunkX, chunkZ, 16 - structure.getSize().x, 16 - structure.getSize().z, distanceFromSurface - structure.getTemplate().getSurfaceOffset(), structure.getSize().y);
     }
     return candidate;
   }
@@ -67,7 +67,7 @@ public class SurfaceLocationSampler implements ILocationSampler {
     }
 
     //Correct for distance from surface
-    loc.y += distanceFromSurface;
+    loc.y += distanceFromSurface;    
     if(loc.y > 0 && loc.y < 256 + requiredVerticalSpace) {
       return loc;
     }
