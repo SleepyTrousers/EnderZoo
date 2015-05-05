@@ -132,10 +132,12 @@ public class Structure {
   }
 
   private void updateBounds() {
-    bb = rotation.rotate(template.getBounds());
-    bb = bb.getOffsetBoundingBox(origin.x, origin.y, origin.z);
-    size = size(bb);
-    bc = new BoundingCircle(bb);
+    if(isValid()) {
+      bb = rotation.rotate(template.getBounds());
+      bb = bb.getOffsetBoundingBox(origin.x, origin.y, origin.z);
+      size = size(bb);
+      bc = new BoundingCircle(bb);
+    }
   }
 
   public static Point3i size(AxisAlignedBB bb) {

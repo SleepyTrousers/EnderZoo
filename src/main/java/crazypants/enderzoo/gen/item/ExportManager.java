@@ -11,9 +11,11 @@ import net.minecraft.util.ChatComponentText;
 import org.apache.commons.io.IOUtils;
 
 import crazypants.enderzoo.IoUtil;
+import crazypants.enderzoo.Log;
 import crazypants.enderzoo.gen.EnderZooStructures;
 import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.io.StructureResourceManager;
+import crazypants.enderzoo.gen.structure.StructureGenerator;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 
 public class ExportManager {
@@ -33,7 +35,23 @@ public class ExportManager {
   public static final ExportManager instance = new ExportManager();
 
   public ExportManager() {
-    StructureRegister.instance.getResourceManager().addResourcePath(EXPORT_DIR);
+    StructureRegister.instance.getResourceManager().addResourcePath(EXPORT_DIR);            
+  }
+
+  public void loadExportFolder() {
+    for(File f : EXPORT_DIR.listFiles()) {
+      if(f != null && f.getName().endsWith(StructureResourceManager.GENERATOR_EXT)) {
+        try {
+          StructureGenerator gen = StructureRegister.instance.getResourceManager().loadGenerator(f);
+          if(gen != null) {
+            StructureRegister.instance.registerGenerator(gen);
+          }
+        } catch (Exception e) {
+          Log.warn("Could not exported generator: " + f.getAbsolutePath());
+          e.printStackTrace();
+        }    
+      }
+    }
   }
 
   public String getNextExportUid() {

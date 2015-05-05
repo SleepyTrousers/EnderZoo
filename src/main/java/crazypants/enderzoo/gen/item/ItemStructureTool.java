@@ -48,7 +48,7 @@ public class ItemStructureTool extends Item {
   }
 
   @Override
-  public ItemStack onItemRightClick(ItemStack p_77659_1_, World world, EntityPlayer player) {
+  public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
 
     if(!world.isRemote) {
       //      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true; 
@@ -59,34 +59,36 @@ public class ItemStructureTool extends Item {
 
       //      boolean valid = new LevelGroundRule().isValidLocation(new Point3i(186, 61, 128), TemplateRegister.instance.getTemplate("test"), null, world, null, 186 >> 4, 128 >> 4);
       //      System.out.println("ItemStructureTool.onItemRightClick: " + valid);
-      //      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true; 
+      //      EnderZoo.structureManager.GEN_ENABLED_DEBUG = true;
+      
+      if(player.isSneaking()) {
+        String uid = setNextUid(stack);
+        player.addChatComponentMessage(new ChatComponentText("Structure Generator set to " + uid));
+      }
     }
+    
+    
 
-    return super.onItemRightClick(p_77659_1_, world, player);
+    return super.onItemRightClick(stack, world, player);
   }
 
   @Override
   public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 
    
-    if(world.getBlock(x, y, z) == EnderZoo.blockStructureMarker) {
-      return false;
+    if(world.getBlock(x, y, z) == EnderZoo.blockStructureMarker) {      
+      return true;
     }
     if(world.isRemote) {
       return true;
     }
 
-    if(player.isSneaking()) {
-      String uid = setNextUid(stack);
-      player.addChatComponentMessage(new ChatComponentText("Structure Generator set to " + uid));
-      return true;
-    }
     
     String uid = getGenUid(stack);
     StructureGenerator gen = StructureRegister.instance.getGenerator(uid);
     if(gen != null) {
       ForgeDirection dir = ForgeDirection.getOrientation(side);
-      placeStructure(gen, world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
+      placeStructure(gen, world, x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ, player.isSneaking());
     }
     return true;
   }
@@ -144,10 +146,32 @@ public class ItemStructureTool extends Item {
     return uid;
   }
 
-  private void placeStructure(StructureGenerator gen, World world, int x, int y, int z) {
+  private void placeStructure(StructureGenerator gen, World world, int x, int y, int z, boolean ignoreSurfaceOffset) {
     Structure s = gen.createStructure();
-    s.setOrigin(new Point3i(x, y, z));
+    Point3i origin = new Point3i(x, y, z);
+    if(!ignoreSurfaceOffset) {
+      System.out.println("ItemStructureTool.placeStructure: ");
+      origin.y -= (s.getTemplate().getSurfaceOffset() + 1);
+    }  else {
+      origin.y++;
+    }
+    s.setOrigin(origin);
     EnderZoo.structureManager.generate(world, s);
+    origin = s.getOrigin();
+    
+    Point3i sz = s.getSize();
+    world.setBlock(origin.x - 1, origin.y - 1, origin.z - 1, EnderZoo.blockStructureMarker);
+    world.setBlock(origin.x - 1, origin.y + sz.y, origin.z - 1, EnderZoo.blockStructureMarker);
+    int sidesY =  origin.y - 1;
+    if(s.getTemplate().getSurfaceOffset() != 0) {
+      sidesY =  origin.y + s.getTemplate().getSurfaceOffset();
+      world.setBlock(origin.x - 1, sidesY, origin.z - 1, EnderZoo.blockStructureMarker);
+    }
+    
+    world.setBlock(origin.x + sz.x, sidesY, origin.z - 1, EnderZoo.blockStructureMarker);
+    world.setBlock(origin.x - 1, sidesY, origin.z + sz.z, EnderZoo.blockStructureMarker);
+    
+    
   }
 
 }

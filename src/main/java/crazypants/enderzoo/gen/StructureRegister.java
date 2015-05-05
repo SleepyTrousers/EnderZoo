@@ -93,8 +93,8 @@ public class StructureRegister {
     templates.put(uid, new StructureTemplate(nbt));
   }
 
-  public void registerStructureTemplate(String uid, StructureTemplate st) {
-    templates.put(uid, st);
+  public void registerStructureTemplate(StructureTemplate st) {
+    templates.put(st.getUid(), st);
   }
 
   public StructureTemplate getStructureTemplate(String uid) {
@@ -129,7 +129,7 @@ public class StructureRegister {
         }
       } catch (Exception e) {
         Log.error("StructureRegister: Could not load structure data for " + uid + " Ex: " + e);
-        e.printStackTrace();
+        //e.printStackTrace();
       }
     }
 

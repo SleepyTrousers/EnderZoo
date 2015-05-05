@@ -27,6 +27,7 @@ import crazypants.enderzoo.gen.EnderZooStructures;
 import crazypants.enderzoo.gen.ReloadConfigCommand;
 import crazypants.enderzoo.gen.WorldGenerator;
 import crazypants.enderzoo.gen.item.BlockStructureMarker;
+import crazypants.enderzoo.gen.item.ExportManager;
 import crazypants.enderzoo.gen.item.ItemStructureTool;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
@@ -59,12 +60,12 @@ public class EnderZoo {
   public static ItemEnderFragment itemEnderFragment;
   public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
   public static ItemGuardiansBow itemGuardiansBow;
-  
+
   
   public static BlockConfusingCharge blockConfusingCharge;
   public static BlockEnderCharge blockEnderCharge;
   public static BlockConcussionCharge blockConcussionCharge;
-  
+
   public static BlockStructureMarker blockStructureMarker;
   public static ItemStructureTool itemStructureTool;
   public static WorldGenerator structureManager;
@@ -79,8 +80,8 @@ public class EnderZoo {
     Config.load(event);
     for (MobInfo mob : MobInfo.values()) {
       registerEntity(mob);
-    }    
-    itemSpawnEgg = ItemSpawnEgg.create();       
+    }
+    itemSpawnEgg = ItemSpawnEgg.create();
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
     itemEnderFragment = ItemEnderFragment.create();
@@ -100,15 +101,15 @@ public class EnderZoo {
     itemStructureTool = ItemStructureTool.create();
     structureManager = WorldGenerator.create();
 
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//        DebugUtil.instance.setEnabled(true);
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    //        DebugUtil.instance.setEnabled(true);
 
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
   }
@@ -118,7 +119,7 @@ public class EnderZoo {
   public void serverStopped(FMLServerStoppedEvent event) {
     structureManager.serverStopped(event);
   }
-  
+
   @EventHandler
   public void serverLoad(FMLServerStartingEvent event) {
     event.registerServerCommand(new ReloadConfigCommand());
@@ -152,8 +153,9 @@ public class EnderZoo {
       spawnEventHandler = new MobSpawnEventHandler();
       spawnEventHandler.init();
     }
-    
+
     EnderZooStructures.registerStructures();
+    ExportManager.instance.loadExportFolder();
 
   }
 

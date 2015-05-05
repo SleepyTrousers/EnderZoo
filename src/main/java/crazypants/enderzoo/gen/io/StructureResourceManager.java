@@ -45,12 +45,24 @@ public class StructureResourceManager {
     return parseJsonGenerator(loadGeneratorText(uid));
   }
   
+  public StructureGenerator loadGenerator(File fromFile) throws Exception {
+    return parseJsonGenerator(loadText(fromFile));
+  }
+
   public StructureGenerator parseJsonGenerator(String json) throws Exception {
     return parser.parseTemplate(register, json);
   }
   
+  public String loadText(File fromFile) throws IOException {
+    return IoUtil.readStream(new FileInputStream(fromFile));
+  }
+  
   public String loadGeneratorText(String uid) throws IOException {
-    return IoUtil.readStream(getStreamForGenerator(uid));
+    InputStream str = getStreamForGenerator(uid);
+    if(str == null) {
+      throw new IOException("Could not find the resource for generator: " + uid);
+    }
+    return IoUtil.readStream(str);
   }
 
   public StructureTemplate loadStructureTemplate(String uid) throws IOException {

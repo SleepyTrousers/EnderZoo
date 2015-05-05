@@ -15,8 +15,7 @@
         "LocationSampler" : {
               "type" : "SurfaceSampler",
               "distanceFromSurface" : 0,
-              "canGenerateOnFluid" : "false"
-            
+              "canGenerateOnFluid" : "false"            
         },
         
         "locationValidators" : [

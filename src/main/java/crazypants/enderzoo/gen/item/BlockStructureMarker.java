@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.gen.StructureRegister;
 import crazypants.enderzoo.gen.StructureUtil;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
@@ -21,7 +22,7 @@ public class BlockStructureMarker extends Block {
 
   public static final String NAME = "blockStructureMarker";
 
-  public static BlockStructureMarker create() {
+  public static BlockStructureMarker create() {    
     BlockStructureMarker res = new BlockStructureMarker();
     res.init();
     return res;
@@ -37,7 +38,7 @@ public class BlockStructureMarker extends Block {
   }
 
   protected void init() {
-    GameRegistry.registerBlock(this, NAME);
+    GameRegistry.registerBlock(this, NAME);    
   }
 
   @Override
@@ -56,12 +57,18 @@ public class BlockStructureMarker extends Block {
     if(world.isRemote) {
       return true;
     }
+    generateAndExport(world, x, y, z, entityPlayer);
+    return true;
+  }
 
+  public StructureTemplate generateAndExport(World world, int x, int y, int z, EntityPlayer entityPlayer) {
     StructureTemplate st = generateTemplate(ExportManager.instance.getNextExportUid(), world, x, y, z, entityPlayer);
     if(st != null) {
       ExportManager.writeToFile(entityPlayer, st, true);
+      StructureRegister.instance.registerStructureTemplate(st);
+      StructureRegister.instance.getGenerator(st.getUid(), true);
     }
-    return true;
+    return st;
   }
 
   public static StructureBounds getStructureBounds(IBlockAccess world, int x, int y, int z, EntityPlayer entityPlayer) {
@@ -95,7 +102,7 @@ public class BlockStructureMarker extends Block {
       return null;
     }
 
-    short surfaceOffset = getDistance(world, xSize, y, z, scanDistance, new Point3i(0, -1, 0), false);
+    short surfaceOffset = getDistance(world, x, y, z, scanDistance, new Point3i(0, -1, 0), false);
     ySize += surfaceOffset;
     System.out.println("BlockStructureMarker.getStructureBounds: " + surfaceOffset);
 
@@ -106,7 +113,7 @@ public class BlockStructureMarker extends Block {
     
     AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
         xSize < 0 ? xSize : 0, ySize < 0 ? ySize : 0, zSize < 0 ? zSize : 0,
-        xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y, z);
+        xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y - surfaceOffset, z);
 
     return new StructureBounds(bb, surfaceOffset);
   }
