@@ -18,7 +18,7 @@ import crazypants.enderzoo.gen.structure.StructureGenerator;
 
 public class StructureResourceManager {
 
-  public static final String CONFIG_EXT = ".gen";
+  public static final String GENERATOR_EXT = ".gen";
   public static final String TEMPLATE_EXT = ".nbt";
   
   private final List<ResourcePath> resourcePaths = new ArrayList<ResourcePath>();
@@ -41,22 +41,22 @@ public class StructureResourceManager {
     parser.getRuleFactory().add(fact);
   }
 
-  public StructureGenerator loadTemplate(String uid) throws Exception {
-    return parseJsonGenerator(loadTemplateText(uid));
+  public StructureGenerator loadGenerator(String uid) throws Exception {
+    return parseJsonGenerator(loadGeneratorText(uid));
   }
   
   public StructureGenerator parseJsonGenerator(String json) throws Exception {
     return parser.parseTemplate(register, json);
   }
   
-  public String loadTemplateText(String uid) throws IOException {
-    return IoUtil.readStream(getStreamForTemplate(uid));
+  public String loadGeneratorText(String uid) throws IOException {
+    return IoUtil.readStream(getStreamForGenerator(uid));
   }
 
-  public StructureTemplate loadStructureData(String uid) throws IOException {
+  public StructureTemplate loadStructureTemplate(String uid) throws IOException {
     InputStream stream = null;
     try {
-      stream = getStreamForStructureData(uid);
+      stream = getStreamForTemplate(uid);
       if(stream == null) {
         throw new IOException("StructureResourceManager: Could find resources for template " + uid);        
       }
@@ -66,11 +66,11 @@ public class StructureResourceManager {
     }
   }
 
-  private InputStream getStreamForTemplate(String uid) {
-    return getStream(uid + CONFIG_EXT);
+  private InputStream getStreamForGenerator(String uid) {
+    return getStream(uid + GENERATOR_EXT);
   }
 
-  private InputStream getStreamForStructureData(String uid) {
+  private InputStream getStreamForTemplate(String uid) {
     return getStream(uid + TEMPLATE_EXT);
   }
 

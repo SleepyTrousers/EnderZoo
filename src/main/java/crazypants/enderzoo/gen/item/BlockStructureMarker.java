@@ -57,16 +57,14 @@ public class BlockStructureMarker extends Block {
       return true;
     }
 
-    StructureTemplate st = generateTemplate("test", world, x, y, z, entityPlayer);
+    StructureTemplate st = generateTemplate(ExportManager.instance.getNextExportUid(), world, x, y, z, entityPlayer);
     if(st != null) {
-      StructureUtil.writeToFile(entityPlayer, st, ItemStructureTool.EXPORT_DIR);
+      ExportManager.writeToFile(entityPlayer, st, true);
     }
     return true;
   }
 
-
-
-  public static AxisAlignedBB getStructureBounds(IBlockAccess world, int x, int y, int z) {
+  public static StructureBounds getStructureBounds(IBlockAccess world, int x, int y, int z, EntityPlayer entityPlayer) {
     short scanDistance = 100;
 
     short xSize;
@@ -75,21 +73,21 @@ public class BlockStructureMarker extends Block {
     Point3i axis = new Point3i(1, 0, 0);
     xSize = getDistance(world, x, y, z, scanDistance, axis);
     axis = new Point3i(0, 1, 0);
-    ySize = getDistance(world, x, y, z, scanDistance, axis);
+    ySize = getDistance(world, x, y, z, scanDistance, axis, false);
     axis = new Point3i(0, 0, 1);
     zSize = getDistance(world, x, y, z, scanDistance, axis);
 
     boolean found = true;
     if(xSize == 0) {
-      //      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the x axis"));
+      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the x axis"));
       return null;
     }
     if(ySize == 0) {
-      //      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the y axis"));
+      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the y axis"));
       return null;
     }
     if(zSize == 0) {
-      //      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the z axis"));
+      entityPlayer.addChatComponentMessage(new ChatComponentText("No marker found along the z axis"));
       return null;
     }
 
@@ -97,29 +95,41 @@ public class BlockStructureMarker extends Block {
       return null;
     }
 
+    short surfaceOffset = getDistance(world, xSize, y, z, scanDistance, new Point3i(0, -1, 0), false);
+    ySize += surfaceOffset;
+    System.out.println("BlockStructureMarker.getStructureBounds: " + surfaceOffset);
+
     //go inside one block from marker clicked on
     x += xSize > 0 ? 1 : 0;
     y += ySize > 0 ? 1 : 0;
     z += zSize > 0 ? 1 : 0;
-
-    return AxisAlignedBB.getBoundingBox(
+    
+    AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
         xSize < 0 ? xSize : 0, ySize < 0 ? ySize : 0, zSize < 0 ? zSize : 0,
         xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y, z);
+
+    return new StructureBounds(bb, surfaceOffset);
   }
 
   public static StructureTemplate generateTemplate(String name, IBlockAccess world, int x, int y, int z, EntityPlayer entityPlayer) {
-    AxisAlignedBB bb = getStructureBounds(world, x, y, z);
+    StructureBounds bb = getStructureBounds(world, x, y, z, entityPlayer);
     if(bb == null) {
       entityPlayer.addChatComponentMessage(new ChatComponentText("Could not find matching markers"));
       return null;
     }
-
-    return new StructureTemplate(name, world, bb);
+    StructureTemplate res = new StructureTemplate(name, world, bb.bb, bb.surfaceOffset);
+    
+    return res;
   }
 
   private static short getDistance(IBlockAccess world, int x, int y, int z, short scanDistance, Point3i axis) {
+    return getDistance(world, x, y, z, scanDistance, axis, true);
+  }
+
+  private static short getDistance(IBlockAccess world, int x, int y, int z, short scanDistance, Point3i axis, boolean reverseAxis) {
+
     short res = getStepCount(world, x, y, z, scanDistance, axis);
-    if(res != 0) {
+    if(res != 0 || !reverseAxis) {
       return res;
     }
     axis.x *= -1;
@@ -141,6 +151,18 @@ public class BlockStructureMarker extends Block {
       }
     }
     return 0;
+  }
+  
+  static class StructureBounds {
+    final AxisAlignedBB bb;
+    final int surfaceOffset;
+    
+    public StructureBounds(AxisAlignedBB bb, int surfaceOffset) {    
+      this.bb = bb;
+      this.surfaceOffset = surfaceOffset;
+    }
+    
+    
   }
 
 }

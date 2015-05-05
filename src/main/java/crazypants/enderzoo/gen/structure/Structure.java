@@ -103,8 +103,8 @@ public class Structure {
   }
 
   public Structure(NBTTagCompound root) {
-    generator = StructureRegister.instance.getConfig(root.getString("generator"));
-    template = StructureRegister.instance.getStructureTemplate(root.getString("template"));
+    generator = StructureRegister.instance.getGenerator(root.getString("generator"));
+    template = StructureRegister.instance.getStructureTemplate(root.getString("template"), true);
     origin = new Point3i(root.getInteger("x"), root.getInteger("y"), root.getInteger("z"));
     rotation = Rotation.values()[MathHelper.clamp_int(root.getShort("rotation"), 0, Rotation.values().length - 1)];
     updateBounds();

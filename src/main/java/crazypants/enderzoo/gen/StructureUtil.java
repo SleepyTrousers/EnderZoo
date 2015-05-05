@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.fluids.FluidRegistry;
+import crazypants.enderzoo.gen.io.StructureResourceManager;
 import crazypants.enderzoo.gen.structure.StructureTemplate;
 import crazypants.enderzoo.vec.Point3i;
 
@@ -71,48 +72,6 @@ public class StructureUtil {
       blockLocationResult.set(x, y, z);
     }
     return blk;
-  }
-
-  public static void writeToFile(EntityPlayer entityPlayer, StructureTemplate st, File dir) {
-    dir.mkdir();
-    if(!dir.exists()) {
-      entityPlayer.addChatComponentMessage(new ChatComponentText("Could not make folder " + dir.getAbsolutePath()));
-      return;
-    }
-    File file = new File(dir, st.getUid() + ".nbt");
-    int num = 1;
-    while(file.exists() && num < 100) {
-      file = new File(dir, st.getUid() + "_" + num +".nbt");
-      num++;
-    }
-    
-    FileOutputStream fos = null;
-    try {
-      fos = new FileOutputStream(file, false);
-      st.write(fos);
-      fos.flush();
-      fos.close();
-      entityPlayer.addChatComponentMessage(new ChatComponentText("Saved to " + file.getAbsolutePath()));
-    } catch (Exception e) {
-      e.printStackTrace();
-      entityPlayer.addChatComponentMessage(new ChatComponentText("Could not save to " + file.getAbsolutePath()));
-    } finally {
-      IOUtils.closeQuietly(fos);
-    }
-
-  }
-
-  public static StructureTemplate readFromFile(File dir, String name) {
-    try {
-      File f = new File(dir, name + ".nbt");
-      if(!f.exists()) {
-        return null;
-      }
-      return new StructureTemplate(new FileInputStream(f));
-    } catch (Exception e) {
-      e.printStackTrace();
-      return null;
-    }
   }
 
 }

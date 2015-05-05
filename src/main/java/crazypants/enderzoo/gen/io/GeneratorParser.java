@@ -55,34 +55,30 @@ public class GeneratorParser {
         res.setMaxInChunk(to.get("maxGeneratedPerChunk").getAsInt());
       }
 
-      //      String dataUid = to.get("dataUid").getAsString();
-      //      StructureTemplate sd = reg.getStructureTemplate(dataUid);
-      //      
-      //      "templates" : [
-      //                     {"uid" : "test",
-      //                      "rotations" : [0,90,180,270]}  
-      //                   ],
-
       if(!to.has("templates")) {
         throw new Exception("No templates field found in definition for " + uid);
       }
       JsonArray templates = to.get("templates").getAsJsonArray();
       for (JsonElement e : templates) {
         JsonObject valObj = e.getAsJsonObject();
-        String tpUid = valObj.get("uid").getAsString();
-        StructureTemplate st = reg.getStructureTemplate(tpUid);
+        if(!valObj.isJsonNull() && valObj.has("uid")) {
+          String tpUid = valObj.get("uid").getAsString();
+          StructureTemplate st = reg.getStructureTemplate(tpUid, true);
 
-        List<Rotation> rots = new ArrayList<Rotation>();
-        if(valObj.has("rotations")) {
-          for (JsonElement rot : valObj.get("rotations").getAsJsonArray()) {
-            Rotation r = Rotation.get(rot.getAsInt());
-            if(r != null) {
-              rots.add(r);
+          List<Rotation> rots = new ArrayList<Rotation>();
+          if(valObj.has("rotations")) {
+            for (JsonElement rot : valObj.get("rotations").getAsJsonArray()) {
+              if(!rot.isJsonNull()) {
+                Rotation r = Rotation.get(rot.getAsInt());
+                if(r != null) {
+                  rots.add(r);
+                }
+              }
             }
           }
+          InstanceGen gen = new InstanceGen(st, rots);
+          res.addInstanceGen(gen);
         }
-        InstanceGen gen = new InstanceGen(st, rots);
-        res.addInstanceGen(gen);
       }
       if(res.getInstanceGens().isEmpty()) {
         throw new Exception("No valid template found in definition for " + uid);
@@ -90,7 +86,7 @@ public class GeneratorParser {
 
       if(to.has("LocationSampler")) {
         JsonObject ls = to.getAsJsonObject("LocationSampler");
-        String samType = ls.get("uid").getAsString();
+        String samType = ls.get("type").getAsString();
         ILocationSampler samp = ruleFact.createSampler(samType, ls);
         if(samp != null) {
           res.setLocationSampler(samp);
@@ -104,12 +100,14 @@ public class GeneratorParser {
         for (JsonElement e : arr) {
           if(e.isJsonObject()) {
             JsonObject valObj = e.getAsJsonObject();
-            String id = valObj.get("uid").getAsString();
-            ILocationValidator val = ruleFact.createValidator(id, valObj);
-            if(val != null) {
-              res.addLocationValidator(val);
-            } else {
-              throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+            if(!valObj.isJsonNull() && valObj.has("type")) {
+              String id = valObj.get("type").getAsString();
+              ILocationValidator val = ruleFact.createValidator(id, valObj);
+              if(val != null) {
+                res.addLocationValidator(val);
+              } else {
+                throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+              }
             }
           }
         }
@@ -120,12 +118,14 @@ public class GeneratorParser {
         JsonArray arr = to.getAsJsonArray("sitePreperations");
         for (JsonElement e : arr) {
           JsonObject valObj = e.getAsJsonObject();
-          String id = valObj.get("uid").getAsString();
-          ISitePreperation val = ruleFact.createPreperation(id, valObj);
-          if(val != null) {
-            res.addSitePreperation(val);
-          } else {
-            throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+          if(!valObj.isJsonNull() && valObj.has("type")) {
+            String id = valObj.get("type").getAsString();
+            ISitePreperation val = ruleFact.createPreperation(id, valObj);
+            if(val != null) {
+              res.addSitePreperation(val);
+            } else {
+              throw new Exception("Could not parse validator: " + id + " for template: " + uid);
+            }
           }
         }
 

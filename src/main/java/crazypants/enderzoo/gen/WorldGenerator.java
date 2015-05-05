@@ -81,7 +81,7 @@ public class WorldGenerator implements IWorldGenerator {
 
       WorldStructures structures = getWorldManOrCreate(world);
 
-      for (StructureGenerator template : StructureRegister.instance.getConfigs()) {
+      for (StructureGenerator template : StructureRegister.instance.getGenerators()) {
         Random r = new Random(chunkSeed ^ template.getUid().hashCode());
         Collection<Structure> s = template.generate(structures, r, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         if(s != null) {

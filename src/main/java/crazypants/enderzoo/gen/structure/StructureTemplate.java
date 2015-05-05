@@ -38,7 +38,7 @@ public class StructureTemplate {
   private final String uid;
   private final int surfaceOffset;
 
-  public StructureTemplate(String uid, IBlockAccess world, AxisAlignedBB worldBnds) {
+  public StructureTemplate(String uid, IBlockAccess world, AxisAlignedBB worldBnds, int surfaceOffset) {
 
     this.uid = uid;
 
@@ -55,7 +55,7 @@ public class StructureTemplate {
         }
       }
     }
-    surfaceOffset = 0;
+    this.surfaceOffset =  surfaceOffset;
 
   }
 
@@ -220,5 +220,12 @@ public class StructureTemplate {
     }
     blocks.get(block).add(new Point3i(x, y, z));
   }
+
+  @Override
+  public String toString() {
+    return "StructureTemplate [uid=" + uid + "]";
+  }
+  
+  
 
 }

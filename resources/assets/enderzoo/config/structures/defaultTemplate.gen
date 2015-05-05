@@ -1,15 +1,14 @@
 {
     "StructureGenerator" : {
             
-        "uid" : "test",        
+        "uid" : "GENERATOR_UID",        
         "canSpanChunks" :  "true",
         "maxAttemptsPerChunk" : 2,
         "maxGeneratedPerChunk" : 1,
         
         "templates" : [
-          {"uid" : "test",
-           "rotations" : [0,90,180,270]},
-          {"uid" : "test2"}    
+          {"uid" : "TEMPLATE_UID",
+           "_rotations" : [0,90,180,270]}
         ],
         
         "LocationSampler" : {
@@ -24,7 +23,7 @@
             { "type" : "RandomValidator", 
                       "chancePerChunk" : 0.05 },
                                   
-            { "type" : "BiomeValidator", 
+            { "_type" : "BiomeValidator", 
                       "match" : "any",                
                       "types" : [ "MESA", "FOREST", "PLAINS", "MOUNTAIN", "HILLS", "SWAMP", "SANDY", "SNOWY", "WASTELAND" ],
                       "typesExcluded" : [ "BEACH", "MUSHROOM", "OCEAN", "RIVER", "NETHER", "END"],
@@ -32,12 +31,12 @@
                       "namesExcluded" : [] },                                    
             
             
-            { "type" : "DimensionValidator",                               
+            { "_type" : "DimensionValidator",                               
                       "names" : [],
                       "namesExcluded" : ["Twilight Forest", "Dungeon"] },
             
             
-            { "uid" : "SpacingValidator", 
+            { "type" : "SpacingValidator", 
                       "minSpacing" : 20,
                       "templateFilter" : [],
                       "validateChunk" : "false",
@@ -46,16 +45,16 @@
             
             { "type" : "SpacingValidator",
                       "minSpacing" : 100,
-                      "templateFilter" : [ "test", "test2" ],
+                      "templateFilter" : [ "TEMPLATE_UID"],
                       "validateChunk" : "true",
                       "validateLocation" : "false" },
             
             
-            { "type" : "LevelGroundValidator",
+            { "_type" : "LevelGroundValidator",
                       "canSpawnOnWater" : "false",
                       "tolerance" : 2,
                       "sampleSpacing" : 4,
-                      "maxSamples" : 50,
+                      "maxSamples" : 100,
                       "Border" : {
                         "sizeXZ" : 1
                       }}                                
@@ -64,14 +63,14 @@
        
        "sitePreperations" : [
                   
-            { "type" : "ClearPreperation", 
+            { "_type" : "ClearPreperation", 
                       "clearPlants" : "true",           
                       "Border" : {
                           "up" : 3, "down" : 0, "north" : 1, "south" : 1, "east" : 1, "west" : 1
                       }
             },
            
-            { "type" : "FillPreperation",
+            { "_type" : "FillPreperation",
                       "clearPlants" : "true",
                       "Border" : {
                           "sizeXZ" : 1

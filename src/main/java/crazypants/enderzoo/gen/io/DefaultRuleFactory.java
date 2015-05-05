@@ -160,7 +160,7 @@ public class DefaultRuleFactory extends CompositeRuleFactory {
 
     @Override
     public ILocationValidator createValidator(String uid, JsonObject json) {
-      String typeElement = JsonUtil.getStringElement(json, "type", "any");
+      String typeElement = JsonUtil.getStringElement(json, "match", "any");
       IBiomeFilter filter;
       if("all".equals(typeElement)) {
         filter = new BiomeFilterAll();

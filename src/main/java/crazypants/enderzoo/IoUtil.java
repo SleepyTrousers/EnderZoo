@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,6 +67,16 @@ public class IoUtil {
       IOUtils.closeQuietly(reader);
     }
     return output.toString();
+  }
+
+  public static void writeToFile(String txt, File file) throws IOException {
+    BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
+    try{
+      bw.write(txt);
+      bw.flush();            
+    } finally {
+      IOUtils.closeQuietly(bw);
+    }    
   }
 
 }

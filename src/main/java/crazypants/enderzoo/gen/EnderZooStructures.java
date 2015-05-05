@@ -36,14 +36,14 @@ public class EnderZooStructures {
 
   private static void register(String uid) {
     
-      String name = uid + StructureResourceManager.CONFIG_EXT;
+      String name = uid + StructureResourceManager.GENERATOR_EXT;
       copyText(name, name + ".defaultValues");
 
       StructureRegister reg = StructureRegister.instance;
       try {
-        reg.registerConfig(reg.getResourceManager().loadTemplate(uid));
+        reg.registerGenerator(reg.getResourceManager().loadGenerator(uid));
       } catch (Exception e) {
-        Log.error("EnderZooStructures: Could not load structure template " + uid + StructureResourceManager.CONFIG_EXT);
+        Log.error("EnderZooStructures: Could not load structure template " + uid + StructureResourceManager.GENERATOR_EXT);
         e.printStackTrace();
       }
     

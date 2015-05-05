@@ -52,39 +52,64 @@ public class StructureRegister {
 
   public void registerJsonGenerator(String json) throws Exception {
     StructureGenerator tp = resourceManager.parseJsonGenerator(json);
-    registerConfig(tp);
+    registerGenerator(tp);
   }
 
-  public void registerConfig(StructureGenerator gen) {
+  public void registerGenerator(StructureGenerator gen) {
     generators.put(gen.getUid(), gen);
     genUids.add(gen.getUid());
   }
 
-  public StructureGenerator getConfig(String uid) {
-    return generators.get(uid);
+  public StructureGenerator getGenerator(String uid) {
+    return getGenerator(uid, false);
+  }
+  
+  public StructureGenerator getGenerator(String uid, boolean doLoadIfNull) {
+    if(uid == null) {
+      return null;
+    }
+    StructureGenerator res = generators.get(uid);    
+    if(res != null || !doLoadIfNull) {
+      return res;
+    }    
+    try {
+      res = resourceManager.loadGenerator(uid);      
+    } catch (Exception e) {
+      Log.error("StructureRegister: Could not load gnerator for " + uid + " Ex: " + e);
+      e.printStackTrace();
+    }
+    if(res != null) {
+      registerGenerator(res);
+    }
+    genUids.add(uid);
+    return res;
   }
 
-  public Collection<StructureGenerator> getConfigs() {
+  public Collection<StructureGenerator> getGenerators() {
     return generators.values();
   }
 
-  public void registerStructureData(String uid, NBTTagCompound nbt) throws IOException {
+  public void registerStructureTemplate(String uid, NBTTagCompound nbt) throws IOException {
     templates.put(uid, new StructureTemplate(nbt));
   }
 
-  public void registerStructureData(String uid, StructureTemplate st) {
+  public void registerStructureTemplate(String uid, StructureTemplate st) {
     templates.put(uid, st);
   }
 
   public StructureTemplate getStructureTemplate(String uid) {
-    if(templates.containsKey(uid)) {
+    return getStructureTemplate(uid, false);
+  }
+  
+  public StructureTemplate getStructureTemplate(String uid, boolean doLoadIfNull) {
+    if(!doLoadIfNull || templates.containsKey(uid)) {
       return templates.get(uid);
     }
     StructureTemplate sd = null;
     try {
-      sd = resourceManager.loadStructureData(uid);
+      sd = resourceManager.loadStructureTemplate(uid);
     } catch (IOException e) {
-      Log.error("StructureRegister: Could not load structure data for " + uid + " Ex: " + e);
+      Log.error("StructureRegister: Could not load structure template for " + uid + " Ex: " + e);
       e.printStackTrace();
     } finally {
       templates.put(uid, sd);
@@ -98,9 +123,9 @@ public class StructureRegister {
     for (String uid : genUids) { 
       StructureGenerator tmp;
       try {
-        tmp = resourceManager.loadTemplate(uid);
+        tmp = resourceManager.loadGenerator(uid);
         if(tmp != null) {
-          registerConfig(tmp);
+          registerGenerator(tmp);
         }
       } catch (Exception e) {
         Log.error("StructureRegister: Could not load structure data for " + uid + " Ex: " + e);
