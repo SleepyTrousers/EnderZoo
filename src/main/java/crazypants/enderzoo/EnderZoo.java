@@ -1,5 +1,8 @@
 package crazypants.enderzoo;
 
+import static crazypants.enderzoo.EnderZoo.MODID;
+import static crazypants.enderzoo.EnderZoo.MOD_NAME;
+import static crazypants.enderzoo.EnderZoo.VERSION;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -13,8 +16,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.charge.BlockConcussionCharge;
@@ -23,11 +24,6 @@ import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
-import crazypants.enderzoo.gen.EnderZooStructures;
-import crazypants.enderzoo.gen.ReloadConfigCommand;
-import crazypants.enderzoo.gen.WorldGenerator;
-import crazypants.enderzoo.gen.item.BlockStructureMarker;
-import crazypants.enderzoo.gen.item.ItemStructureTool;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
@@ -36,9 +32,6 @@ import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import crazypants.enderzoo.spawn.MobSpawnEventHandler;
 import crazypants.enderzoo.spawn.MobSpawns;
-import static crazypants.enderzoo.EnderZoo.MODID;
-import static crazypants.enderzoo.EnderZoo.MOD_NAME;
-import static crazypants.enderzoo.EnderZoo.VERSION;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
 public class EnderZoo {
@@ -63,11 +56,7 @@ public class EnderZoo {
   
   public static BlockConfusingCharge blockConfusingCharge;
   public static BlockEnderCharge blockEnderCharge;
-  public static BlockConcussionCharge blockConcussionCharge;
-  
-  public static BlockStructureMarker blockStructureMarker;
-  public static ItemStructureTool itemStructureTool;
-  public static WorldGenerator structureManager;
+  public static BlockConcussionCharge blockConcussionCharge;  
 
   public static MobSpawnEventHandler spawnEventHandler;
 
@@ -96,10 +85,6 @@ public class EnderZoo {
       blockConcussionCharge = BlockConcussionCharge.create();
     }
 
-    blockStructureMarker = BlockStructureMarker.create();
-    itemStructureTool = ItemStructureTool.create();
-    structureManager = WorldGenerator.create();
-
 //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -111,17 +96,6 @@ public class EnderZoo {
 //        DebugUtil.instance.setEnabled(true);
 
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
-  }
-
-
-  @EventHandler
-  public void serverStopped(FMLServerStoppedEvent event) {
-    structureManager.serverStopped(event);
-  }
-  
-  @EventHandler
-  public void serverLoad(FMLServerStartingEvent event) {
-    event.registerServerCommand(new ReloadConfigCommand());
   }
 
   private void registerEntity(MobInfo mob) {
@@ -151,9 +125,7 @@ public class EnderZoo {
     if(Config.enderZooDifficultyModifierEnabled || Config.globalDifficultyModifierEnabled) {
       spawnEventHandler = new MobSpawnEventHandler();
       spawnEventHandler.init();
-    }
-    
-    EnderZooStructures.registerStructures();
+    }    
 
   }
 

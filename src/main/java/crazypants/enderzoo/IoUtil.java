@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 
 import org.apache.commons.io.IOUtils;
 
-import crazypants.enderzoo.gen.structure.StructureGenerator;
-
 public class IoUtil {
   
   public static String readConfigFile(File copyTo, String resourcePath, boolean replaceIfExists) throws IOException {
