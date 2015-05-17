@@ -9,7 +9,7 @@ import net.minecraft.potion.PotionHelper;
 import crazypants.enderzoo.EnderZoo;
 
 public class BrewingUtil {
-  
+
   private static final ItemStack REDSTONE = new ItemStack(Items.redstone);
   private static final ItemStack GLOWSTONE = new ItemStack(Items.glowstone_dust);
   private static final ItemStack NETHER_WART = new ItemStack(Items.nether_wart);
@@ -23,10 +23,10 @@ public class BrewingUtil {
     ItemStack result = createAwkwardPotion();
     addIngredientToPotion(result, SPIDER_EYE);
     addIngredientToPotion(result, FERMENTED_SPIDER_EYE);
-    if(isAugmented) {
+    if (isAugmented) {
       addIngredientToPotion(result, GLOWSTONE);
     }
-    if(isSplash) {
+    if (isSplash) {
       addIngredientToPotion(result, GUN_POWDER);
     }
     return result;
@@ -35,63 +35,62 @@ public class BrewingUtil {
   public static ItemStack createWitherPotion(boolean isProlonged, boolean isSplash) {
     ItemStack result = createAwkwardPotion();
     addIngredientToPotion(result, new ItemStack(EnderZoo.itemWitheringDust));
-    if(isProlonged) {
+    if (isProlonged) {
       addIngredientToPotion(result, REDSTONE);
     }
-    if(isSplash) {
+    if (isSplash) {
       addIngredientToPotion(result, GUN_POWDER);
-    }    
+    }
     return result;
   }
 
   public static ItemStack createHealthPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
     ItemStack result = createAwkwardPotion();
     addIngredientToPotion(result, SPECKLED_MELLON);
-    if(isProlonged) {
+    if (isProlonged) {
       addIngredientToPotion(result, REDSTONE);
     }
-    if(isAugmented) {
+    if (isAugmented) {
       addIngredientToPotion(result, GLOWSTONE);
     }
-    if(isSplash) {
+    if (isSplash) {
       addIngredientToPotion(result, GUN_POWDER);
-    }    
+    }
     return result;
   }
-  
+
   public static ItemStack createRegenerationPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
     ItemStack result = createAwkwardPotion();
     addIngredientToPotion(result, GHAST_TEAR);
-    if(isProlonged) {
+    if (isProlonged) {
       addIngredientToPotion(result, REDSTONE);
     }
-    if(isAugmented) {
+    if (isAugmented) {
       addIngredientToPotion(result, GLOWSTONE);
     }
-    if(isSplash) {
+    if (isSplash) {
       addIngredientToPotion(result, GUN_POWDER);
-    }    
+    }
     return result;
   }
-  
+
   public static ItemStack createAwkwardPotion() {
-    ItemStack result = new ItemStack(Items.potionitem);    
+    ItemStack result = new ItemStack(Items.potionitem);
     addIngredientToPotion(result, NETHER_WART);
     return result;
   }
-  
-  
+
   public static void addIngredientToPotion(ItemStack targetPotion, ItemStack ingredient) {
     int originalMetaData = targetPotion.getItemDamage();
     int metaWithAddedIngredient = addPotionEffect(originalMetaData, ingredient);
-    List originalEffects = Items.potionitem.getEffects(originalMetaData);
-    List withAddedEffects = Items.potionitem.getEffects(metaWithAddedIngredient);
-    if((originalMetaData <= 0 || originalEffects != withAddedEffects) &&
-        (originalEffects == null || !originalEffects.equals(withAddedEffects) && withAddedEffects != null)) {
-      if(originalMetaData != metaWithAddedIngredient) {
+    List<?> originalEffects = Items.potionitem.getEffects(originalMetaData);
+    List<?> withAddedEffects = Items.potionitem.getEffects(metaWithAddedIngredient);
+    if ((originalMetaData <= 0 || originalEffects != withAddedEffects)
+        && (originalEffects == null || !originalEffects.equals(withAddedEffects) && withAddedEffects != null)) {
+      if (originalMetaData != metaWithAddedIngredient) {
         targetPotion.setItemDamage(metaWithAddedIngredient);
       }
-    } else if(!ItemPotion.isSplash(originalMetaData) && ItemPotion.isSplash(metaWithAddedIngredient)) {
+    } else if (!ItemPotion.isSplash(originalMetaData) && ItemPotion.isSplash(metaWithAddedIngredient)) {
       targetPotion.setItemDamage(metaWithAddedIngredient);
     }
   }

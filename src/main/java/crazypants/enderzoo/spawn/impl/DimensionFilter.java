@@ -29,11 +29,11 @@ public class DimensionFilter {
   }
 
   public boolean canSpawnInDimension(World world) {
-    if(name != null) {
+    if (name != null) {
       return !name.equals(world.provider.getDimensionName());
     }
     int id = world.provider.dimensionId;
-    if(isRange) {
+    if (isRange) {
       return id < minId || id > maxId;
     }
     return id != minId;

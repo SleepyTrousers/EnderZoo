@@ -1,41 +1,25 @@
 package crazypants.enderzoo.potion;
 
-import java.lang.reflect.Field;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
-import javax.swing.plaf.ColorUIResource;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.EnderZooTab;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.brewing.PotionBrewedEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import crazypants.enderzoo.EnderZooTab;
 
 public class ItemPotionEZ_WIP extends ItemPotion {
 
@@ -45,10 +29,10 @@ public class ItemPotionEZ_WIP extends ItemPotion {
     res.init();
 
     MinecraftForge.EVENT_BUS.register(res);
-    
-//    int entityID = EntityRegistry.findGlobalUniqueEntityId();
-//    EntityRegistry.registerGlobalEntityID(EntityPotionEZ.class, "EntityPotionEZ", entityID);
-//    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", entityID, this, 32, 20, true);
+
+    //    int entityID = EntityRegistry.findGlobalUniqueEntityId();
+    //    EntityRegistry.registerGlobalEntityID(EntityPotionEZ.class, "EntityPotionEZ", entityID);
+    //    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", entityID, this, 32, 20, true);
 
     return res;
   }
@@ -68,13 +52,13 @@ public class ItemPotionEZ_WIP extends ItemPotion {
     iconString = "potion";
 
     effect = new PotionEffect(Potion.wither.getId(), 100);
-    effects = Collections.singletonList(effect);    
+    effects = Collections.singletonList(effect);
   }
 
   @Override
   public String getPotionEffect(ItemStack p_150896_1_) {
     return "+0+1-2+3&4-4+16";
-    
+
   }
 
   protected void init() {
@@ -88,12 +72,12 @@ public class ItemPotionEZ_WIP extends ItemPotion {
 
   @Override
   public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-    if(isSplash(stack.getItemDamage())) {
-      if(!player.capabilities.isCreativeMode) {
+    if (isSplash(stack.getItemDamage())) {
+      if (!player.capabilities.isCreativeMode) {
         --stack.stackSize;
       }
       world.playSoundAtEntity(player, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-      if(!world.isRemote) {
+      if (!world.isRemote) {
         world.spawnEntityInWorld(new EntityPotionEZ_WIP(world, player, stack));
       }
       return stack;
@@ -108,12 +92,15 @@ public class ItemPotionEZ_WIP extends ItemPotion {
     return 0x000000;
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
+  @Override
   @SideOnly(Side.CLIENT)
   public void getSubItems(Item item, CreativeTabs tabs, List list) {
     list.add(new ItemStack(this, 1, 8192));
     list.add(new ItemStack(this, 1, 16384));
   }
 
+  @Override
   @SideOnly(Side.CLIENT)
   public boolean isEffectInstant(int p_77833_1_) {
     return false;
@@ -123,27 +110,28 @@ public class ItemPotionEZ_WIP extends ItemPotion {
   public String getItemStackDisplayName(ItemStack stack) {
     String s = "";
 
-    if(isSplash(stack.getItemDamage())) {
+    if (isSplash(stack.getItemDamage())) {
       s = StatCollector.translateToLocal("potion.prefix.grenade").trim() + " ";
     }
 
     return s + StatCollector.translateToLocal("item.itemPotionEZ.wither.name");
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean aBool) {
     for (PotionEffect potioneffect : getEffects(stack)) {
       String s1 = StatCollector.translateToLocal(potioneffect.getEffectName()).trim();
       Potion potion = Potion.potionTypes[potioneffect.getPotionID()];
-      Map map = potion.func_111186_k();
+//      Map map = potion.func_111186_k();
 
-      if(potioneffect.getAmplifier() > 0) {
+      if (potioneffect.getAmplifier() > 0) {
         s1 = s1 + " " + StatCollector.translateToLocal("potion.potency." + potioneffect.getAmplifier()).trim();
       }
-      if(potioneffect.getDuration() > 20) {
+      if (potioneffect.getDuration() > 20) {
         s1 = s1 + " (" + Potion.getDurationString(potioneffect) + ")";
       }
-      if(potion.isBadEffect()) {
+      if (potion.isBadEffect()) {
         list.add(EnumChatFormatting.RED + s1);
       } else {
         list.add(EnumChatFormatting.GRAY + s1);
@@ -153,17 +141,17 @@ public class ItemPotionEZ_WIP extends ItemPotion {
 
   @SubscribeEvent
   public void onPotionBrewed(PotionBrewedEvent evt) {
-//    System.out.println("ItemPotionEZ.onPotionBrewed: " + evt);
-//    //evt.brewingStacks[0] = new ItemStack(Items.stick);
-//    for(int i=0;i<3;i++) {
-//      ItemStack stack = evt.brewingStacks[i];
-//    //for (ItemStack stack : evt.brewingStacks) {
-//      if(stack != null) {
-//        if(stack.getItemDamage() == 8198) {
-//          evt.brewingStacks[i] = new ItemStack(this, 1, 8192);
-//        }
-//      }        
-//    }
+    //    System.out.println("ItemPotionEZ.onPotionBrewed: " + evt);
+    //    //evt.brewingStacks[0] = new ItemStack(Items.stick);
+    //    for(int i=0;i<3;i++) {
+    //      ItemStack stack = evt.brewingStacks[i];
+    //    //for (ItemStack stack : evt.brewingStacks) {
+    //      if(stack != null) {
+    //        if(stack.getItemDamage() == 8198) {
+    //          evt.brewingStacks[i] = new ItemStack(this, 1, 8192);
+    //        }
+    //      }        
+    //    }
   }
 
 }

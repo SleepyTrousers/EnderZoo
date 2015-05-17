@@ -64,7 +64,7 @@ public class EntityPrimedCharge extends Entity {
   @Override
   public void onUpdate() {
 
-    if(worldObj.isRemote && isDead) {
+    if (worldObj.isRemote && isDead) {
       System.out.println("EntityPrimedCharge.onUpdate: Dead");
     }
 
@@ -77,16 +77,16 @@ public class EntityPrimedCharge extends Entity {
     motionY *= 0.9800000190734863D;
     motionZ *= 0.9800000190734863D;
 
-    if(onGround) {
+    if (onGround) {
       motionX *= 0.699999988079071D;
       motionZ *= 0.699999988079071D;
       motionY *= -0.5D;
     }
 
-    if(fuse-- <= 0) {
+    if (fuse-- <= 0) {
       setDead();
-      if(!worldObj.isRemote) {
-        if(charge != null) {
+      if (!worldObj.isRemote) {
+        if (charge != null) {
           charge.explode(this);
         }
       }
@@ -100,11 +100,10 @@ public class EntityPrimedCharge extends Entity {
     }
   }
 
-
   @Override
   protected void writeEntityToNBT(NBTTagCompound root) {
     root.setByte("Fuse", (byte) fuse);
-    if(charge != null) {
+    if (charge != null) {
       root.setInteger("chargeID", charge.getID());
     }
   }
@@ -112,7 +111,7 @@ public class EntityPrimedCharge extends Entity {
   @Override
   protected void readEntityFromNBT(NBTTagCompound root) {
     fuse = root.getByte("Fuse");
-    if(root.hasKey("charge")) {
+    if (root.hasKey("charge")) {
       int id = root.getInteger("chargeID");
       getDataWatcher().updateObject(CHARGE_ID_KEY, id);
       charge = ChargeRegister.instance.getCharge(id);
@@ -131,7 +130,7 @@ public class EntityPrimedCharge extends Entity {
   public Block getBlock() {
     int id = dataWatcher.getWatchableObjectInt(CHARGE_ID_KEY);
     charge = ChargeRegister.instance.getCharge(id);
-    if(charge != null) {
+    if (charge != null) {
       return charge.getBlock();
     }
     return null;

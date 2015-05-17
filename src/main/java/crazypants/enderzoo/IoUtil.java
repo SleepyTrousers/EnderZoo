@@ -12,13 +12,13 @@ import java.io.InputStreamReader;
 import org.apache.commons.io.IOUtils;
 
 public class IoUtil {
-  
+
   public static String readConfigFile(File copyTo, String resourcePath, boolean replaceIfExists) throws IOException {
     return readConfigFile(copyTo, IoUtil.class.getResourceAsStream(resourcePath), replaceIfExists);
   }
-  
+
   public static String readConfigFile(File copyTo, InputStream in, boolean replaceIfExists) throws IOException {
-    if(!replaceIfExists && copyTo.exists()) {
+    if (!replaceIfExists && copyTo.exists()) {
       return readStream(new FileInputStream(copyTo));
     }
     String output = copyTextTo(copyTo, in);
@@ -40,11 +40,11 @@ public class IoUtil {
 
   public static void makePath(File copyTo) throws IOException {
     File p = copyTo.getParentFile();
-    if(p == null) {
+    if (p == null) {
       return;
     }
-    if(!p.exists()) {
-      if(!p.mkdirs()) {
+    if (!p.exists()) {
+      if (!p.mkdirs()) {
         throw new IOException("Could not create directory: " + p.getAbsolutePath());
       }
     }

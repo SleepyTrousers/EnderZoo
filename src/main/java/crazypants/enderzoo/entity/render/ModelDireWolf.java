@@ -50,7 +50,7 @@ public class ModelDireWolf extends ModelBase {
     wolfLeg2.addBox(-1.8F, 0.0F, -1.0F, 2, 8, 2, f);
     wolfLeg2.setTextureOffset(52, 14).addBox(-1.75F, -2.5F, -2F, 2, 4, 4, f);
     wolfLeg2.setRotationPoint(2.0F, 16.0F, 6.0F);
-    
+
     wolfLeg3 = new ModelRenderer(this, 0, 22);
     wolfLeg3.addBox(-1.0F, 0.0F, -1.0F, 2, 8, 2, f);
     wolfLeg3.setRotationPoint(-2.5F, 16.0F, -4.0F);
@@ -104,12 +104,11 @@ public class ModelDireWolf extends ModelBase {
     //    }
   }
 
-
   @Override
   public void setLivingAnimations(EntityLivingBase entity, float p_78086_2_, float p_78086_3_, float p_78086_4_) {
     EntityDireWolf entitywolf = (EntityDireWolf) entity;
 
-    if(entitywolf.isAngry()) {
+    if (entitywolf.isAngry()) {
       wolfTail.rotateAngleY = 0.0F;
     } else {
       wolfTail.rotateAngleY = MathHelper.cos(p_78086_2_ * 0.6662F) * 1.4F * p_78086_3_;
@@ -131,19 +130,19 @@ public class ModelDireWolf extends ModelBase {
     //      wolfLeg4.rotateAngleX = 5.811947F;
     //      wolfLeg4.setRotationPoint(0.51F, 17.0F, -4.0F);
     //    } else {
-      wolfBody.setRotationPoint(0.0F, 14.0F, 2.0F);
-      wolfBody.rotateAngleX = ((float) Math.PI / 2F);
-      wolfMane.setRotationPoint(-1.0F, 14.0F, -3.0F);
-      wolfMane.rotateAngleX = wolfBody.rotateAngleX;
-      wolfTail.setRotationPoint(-1.0F, 12.0F, 8.0F);
+    wolfBody.setRotationPoint(0.0F, 14.0F, 2.0F);
+    wolfBody.rotateAngleX = ((float) Math.PI / 2F);
+    wolfMane.setRotationPoint(-1.0F, 14.0F, -3.0F);
+    wolfMane.rotateAngleX = wolfBody.rotateAngleX;
+    wolfTail.setRotationPoint(-1.0F, 12.0F, 8.0F);
     //      wolfLeg1.setRotationPoint(-2.5F, 16.0F, 7.0F);
     //      wolfLeg2.setRotationPoint(0.5F, 16.0F, 7.0F);
     //      wolfLeg3.setRotationPoint(-2.5F, 16.0F, -4.0F);
     //      wolfLeg4.setRotationPoint(0.5F, 16.0F, -4.0F);
-      wolfLeg1.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F) * 1.4F * p_78086_3_;
-      wolfLeg2.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F + (float) Math.PI) * 1.4F * p_78086_3_;
-      wolfLeg3.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F + (float) Math.PI) * 1.4F * p_78086_3_;
-      wolfLeg4.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F) * 1.4F * p_78086_3_;
+    wolfLeg1.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F) * 1.4F * p_78086_3_;
+    wolfLeg2.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F + (float) Math.PI) * 1.4F * p_78086_3_;
+    wolfLeg3.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F + (float) Math.PI) * 1.4F * p_78086_3_;
+    wolfLeg4.rotateAngleX = MathHelper.cos(p_78086_2_ * 0.6662F) * 1.4F * p_78086_3_;
     //    }
 
     //    //Begging head tilt I think

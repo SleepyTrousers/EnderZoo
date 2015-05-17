@@ -35,11 +35,8 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   private static final int ANGRY_INDEX = 12;
 
-  private static final float DEF_HEIGHT = 0.8F;
-  private static final float DEF_WIDTH = 0.6F;
-
   private EntityLivingBase previsousAttackTarget;
-  
+
   private static int packHowl = 0;
   private static long lastHowl = 0;
 
@@ -54,7 +51,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     tasks.addTask(9, new EntityAILookIdle(this));
     targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
-    if(Config.direWolfAggresiveRange > 0) {
+    if (Config.direWolfAggresiveRange > 0) {
       EntityAINearestAttackableTargetBounded nearTarg = new EntityAINearestAttackableTargetBounded(this, EntityPlayer.class, 0, true);
       nearTarg.setMaxDistanceToTarget(Config.direWolfAggresiveRange);
       targetTasks.addTask(2, nearTarg);
@@ -72,7 +69,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   protected boolean isAIEnabled() {
     return true;
   }
-  
+
   @Override
   public float getBlockPathWeight(int x, int y, int z) {
     // Impl from EntityAnimal
@@ -127,15 +124,15 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   @Override
   protected String getLivingSound() {
-    if(isAngry()) {
+    if (isAngry()) {
       return SND_GROWL;
     }
-    if(EntityUtil.isPlayerWithinRange(this, 12)) {
+    if (EntityUtil.isPlayerWithinRange(this, 12)) {
       return SND_GROWL;
     }
     boolean howl = (packHowl > 0 || rand.nextFloat() <= Config.direWolfHowlChance) && worldObj.getTotalWorldTime() > (lastHowl + 10);
-    if(howl) {
-      if(packHowl <= 0 && rand.nextFloat() <= 0.6) {
+    if (howl) {
+      if (packHowl <= 0 && rand.nextFloat() <= 0.6) {
         packHowl = Config.direWolfPackHowlAmount;
       }
       lastHowl = worldObj.getTotalWorldTime();
@@ -148,7 +145,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   @Override
   public void playSound(String name, float volume, float pitch) {
-    if(SND_HOWL.equals(name)) {
+    if (SND_HOWL.equals(name)) {
       volume *= (float) Config.direWolfHowlVolumeMult;
       pitch *= 0.8f;
     }
@@ -181,7 +178,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   }
 
   public float getTailRotation() {
-    if(isAngry()) {
+    if (isAngry()) {
       return (float) Math.PI / 2;
     }
     return (float) Math.PI / 4;
@@ -196,17 +193,15 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     double hw = width / 2.0F;
     double hd = hw * 2.25;
     float f1 = height;
-    boundingBox.setBounds(
-        x - hw, y - yOffset + ySize, z - hd,
-        x + hw, y - yOffset + ySize + f1, z + hd);
+    boundingBox.setBounds(x - hw, y - yOffset + ySize, z - hd, x + hw, y - yOffset + ySize + f1, z + hd);
   }
 
   @Override
   public void onLivingUpdate() {
     super.onLivingUpdate();
     EntityLivingBase curTarget = getAttackTarget();
-    if(curTarget != previsousAttackTarget) {
-      if(curTarget != null) {
+    if (curTarget != previsousAttackTarget) {
+      if (curTarget != null) {
         doGroupArgo(curTarget);
       }
       previsousAttackTarget = getAttackTarget();
@@ -214,16 +209,17 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void doGroupArgo(EntityLivingBase curTarget) {
-    if(!Config.direWolfPackAttackEnabled) {
+    if (!Config.direWolfPackAttackEnabled) {
       return;
     }
     int range = 16;
     AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
     List<EntityDireWolf> pack = worldObj.getEntitiesWithinAABB(EntityDireWolf.class, bb);
-    if(pack != null && !pack.isEmpty()) {
+    if (pack != null && !pack.isEmpty()) {
       for (EntityDireWolf wolf : pack) {
-        if(wolf.getAttackTarget() == null) {
+        if (wolf.getAttackTarget() == null) {
           EntityUtil.cancelCurrentTasks(wolf);
           wolf.setAttackTarget(curTarget);
         }

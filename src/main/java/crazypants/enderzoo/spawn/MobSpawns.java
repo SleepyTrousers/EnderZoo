@@ -26,7 +26,7 @@ public final class MobSpawns {
 
   public void loadSpawnConfig() {
     List<SpawnEntry> entries = SpawnConfig.loadSpawnConfig();
-    if(entries != null) {
+    if (entries != null) {
       Log.info("Applying " + entries.size() + " spawn entries from config.");
       for (SpawnEntry entry : entries) {
         addSpawn(entry);
@@ -39,48 +39,49 @@ public final class MobSpawns {
 
   public void addSpawn(ISpawnEntry entry) {
 
-    if(entry == null) {
+    if (entry == null) {
       return;
     }
     spawnEntries.add(entry);
 
+    @SuppressWarnings("unchecked")
     Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.stringToClassMapping.get(entry.getMobName());
-    if(clz == null) {
+    if (clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
       return;
     }
 
-    if(entry.isRemove()) {
-      if(PRINT_DETAIL) {
+    if (entry.isRemove()) {
+      if (PRINT_DETAIL) {
         //yeah, I know I could print them as debug messages but that is more painful to change...
         Log.info("EnderIO.MobSpawns.addSpawn: Removing spawns defined in entry: " + entry + " for biomes: ");
         System.out.print(" - ");
       }
       for (IBiomeFilter filter : entry.getFilters()) {
         BiomeGenBase[] biomes = filter.getMatchedBiomes();
-        if(PRINT_DETAIL) {
+        if (PRINT_DETAIL) {
           printBiomeNames(biomes);
         }
         EntityRegistry.removeSpawn(clz, entry.getCreatureType(), biomes);
       }
-      if(PRINT_DETAIL) {
+      if (PRINT_DETAIL) {
         System.out.println();
       }
       return;
     }
 
-    if(PRINT_DETAIL) {
+    if (PRINT_DETAIL) {
       Log.info("MobSpawns.addSpawn: Adding spawns defined in entry: " + entry + " for biomes: ");
       System.out.print(" - ");
     }
     for (IBiomeFilter filter : entry.getFilters()) {
       BiomeGenBase[] biomes = filter.getMatchedBiomes();
-      if(PRINT_DETAIL) {
+      if (PRINT_DETAIL) {
         printBiomeNames(biomes);
       }
       EntityRegistry.addSpawn(clz, entry.getRate(), entry.getMinGroupSize(), entry.getMaxGroupSize(), entry.getCreatureType(), biomes);
     }
-    if(PRINT_DETAIL) {
+    if (PRINT_DETAIL) {
       System.out.println();
     }
 
@@ -88,7 +89,7 @@ public final class MobSpawns {
 
   protected static void printBiomeNames(BiomeGenBase[] biomes) {
     for (BiomeGenBase biome : biomes) {
-      if(biome != null) {
+      if (biome != null) {
         System.out.print(biome.biomeName + ", ");
       } else {
         System.out.print("null, ");

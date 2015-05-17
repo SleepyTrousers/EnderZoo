@@ -34,7 +34,7 @@ public class EnchantmentWitherWeapon extends Enchantment {
   @Override
   public void func_151368_a(EntityLivingBase source, Entity entityHit, int p_151368_3_) {
     //calc damage modifier    
-    if(entityHit instanceof EntityLivingBase) {
+    if (entityHit instanceof EntityLivingBase) {
       ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(Potion.wither.getId(), Config.enchantmentWitherWeaponDuration));
     }
   }

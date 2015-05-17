@@ -46,7 +46,7 @@ public class PacketExplodeEffect implements IMessage, IMessageHandler<PacketExpl
   @Override
   public IMessage onMessage(PacketExplodeEffect message, MessageContext ctx) {
     EntityPlayer player = EnderZoo.proxy.getClientPlayer();
-    if(message.charge != null && player != null) {
+    if (message.charge != null && player != null) {
       message.charge.explodeEffect(player.worldObj, message.x, message.y, message.z);
     }
     return null;

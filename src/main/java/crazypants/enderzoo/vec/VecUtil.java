@@ -16,18 +16,18 @@ public class VecUtil {
     return Vec3.createVectorHelper(vec.xCoord, vec.yCoord, vec.zCoord);
   }
 
-  public static Vec3 subtract(Vec3 a, Vec3 b) {    
+  public static Vec3 subtract(Vec3 a, Vec3 b) {
     return Vec3.createVectorHelper(a.xCoord - b.xCoord, a.yCoord - b.yCoord, a.zCoord - b.zCoord);
   }
 
-  public static Vec3 add(Vec3 a, Vec3 b) {    
-    return Vec3.createVectorHelper(a.xCoord + b.xCoord, a.yCoord+ b.yCoord, a.zCoord+ b.zCoord);
+  public static Vec3 add(Vec3 a, Vec3 b) {
+    return Vec3.createVectorHelper(a.xCoord + b.xCoord, a.yCoord + b.yCoord, a.zCoord + b.zCoord);
   }
 
   public static void set(Vec3 pos, double posX, double posY, double posZ) {
     pos.xCoord = posX;
     pos.yCoord = posY;
-    pos.zCoord = posZ;    
+    pos.zCoord = posZ;
   }
-  
+
 }

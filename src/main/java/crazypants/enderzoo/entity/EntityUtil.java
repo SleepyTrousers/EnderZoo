@@ -51,22 +51,21 @@ public class EntityUtil {
   }
 
   public static AxisAlignedBB getBoundsAround(double x, double y, double z, double range) {
-    return AxisAlignedBB.getBoundingBox(
-        x - range, y - range, z - range,
-        x + range, y + range, z + range);
+    return AxisAlignedBB.getBoundingBox(x - range, y - range, z - range, x + range, y + range, z + range);
   }
 
   public static Point3i getEntityPositionI(Entity entity) {
     return new Point3i((int) entity.posX, (int) entity.posY, (int) entity.posZ);
   }
 
+  @SuppressWarnings("rawtypes")
   public static void cancelCurrentTasks(EntityLiving ent) {
     Iterator iterator = ent.tasks.taskEntries.iterator();
 
     List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
     while (iterator.hasNext()) {
       EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
-      if(entityaitaskentry != null) {
+      if (entityaitaskentry != null) {
         currentTasks.add(entityaitaskentry);
       }
     }
@@ -81,7 +80,7 @@ public class EntityUtil {
   public static IAttributeInstance removeModifier(EntityLivingBase ent, IAttribute p, UUID u) {
     IAttributeInstance att = ent.getEntityAttribute(p);
     AttributeModifier curmod = att.getModifier(u);
-    if(curmod != null) {
+    if (curmod != null) {
       att.removeModifier(curmod);
     }
     return att;
@@ -90,12 +89,13 @@ public class EntityUtil {
   public static double getDistanceSqToNearestPlayer(Entity entity, double maxRange) {
     AxisAlignedBB bounds = getBoundsAround(entity, maxRange);
     EntityPlayer nearest = (EntityPlayer) entity.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, bounds, entity);
-    if(nearest == null) {
+    if (nearest == null) {
       return 1;
     }
     return nearest.getDistanceSqToEntity(entity);
   }
 
+  @SuppressWarnings("rawtypes")
   public static boolean isPlayerWithinRange(Entity entity, double range) {
     List res = entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, getBoundsAround(entity, range));
     return res != null && !res.isEmpty();

@@ -23,12 +23,12 @@ public class RenderPrimedCharge extends Render {
     GL11.glTranslatef((float) x, (float) y, (float) z);
     float f2;
 
-    if(entity.getFuse() - p_76986_9_ + 1.0F < 10.0F) {
+    if (entity.getFuse() - p_76986_9_ + 1.0F < 10.0F) {
       f2 = 1.0F - (entity.getFuse() - p_76986_9_ + 1.0F) / 10.0F;
-      if(f2 < 0.0F) {
+      if (f2 < 0.0F) {
         f2 = 0.0F;
       }
-      if(f2 > 1.0F) {
+      if (f2 > 1.0F) {
         f2 = 1.0F;
       }
       f2 *= f2;
@@ -40,12 +40,12 @@ public class RenderPrimedCharge extends Render {
     f2 = (1.0F - (entity.getFuse() - p_76986_9_ + 1.0F) / 100.0F) * 0.8F;
     bindEntityTexture(entity);
     Block blk = entity.getBlock();
-    if(blk == null) {
+    if (blk == null) {
       blk = Blocks.tnt;
     }
     blockRenderer.renderBlockAsItem(blk, 0, entity.getBrightness(p_76986_9_));
 
-    if(entity.getFuse() / 5 % 2 == 0) {
+    if (entity.getFuse() / 5 % 2 == 0) {
       GL11.glDisable(GL11.GL_TEXTURE_2D);
       GL11.glDisable(GL11.GL_LIGHTING);
       GL11.glEnable(GL11.GL_BLEND);

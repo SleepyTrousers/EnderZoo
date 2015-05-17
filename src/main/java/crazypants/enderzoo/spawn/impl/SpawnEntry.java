@@ -13,17 +13,17 @@ public class SpawnEntry implements ISpawnEntry {
   private final String id;
   private final String mobName;
   private final int rate;
-  
-  private EnumCreatureType creatureType = EnumCreatureType.monster;  
+
+  private EnumCreatureType creatureType = EnumCreatureType.monster;
   private int minGroupSize = 1;
   private int maxGroupSize = 3;
   private boolean isRemove = false;
-  
+
   private final List<IBiomeFilter> filters = new ArrayList<IBiomeFilter>();
 
   private final List<DimensionFilter> dimFilters = new ArrayList<DimensionFilter>();
 
-  public SpawnEntry(String id, String mobName, int rate) {    
+  public SpawnEntry(String id, String mobName, int rate) {
     this.id = id;
     this.mobName = mobName;
     this.rate = rate;
@@ -96,7 +96,7 @@ public class SpawnEntry implements ISpawnEntry {
   @Override
   public boolean canSpawnInDimension(World world) {
     for (DimensionFilter f : dimFilters) {
-      if(!f.canSpawnInDimension(world)) {
+      if (!f.canSpawnInDimension(world)) {
         return false;
       }
     }

@@ -1,19 +1,18 @@
 package crazypants.enderzoo.vec;
 
-
 public class Point3i {
 
   public int x;
   public int y;
   public int z;
-  
+
   public Point3i() {
     x = 0;
     y = 0;
     z = 0;
   }
 
-  public Point3i(int x, int y, int z) {  
+  public Point3i(int x, int y, int z) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -37,11 +36,11 @@ public class Point3i {
     y += other.y;
     z += other.z;
   }
-  
+
   public void add(int x2, int y2, int z2) {
     x += x2;
     y += y2;
-    z += z2;    
+    z += z2;
   }
 
   public double distanceSquared(Point3i v) {
@@ -73,28 +72,26 @@ public class Point3i {
 
   @Override
   public boolean equals(Object obj) {
-    if(this == obj) {
+    if (this == obj) {
       return true;
     }
-    if(obj == null) {
+    if (obj == null) {
       return false;
     }
-    if(getClass() != obj.getClass()) {
+    if (getClass() != obj.getClass()) {
       return false;
     }
     Point3i other = (Point3i) obj;
-    if(x != other.x) {
+    if (x != other.x) {
       return false;
     }
-    if(y != other.y) {
+    if (y != other.y) {
       return false;
     }
-    if(z != other.z) {
+    if (z != other.z) {
       return false;
     }
     return true;
   }
-
-  
 
 }

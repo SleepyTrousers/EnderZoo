@@ -1,6 +1,5 @@
 package crazypants.enderzoo.entity;
 
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +40,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   private boolean firstUpdate = true;
   private boolean isMounted = false;
-  
+
   private boolean spawned = false;
 
   public EntityFallenKnight(World world) {
@@ -58,15 +57,14 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   @Override
   protected void attackEntity(Entity target, float distance) {
-    if(attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY
-        && target.boundingBox.minY < boundingBox.maxY) {
+    if (attackTime <= 0 && distance < getAttackRange() && target.boundingBox.maxY > boundingBox.minY && target.boundingBox.minY < boundingBox.maxY) {
       attackTime = 20;
       attackEntityAsMob(target);
     }
   }
 
   private float getAttackRange() {
-    if(isRiding()) {
+    if (isRiding()) {
       return 3;
     }
     return 2;
@@ -76,7 +74,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   public void setCombatTask() {
     tasks.removeTask(getAiAttackOnCollide());
     tasks.removeTask(getAiArrowAttack());
-    if(isRanged()) {
+    if (isRanged()) {
       tasks.addTask(4, getAiArrowAttack());
     } else {
       tasks.addTask(4, getAiAttackOnCollide());
@@ -84,7 +82,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   public EntityAIMountedArrowAttack getAiArrowAttack() {
-    if(aiArrowAttack == null) {
+    if (aiArrowAttack == null) {
       aiArrowAttack = new EntityAIMountedArrowAttack(this, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED,
           Config.fallenKnightRangedMinAttackPause, Config.fallenKnightRangedMaxAttackPause, Config.fallenKnightRangedMaxRange,
           Config.fallKnightMountedArchesMaintainDistance);
@@ -93,7 +91,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   public EntityAIMountedAttackOnCollide getAiAttackOnCollide() {
-    if(aiAttackOnCollide == null) {
+    if (aiAttackOnCollide == null) {
       aiAttackOnCollide = new EntityAIMountedAttackOnCollide(this, EntityPlayer.class, ATTACK_MOVE_SPEED, EntityFallenMount.MOUNTED_ATTACK_MOVE_SPEED, false);
     }
     return aiAttackOnCollide;
@@ -118,30 +116,30 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   public void onLivingUpdate() {
     super.onLivingUpdate();
 
-    if(firstUpdate && !worldObj.isRemote) {
+    if (firstUpdate && !worldObj.isRemote) {
       spawnMount();
     }
 
-    if(isRidingMount()) {
+    if (isRidingMount()) {
       EntityLiving entLiving = ((EntityLiving) ridingEntity);
-      if(lastAttackTarget != getAttackTarget() || firstUpdate) {
+      if (lastAttackTarget != getAttackTarget() || firstUpdate) {
         EntityUtil.cancelCurrentTasks(entLiving);
         lastAttackTarget = getAttackTarget();
       }
     }
     firstUpdate = false;
 
-    if(!isMounted == isRidingMount()) {
+    if (!isMounted == isRidingMount()) {
       getAiAttackOnCollide().resetTask();
       getAiArrowAttack().resetTask();
       getNavigator().clearPathEntity();
       isMounted = isRidingMount();
     }
-    if(isBurning() && isRidingMount()) {
+    if (isBurning() && isRidingMount()) {
       ridingEntity.setFire(8);
     }
-    if(Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance)
-        && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {
+    if (Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance) && getAttackTarget() != null && isRanged()
+        && getDistanceSqToEntity(getAttackTarget()) < 5) {
       setCurrentItemOrArmor(0, getSwordForLevel(getRandomEquipmentLevel()));
     }
   }
@@ -154,27 +152,27 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   protected void despawnEntity() {
     Entity mount = ridingEntity;
     super.despawnEntity();
-    if(isDead && mount != null) {
+    if (isDead && mount != null) {
       mount.setDead();
     }
   }
 
   private void spawnMount() {
-    if(ridingEntity != null || !spawned) {
+    if (ridingEntity != null || !spawned) {
       return;
     }
-    
+
     EntityFallenMount mount = null;
-    if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
+    if (Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
       mount = new EntityFallenMount(worldObj);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
       mount.onSpawnWithEgg((IEntityLivingData) null);
       //NB: don;t check for entity collisions as we know the knight will collide
-      if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {      
+      if (!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
         mount = null;
       }
-    } 
-    if(mount != null) {
+    }
+    if (mount != null) {
       setCanPickUpLoot(false);
       setCanBreakDoors(false);
       worldObj.spawnEntityInWorld(mount);
@@ -187,8 +185,6 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     return itemstack != null && itemstack.getItem() == Items.bow;
   }
 
-
-
   @Override
   protected void addRandomArmor() {
 
@@ -196,29 +192,28 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     int equipmentLevel = getRandomEquipmentLevel(occupiedDiffcultyMultiplier);
     int armorLevel = equipmentLevel;
-    if(armorLevel == 1) {
+    if (armorLevel == 1) {
       //Skip gold armor, I don't like it
       armorLevel++;
     }
 
-    float chancePerPiece = isHardDifficulty() ? Config.fallenKnightChancePerArmorPieceHard
-        : Config.fallenKnightChancePerArmorPiece;
+    float chancePerPiece = isHardDifficulty() ? Config.fallenKnightChancePerArmorPieceHard : Config.fallenKnightChancePerArmorPiece;
     chancePerPiece *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
 
     for (int slot = 1; slot < 5; slot++) {
       ItemStack itemStack = getEquipmentInSlot(slot);
-      if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
+      if (itemStack == null && rand.nextFloat() <= chancePerPiece) {
         Item item = EntityLiving.getArmorItemForSlot(slot, armorLevel);
-        if(item != null) {
+        if (item != null) {
           ItemStack stack = new ItemStack(item);
-          if(armorLevel == 0) {
+          if (armorLevel == 0) {
             ((ItemArmor) item).func_82813_b(stack, 0);
           }
           setCurrentItemOrArmor(slot, stack);
         }
       }
     }
-    if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
+    if (rand.nextFloat() > Config.fallenKnightRangedRatio) {
       setCurrentItemOrArmor(0, getSwordForLevel(equipmentLevel));
     } else {
       setCurrentItemOrArmor(0, new ItemStack(Items.bow));
@@ -230,13 +225,12 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private int getRandomEquipmentLevel(float occupiedDiffcultyMultiplier) {
-    float chanceImprovedArmor = isHardDifficulty() ? Config.fallenKnightChanceArmorUpgradeHard
-        : Config.fallenKnightChanceArmorUpgrade;
+    float chanceImprovedArmor = isHardDifficulty() ? Config.fallenKnightChanceArmorUpgradeHard : Config.fallenKnightChanceArmorUpgrade;
     chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor   
 
     int armorLevel = rand.nextInt(2);
     for (int i = 0; i < 2; i++) {
-      if(rand.nextFloat() <= chanceImprovedArmor) {
+      if (rand.nextFloat() <= chanceImprovedArmor) {
         armorLevel++;
       }
     }
@@ -249,7 +243,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   private ItemStack getSwordForLevel(int swordLevel) {
     ////have a better chance of not getting a wooden or stone sword
-    if(swordLevel < 2) {
+    if (swordLevel < 2) {
       swordLevel += rand.nextInt(isHardDifficulty() ? 3 : 2);
       swordLevel = Math.min(swordLevel, 2);
     }
@@ -270,17 +264,17 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   public IEntityLivingData onSpawnWithEgg(IEntityLivingData livingData) {
 
     spawned = true;
-    
+
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
 
     setSkeletonType(0);
     addRandomArmor();
     enchantEquipment();
-    
+
     float f = worldObj.func_147462_b(posX, posY, posZ);
     setCanPickUpLoot(rand.nextFloat() < 0.55F * f);
-    setCanBreakDoors(rand.nextFloat() < f * 0.1F);    
+    setCanBreakDoors(rand.nextFloat() < f * 0.1F);
 
     return livingData;
   }
@@ -298,9 +292,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private void setCanBreakDoors(boolean val) {
-    if(canBreakDoors != val) {
+    if (canBreakDoors != val) {
       canBreakDoors = val;
-      if(canBreakDoors) {
+      if (canBreakDoors) {
         tasks.addTask(1, breakDoorAI);
       } else {
         tasks.removeTask(breakDoorAI);
@@ -312,7 +306,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   protected void dropFewItems(boolean hitByPlayer, int lootingLevel) {
     int numDrops = rand.nextInt(3 + lootingLevel);
     for (int i = 0; i < numDrops; ++i) {
-      if(rand.nextBoolean()) {
+      if (rand.nextBoolean()) {
         dropItem(Items.bone, 1);
       } else {
         dropItem(Items.rotten_flesh, 1);

@@ -22,7 +22,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.entity.MobInfo;
 
-
 public class ItemSpawnEgg extends Item {
 
   private static final String NAME = "itemSpawnEggEnderZoo";
@@ -38,7 +37,7 @@ public class ItemSpawnEgg extends Item {
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(true);
   }
-  
+
   private void init() {
     GameRegistry.registerItem(this, NAME);
   }
@@ -62,16 +61,17 @@ public class ItemSpawnEgg extends Item {
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     String s = ("" + StatCollector.translateToLocal(getUnlocalizedName() + ".name")).trim();
     String s1 = MobInfo.values()[damage].getName();
-    if(s1 != null) {
+    if (s1 != null) {
       s = s + " " + StatCollector.translateToLocal("entity." + s1 + ".name");
     }
     return s;
   }
 
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public void getSubItems(Item item, CreativeTabs tab, List list) {
-    for(MobInfo mob : MobInfo.values()) {
-      if(mob.isEnabled()) {
+    for (MobInfo mob : MobInfo.values()) {
+      if (mob.isEnabled()) {
         list.add(new ItemStack(item, 1, mob.ordinal()));
       }
     }
@@ -87,9 +87,9 @@ public class ItemSpawnEgg extends Item {
 
   @Override
   public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int posX, int posY, int posZ, int par7, float par8, float par9, float par10) {
-    if(!world.isRemote) {
+    if (!world.isRemote) {
       activateSpawnEgg(stack, world, posX, posY, posZ, par7);
-      if(!player.capabilities.isCreativeMode) {
+      if (!player.capabilities.isCreativeMode) {
         --stack.stackSize;
       }
     }
@@ -101,19 +101,18 @@ public class ItemSpawnEgg extends Item {
     posX += Facing.offsetsXForSide[par7];
     posY += Facing.offsetsYForSide[par7];
     posZ += Facing.offsetsZForSide[par7];
-    double d0 = 0.0D;
-    if(par7 == 1 && i1 != null && i1.getRenderType() == 11) {
-      d0 = 0.5D;
+    if (par7 == 1 && i1 != null && i1.getRenderType() == 11) {
+      posY += 0.5;
     }
 
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    EntityLiving entity = (EntityLiving)EntityList.createEntityByName(MobInfo.values()[damage].getName(), world);
+    EntityLiving entity = (EntityLiving) EntityList.createEntityByName(MobInfo.values()[damage].getName(), world);
     spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
-    return entity;    
+    return entity;
   }
 
   public static void spawnEntity(double x, double y, double z, EntityLiving entity, World world) {
-    if(!world.isRemote) {
+    if (!world.isRemote) {
       entity.setPosition(x, y, z);
       entity.onSpawnWithEgg(null);
       world.spawnEntityInWorld(entity);

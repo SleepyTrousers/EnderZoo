@@ -33,17 +33,16 @@ public class RenderWitherCat extends RenderLiving {
     super.doRender(entity, x, y, z, p_76986_8_, p_76986_9_);
     GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
     // Debug to show hit box    
-//    RenderUtil.renderEntityBoundingBox(entity, x, y, z);
+    //    RenderUtil.renderEntityBoundingBox(entity, x, y, z);
   }
-
 
   @Override
   protected void preRenderCallback(EntityLivingBase entity, float partialTick) {
 
     EntityWitherCat cat = (EntityWitherCat) entity;
     float scale = cat.getScale();
-    if(scale > 1) {
-      if(cat.getGrowthMode() == GrowthMode.SHRINK) {
+    if (scale > 1) {
+      if (cat.getGrowthMode() == GrowthMode.SHRINK) {
         partialTick *= -1;
       }
       scale = Math.min(cat.getAngryScale(), scale + cat.getScaleInc() * partialTick);
@@ -56,7 +55,7 @@ public class RenderWitherCat extends RenderLiving {
   @Override
   protected int shouldRenderPass(EntityLivingBase entity, int p_77032_2_, float p_77032_3_) {
 
-    if(p_77032_2_ != 0) {
+    if (p_77032_2_ != 0) {
       return -1;
     } else {
       bindTexture(angryTexture);

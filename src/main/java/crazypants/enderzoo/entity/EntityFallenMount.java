@@ -50,7 +50,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
-    updateAttackAI(); 
+    updateAttackAI();
   }
 
   @Override
@@ -68,14 +68,14 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public boolean interact(EntityPlayer p_70085_1_) {
     ItemStack itemstack = p_70085_1_.inventory.getCurrentItem();
-    if(itemstack != null && itemstack.getItem() == Items.spawn_egg) {
+    if (itemstack != null && itemstack.getItem() == Items.spawn_egg) {
       return super.interact(p_70085_1_);
     }
     return false;
   }
 
   @Override
-  protected boolean canDespawn() {    
+  protected boolean canDespawn() {
     return true;
   }
 
@@ -90,31 +90,30 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   }
 
   @Override
-  public boolean isBreedingItem(ItemStack p_70877_1_) {   
+  public boolean isBreedingItem(ItemStack p_70877_1_) {
     return false;
-  }  
+  }
 
   @Override
-  public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {    
-    if(type == EnumCreatureType.monster) {      
+  public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+    if (type == EnumCreatureType.monster) {
       return true;
     }
-    return false;    
+    return false;
   }
 
   @Override
   public IEntityLivingData onSpawnWithEgg(IEntityLivingData data) {
     setHorseType(3);
-    setHorseSaddled(true);    
+    setHorseSaddled(true);
     setGrowingAge(0);
     getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenMountHealth);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2);
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());
-    
-    float chanceOfArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
-        : Config.fallenMountChanceArmored;
-    if(rand.nextFloat() <= chanceOfArmor) {
+
+    float chanceOfArmor = worldObj.difficultySetting == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard : Config.fallenMountChanceArmored;
+    if (rand.nextFloat() <= chanceOfArmor) {
 
       //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied and the moon phase
       float occupiedDiffcultyMultiplier = worldObj.func_147462_b(posX, posY, posZ);
@@ -125,7 +124,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
       int armorLevel = 0;
       for (int i = 0; i < 2; i++) {
-        if(rand.nextFloat() <= chanceImprovedArmor) {
+        if (rand.nextFloat() <= chanceImprovedArmor) {
           armorLevel++;
         }
       }
@@ -147,7 +146,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void onUpdate() {
     super.onUpdate();
-    if(!worldObj.isRemote && worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
+    if (!worldObj.isRemote && worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
       setDead();
     }
   }
@@ -157,10 +156,10 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     super.onLivingUpdate();
 
-    if(worldObj.isDaytime() && !worldObj.isRemote) {
-      if(burnInSun() && worldObj.getTotalWorldTime() % 20 == 0) {
+    if (worldObj.isDaytime() && !worldObj.isRemote) {
+      if (burnInSun() && worldObj.getTotalWorldTime() % 20 == 0) {
         float f = getBrightness(1.0F);
-        if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
+        if (f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
             && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ))) {
           setFire(8);
         }
@@ -168,18 +167,17 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     }
     setEating(false);
 
-    if(wasRidden != isRidden()) {
+    if (wasRidden != isRidden()) {
       updateAttackAI();
       wasRidden = isRidden();
     }
   }
 
-  
-  private boolean burnInSun() {        
-    if(!isRidden()) {
+  private boolean burnInSun() {
+    if (!isRidden()) {
       return getTotalArmorValue() == 0;
-    }    
-    if(Config.fallenMountShadedByRider) {
+    }
+    if (Config.fallenMountShadedByRider) {
       return false;
     }
     return getTotalArmorValue() > 0;
@@ -192,7 +190,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   private void updateAttackAI() {
     targetTasks.removeTask(findTargetAI);
     tasks.removeTask(attackAI);
-    if(!isRidden()) {
+    if (!isRidden()) {
       targetTasks.addTask(2, findTargetAI);
       tasks.addTask(4, attackAI);
     }
@@ -209,11 +207,11 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   @Override
   public boolean attackEntityAsMob(Entity target) {
-    if(isRidden() || isDead) {
+    if (isRidden() || isDead) {
       return false;
     }
     super.attackEntityAsMob(target);
-    if(!isRearing()) {
+    if (!isRearing()) {
       makeHorseRearWithSound();
     }
     float damage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
@@ -223,7 +221,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(armor != null) {
+    if (armor != null) {
       NBTTagCompound armTag = new NBTTagCompound();
       armor.writeToNBT(armTag);
       root.setTag("armor", armTag);
@@ -234,12 +232,11 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   public void readEntityFromNBT(NBTTagCompound root) {
     super.readEntityFromNBT(root);
     setHorseSaddled(true);
-    if(root.hasKey("armor")) {
+    if (root.hasKey("armor")) {
       NBTTagCompound armTag = root.getCompoundTag("armor");
       armor = ItemStack.loadItemStackFromNBT(armTag);
       func_146086_d(armor);
     }
   }
-
 
 }

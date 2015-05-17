@@ -1,20 +1,15 @@
 package crazypants.enderzoo.potion;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
-import crazypants.enderzoo.EnderZoo;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.projectile.EntityPotion;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
-import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class RenderPotionEntity_WIP extends Render {
 
@@ -30,7 +25,7 @@ public class RenderPotionEntity_WIP extends Render {
     GL11.glScalef(0.5F, 0.5F, 0.5F);
     bindEntityTexture(entity);
     Tessellator tessellator = Tessellator.instance;
-    GL11.glColor3f(0,0,0);
+    GL11.glColor3f(0, 0, 0);
     GL11.glPushMatrix();
     this.renderIcon(tessellator, ItemPotion.func_94589_d("overlay"));
     GL11.glPopMatrix();
@@ -47,6 +42,7 @@ public class RenderPotionEntity_WIP extends Render {
    * Returns the location of an entity's texture. Doesn't seem to be called
    * unless you call Render.bindEntityTexture.
    */
+  @Override
   protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
     return TextureMap.locationItemsTexture;
   }
@@ -63,10 +59,10 @@ public class RenderPotionEntity_WIP extends Render {
     GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
     tesselator.startDrawingQuads();
     tesselator.setNormal(0.0F, 1.0F, 0.0F);
-    tesselator.addVertexWithUV((double) (0.0F - f5), (double) (0.0F - f6), 0.0D, (double) f, (double) f3);
-    tesselator.addVertexWithUV((double) (f4 - f5), (double) (0.0F - f6), 0.0D, (double) f1, (double) f3);
-    tesselator.addVertexWithUV((double) (f4 - f5), (double) (f4 - f6), 0.0D, (double) f1, (double) f2);
-    tesselator.addVertexWithUV((double) (0.0F - f5), (double) (f4 - f6), 0.0D, (double) f, (double) f2);
+    tesselator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, f, f3);
+    tesselator.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, f1, f3);
+    tesselator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, f1, f2);
+    tesselator.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, f, f2);
     tesselator.draw();
   }
 }

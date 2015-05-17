@@ -28,6 +28,7 @@ public class ItemConfusingDust extends Item {
     setHasSubtypes(false);
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   private void init() {
     GameRegistry.registerItem(this, NAME);
     try {

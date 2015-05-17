@@ -83,7 +83,7 @@ public class Vector2d {
     dx = x - x2;
     dy = y - y2;
     return (dx * dx + dy * dy);
-    
+
   }
 
 }

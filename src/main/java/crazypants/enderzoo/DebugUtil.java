@@ -24,12 +24,12 @@ public class DebugUtil {
 
   public void setEnabled(boolean enabled) {
     Object obf = Launch.blackboard.get("fml.deobfuscatedEnvironment");
-    if(obf == null || !(Boolean) obf) {
+    if (obf == null || !(Boolean) obf) {
       Log.warn("DebugUtil: Debug was enabled in a non dev. environemnt. Ignoring request.");
       return;
     }
 
-    if(enabled) {
+    if (enabled) {
       System.err.println("DebugUtil.setEnabled:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
       MinecraftForge.EVENT_BUS.register(this);
       FMLCommonHandler.instance().bus().register(this);
@@ -41,7 +41,7 @@ public class DebugUtil {
 
   @SubscribeEvent
   public void onPlayerTick(PlayerTickEvent evt) {
-    if(evt.side != Side.SERVER || evt.phase != Phase.START) {
+    if (evt.side != Side.SERVER || evt.phase != Phase.START) {
       return;
     }
     evt.player.setHealth(evt.player.getMaxHealth());
@@ -50,17 +50,17 @@ public class DebugUtil {
   @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onPlayerTickClient(PlayerTickEvent evt) {
-    if(evt.side != Side.CLIENT || evt.phase != Phase.END) {
+    if (evt.side != Side.CLIENT || evt.phase != Phase.END) {
       return;
     }
     MovingObjectPosition mo = Minecraft.getMinecraft().objectMouseOver;
-    if(mo != null && mo.entityHit != null && mo.entityHit instanceof EntityLivingBase) {
+    if (mo != null && mo.entityHit != null && mo.entityHit instanceof EntityLivingBase) {
       EntityLivingBase el = (EntityLivingBase) mo.entityHit;
-      if(el != lastMouseOver) {
+      if (el != lastMouseOver) {
         double baseAttack = 0;
         double attack = 0;
         IAttributeInstance damAtt = el.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
-        if(damAtt != null) {
+        if (damAtt != null) {
           baseAttack = damAtt.getBaseValue();
           attack = damAtt.getAttributeValue();
         }
@@ -75,8 +75,8 @@ public class DebugUtil {
 
   @SubscribeEvent
   public void onMonsterSpawn(LivingSpawnEvent evt) {
-    if(evt.entityLiving != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
-    //      evt.setResult(Result.DENY);
+    if (evt.entityLiving != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
+      //      evt.setResult(Result.DENY);
     }
   }
 
