@@ -72,7 +72,7 @@ public class FillPreperation implements ISitePreperation {
         int startY = maxY;
         if(x < minX || x >= maxX || z < minZ || z >= maxZ) {
           //border, so need to make it back to ground level 
-          startY = maxY + structure.getTemplate().getSurfaceOffset();
+//          startY = maxY + structure.getTemplate().getSurfaceOffset();
         }
         for (int y = startY; y > minY; y--) {
           if(clip.isBlockInBounds(x, z)) {

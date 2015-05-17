@@ -110,7 +110,7 @@ public class StructureRegister {
       sd = resourceManager.loadStructureTemplate(uid);
     } catch (IOException e) {
       Log.error("StructureRegister: Could not load structure template for " + uid + " Ex: " + e);
-      e.printStackTrace();
+      //e.printStackTrace();
     } finally {
       templates.put(uid, sd);
     }

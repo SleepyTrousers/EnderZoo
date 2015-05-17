@@ -43,12 +43,12 @@ public class ExportManager {
       if(f != null && f.getName().endsWith(StructureResourceManager.GENERATOR_EXT)) {
         try {
           StructureGenerator gen = StructureRegister.instance.getResourceManager().loadGenerator(f);
-          if(gen != null) {
+          if(gen != null && gen.isValid()) {
             StructureRegister.instance.registerGenerator(gen);
           }
         } catch (Exception e) {
-          Log.warn("Could not exported generator: " + f.getAbsolutePath());
-          e.printStackTrace();
+          Log.warn("Could not load exported generator: " + f.getAbsolutePath() + " Ex: " + e);
+//          e.printStackTrace();
         }    
       }
     }

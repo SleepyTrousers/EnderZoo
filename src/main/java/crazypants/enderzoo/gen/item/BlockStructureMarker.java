@@ -102,9 +102,10 @@ public class BlockStructureMarker extends Block {
       return null;
     }
 
-    short surfaceOffset = getDistance(world, x, y, z, scanDistance, new Point3i(0, -1, 0), false);
-    ySize += surfaceOffset;
-    System.out.println("BlockStructureMarker.getStructureBounds: " + surfaceOffset);
+    short surfaceOffset = getDistance(world, x, y, z, scanDistance, new Point3i(0, -1, 0), false);    
+    if(surfaceOffset != 0) {
+      ySize += 1 + surfaceOffset;
+    }    
 
     //go inside one block from marker clicked on
     x += xSize > 0 ? 1 : 0;
@@ -113,8 +114,8 @@ public class BlockStructureMarker extends Block {
     
     AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(
         xSize < 0 ? xSize : 0, ySize < 0 ? ySize : 0, zSize < 0 ? zSize : 0,
-        xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y - surfaceOffset, z);
-
+        xSize < 0 ? 0 : xSize, ySize < 0 ? 0 : ySize, zSize < 0 ? 0 : zSize).getOffsetBoundingBox(x, y - surfaceOffset - 1, z);
+    System.out.println("BlockStructureMarker.getStructureBounds: !!!!!!!!!!!!!!!!!!! " + bb); 
     return new StructureBounds(bb, surfaceOffset);
   }
 

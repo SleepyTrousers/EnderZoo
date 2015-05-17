@@ -36,7 +36,7 @@
                       "namesExcluded" : ["Twilight Forest", "Dungeon"] },
             
             
-            { "uid" : "SpacingValidator", 
+            { "type" : "SpacingValidator", 
                       "minSpacing" : 20,
                       "templateFilter" : [],
                       "validateChunk" : "false",

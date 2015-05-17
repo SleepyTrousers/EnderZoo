@@ -64,20 +64,21 @@ public class GeneratorParser {
         if(!valObj.isJsonNull() && valObj.has("uid")) {
           String tpUid = valObj.get("uid").getAsString();
           StructureTemplate st = reg.getStructureTemplate(tpUid, true);
-
-          List<Rotation> rots = new ArrayList<Rotation>();
-          if(valObj.has("rotations")) {
-            for (JsonElement rot : valObj.get("rotations").getAsJsonArray()) {
-              if(!rot.isJsonNull()) {
-                Rotation r = Rotation.get(rot.getAsInt());
-                if(r != null) {
-                  rots.add(r);
+          if(st != null) {
+            List<Rotation> rots = new ArrayList<Rotation>();
+            if(valObj.has("rotations")) {
+              for (JsonElement rot : valObj.get("rotations").getAsJsonArray()) {
+                if(!rot.isJsonNull()) {
+                  Rotation r = Rotation.get(rot.getAsInt());
+                  if(r != null) {
+                    rots.add(r);
+                  }
                 }
               }
             }
+            InstanceGen gen = new InstanceGen(st, rots);
+            res.addInstanceGen(gen);
           }
-          InstanceGen gen = new InstanceGen(st, rots);
-          res.addInstanceGen(gen);
         }
       }
       if(res.getInstanceGens().isEmpty()) {

@@ -30,9 +30,18 @@ public class StructureBlock {
 
   }
 
-  public StructureBlock(IBlockAccess ba, int x, int y, int z) {
+  public StructureBlock(String modId, String blockName) {
+    this.modId = modId;
+    this.blockName = blockName;
+    tileEntity = null;
+    blockMeta = 0;
+  }
 
-    Block b = ba.getBlock(x, y, z);
+  public StructureBlock(Block b) {
+    this(b,0,null);
+  }
+  
+  public StructureBlock(Block b, int meta, TileEntity te) {
     if(b == null) {
       Log.warn("StructureBlock.StructureBlock: Null block");
       b = Blocks.air;
@@ -46,15 +55,17 @@ public class StructureBlock {
       modId = uid.modId;
       blockName = uid.name;
     }
-    blockMeta = (short) ba.getBlockMetadata(x, y, z);
-
-    TileEntity tile = ba.getTileEntity(x, y, z);
-    if(tile != null) {
+    blockMeta = (short) meta;
+    if(te != null) {
       tileEntity = new NBTTagCompound();
-      tile.writeToNBT(tileEntity);
+      te.writeToNBT(tileEntity);
     } else {
       tileEntity = null;
     }
+  }
+
+  public StructureBlock(IBlockAccess ba, int x, int y, int z) {
+    this(ba.getBlock(x, y, z), ba.getBlockMetadata(x, y, z), ba.getTileEntity(x, y, z));
   }
 
   public boolean isAir() {
@@ -73,7 +84,6 @@ public class StructureBlock {
     if(tileEntity != null) {
       res.setTag("te", tileEntity);
     }
-
   }
 
   @Override

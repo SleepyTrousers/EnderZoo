@@ -16,6 +16,7 @@ public class ClearPreperation implements ISitePreperation {
   private Border border = new Border();
 
   private boolean clearPlants = true;
+  private boolean clearBellowGround = false;
 
   public ClearPreperation() {
     border.setBorder(1, 1, 1, 1, 3, 0);
@@ -34,6 +35,10 @@ public class ClearPreperation implements ISitePreperation {
     int minZ = (int) bb.minZ - border.get(ForgeDirection.NORTH);
     int maxZ = (int) bb.maxZ + border.get(ForgeDirection.SOUTH);
 
+//    if(!clearBellowGround) {
+//      minY += structure.getTemplate().getSurfaceOffset();
+//    }
+    
     for (int x = minX; x < maxX; x++) {
       for (int y = minY; y < maxY; y++) {
         for (int z = minZ; z < maxZ; z++) {

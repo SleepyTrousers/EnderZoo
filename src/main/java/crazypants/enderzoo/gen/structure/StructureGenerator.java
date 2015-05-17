@@ -108,7 +108,7 @@ public class StructureGenerator {
     List<Structure> res = new ArrayList<Structure>();
     for (int i = 0; i < attemptsPerChunk && res.size() < maxInChunk; i++) {
       Point3i origin = locSampler.generateCandidateLocation(struct, structures, world, random, chunkX, chunkZ);      
-      if(origin != null) {
+      if(origin != null) {        
         struct.setOrigin(origin);
         if(validators.isValidLocation(struct, structures, world, random, chunkX, chunkZ)) {            
           if(buildStructure(struct, structures, random, chunkX, chunkZ, world, chunkGenerator, chunkProvider)) {

@@ -70,7 +70,7 @@ public class StructureResourceManager {
     try {
       stream = getStreamForTemplate(uid);
       if(stream == null) {
-        throw new IOException("StructureResourceManager: Could find resources for template " + uid);        
+        throw new IOException("StructureResourceManager: Could find resources for template: " + uid);        
       }
       return new StructureTemplate(stream);
     } finally {
