@@ -19,7 +19,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import crazypants.enderzoo.vec.Point3i;
 
 public class EntityUtil {
 
@@ -38,10 +37,6 @@ public class EntityUtil {
     return StatCollector.translateToLocal("entity." + mobName + ".name");
   }
 
-  public static Vec3 getEntityPosition(Entity entity) {
-    return Vec3.createVectorHelper(entity.posX, entity.posY, entity.posZ);
-  }
-
   public static AxisAlignedBB getBoundsAround(Entity entity, double range) {
     return getBoundsAround(entity.posX, entity.posY, entity.posZ, range);
   }
@@ -56,12 +51,8 @@ public class EntityUtil {
         x + range, y + range, z + range);
   }
 
-  public static Point3i getEntityPositionI(Entity entity) {
-    return new Point3i((int) entity.posX, (int) entity.posY, (int) entity.posZ);
-  }
-
   public static void cancelCurrentTasks(EntityLiving ent) {
-    Iterator iterator = ent.tasks.taskEntries.iterator();
+    Iterator<?> iterator = ent.tasks.taskEntries.iterator();
 
     List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
     while (iterator.hasNext()) {

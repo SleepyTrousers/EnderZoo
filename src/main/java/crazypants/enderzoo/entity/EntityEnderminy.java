@@ -26,11 +26,13 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+
+import com.enderio.core.common.util.BlockCoord;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
@@ -424,23 +426,12 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
     
-    Vec3 pos = Vec3.createVectorHelper(0, 0, 0);
-
     @Override
     public int compare(EntityCreeper o1, EntityCreeper o2) {
-      VecUtil.set(pos, posX, posY, posZ);      
-      double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
-      double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
+      BlockCoord pos = new BlockCoord(posX, posY, posZ);      
+      double d1 = pos.getDistSq(new BlockCoord(o1));
+      double d2 = pos.getDistSq(new BlockCoord(o2));
       return Double.compare(d1, d2);
     }
   }
-  
-  public double distanceSquared(double x, double y, double z, Vec3 v2) {
-    double dx, dy, dz;
-    dx = x - v2.xCoord;
-    dy = y - v2.yCoord;
-    dz = z - v2.zCoord;
-    return (dx * dx + dy * dy + dz * dz);
-  }
-
 }

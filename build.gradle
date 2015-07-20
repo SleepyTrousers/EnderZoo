@@ -17,7 +17,7 @@ if (System.getenv('BUILD_NUMBER') != null)
 else
     logger.lifecycle "No build number detected, setting to 0"
 
-group = "com.enderzoo"
+group = "com.enderio.enderzoo"
 archivesBaseName = "EnderZoo"
 version = "${minecraft_version}-${mod_version}.${buildnumber}"
 
@@ -48,6 +48,7 @@ repositories {
 
 dependencies {
     compile "mcp.mobius.waila:Waila:${waila_version}"
+    compile "com.enderio.core:EnderCore:${endercore_version}:dev"
 }
 
 sourceSets {

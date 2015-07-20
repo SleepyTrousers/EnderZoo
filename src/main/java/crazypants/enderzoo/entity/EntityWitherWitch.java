@@ -27,12 +27,14 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+
+import com.enderio.core.common.util.BlockCoord;
+
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
 import crazypants.enderzoo.potion.BrewingUtil;
-import crazypants.enderzoo.vec.Point3i;
 
 public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
@@ -260,10 +262,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     int numCats = rand.nextInt(Config.witherWitchMaxCats + 1);
     numCats = Math.max(numCats, Config.witherWitchMinCats);
     for (int i = 0; i < numCats; i++) {
-      Point3i startPoint = EntityUtil.getEntityPositionI(this);
-      startPoint.x += 4 - rand.nextInt(9);
-      startPoint.z += 4 - rand.nextInt(9);
-      Point3i spawnLoc = new Point3i();
+      BlockCoord startPoint = new BlockCoord(this);
+      startPoint = new BlockCoord(startPoint.x + (4 - rand.nextInt(9)), startPoint.y, startPoint.z + (4 - rand.nextInt(9)));
+      BlockCoord spawnLoc = new BlockCoord();
       if(SpawnUtil.findClearGround(worldObj, startPoint, spawnLoc, 2, 10, true)) {
         spawnCat(spawnLoc);
       } else {
@@ -272,7 +273,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     }
   }
 
-  private void spawnCat(Point3i spawnLoc) {
+  private void spawnCat(BlockCoord spawnLoc) {
     EntityWitherCat cat = new EntityWitherCat(worldObj);
     cat.onSpawnWithEgg(null);
     cat.setOwner(this);

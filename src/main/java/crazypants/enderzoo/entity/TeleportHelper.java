@@ -54,7 +54,7 @@ public class TeleportHelper {
     entity.posZ = event.targetZ;
 
     int xInt = MathHelper.floor_double(entity.posX);
-    int yInt = Math.max(1, MathHelper.floor_double(entity.posY));
+    int yInt = MathHelper.floor_double(entity.posY);
     int zInt = MathHelper.floor_double(entity.posZ);
 
     boolean flag = false;
@@ -74,6 +74,8 @@ public class TeleportHelper {
       if(foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
         if(entity.worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox)) {
+          flag = true;
+        } else if (yInt <= 0) {
           flag = true;
         }
       }
