@@ -11,7 +11,7 @@ public class EntityAIFollowOwner extends EntityAIBase {
   IOwnable<? extends EntityCreature, ? extends EntityLivingBase> owned;
   double followSpeed;
   private int pathingTimer;
-  
+
   private double minDistanceSq;
   private double maxDistanceSq;
 
@@ -24,7 +24,7 @@ public class EntityAIFollowOwner extends EntityAIBase {
 
   @Override
   public boolean shouldExecute() {
-    if(owned.getOwner() == null) {
+    if (owned.getOwner() == null) {
       return false;
     }
     return getDistanceSqFromOwner() > maxDistanceSq;
@@ -33,14 +33,14 @@ public class EntityAIFollowOwner extends EntityAIBase {
   @Override
   public boolean continueExecuting() {
     EntityLivingBase owner = owned.getOwner();
-    if(owner == null || !owner.isEntityAlive()) {
+    if (owner == null || !owner.isEntityAlive()) {
       return false;
     }
     return !owned.asEntity().getNavigator().noPath();
   }
 
   public boolean isWithinTargetDistanceFromOwner() {
-    if(owned.getOwner() == null) {
+    if (owned.getOwner() == null) {
       return true;
     }
     double distance = getDistanceSqFromOwner();
@@ -58,20 +58,20 @@ public class EntityAIFollowOwner extends EntityAIBase {
   }
 
   @Override
-  public void resetTask() {    
+  public void resetTask() {
   }
 
   @Override
   public void updateTask() {
     EntityLivingBase owner = owned.getOwner();
-    if(owner == null) {
+    if (owner == null) {
       return;
     }
     double distance = getDistanceSqFromOwner();
-    if(distance < minDistanceSq) {
+    if (distance < minDistanceSq) {
       owned.asEntity().getNavigator().clearPathEntity();
     }
-    if(--pathingTimer <= 0) {
+    if (--pathingTimer <= 0) {
       pathingTimer = 10;
       owned.asEntity().getNavigator().tryMoveToEntityLiving(owned.getOwner(), followSpeed);
     }

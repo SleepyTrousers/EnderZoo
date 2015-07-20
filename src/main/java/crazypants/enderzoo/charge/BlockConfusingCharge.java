@@ -43,7 +43,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     EntityRegistry.registerGlobalEntityID(EntityPrimedCharge.class, "EntityPrimedCharge", entityID);
     EntityRegistry.registerModEntity(EntityPrimedCharge.class, "EntityPrimedCharge", entityID, EnderZoo.instance, 64, 100, false);
 
-    if(!Config.confusingChargeEnabled) {
+    if (!Config.confusingChargeEnabled) {
       return null;
     }
 
@@ -88,23 +88,23 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   public void explode(EntityPrimedCharge entity) {
     World world = entity.worldObj;
 
-    world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 3F,
-        1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
+    world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
     PacketHandler.sendToAllAround(new PacketExplodeEffect(entity, this), entity);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
 
     List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, EntityUtil.getBoundsAround(x, y, z, Config.confusingChargeRange));
-    if(players != null) {
+    if (players != null) {
 
       double maxDistanceSq = Config.confusingChargeRange * Config.confusingChargeRange;
       for (EntityPlayer player : players) {
         double playerDistSq = player.getDistanceSq(x, y, z);
-        if(playerDistSq < maxDistanceSq) {
+        if (playerDistSq < maxDistanceSq) {
           double scale = 1 - playerDistSq / maxDistanceSq;
           scale = Math.exp(scale) / Math.E;
           int duration = (int) Math.ceil(Config.confusingChargeEffectDuration * scale);
@@ -129,8 +129,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
 
-      EntitySpellParticleFX entityfx = new EntitySpellParticleFX(world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
-          motionZ);
+      EntitySpellParticleFX entityfx = new EntitySpellParticleFX(world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY, motionZ);
       float colRan = 0.75F + random.nextFloat() * 0.25F;
       entityfx.setRBGColorF(r * colRan, g * colRan, b * colRan);
       //entityfx.multiplyVelocity((float) (random.nextDouble() * 4.0D));
@@ -155,8 +154,8 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   @Override
   public void func_150114_a(World world, int x, int y, int z, int meta, EntityLivingBase placedBy) {
-    if(!world.isRemote) {
-      if((meta & 1) == 1) {
+    if (!world.isRemote) {
+      if ((meta & 1) == 1) {
         EntityPrimedCharge entity = new EntityPrimedCharge(this, world, x + 0.5F, y + 0.5F, z + 0.5F, placedBy);
         world.spawnEntityInWorld(entity);
         world.playSoundAtEntity(entity, "game.tnt.primed", 1.0F, 1.0F);
@@ -167,15 +166,14 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   @Override
   public void onBlockDestroyedByExplosion(World world, int x, int y, int z, Explosion explosion) {
-    if(!world.isRemote) {
+    if (!world.isRemote) {
       EntityLivingBase placedBy = explosion.getExplosivePlacedBy();
       onIgnitedByNeighbour(world, x, y, z, placedBy);
     }
   }
 
   protected void onIgnitedByNeighbour(World world, int x, int y, int z, EntityLivingBase placedBy) {
-    EntityPrimedCharge entity = new EntityPrimedCharge(this, world, x + 0.5F, y + 0.5F,
-        z + 0.5F, placedBy);
+    EntityPrimedCharge entity = new EntityPrimedCharge(this, world, x + 0.5F, y + 0.5F, z + 0.5F, placedBy);
     entity.setFuse(world.rand.nextInt(entity.getFuse() / 4) + entity.getFuse() / 8);
     world.spawnEntityInWorld(entity);
   }

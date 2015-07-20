@@ -9,41 +9,38 @@ public class Enchantments {
   private static Enchantments instance;
 
   public static Enchantments getInstance() {
-    if(instance == null) {
+    if (instance == null) {
       instance = new Enchantments();
       instance.registerEnchantments();
     }
     return instance;
   }
 
-  private EnchantmentWitherArrow witherArrow;
-  private EnchantmentWitherWeapon witherWeapon;
-
   private void registerEnchantments() {
     int id = Config.enchantmentWitherArrowId;
-    if(id < 0) {
+    if (id < 0) {
       id = getEmptyEnchantId();
     }
-    if(id < 0) {
+    if (id < 0) {
       Log.error("Could not find an empty enchantment ID to add enchanments");
       return;
     }
-    witherArrow = new EnchantmentWitherArrow(id);
+    new EnchantmentWitherArrow(id);
 
     id = Config.enchantmentWitherWeaponId;
-    if(id < 0) {
+    if (id < 0) {
       id = getEmptyEnchantId();
     }
-    if(id < 0) {
+    if (id < 0) {
       Log.error("Could not find an empty enchantment ID to add enchanments");
       return;
     }
-    witherWeapon = new EnchantmentWitherWeapon(id);
+    new EnchantmentWitherWeapon(id);
   }
 
   private int getEmptyEnchantId() {
     for (int i = 0; i < Enchantment.enchantmentsList.length; i++) {
-      if(Enchantment.enchantmentsList[i] == null) {
+      if (Enchantment.enchantmentsList[i] == null) {
         return i;
       }
     }

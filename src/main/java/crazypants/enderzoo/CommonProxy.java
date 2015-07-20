@@ -16,14 +16,13 @@ public class CommonProxy {
 
   public EntityPlayer getClientPlayer() {
     return null;
-  }  
+  }
 
   public void load() {
   }
 
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
-    ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, true));    
+    ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, true));
   }
-  
 
 }

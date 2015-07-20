@@ -12,7 +12,7 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
   private boolean retreating;
   private EntityAIFollowOwner followTask;
 
-  public EntityAIAttackOnCollideOwned(IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable, Class p_i1635_2_, double p_i1635_3_,
+  public EntityAIAttackOnCollideOwned(IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable, Class<?> p_i1635_2_, double p_i1635_3_,
       boolean p_i1635_5_, EntityAIFollowOwner followTask) {
     super(ownable.asEntity(), p_i1635_2_, p_i1635_3_, p_i1635_5_);
     this.ownable = ownable;
@@ -40,16 +40,16 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
 
   @Override
   public void updateTask() {
-    if(retreating) {
+    if (retreating) {
       followTask.updateTask();
-      if(followTask.isWithinTargetDistanceFromOwner()) {
+      if (followTask.isWithinTargetDistanceFromOwner()) {
         retreating = false;
         followTask.resetTask();
         super.startExecuting();
       }
       return;
     }
-    if(isTooFarFromOwner()) {
+    if (isTooFarFromOwner()) {
       retreating = true;
       followTask.startExecuting();
       return;
@@ -58,7 +58,7 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
   }
 
   private boolean isTooFarFromOwner() {
-    if(ownable.getOwner() == null) {
+    if (ownable.getOwner() == null) {
       return false;
     }
     double distance = getDistanceSqFromOwner();
@@ -71,7 +71,5 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
   private double getDistanceSqFromOwner() {
     return ownable.asEntity().getDistanceSqToEntity(ownable.getOwner());
   }
-
-
 
 }

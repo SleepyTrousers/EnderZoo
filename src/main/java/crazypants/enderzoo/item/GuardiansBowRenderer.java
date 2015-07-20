@@ -3,7 +3,6 @@ package crazypants.enderzoo.item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,8 +38,7 @@ public class GuardiansBowRenderer implements IItemRenderer {
 
   @Override
   public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-    EntityLivingBase living = (EntityLivingBase) data[1];
-    ItemRenderer renderer = RenderManager.instance.itemRenderer;
+    EntityLivingBase living = (EntityLivingBase) data[1];    
     for (int i = 0; i < item.getItem().getRenderPasses(item.getItemDamage()) + 1; i++) {
       renderItem(living, item, i, type);
     }
@@ -51,9 +49,9 @@ public class GuardiansBowRenderer implements IItemRenderer {
     GL11.glPushMatrix();
 
     IIcon icon = null;
-    if(living instanceof EntityPlayer) {
+    if (living instanceof EntityPlayer) {
       EntityPlayer player = (EntityPlayer) living;
-      if(player.getItemInUse() != null) {
+      if (player.getItemInUse() != null) {
         icon = stack.getItem().getIcon(stack, renderPass, player, player.getItemInUse(), player.getItemInUseCount());
       } else {
         icon = living.getItemIcon(stack, renderPass);
@@ -62,7 +60,7 @@ public class GuardiansBowRenderer implements IItemRenderer {
       icon = living.getItemIcon(stack, renderPass);
     }
 
-    if(icon == null) {
+    if (icon == null) {
       GL11.glPopMatrix();
       return;
     }
@@ -70,7 +68,7 @@ public class GuardiansBowRenderer implements IItemRenderer {
     TextureManager texturemanager = mc.getTextureManager();
     texturemanager.bindTexture(texturemanager.getResourceLocation(stack.getItemSpriteNumber()));
 
-    if(type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
+    if (type == ItemRenderType.EQUIPPED_FIRST_PERSON) {
       GL11.glTranslatef(0.6F, 0.5F, 0.5F);
     } else {
       GL11.glRotatef(180.0F, 0F, 0F, 1.0F);

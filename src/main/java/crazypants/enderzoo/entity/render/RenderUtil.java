@@ -15,7 +15,7 @@ public final class RenderUtil {
   public static void renderEntityBoundingBox(EntityLiving entity, double x, double y, double z) {
 
     AxisAlignedBB bb = entity.boundingBox;
-    if(bb != null) {
+    if (bb != null) {
 
       GL11.glDisable(GL11.GL_TEXTURE_2D);
       GL11.glDisable(GL11.GL_LIGHTING);

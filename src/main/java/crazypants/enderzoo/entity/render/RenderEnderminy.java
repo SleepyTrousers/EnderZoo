@@ -15,13 +15,12 @@ import org.lwjgl.opengl.GL11;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityEnderminy;
 
-
 public class RenderEnderminy extends RenderLiving {
-  
+
   private static final String PATH = Config.enderminyOldTexture ? "entity/old/" : "entity/";
   private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:" + PATH + "enderminy_eyes.png");
   private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:" + PATH + "enderminy.png");
-  
+
   private ModelEnderman endermanModel;
   private Random rnd = new Random();
 
@@ -31,11 +30,10 @@ public class RenderEnderminy extends RenderLiving {
     setRenderPassModel(endermanModel);
   }
 
-
   public void doRender(EntityEnderminy p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 
     endermanModel.isAttacking = p_76986_1_.isScreaming();
-    if(p_76986_1_.isScreaming()) {
+    if (p_76986_1_.isScreaming()) {
       double d3 = 0.02D;
       p_76986_2_ += rnd.nextGaussian() * d3;
       p_76986_6_ += rnd.nextGaussian() * d3;
@@ -48,7 +46,7 @@ public class RenderEnderminy extends RenderLiving {
   }
 
   protected int shouldRenderPass(EntityEnderminy p_77032_1_, int p_77032_2_, float p_77032_3_) {
-    if(p_77032_2_ != 0) {
+    if (p_77032_2_ != 0) {
       return -1;
     } else {
       bindTexture(endermanEyesTexture);
@@ -57,7 +55,7 @@ public class RenderEnderminy extends RenderLiving {
       GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE);
       GL11.glDisable(GL11.GL_LIGHTING);
 
-      if(p_77032_1_.isInvisible()) {
+      if (p_77032_1_.isInvisible()) {
         GL11.glDepthMask(false);
       } else {
         GL11.glDepthMask(true);
@@ -72,7 +70,7 @@ public class RenderEnderminy extends RenderLiving {
       return 1;
     }
   }
-  
+
   @Override
   protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_) {
     GL11.glScalef(0.5F, 0.25F, 0.5F);
@@ -102,5 +100,5 @@ public class RenderEnderminy extends RenderLiving {
   public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
-   
+
 }

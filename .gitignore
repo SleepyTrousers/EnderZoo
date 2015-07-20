@@ -19,3 +19,4 @@ bin
 /resources/assets/enderzoo/textures/blocks/*.pdn
 /eclipse
 *.bak
+/run

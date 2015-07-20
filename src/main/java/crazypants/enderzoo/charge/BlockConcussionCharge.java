@@ -1,8 +1,8 @@
 package crazypants.enderzoo.charge;
 
+import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.world.World;
 import crazypants.enderzoo.config.Config;
 
 public class BlockConcussionCharge extends BlockConfusingCharge {
@@ -10,7 +10,7 @@ public class BlockConcussionCharge extends BlockConfusingCharge {
   private static final String NAME = "blockConcussionCharge";
 
   public static BlockConcussionCharge create() {
-    if(!Config.concussionChargeEnabled) {
+    if (!Config.concussionChargeEnabled) {
       return null;
     }
 
