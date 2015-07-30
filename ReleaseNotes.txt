@@ -1,4 +1,17 @@
 -------------------------------------------
+Version 1.0.13
+-------------------------------------------
+
+New: 
+
+- Dire Slime
+
+Bugs
+- #70 Wither Cat Spawning in dark areas
+- #92 Concussion Creeper Teleporting to Void
+- Spawn Config biome filters not always applied correctly
+
+-------------------------------------------
 Version 1.0.12
 -------------------------------------------
 
