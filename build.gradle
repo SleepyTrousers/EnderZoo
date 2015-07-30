@@ -48,7 +48,6 @@ repositories {
 
 dependencies {
     compile "mcp.mobius.waila:Waila:${waila_version}"
-    compile "com.enderio.core:EnderCore:${endercore_version}:dev"
 }
 
 sourceSets {

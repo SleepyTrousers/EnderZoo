@@ -26,13 +26,11 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-
-import com.enderio.core.common.util.BlockCoord;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
@@ -100,7 +98,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   public boolean getCanSpawnHere() {
     boolean passedGrassCheck = true;
-    if (Config.enderminySpawnOnlyOnGrass) {
+    if(Config.enderminySpawnOnlyOnGrass) {
       int i = MathHelper.floor_double(posX);
       int j = MathHelper.floor_double(boundingBox.minY);
       int k = MathHelper.floor_double(posZ);
@@ -112,17 +110,17 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   protected Entity findPlayerToAttack() {
 
-    if (attackIfLookingAtPlayer) {
+    if(attackIfLookingAtPlayer) {
       EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 64.0D);
-      if (entityplayer != null) {
-        if (shouldAttackPlayer(entityplayer)) {
+      if(entityplayer != null) {
+        if(shouldAttackPlayer(entityplayer)) {
           isAggressive = true;
 
-          if (stareTimer == 0) {
+          if(stareTimer == 0) {
             worldObj.playSoundEffect(entityplayer.posX, entityplayer.posY, entityplayer.posZ, "mob.endermen.stare", 1.0F, 1.0F);
           }
 
-          if (stareTimer++ == 5) {
+          if(stareTimer++ == 5) {
             stareTimer = 0;
             setScreaming(true);
             return entityplayer;
@@ -132,15 +130,15 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
         }
       }
     }
-    if (attackCreepers) {
+    if(attackCreepers) {
       int range = 16;
       AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
       @SuppressWarnings("unchecked")
       List<EntityCreeper> creepers = worldObj.getEntitiesWithinAABB(EntityCreeper.class, bb);
-      if (creepers != null && !creepers.isEmpty()) {
+      if(creepers != null && !creepers.isEmpty()) {
         Collections.sort(creepers, closestEntityComparator);
         for (EntityCreeper creeper : creepers) {
-          if (creeper.canEntityBeSeen(this)) {
+          if(creeper.canEntityBeSeen(this)) {
             return creeper;
           }
         }
@@ -155,7 +153,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   private boolean shouldAttackPlayer(EntityPlayer player) {
 
     ItemStack itemstack = player.inventory.armorInventory[3];
-    if (itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
+    if(itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
       return false;
     } else {
 
@@ -182,11 +180,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   public void onLivingUpdate() {
 
-    if (lastEntityToAttack != entityToAttack) {
+    if(lastEntityToAttack != entityToAttack) {
       IAttributeInstance iattributeinstance = getEntityAttribute(SharedMonsterAttributes.movementSpeed);
       iattributeinstance.removeModifier(attackingSpeedBoostModifier);
 
-      if (entityToAttack != null) {
+      if(entityToAttack != null) {
         iattributeinstance.applyModifier(attackingSpeedBoostModifier);
       }
     }
@@ -197,26 +195,26 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
           * width, (rand.nextDouble() - 0.5D) * 2.0D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2.0D);
     }
 
-    if (isBurning() || isInWater()) {
+    if(isBurning() || isInWater()) {
       entityToAttack = null;
       setScreaming(false);
       isAggressive = false;
       teleportRandomly();
     }
 
-    if (isScreaming() && !isAggressive && rand.nextInt(100) == 0) {
+    if(isScreaming() && !isAggressive && rand.nextInt(100) == 0) {
       setScreaming(false);
     }
 
     isJumping = false;
 
-    if (entityToAttack != null) {
+    if(entityToAttack != null) {
       faceEntity(entityToAttack, 100.0F, 100.0F);
     }
 
-    if (!worldObj.isRemote && isEntityAlive()) {
-      if (entityToAttack != null) {
-        if (entityToAttack.getDistanceSqToEntity(this) > 256.0D && teleportDelay++ >= 30 && teleportToEntity(entityToAttack)) {
+    if(!worldObj.isRemote && isEntityAlive()) {
+      if(entityToAttack != null) {
+        if(entityToAttack.getDistanceSqToEntity(this) > 256.0D && teleportDelay++ >= 30 && teleportToEntity(entityToAttack)) {
           teleportDelay = 0;
         }
       } else {
@@ -253,7 +251,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   protected boolean teleportTo(double x, double y, double z) {
 
     EnderTeleportEvent event = new EnderTeleportEvent(this, x, y, z, 0);
-    if (MinecraftForge.EVENT_BUS.post(event)) {
+    if(MinecraftForge.EVENT_BUS.post(event)) {
       return false;
     }
     double d3 = posX;
@@ -268,12 +266,12 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     int zInt = MathHelper.floor_double(posZ);
 
     boolean flag = false;
-    if (worldObj.blockExists(xInt, yInt, zInt)) {
+    if(worldObj.blockExists(xInt, yInt, zInt)) {
 
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
         Block block = worldObj.getBlock(xInt, yInt - 1, zInt);
-        if (block.getMaterial().blocksMovement()) {
+        if(block.getMaterial().blocksMovement()) {
           foundGround = true;
         } else {
           --posY;
@@ -281,15 +279,15 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
         }
       }
 
-      if (foundGround) {
+      if(foundGround) {
         setPosition(posX, posY, posZ);
-        if (worldObj.getCollidingBoundingBoxes(this, boundingBox).isEmpty() && !worldObj.isAnyLiquid(boundingBox)) {
+        if(worldObj.getCollidingBoundingBoxes(this, boundingBox).isEmpty() && !worldObj.isAnyLiquid(boundingBox)) {
           flag = true;
         }
       }
     }
 
-    if (!flag) {
+    if(!flag) {
       setPosition(d3, d4, d5);
       return false;
     }
@@ -335,10 +333,10 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   protected void dropFewItems(boolean hitByPlayer, int looting) {
     Item item = getDropItem();
-    if (item != null) {
+    if(item != null) {
       int numItems = rand.nextInt(2 + looting);
       for (int i = 0; i < numItems; ++i) {
-        if (rand.nextFloat() <= 0.5) {
+        if(rand.nextFloat() <= 0.5) {
           dropItem(EnderZoo.itemEnderFragment, 1);
         }
         dropItem(item, 1);
@@ -351,16 +349,16 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
    */
   @Override
   public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-    if (isEntityInvulnerable()) {
+    if(isEntityInvulnerable()) {
       return false;
     }
 
     setScreaming(true);
 
-    if (damageSource instanceof EntityDamageSourceIndirect) {
+    if(damageSource instanceof EntityDamageSourceIndirect) {
       isAggressive = false;
       for (int i = 0; i < 64; ++i) {
-        if (teleportRandomly()) {
+        if(teleportRandomly()) {
           return true;
         }
       }
@@ -372,9 +370,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     //&& !ItemDarkSteelSword.isEquippedAndPowered((EntityPlayer) damageSource.getEntity(), 1)) {
     ) {
       isAggressive = true;
-      if (rand.nextInt(3) == 0) {
+      if(rand.nextInt(3) == 0) {
         for (int i = 0; i < 64; ++i) {
-          if (teleportRandomly(16)) {
+          if(teleportRandomly(16)) {
             entityToAttack = damageSource.getEntity();
             doGroupArgo();
             return true;
@@ -383,7 +381,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       }
     }
 
-    if (res) {
+    if(res) {
       doGroupArgo();
     }
     return res;
@@ -392,19 +390,19 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   @SuppressWarnings("unchecked")
   private void doGroupArgo() {
-    if (!groupAgroEnabled) {
+    if(!groupAgroEnabled) {
       return;
     }
-    if (!(entityToAttack instanceof EntityPlayer)) {
+    if(!(entityToAttack instanceof EntityPlayer)) {
       return;
     }
     int range = 16;
     AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
     List<EntityEnderminy> minies = worldObj.getEntitiesWithinAABB(EntityEnderminy.class, bb);
-    if (minies != null && !minies.isEmpty()) {
+    if(minies != null && !minies.isEmpty()) {
 
       for (EntityEnderminy miny : minies) {
-        if (miny.entityToAttack == null) { //&& miny.canEntityBeSeen(this)) {
+        if(miny.entityToAttack == null) { //&& miny.canEntityBeSeen(this)) {
           miny.entityToAttack = entityToAttack;
         }
       }
@@ -421,12 +419,23 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
 
+    Vec3 pos = Vec3.createVectorHelper(0, 0, 0);
+
     @Override
     public int compare(EntityCreeper o1, EntityCreeper o2) {
-      BlockCoord pos = new BlockCoord(posX, posY, posZ);      
-      double d1 = pos.getDistSq(new BlockCoord(o1));
-      double d2 = pos.getDistSq(new BlockCoord(o2));
+      VecUtil.set(pos, posX, posY, posZ);
+      double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
+      double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
       return Double.compare(d1, d2);
     }
   }
+
+  public double distanceSquared(double x, double y, double z, Vec3 v2) {
+    double dx, dy, dz;
+    dx = x - v2.xCoord;
+    dy = y - v2.yCoord;
+    dz = z - v2.zCoord;
+    return (dx * dx + dy * dy + dz * dz);
+  }
+
 }
