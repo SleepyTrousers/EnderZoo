@@ -3,13 +3,17 @@ package crazypants.enderzoo.charge;
 import java.util.List;
 import java.util.Random;
 
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.PacketHandler;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityTNTPrimed;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
@@ -20,11 +24,6 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.EnderZooTab;
-import crazypants.enderzoo.PacketHandler;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.EntityUtil;
 
 public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
@@ -119,6 +118,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   @SideOnly(Side.CLIENT)
   public void explodeEffect(World world, double x, double y, double z) {
 
+    @SuppressWarnings("unchecked")
     List<EntityPlayer> players = world.getEntitiesWithinAABB(EntityPlayer.class, EntityUtil.getBoundsAround(x, y, z, Config.confusingChargeRange));
     if(players != null) {
 

@@ -25,5 +25,4 @@ public class CommonProxy {
     ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, false, true));    
   }
   
-
 }

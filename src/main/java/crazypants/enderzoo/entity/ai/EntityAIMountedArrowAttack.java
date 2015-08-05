@@ -114,7 +114,6 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       return;
     }
     
-
     entityHost.getLookHelper().setLookPositionWithEntity(attackTarget, 30.0F, 30.0F);
 
     if(--timeUntilNextAttack == 0) {

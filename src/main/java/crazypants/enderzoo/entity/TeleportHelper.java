@@ -2,7 +2,6 @@ package crazypants.enderzoo.entity;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -35,7 +34,7 @@ public class TeleportHelper {
     vec3 = vec3.normalize();
     double d0 = 16.0D;
     double d1 = entity.posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
-    double d2 = entity.posY + (double) (rand.nextInt(16) - 8) - vec3.yCoord * d0;
+    double d2 = entity.posY + (rand.nextInt(16) - 8) - vec3.yCoord * d0;
     double d3 = entity.posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
     return teleportTo(entity, d1, d2, d3, false);
   }
@@ -43,8 +42,8 @@ public class TeleportHelper {
   public static boolean teleportTo(EntityLivingBase entity, double x, double y, double z, boolean fireEndermanEvent) {
 
     EnderTeleportEvent event = new EnderTeleportEvent(entity, x, y, z, 0);
-    if(fireEndermanEvent) {
-      if(MinecraftForge.EVENT_BUS.post(event)) {
+    if (fireEndermanEvent) {
+      if (MinecraftForge.EVENT_BUS.post(event)) {
         return false;
       }
     }
@@ -57,7 +56,7 @@ public class TeleportHelper {
     entity.posZ = event.targetZ;
 
     int xInt = MathHelper.floor_double(entity.posX);
-    int yInt = MathHelper.floor_double(entity.posY);
+    int yInt = Math.max(1,MathHelper.floor_double(entity.posY));
     int zInt = MathHelper.floor_double(entity.posZ);
 
     boolean flag = false;
@@ -68,6 +67,7 @@ public class TeleportHelper {
         //Block block = entity.worldObj.getBlock(xInt, yInt - 1, zInt);
     	IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
     	if(bs != null && bs.getBlock() != null && bs.getBlock().getMaterial().blocksMovement()) {
+
           foundGround = true;
         } else {
           --entity.posY;
@@ -75,24 +75,26 @@ public class TeleportHelper {
         }
       }
 
-      if(foundGround) {
+      if (foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
         if(entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty() && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
+          flag = true;
+        } else if (yInt <= 0) {
           flag = true;
         }
       }
     }
 
-    if(!flag) {
+    if (!flag) {
       entity.setPosition(d3, d4, d5);
       return false;
     }
-    
-    entity.setPositionAndUpdate(entity.posX, entity.posY, entity.posZ);    
+
+    entity.setPositionAndUpdate(entity.posX, entity.posY, entity.posZ);
 
     short short1 = 128;
     for (int l = 0; l < short1; ++l) {
-      double d6 = (double) l / ((double) short1 - 1.0D);
+      double d6 = l / (short1 - 1.0D);
       float f = (rand.nextFloat() - 0.5F) * 0.2F;
       float f1 = (rand.nextFloat() - 0.5F) * 0.2F;
       float f2 = (rand.nextFloat() - 0.5F) * 0.2F;

@@ -1,18 +1,5 @@
 package crazypants.enderzoo;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import crazypants.enderzoo.charge.BlockConcussionCharge;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
 import crazypants.enderzoo.charge.BlockEnderCharge;
@@ -20,6 +7,7 @@ import crazypants.enderzoo.charge.EntityPrimedCharge;
 import crazypants.enderzoo.charge.RenderPrimedCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityConcussionCreeper;
+import crazypants.enderzoo.entity.EntityDireSlime;
 import crazypants.enderzoo.entity.EntityDireWolf;
 import crazypants.enderzoo.entity.EntityEnderminy;
 import crazypants.enderzoo.entity.EntityFallenKnight;
@@ -28,6 +16,7 @@ import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherWitch;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.entity.render.RenderConcussionCreeper;
+import crazypants.enderzoo.entity.render.RenderDireSlime;
 import crazypants.enderzoo.entity.render.RenderDirewolf;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
 import crazypants.enderzoo.entity.render.RenderFallenKnight;
@@ -41,6 +30,18 @@ import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+
 
 public class ClientProxy extends CommonProxy {
 
@@ -57,6 +58,7 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void load() {
     super.load();
+
     RenderManager rm = Minecraft.getMinecraft().getRenderManager();
     if(Config.enderminyEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityEnderminy.class, new RenderEnderminy(rm));
@@ -78,6 +80,9 @@ public class ClientProxy extends CommonProxy {
     }
     if(Config.direWolfEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new RenderDirewolf(rm));
+    }
+    if (Config.direSlimeEnabled) {
+      RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, new RenderDireSlime(rm));
     }
 
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge(rm));
@@ -109,7 +114,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     //renderItem.getItemModelMesher().register(Item.getItemFromBlock(tutorialBlock), 0, new ModelResourceLocation(Reference.MODID + ":" + ((BlockTutorial) tutorialBlock).getName(), "inventory")); - See more at: http://www.wuppy29.com/minecraft/1-8-tutorial/updating-1-7-to-1-8-part-3-basic-blocks/#sthash.SbmEziF9.oH7EPdaT.dpuf
-
+    
   }
 
   private void regRenderer(Item item, int meta, String name) {
@@ -118,7 +123,7 @@ public class ClientProxy extends CommonProxy {
 
   private void regRenderer(Item item, int meta, String modId, String name) {
     RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-    ItemMeshDefinition d;
+    //ItemMeshDefinition d;
     String resourceName;
     if(modId != null) {
       resourceName = modId + ":" + name;

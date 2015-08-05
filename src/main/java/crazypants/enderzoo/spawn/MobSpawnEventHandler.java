@@ -5,22 +5,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.block.BlockDirt;
+import net.minecraft.block.BlockGrass;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
 import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityDireSlime;
 import crazypants.enderzoo.entity.IEnderZooMob;
 
 public class MobSpawnEventHandler {
@@ -181,6 +189,31 @@ public class MobSpawnEventHandler {
     double newValue = curValue * attackModifier;
     att.setBaseValue(newValue);
     //    System.out.println("MobSpawnEventHandler.adjustBaseAttack: base attack changed from " + curValue + " to " + newValue);
+  }
+  
+  @SubscribeEvent
+  public void onBlockHarvest(HarvestDropsEvent event) {
+    if (Config.direSlimeEnabled && !event.isCanceled() && (event.state.getBlock() instanceof BlockDirt || event.state.getBlock() instanceof BlockGrass) && event.harvester != null
+        && !event.harvester.capabilities.isCreativeMode && event.world != null && !event.world.isRemote && event.harvester.getCurrentEquippedItem() != null
+        && !ForgeHooks.isToolEffective(event.world, event.pos, event.harvester.getCurrentEquippedItem())
+        && Config.direSlimeChance >= event.world.rand.nextFloat()) {
+      EntityDireSlime direSlime = new EntityDireSlime(event.world);
+      direSlime.setPosition(event.pos.getX() + 0.5, event.pos.getY() + 0.0, event.pos.getZ() + 0.5);
+      event.world.spawnEntityInWorld(direSlime);
+      direSlime.playLivingSound();
+      for (ItemStack drop : event.drops) {
+        if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.dirt)) {
+          if (drop.stackSize > 1) {
+            drop.stackSize--;
+          } else if (event.drops.size() == 1) {
+            event.drops.clear();
+          } else {
+            event.drops.remove(drop);
+          }
+          return;
+        }
+      }
+    }
   }
 
 }

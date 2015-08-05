@@ -1,13 +1,14 @@
 package crazypants.enderzoo.entity;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -19,7 +20,6 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -37,11 +37,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
@@ -57,24 +52,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
       6.2, 0)).setSaved(false);
 
-  /**
-   * Counter to delay the teleportation of an enderman towards the currently
-   * attacked target
-   */
-  private int teleportDelay;
-  /**
-   * A player must stare at an enderman for 5 ticks before it becomes
-   * aggressive. This field counts those ticks.
-   */
-  private int stareTimer;
-  private Entity lastEntityToAttack;
   private boolean isAggressive;
 
   private boolean attackIfLookingAtPlayer = Config.enderminyAttacksPlayerOnSight;
   private boolean attackCreepers = Config.enderminyAttacksCreepers;
   private boolean groupAgroEnabled = Config.enderminyGroupAgro;
-
-  private final ClosestEntityComparator closestEntityComparator = new ClosestEntityComparator();
 
   public EntityEnderminy(World world) {
     super(world);
@@ -97,11 +79,6 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
   }
 
-  //  @Override
-  //  @SideOnly(Side.CLIENT)
-  //  public float getShadowSize() {
-  //    return 0.01F;
-  //  }
 
   @Override
   protected boolean isValidLightLevel() {
@@ -130,7 +107,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       int k = MathHelper.floor_double(posZ);
       passedGrassCheck = worldObj.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.grass;
     }
-    return posY > Config.enderminyMinSpawnY && super.getCanSpawnHere();
+    return passedGrassCheck && posY > Config.enderminyMinSpawnY && super.getCanSpawnHere();
   }
 
   /**
@@ -355,6 +332,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
     int range = 16;
     AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+    @SuppressWarnings("unchecked")
     List<EntityEnderminy> minies = worldObj.getEntitiesWithinAABB(EntityEnderminy.class, bb);
     if(minies != null && !minies.isEmpty()) {
 
@@ -375,26 +353,26 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     dataWatcher.updateObject(SCREAMING_INDEX, Byte.valueOf((byte) (p_70819_1_ ? 1 : 0)));
   }
 
-  private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
-
-    Vec3 pos = new Vec3(0, 0, 0);
-
-    @Override
-    public int compare(EntityCreeper o1, EntityCreeper o2) {
-      pos = new Vec3(posX, posY, posZ);
-      double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
-      double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
-      return Double.compare(d1, d2);
-    }
-  }
-
-  public double distanceSquared(double x, double y, double z, Vec3 v2) {
-    double dx, dy, dz;
-    dx = x - v2.xCoord;
-    dy = y - v2.yCoord;
-    dz = z - v2.zCoord;
-    return (dx * dx + dy * dy + dz * dz);
-  }
+//  private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
+//
+//    Vec3 pos = new Vec3(0, 0, 0);
+//
+//    @Override
+//    public int compare(EntityCreeper o1, EntityCreeper o2) {
+//      pos = new Vec3(posX, posY, posZ);
+//      double d1 = distanceSquared(o1.posX, o1.posY, o1.posZ, pos);
+//      double d2 = distanceSquared(o2.posX, o2.posY, o2.posZ, pos);
+//      return Double.compare(d1, d2);
+//    }
+//  }
+//
+//  public double distanceSquared(double x, double y, double z, Vec3 v2) {
+//    double dx, dy, dz;
+//    dx = x - v2.xCoord;
+//    dy = y - v2.yCoord;
+//    dz = z - v2.zCoord;
+//    return (dx * dx + dy * dy + dz * dz);
+//  }
 
   class AIFindPlayer extends EntityAINearestAttackableTarget {
 
@@ -410,9 +388,10 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
+    @SuppressWarnings("unchecked")
     public boolean shouldExecute() {
       double d0 = getTargetDistance();
-      List list = taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
+      List<?> list = taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
       Collections.sort(list, this.theNearestAttackableTargetSorter);
       if(list.isEmpty()) {
         return false;

@@ -274,7 +274,12 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     cat.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
-    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) return;
+    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) {
+      return;
+    }
+    if(!cat.getCanSpawnHere()) {
+      return;
+    }
     cats.add(cat);
     worldObj.spawnEntityInWorld(cat);
   }

@@ -29,7 +29,7 @@ public class DimensionFilter {
   }
 
   public boolean canSpawnInDimension(World world) {
-    if(name != null) {
+    if (name != null) {
       return !name.equals(world.provider.getDimensionName());
     }
     int id = world.provider.getDimensionId();

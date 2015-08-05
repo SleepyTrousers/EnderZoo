@@ -7,6 +7,65 @@ Version 1.1.0.beta
 
 
 -------------------------------------------
+Version 1.0.13
+-------------------------------------------
+
+New: 
+
+- Dire Slime
+
+Bugs
+- #70 Wither Cat Spawning in dark areas
+- #92 Concussion Creeper Teleporting to Void
+- Spawn Config biome filters not always applied correctly
+
+-------------------------------------------
+Version 1.0.12
+-------------------------------------------
+
+Bugs
+
+- #57 Server wither cat crash
+- #70 Wither Cat Spawning in dark areas
+- #81 Fixed rendering artifacts on items / blocks
+- Fixed rendering of enderminy
+ 
+
+-------------------------------------------
+Version 1.0.11
+-------------------------------------------
+New
+
+- #74 Improve Dire Wolf howl sounds
+  - Add pack howls, where howls will group together
+  - Add configs for all howl sound parameters
+  - Limit the minimum time between howls globally
+
+Changes
+
+- New textures for enderminy and concussion creeper. Can be changed back in the config.
+
+Bugs
+
+- #72 Fix dire wolves spawning in lit bases, now follow normal wolf rules
+- #69 Fix concussion creepers teleporting you below bedrock
+- #78 Fix strange rendering on wither cats
+
+-------------------------------------------
+Version 1.0.10
+-------------------------------------------
+New
+
+- #62 Prevent teleporting the player in Runic Dungeons (HenryLoenwind)
+- #68 Added fr_FR.lang (Milobe115 )
+- #71 Added French Canadian language (DragonsLover)
+
+Bugs
+
+- #48 Added config option to resolve conflict with wither potion effect        
+
+
+-------------------------------------------
 Version 1.0.9
 -------------------------------------------
 New

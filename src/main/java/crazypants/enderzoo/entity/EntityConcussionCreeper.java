@@ -44,30 +44,34 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   @Override
   public void onUpdate() {
 
-    if(isEntityAlive()) {
+    if (isEntityAlive()) {
       int timeSinceIgnited = getTimeSinceIgnited();
       int fuseTime = getFuseTime();
 
-      if(timeSinceIgnited >= fuseTime - 1) {
+      if (timeSinceIgnited >= fuseTime - 1) {
         setTimeSinceIgnited(0);
 
         int range = Config.concussionCreeperExplosionRange;
         AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
+
+        
+        @SuppressWarnings("unchecked")
         List<EntityLivingBase> ents = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
         for (EntityLivingBase ent : ents) {
-          if(ent != this) {
-            if(!worldObj.isRemote) {
+          if (ent != this) {
+            if (!worldObj.isRemote) {
               boolean done = false;
               for (int i = 0; i < 20 && !done; i++) {
                 done = TeleportHelper.teleportRandomly(ent, Config.concussionCreeperMaxTeleportRange);
               }
             }
-            if(ent instanceof EntityPlayer) {
+            if (ent instanceof EntityPlayer) {
               worldObj.playSoundEffect(ent.posX, ent.posY, ent.posZ, "mob.endermen.portal", 1.0F, 1.0F);
               EnderZoo.proxy.setInstantConfusionOnPlayer((EntityPlayer) ent, Config.concussionCreeperConfusionDuration);
             }
           }
         }
+
 
         worldObj.playSoundEffect(posX, posY, posZ, "random.explode", 4.0F,
             (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
@@ -83,7 +87,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   @Override
   protected void dropFewItems(boolean hitByPlayer, int looting) {
     int j = rand.nextInt(3);
-    if(looting > 0) {
+    if (looting > 0) {
       j += rand.nextInt(looting + 1);
     }
     for (int k = 0; k < j; ++k) {
@@ -94,9 +98,9 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   @Override
   protected Item getDropItem() {
     int num = rand.nextInt(3);
-    if(num == 0) {
+    if (num == 0) {
       return EnderZoo.itemEnderFragment;
-    } else if(num == 1) {
+    } else if (num == 1) {
       return EnderZoo.itemConfusingDust;
     } else {
       return Items.gunpowder;
@@ -104,7 +108,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   }
 
   private void setTimeSinceIgnited(int i) {
-    if(fTimeSinceIgnited == null) {
+    if (fTimeSinceIgnited == null) {
       return;
     }
     try {
@@ -115,7 +119,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   }
 
   private int getTimeSinceIgnited() {
-    if(fTimeSinceIgnited == null) {
+    if (fTimeSinceIgnited == null) {
       return 0;
     }
     try {
@@ -127,7 +131,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
   }
 
   private int getFuseTime() {
-    if(fFuseTime == null) {
+    if (fFuseTime == null) {
       return 0;
     }
     try {

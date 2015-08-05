@@ -17,7 +17,7 @@ if (System.getenv('BUILD_NUMBER') != null)
 else
     logger.lifecycle "No build number detected, setting to 0"
 
-group = "com.enderzoo"
+group = "com.enderio.enderzoo"
 archivesBaseName = "EnderZoo"
 version = "${minecraft_version}-${mod_version}.${buildnumber}"
 
@@ -155,4 +155,5 @@ curse {
     projectId = project.curse_projectId
     changelog = System.getenv("CHANGELOG").equals("none") ? getChangelogText() : System.getenv("CHANGELOG")
     releaseType = project.hasProperty('mod_appendix') ? "${mod_appendix}".toString() : 'release'
+    additionalArtifact deobfJar, sourceJar
 }

@@ -19,14 +19,14 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
 
   @Override
   public void addBiomeDescriptor(IBiomeDescriptor biome) {
-    if(biome.getType() != null) {
-      if(biome.isExclude()) {
+    if (biome.getType() != null) {
+      if (biome.isExclude()) {
         typeExcludes.add(biome.getType());
       } else {
         types.add(biome.getType());
       }
-    } else if(biome.getName() != null) {
-      if(biome.isExclude()) {
+    } else if (biome.getName() != null) {
+      if (biome.isExclude()) {
         nameExcludes.add(biome.getName());
       } else {
         names.add(biome.getName());
@@ -36,8 +36,8 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
 
   protected boolean isExcluded(BiomeGenBase candidate) {
     for (BiomeDictionary.Type exType : typeExcludes) {
-      if(BiomeDictionary.isBiomeOfType(candidate, exType)) {
-        if(Config.spawnConfigPrintDetailedOutput) {
+      if (BiomeDictionary.isBiomeOfType(candidate, exType)) {
+        if (Config.spawnConfigPrintDetailedOutput) {
           System.out.print("Excluded " + candidate.biomeName + ", ");
         }
         return true;
@@ -45,7 +45,7 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
       }
     }
     for (String exName : nameExcludes) {
-      if(exName != null && exName.equals(candidate.biomeName)) {
+      if (exName != null && exName.equals(candidate.biomeName)) {
         System.out.print("Excluded " + candidate.biomeName + ", ");
         return false;
       }

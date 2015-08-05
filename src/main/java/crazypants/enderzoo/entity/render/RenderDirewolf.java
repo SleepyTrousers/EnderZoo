@@ -31,7 +31,7 @@ public class RenderDirewolf extends RenderLiving {
   @Override
   protected void preRenderCallback(EntityLivingBase entity, float partialTick) {
 
-    if(debugCounter == 4) {
+    if (debugCounter == 4) {
       System.out.println("RenderDirewolf.preRenderCallback: ");
       mainModel = new ModelDireWolf();
       debugCounter++;
@@ -64,7 +64,6 @@ public class RenderDirewolf extends RenderLiving {
   //  protected int shouldRenderPass(EntityLivingBase p_77032_1_, int p_77032_2_, float p_77032_3_) {
   //    return this.shouldRenderPass((EntityDirewolf) p_77032_1_, p_77032_2_, p_77032_3_);
   //  }
-
 
   @Override
   protected float handleRotationFloat(EntityLivingBase p_77044_1_, float p_77044_2_) {

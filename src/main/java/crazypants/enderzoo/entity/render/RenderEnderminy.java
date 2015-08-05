@@ -15,12 +15,16 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityEnderminy;
 
 public class RenderEnderminy extends RenderLiving {
 
-  private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:entity/enderminy_eyes.png");
-  private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:entity/enderminy.png");
+
+  private static final String PATH = Config.enderminyOldTexture ? "entity/old/" : "entity/";
+  private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:" + PATH + "enderminy_eyes.png");
+  private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:" + PATH + "enderminy.png");
+
 
   private ModelEnderman endermanModel;
   private Random rnd = new Random();
@@ -33,13 +37,13 @@ public class RenderEnderminy extends RenderLiving {
 
   public void doRender(EntityEnderminy p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 
-    this.endermanModel.isAttacking = p_76986_1_.isScreaming();
-    if(p_76986_1_.isScreaming()) {
+    endermanModel.isAttacking = p_76986_1_.isScreaming();
+    if (p_76986_1_.isScreaming()) {
       double d3 = 0.02D;
-      p_76986_2_ += this.rnd.nextGaussian() * d3;
-      p_76986_6_ += this.rnd.nextGaussian() * d3;
+      p_76986_2_ += rnd.nextGaussian() * d3;
+      p_76986_6_ += rnd.nextGaussian() * d3;
     }
-    super.doRender((EntityLiving) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+    super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
 
   protected ResourceLocation getEntityTexture(EntityEnderminy p_110775_1_) {

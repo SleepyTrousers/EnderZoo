@@ -8,14 +8,14 @@ import net.minecraftforge.fml.client.IModGuiFactory;
 import net.minecraftforge.fml.client.IModGuiFactory.RuntimeOptionCategoryElement;
 import net.minecraftforge.fml.client.IModGuiFactory.RuntimeOptionGuiHandler;
 
-public class ConfigFactoryEnderZoo implements IModGuiFactory{
+public class ConfigFactoryEnderZoo implements IModGuiFactory {
 
   @Override
-  public void initialize(Minecraft minecraftInstance) {    
+  public void initialize(Minecraft minecraftInstance) {
   }
 
   @Override
-  public Class<? extends GuiScreen> mainConfigGuiClass() {    
+  public Class<? extends GuiScreen> mainConfigGuiClass() {
     return GuiConfigFactoryEnderZoo.class;
   }
 

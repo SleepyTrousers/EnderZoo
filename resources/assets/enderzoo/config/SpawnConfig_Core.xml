@@ -29,7 +29,7 @@ entry attributes:
 - entry.mobName: The name used to register the mob with Minecraft. 
 
 - entry.creatureType: (Optional, default monster) The type of mob. Values must match the names in EnumCreatureType. Valid entries:
-                     monster, creature, ambient, waterCreature
+                     MONSTER, CREATURE, AMBIENT, WATER_CREATURE
 
 - entry.rate: The rate at which the entities are spawned, for example 10=Enderman spawn rate, 100=Zombie spawn rate
 
@@ -84,7 +84,7 @@ dimensionExclude attributes:
  -->
 <SpawnConfig>
 
-  <entry id="ConcussionCreeper" mobName="enderzoo.ConcussionCreeper" creatureType="monster" rate="40"
+  <entry id="ConcussionCreeper" mobName="enderzoo.ConcussionCreeper" creatureType="MONSTER" rate="40"
     minGroupSize="1" maxGroupSize="3" remove="false">
     <biomeFilter type="any">
       <biome type="BASE_LAND_TYPES" />
@@ -93,6 +93,7 @@ dimensionExclude attributes:
       <biome type="MUSHROOM" exclude="true" />
     </biomeFilter>   
     <dimensionExclude name="Twilight Forest"/>           
+    <dimensionExclude name="Dungeon"/>
   </entry>
 
   <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="30">

@@ -1,6 +1,7 @@
 package crazypants.enderzoo.item;
 
-import net.minecraft.client.resources.model.ModelBakery;
+import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.config.Config;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -18,9 +19,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.EnderZooTab;
-import crazypants.enderzoo.config.Config;
 
 public class ItemGuardiansBow extends ItemBow {
 

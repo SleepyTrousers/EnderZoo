@@ -1,6 +1,8 @@
 package crazypants.enderzoo.entity;
 
-import net.minecraft.enchantment.EnchantmentHelper;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
+import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,9 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.ai.EntityAIMountedArrowAttack;
-import crazypants.enderzoo.entity.ai.EntityAIMountedAttackOnCollide;
 
 public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
@@ -58,12 +57,12 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     MobInfo.FALLEN_KNIGHT.applyAttributes(this);
   }
 
-  private float getAttackRange() {
-    if(isRiding()) {
-      return 3;
-    }
-    return 2;
-  }
+//  private float getAttackRange() {
+//    if(isRiding()) {
+//      return 3;
+//    }
+//    return 2;
+//  }
 
   @Override
   public void setCombatTask() {

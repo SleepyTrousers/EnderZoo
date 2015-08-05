@@ -1,52 +1,42 @@
 package crazypants.enderzoo.spawn.impl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class BiomeFilterAll extends AbstractBiomeFilter {
 
   @Override
   public BiomeGenBase[] getMatchedBiomes() {
 
-    if(types.isEmpty() && names.isEmpty()) {
+    if (types.isEmpty() && names.isEmpty()) {
       return new BiomeGenBase[0];
     }
-
-    List<BiomeGenBase> result = new ArrayList<BiomeGenBase>();
+    Set<BiomeGenBase> result = new HashSet<BiomeGenBase>();
     for (BiomeGenBase candidate : BiomeGenBase.getBiomeGenArray()) {
-      if(candidate != null && !isExcluded(candidate) && matchesAll(candidate)) {
+      if (candidate != null && isMatchingBiome(candidate)) {
         result.add(candidate);
       }
     }
     return result.toArray(new BiomeGenBase[result.size()]);
   }
 
-  private boolean matchesAll(BiomeGenBase candidate) {
-    Type[] canTypes = BiomeDictionary.getTypesForBiome(candidate);
-    for (BiomeDictionary.Type type : types) {
-      if(!contains(canTypes, type)) {
-        return false;
-      }
+  @Override
+  public boolean isMatchingBiome(BiomeGenBase biome) {
+
+    if (isExcluded(biome)) {
+      return false;
     }
-    for (String name : names) {
-      if(name == null || !name.equals(candidate.biomeName)) {
+    if (!names.isEmpty() && !names.contains(biome.biomeName)) {
+      return false;
+    }
+    for (BiomeDictionary.Type type : types) {
+      if (!BiomeDictionary.isBiomeOfType(biome, type)) {
         return false;
       }
     }
     return true;
   }
-
-  private boolean contains(Type[] in, Type type) {
-    for (Type t : in) {
-      if(t == type) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }

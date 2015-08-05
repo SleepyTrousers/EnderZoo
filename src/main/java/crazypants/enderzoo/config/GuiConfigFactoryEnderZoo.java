@@ -18,6 +18,7 @@ public class GuiConfigFactoryEnderZoo extends GuiConfig {
     super(parentScreen, getConfigElements(parentScreen), EnderZoo.MODID, false, false, StatCollector.translateToLocal("enderzoo.config.title"));
   }
 
+  @SuppressWarnings("rawtypes")
   private static List<IConfigElement> getConfigElements(GuiScreen parent) {
     List<IConfigElement> list = new ArrayList<IConfigElement>();
     String prefix = "enderzoo.config.";

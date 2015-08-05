@@ -2,13 +2,12 @@ package crazypants.enderzoo;
 
 import net.minecraftforge.fml.common.FMLLog;
 
-
 public final class Log {
 
   public static final String CHANNEL = EnderZoo.MODID;
 
   public static void warn(String msg) {
-    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.WARN, msg, (Object[])null);
+    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.WARN, msg, (Object[]) null);
   }
 
   public static void error(String msg) {
