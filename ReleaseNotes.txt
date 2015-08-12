@@ -1,10 +1,16 @@
 -------------------------------------------
+Version 1.0.14
+-------------------------------------------
+
+- Lowered default chance a Dire Slime is spawned
+
+-------------------------------------------
 Version 1.0.13
 -------------------------------------------
 
 New: 
 
-- Dire Slime
+- Dire Slime (HenryLoenwind)
 
 Bugs
 - #70 Wither Cat Spawning in dark areas

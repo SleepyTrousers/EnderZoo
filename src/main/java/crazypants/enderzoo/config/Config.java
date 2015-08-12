@@ -145,7 +145,7 @@ public final class Config {
   public static double direSlimeAttackDamage = 3;
   public static double direSlimeAttackDamageMedium = 5;
   public static double direSlimeAttackDamageLarge = 8;
-  public static double direSlimeChance = 0.65;
+  public static double direSlimeChance = 0.2;
   public static double direSlimeChanceLarge = 0.2;
   public static double direSlimeChanceMedium = 0.4;
 
