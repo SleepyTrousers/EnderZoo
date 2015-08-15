@@ -19,6 +19,7 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
@@ -193,7 +194,8 @@ public class MobSpawnEventHandler {
 
   @SubscribeEvent
   public void onBlockHarvest(HarvestDropsEvent event) {
-    if (Config.direSlimeEnabled && !event.isCanceled() && (event.block instanceof BlockDirt || event.block instanceof BlockGrass) && event.harvester != null
+    if (!(event.harvester instanceof FakePlayer)
+        && Config.direSlimeEnabled && !event.isCanceled() && (event.block instanceof BlockDirt || event.block instanceof BlockGrass) && event.harvester != null
         && !event.harvester.capabilities.isCreativeMode && event.world != null && !event.world.isRemote && event.harvester.getCurrentEquippedItem() != null
         && !ForgeHooks.isToolEffective(event.harvester.getCurrentEquippedItem(), event.block, event.blockMetadata)
         && Config.direSlimeChance >= event.world.rand.nextFloat()) {
