@@ -131,7 +131,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
     if (!worldObj.isAirBlock(new BlockPos(i, 0, j))) {
       double d0 = (getEntityBoundingBox().maxY - getEntityBoundingBox().minY) * 0.66D;
       int k = MathHelper.floor_double(this.posY - getYOffset() + d0);
-      return worldObj.getCombinedLight(new BlockPos(  i, k, j), 0);
+      return worldObj.getLightBrightness(new BlockPos(  i, k, j));
     } else {
       return 0.0F;
     }
