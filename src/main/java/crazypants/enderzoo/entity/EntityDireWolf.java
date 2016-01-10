@@ -54,7 +54,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 
     if(Config.direWolfAggresiveRange > 0) {      
-      EntityAINearestAttackableTargetBounded nearTarg = new EntityAINearestAttackableTargetBounded(this, EntityPlayer.class, true);
+      EntityAINearestAttackableTargetBounded<EntityPlayer> nearTarg = new EntityAINearestAttackableTargetBounded<EntityPlayer>(this, EntityPlayer.class, true);
       nearTarg.setMaxDistanceToTarget(Config.direWolfAggresiveRange);
       targetTasks.addTask(2, nearTarg);
     }
@@ -195,7 +195,6 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private void doGroupArgo(EntityLivingBase curTarget) {
     if (!Config.direWolfPackAttackEnabled) {
       return;

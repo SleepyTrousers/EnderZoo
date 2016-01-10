@@ -3,6 +3,12 @@ package crazypants.enderzoo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
+import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
+import crazypants.enderzoo.potion.BrewingUtil;
+import crazypants.enderzoo.vec.Point3i;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.IRangedAttackMob;
@@ -29,12 +35,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
-import crazypants.enderzoo.entity.ai.EntityAIRangedAttack;
-import crazypants.enderzoo.potion.BrewingUtil;
-import crazypants.enderzoo.vec.Point3i;
 
 public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IEnderZooMob {
 
@@ -76,7 +76,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     tasks.addTask(3, new EntityAILookIdle(this));
     targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityPlayer>(this, EntityPlayer.class, true));
   }
 
   @Override
@@ -130,9 +130,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   @Override
-  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData livingData) {
+  public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData livingData) {
     spawned = true;
-    return super.onSpawnFirstTime(di, livingData);
+    return super.onInitialSpawn(di, livingData);
   }
 
   @Override
@@ -271,7 +271,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   private void spawnCat(Point3i spawnLoc) {
     EntityWitherCat cat = new EntityWitherCat(worldObj);
-    cat.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
+    cat.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
     if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, worldObj, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) {

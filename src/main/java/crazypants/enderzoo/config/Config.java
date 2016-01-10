@@ -4,13 +4,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public final class Config {
 
@@ -62,6 +62,7 @@ public final class Config {
   public static double globalHardAttackModifier = 1.1;
 
   public static final Section sectionEnderminy = new Section("Enderminy", "enderminy");
+  public static int enderminyId = 689990;
   public static boolean enderminyEnabled = true;
   public static boolean enderminyAttacksPlayerOnSight = false;
   public static boolean enderminyAttacksCreepers = true;
@@ -75,6 +76,7 @@ public final class Config {
   public static boolean enderminyOldTexture = true;
 
   public static final Section sectionConCreeper = new Section("Concussion Creeper", "concussionCreeper");
+  public static int concussionCreeperId = 689991;
   public static boolean concussionCreeperEnabled = true;
   public static int concussionCreeperMaxTeleportRange = 32;
   public static int concussionCreeperConfusionDuration = 100;
@@ -83,6 +85,7 @@ public final class Config {
   public static boolean concussionCreeperOldTexture = true;
 
   public static final Section sectionFallenKnight = new Section("Fallen Knight", "fallenKnight");
+  public static int fallenKnightId = 689992;
   public static boolean fallenKnightEnabled = true;
   public static double fallenKnightBaseDamage = 4.0;
   public static double fallenKnightHealth = 20;
@@ -101,6 +104,7 @@ public final class Config {
   public static boolean fallenKnightArchersSwitchToMelee = true;
 
   public static final Section sectionFallenMount = new Section("Fallen Mount", "fallenMount");
+  public static int fallenMountId = 689993;
   public static boolean fallenMountEnabled = true;
   public static double fallenMountChargeSpeed = 2.5f;
   public static double fallenMountBaseAttackDamage = 4;
@@ -112,12 +116,14 @@ public final class Config {
   public static double fallenMountHealth = 30;
 
   public static final Section sectionWitherWitch = new Section("Wither Witch", "witherWitch");
+  public static int witherWitchId = 689994;
   public static boolean witherWitchEnabled = true;
   public static double witherWitchHealth = 30;
   public static int witherWitchMinCats = 1;
   public static int witherWitchMaxCats = 2;
 
   public static final Section sectionWitherCat = new Section("Wither Cat", "witherCat");
+  public static int witherCatId = 689995;
   public static boolean witherCatEnabled = true;
   public static double witherCatHealth = 12;
   public static double witherCatAttackDamage = 3;
@@ -126,6 +132,7 @@ public final class Config {
   public static double witherCatAngryAttackDamageHardModifier = 2;
 
   public static final Section sectionDireWolf = new Section("Dire Wolf", "direWolf");
+  public static int direWolfId = 689996;
   public static boolean direWolfEnabled = true;
   public static boolean direWolfPackAttackEnabled = true;
   public static double direWolfHealth = 20;
@@ -138,6 +145,7 @@ public final class Config {
   public static int direWolfPackHowlAmount = 8;
 
   public static final Section sectionDireSlime = new Section("Dire Slime", "direSlime");
+  public static int direSlimeId = 689997;
   public static boolean direSlimeEnabled = true;
   public static double direSlimeHealth = 4;
   public static double direSlimeHealthMedium = 8;
@@ -162,7 +170,8 @@ public final class Config {
   public static int enchantmentWitherWeaponMinEnchantability = 20;
   public static int enchantmentWitherWeaponMaxEnchantability = 50;
 
-  public static final Section sectionCharges = new Section("Charges", "charges");
+  public static final Section sectionCharges = new Section("Charges", "charges");  
+  public static int entityPrimedChargeId = 689998;
   public static boolean confusingChargeEnabled = true;
   public static double confusingChargeRange = 6;
   public static int confusingChargeEffectDuration = 300;
@@ -183,9 +192,8 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
-  public static void load(FMLPreInitializationEvent event) {
-
-    FMLCommonHandler.instance().bus().register(new Config());
+  public static void load(FMLPreInitializationEvent event) {    
+    MinecraftForge.EVENT_BUS.register(new Config());
     configDirectory = new File(event.getModConfigurationDirectory(), EnderZoo.MODID.toLowerCase());
     if (!configDirectory.exists()) {
       configDirectory.mkdir();
@@ -219,6 +227,7 @@ public final class Config {
 
   public static void processConfig(Configuration config) {
 
+    enderminyId = config.get(sectionEnderminy.name, "enderminyId", enderminyId, "Mob ID").getInt(enderminyId);
     enderminyEnabled = config.getBoolean("enderminyEnabled", sectionEnderminy.name, enderminyEnabled, "Wether Enderminies are enabled");
     enderminyAttacksPlayerOnSight = config.getBoolean("enderminyAttacksPlayerOnSight", sectionEnderminy.name, enderminyAttacksPlayerOnSight,
         "When true an Enderminy will attack a player if it looks at them, otherwise they are neutral mobs.");
@@ -241,6 +250,7 @@ public final class Config {
     enderminyOldTexture = config.get(sectionEnderminy.name, "enderminyOldTexture", enderminyOldTexture, "If true, uses the old texture for the Enderminy.")
         .getBoolean();
 
+    concussionCreeperId = config.get(sectionConCreeper.name, "concussionCreeperId", concussionCreeperId, "Mob ID").getInt(concussionCreeperId);
     concussionCreeperEnabled = config.getBoolean("concussionCreeperEnabled", sectionConCreeper.name, concussionCreeperEnabled,
         "Wether ConcussionCreepers are enabled");
     concussionCreeperMaxTeleportRange = config.get(sectionConCreeper.name, "concussionCreeperMaxTeleportRange", concussionCreeperMaxTeleportRange,
@@ -254,6 +264,7 @@ public final class Config {
     concussionCreeperOldTexture = config.get(sectionConCreeper.name, "concussionCreeperOldTexture", concussionCreeperOldTexture,
         "If true, uses the old texture for the Concussion Creeper.").getBoolean();
 
+    fallenKnightId = config.get(sectionFallenKnight.name, "fallenKnightId", fallenKnightId, "Mob ID").getInt(fallenKnightId);
     fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
     fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
         fallenKnightBaseDamage);
@@ -287,6 +298,7 @@ public final class Config {
         "When true archer knigts will switch to a sword when target is within melee range. "
             + "Doesn't apply to mounted archers if fallKnightMountedArchesMaintainDistance is true");
 
+    fallenMountId = config.get(sectionFallenMount.name, "fallenMountId", fallenMountId, "Mob ID").getInt(fallenMountId);
     fallenMountEnabled = config.getBoolean("fallenMountEnabled", sectionFallenMount.name, fallenMountEnabled, "If false fallen mounts will be disabled");
     fallenMountChargeSpeed = config.get(sectionFallenMount.name, "fallenMountChargeSpeed", fallenMountChargeSpeed,
         "he speed at which a mount will charge its target").getDouble(fallenMountChargeSpeed);
@@ -305,6 +317,7 @@ public final class Config {
     fallenMountChanceArmorUpgradeHard = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmorUpgradeHard", fallenMountChanceArmorUpgradeHard,
         "The chance a mount's armor will be upgraded when difficulty is hard").getDouble(fallenMountChanceArmorUpgradeHard);
 
+    witherWitchId = config.get(sectionWitherWitch.name, "witherWitchId", witherWitchId, "Mob ID").getInt(witherWitchId);
     witherWitchEnabled = config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
     witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth, "Base attack damage of the mount").getDouble(
         witherWitchHealth);
@@ -315,6 +328,7 @@ public final class Config {
         .get(sectionWitherWitch.name, "witherWitchMaxCats", witherWitchMaxCats, "The maximum number of cats spawned with a Wither Witch").getInt(
             witherWitchMaxCats);
 
+    witherCatId = config.get(sectionWitherCat.name, "witherCatId", witherCatId, "Mob ID").getInt(witherCatId);
     witherCatEnabled = config.getBoolean("witherCatEnabled", sectionWitherCat.name, witherCatEnabled, "If false Wither Cats will be disabled");
     witherCatHealth = config.get(sectionWitherCat.name, "witherCatHealth", witherCatHealth, "Base health of the wither cat").getDouble(witherCatHealth);
     witherCatAttackDamage = config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage, "Base attack damage of the wither cat")
@@ -322,6 +336,7 @@ public final class Config {
     witherCatAngryAttackDamageHardModifier = config.get(sectionWitherCat.name, "witherCatAngryAttackDamageHardModifier",
         witherCatAngryAttackDamageHardModifier, "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
 
+    direWolfId = config.get(sectionDireWolf.name, "direWolfId", direWolfId, "Mob ID").getInt(direWolfId);
     direWolfEnabled = config.getBoolean("direWolfEnabled", sectionDireWolf.name, direWolfEnabled, "If false Dire Wolves will be disabled");
     direWolfPackAttackEnabled = config.getBoolean("direWolfPackAttackEnabled", sectionDireWolf.name, direWolfPackAttackEnabled,
         "When true all nearby dire wolves will join an attack");
@@ -341,6 +356,7 @@ public final class Config {
     direWolfPackHowlAmount = config.get(sectionDireWolf.name, "direWolfPackHowlAmount", direWolfPackHowlAmount,
         "The amount of other dire wolves that will \"join in\" with the initial howl, per pack howl.").getInt();
 
+    direSlimeId = config.get(sectionDireSlime.name, "direSlimeId", direSlimeId, "Mob ID").getInt(direSlimeId);
     direSlimeEnabled = config.getBoolean("direSlimeEnabled", sectionDireSlime.name, direSlimeEnabled, "If false Dire Slime will be disabled");
     direSlimeAttackDamage = config.get(sectionDireSlime.name, "direSlimeAttackDamage", direSlimeAttackDamage, "Base attack damage of the dire slime.")
         .getDouble(direSlimeAttackDamage);
@@ -384,7 +400,9 @@ public final class Config {
         enchantmentWitherWeaponMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherWeaponMinEnchantability);
     enchantmentWitherWeaponMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMaxEnchantability",
         enchantmentWitherWeaponMaxEnchantability, "The maximum required level").getInt(enchantmentWitherWeaponMaxEnchantability);
-
+    
+    entityPrimedChargeId = config.get(sectionCharges.name, "entityPrimedChargeId", entityPrimedChargeId, "ID for charge entities").getInt(entityPrimedChargeId);
+    
     confusingChargeEnabled = config.getBoolean("confusingChargeEnabled", sectionCharges.name, confusingChargeEnabled,
         "If false Confusing Charges will be disabled");
     confusingChargeRange = config.get(sectionCharges.name, "confusingChargeRange", confusingChargeRange, "The range of the confusion charges effect")

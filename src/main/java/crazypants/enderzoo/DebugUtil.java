@@ -8,7 +8,6 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -31,11 +30,9 @@ public class DebugUtil {
 
     if (enabled) {
       System.err.println("DebugUtil.setEnabled:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ");
-      MinecraftForge.EVENT_BUS.register(this);
-      FMLCommonHandler.instance().bus().register(this);
+      MinecraftForge.EVENT_BUS.register(this);      
     } else {
-      MinecraftForge.EVENT_BUS.unregister(this);
-      FMLCommonHandler.instance().bus().unregister(this);
+      MinecraftForge.EVENT_BUS.unregister(this);      
     }
   }
 

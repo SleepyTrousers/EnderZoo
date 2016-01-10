@@ -47,7 +47,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   public EntityFallenKnight(World world) {
     super(world);
-    targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVillager.class, false));
+    targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityVillager>(this, EntityVillager.class, false));
   }
 
   @Override
@@ -162,7 +162,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
 
       DifficultyInstance di = worldObj.getDifficultyForLocation(new BlockPos(mount));
-      mount.onSpawnFirstTime(di, null);
+      mount.onInitialSpawn(di, null);
       //NB: don;t check for entity collisions as we know the knight will collide
       if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
         mount = null;
@@ -258,7 +258,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData livingData) {
+  public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData livingData) {
     spawned = true;
 
     //From base entity living class

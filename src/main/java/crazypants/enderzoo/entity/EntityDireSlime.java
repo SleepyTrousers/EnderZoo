@@ -79,7 +79,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
         EntityDireSlime spawn = new EntityDireSlime(worldObj);
         spawn.setSlimeSize(nextConf.size);
         spawn.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0);
-        spawn.onSpawnFirstTime(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
+        spawn.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
         if (SpawnUtil.isSpaceAvailableForSpawn(worldObj, spawn, false)) {
           worldObj.spawnEntityInWorld(spawn);
         }

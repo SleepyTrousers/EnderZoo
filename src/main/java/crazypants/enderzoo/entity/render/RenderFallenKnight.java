@@ -7,15 +7,15 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderFallenKnight extends RenderSkeleton {
 
-  private static final ResourceLocation texture= new ResourceLocation("enderzoo:entity/fallen_knight.png");
-  
+  private static final ResourceLocation texture = new ResourceLocation("enderzoo:entity/fallen_knight.png");
+
   public RenderFallenKnight(RenderManager p_i46143_1_) {
     super(p_i46143_1_);
   }
-    
+
   @Override
-  protected ResourceLocation func_180577_a(EntitySkeleton p_110775_1_) {
-      return texture;
+  protected ResourceLocation getEntityTexture(EntitySkeleton entity) {
+    return texture;
   }
-  
+
 }

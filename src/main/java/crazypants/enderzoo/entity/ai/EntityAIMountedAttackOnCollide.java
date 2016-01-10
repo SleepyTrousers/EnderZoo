@@ -8,7 +8,6 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityAIMountedAttackOnCollide extends EntityAIBase {
@@ -29,7 +28,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   
   
   PathEntity entityPathEntity;
-  Class classTarget;
+  Class<?> classTarget;
   private int pathUpdateTimer;
   private double targetPosX;
   private double targetPosY;
@@ -38,7 +37,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   private int failedPathFindingPenalty;
   
 
-  public EntityAIMountedAttackOnCollide(EntityCreature attacker, Class targetClass, double speedTowardsTarget, double speedTowardsTargetMounted, boolean longMemory) {
+  public EntityAIMountedAttackOnCollide(EntityCreature attacker, Class<?> targetClass, double speedTowardsTarget, double speedTowardsTargetMounted, boolean longMemory) {
     this(attacker, speedTowardsTarget, speedTowardsTargetMounted, longMemory);
     this.classTarget = targetClass;
   }

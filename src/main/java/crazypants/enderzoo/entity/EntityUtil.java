@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,8 +21,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import crazypants.enderzoo.vec.Point3i;
-import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityUtil {
 
@@ -63,11 +63,10 @@ public class EntityUtil {
   }
 
   public static void cancelCurrentTasks(EntityLiving ent) {
-    Iterator iterator = ent.tasks.taskEntries.iterator();
-
+    Iterator<EntityAITaskEntry> iterator = ent.tasks.taskEntries.iterator();
     List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
     while (iterator.hasNext()) {
-      EntityAITaskEntry entityaitaskentry = (EntityAITasks.EntityAITaskEntry) iterator.next();
+      EntityAITaskEntry entityaitaskentry = iterator.next();
       if(entityaitaskentry != null) {
         currentTasks.add(entityaitaskentry);
       }
@@ -99,7 +98,7 @@ public class EntityUtil {
   }
 
   public static boolean isPlayerWithinRange(Entity entity, double range) {
-    List res = entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, getBoundsAround(entity, range));
+    List<EntityPlayer> res = entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, getBoundsAround(entity, range));
     return res != null && !res.isEmpty();
   }
 

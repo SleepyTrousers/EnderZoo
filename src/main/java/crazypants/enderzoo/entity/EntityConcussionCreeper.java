@@ -3,6 +3,9 @@ package crazypants.enderzoo.entity;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.Log;
+import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,9 +15,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.Log;
-import crazypants.enderzoo.config.Config;
 
 public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooMob {
 
@@ -52,10 +52,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
         setTimeSinceIgnited(0);
 
         int range = Config.concussionCreeperExplosionRange;
-        AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-
-        
-        @SuppressWarnings("unchecked")
+        AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);        
         List<EntityLivingBase> ents = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
         for (EntityLivingBase ent : ents) {
           if (ent != this) {

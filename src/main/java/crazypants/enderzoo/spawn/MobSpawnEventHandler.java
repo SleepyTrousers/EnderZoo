@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityDireSlime;
+import crazypants.enderzoo.entity.IEnderZooMob;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockGrass;
 import net.minecraft.entity.EntityList;
@@ -22,14 +25,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent.CheckSpawn;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ServerTickEvent;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.EntityDireSlime;
-import crazypants.enderzoo.entity.IEnderZooMob;
 
 public class MobSpawnEventHandler {
 
@@ -68,7 +67,6 @@ public class MobSpawnEventHandler {
 
   public void init() {
     MinecraftForge.EVENT_BUS.register(this);
-    FMLCommonHandler.instance().bus().register(this);
   }
 
   @SubscribeEvent

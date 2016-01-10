@@ -1,17 +1,13 @@
 package crazypants.enderzoo.entity.render;
 
-import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 import crazypants.enderzoo.entity.EntityDireWolf;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.util.ResourceLocation;
 
-public class RenderDirewolf extends RenderLiving {
+public class RenderDirewolf extends RenderLiving<EntityDireWolf> {
 
   
 
@@ -29,7 +25,7 @@ public class RenderDirewolf extends RenderLiving {
   }
 
   @Override
-  protected void preRenderCallback(EntityLivingBase entity, float partialTick) {
+  protected void preRenderCallback(EntityDireWolf entity, float partialTick) {
 
     if (debugCounter == 4) {
       System.out.println("RenderDirewolf.preRenderCallback: ");
@@ -60,18 +56,9 @@ public class RenderDirewolf extends RenderLiving {
   //    }
   //  }
 
-  //  @Override
-  //  protected int shouldRenderPass(EntityLivingBase p_77032_1_, int p_77032_2_, float p_77032_3_) {
-  //    return this.shouldRenderPass((EntityDirewolf) p_77032_1_, p_77032_2_, p_77032_3_);
-  //  }
 
   @Override
-  protected float handleRotationFloat(EntityLivingBase p_77044_1_, float p_77044_2_) {
-    return this.handleRotationFloat((EntityDireWolf) p_77044_1_, p_77044_2_);
-  }
-
-  @Override
-  public void doRender(Entity entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
+  public void doRender(EntityDireWolf entity, double x, double y, double z, float p_76986_8_, float p_76986_9_) {
     super.doRender(entity, x, y, z, p_76986_8_, p_76986_9_);
     GL11.glPopMatrix();
     //RenderUtil.renderEntityBoundingBox((EntityLiving) entity, x, y, z);
@@ -79,7 +66,7 @@ public class RenderDirewolf extends RenderLiving {
   }
 
   @Override
-  protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
+  protected ResourceLocation getEntityTexture(EntityDireWolf p_110775_1_) {
     return wolfTextures;
   }
 

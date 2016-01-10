@@ -46,7 +46,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   private static final int MAX_RND_TP_DISTANCE = 32;
 
-  private static final int SCREAMING_INDEX = 20;
+  private static final int SCREAMING_INDEX = 30;
 
   private static final UUID attackingSpeedBoostModifierUUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291B0");
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
@@ -75,7 +75,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
 
     if(attackCreepers) {
-      targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityCreeper.class, true, true));
+      targetTasks.addTask(2, new EntityAINearestAttackableTarget<EntityCreeper>(this, EntityCreeper.class, true, true));
     }
   }
 
@@ -332,7 +332,6 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
     int range = 16;
     AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-    @SuppressWarnings("unchecked")
     List<EntityEnderminy> minies = worldObj.getEntitiesWithinAABB(EntityEnderminy.class, bb);
     if(minies != null && !minies.isEmpty()) {
 
@@ -374,7 +373,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 //    return (dx * dx + dy * dy + dz * dz);
 //  }
 
-  class AIFindPlayer extends EntityAINearestAttackableTarget {
+  class AIFindPlayer extends EntityAINearestAttackableTarget<EntityPlayer> {
 
     private EntityPlayer targetPlayer;
     private int stareTimer;
@@ -388,10 +387,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     /**
      * Returns whether the EntityAIBase should begin execution.
      */
-    @SuppressWarnings("unchecked")
     public boolean shouldExecute() {
       double d0 = getTargetDistance();
-      List<?> list = taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
+      List<EntityPlayer> list = taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
       Collections.sort(list, this.theNearestAttackableTargetSorter);
       if(list.isEmpty()) {
         return false;

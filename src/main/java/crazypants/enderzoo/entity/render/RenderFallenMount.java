@@ -29,7 +29,7 @@ public class RenderFallenMount extends RenderHorse {
   }
 
   @Override
-  protected ResourceLocation getHorseTexture(EntityHorse horse) {
+  protected ResourceLocation getEntityTexture(EntityHorse horse) {
     if(horse.getTotalArmorValue() == 0) {
       return zombieHorseTexture;
     } else {

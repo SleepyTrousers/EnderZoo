@@ -98,12 +98,10 @@ public class EnderZoo {
   }
 
   private void registerEntity(MobInfo mob) {
-    if (!mob.isEnabled()) {
-      return;
-    }
-    int entityID = EntityRegistry.findGlobalUniqueEntityId();
-    EntityRegistry.registerGlobalEntityID(mob.getClz(), mob.getName(), entityID, mob.getEggBackgroundColor(), mob.getEggForegroundColor());
-    EntityRegistry.registerModEntity(mob.getClz(), mob.getName(), entityID, this, 64, 3, true);
+//    if (!mob.isEnabled()) {
+//      return;
+//    }
+    EntityRegistry.registerModEntity(mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
   }
 
   @EventHandler

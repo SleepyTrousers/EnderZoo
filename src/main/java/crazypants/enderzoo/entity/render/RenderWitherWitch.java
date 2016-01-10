@@ -1,23 +1,16 @@
 package crazypants.enderzoo.entity.render;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.model.ModelWitch;
-import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
 
 import crazypants.enderzoo.entity.EntityWitherWitch;
+import net.minecraft.client.model.ModelWitch;
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 //Pretty much a copy / paste from RenderWitch
-public class RenderWitherWitch extends RenderLiving {
+public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
   private static final ResourceLocation witchTextures = new ResourceLocation("enderzoo:entity/wither_witch.png");
   private final ModelWitch witchModel;
@@ -30,9 +23,9 @@ public class RenderWitherWitch extends RenderLiving {
   public void doRender(EntityWitherWitch p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     ItemStack itemstack = p_76986_1_.getHeldItem();
     this.witchModel.field_82900_g = itemstack != null;
-    super.doRender((EntityLiving) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+    super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
- 
+  
   //TODO:
 //  protected void renderEquippedItems(EntityLivingBase p_77029_1_, float p_77029_2_) {
 //    GL11.glColor3f(1.0F, 1.0F, 1.0F);
@@ -97,24 +90,13 @@ public class RenderWitherWitch extends RenderLiving {
     GL11.glTranslatef(0.0F, 0.1875F, 0.0F);
   }
 
-  protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_) {
+  protected void preRenderCallback(EntityWitherWitch p_77041_1_, float p_77041_2_) {
     float f1 = 0.9375F;
     GL11.glScalef(f1, f1, f1);
   } 
 
-  protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
+  protected ResourceLocation getEntityTexture(EntityWitherWitch p_110775_1_) {
     return witchTextures;
   }
 
-  public void doRender(EntityLivingBase p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    doRender((EntityWitherWitch) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
-  
-  public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    doRender((EntityWitherWitch) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
-  
-  public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    doRender((EntityWitherWitch) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
 }

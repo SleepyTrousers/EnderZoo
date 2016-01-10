@@ -2,23 +2,19 @@ package crazypants.enderzoo.entity.render;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.EntityEnderminy;
 import net.minecraft.client.model.ModelEnderman;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
-
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.EntityEnderminy;
-
-public class RenderEnderminy extends RenderLiving {
+public class RenderEnderminy extends RenderLiving<EntityEnderminy> {
 
 
   private static final String PATH = Config.enderminyOldTexture ? "entity/old/" : "entity/";
@@ -51,37 +47,17 @@ public class RenderEnderminy extends RenderLiving {
   }
 
   @Override
-  protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_) {
+  protected void preRenderCallback(EntityEnderminy p_77041_1_, float p_77041_2_) {
     GL11.glScalef(0.5F, 0.25F, 0.5F);
   }
 
-  @Override
-  public void doRender(EntityLiving p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
-
-  @Override
-  public void doRender(EntityLivingBase p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
-
-  @Override
-  protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
-    return this.getEntityTexture((EntityEnderminy) p_110775_1_);
-  }
-
-  @Override
-  public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    this.doRender((EntityEnderminy) p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-  }
-
-  private class EyesLayer implements LayerRenderer {
+  private class EyesLayer implements LayerRenderer<EntityEnderminy> {
 
     @Override
-    public void doRenderLayer(EntityLivingBase entity, float p_177201_2_, float p_177201_3_, float p_177201_4_, float p_177201_5_, float p_177201_6_,
+    public void doRenderLayer(EntityEnderminy em, float p_177201_2_, float p_177201_3_, float p_177201_4_, float p_177201_5_, float p_177201_6_,
         float p_177201_7_, float p_177201_8_) {
 
-      EntityEnderminy em = (EntityEnderminy) entity;
+      
 
       bindTexture(endermanEyesTexture);
       GlStateManager.enableBlend();
@@ -101,7 +77,7 @@ public class RenderEnderminy extends RenderLiving {
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) i / 1.0F, (float) j / 1.0F);
       GlStateManager.enableLighting();
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-      getMainModel().render(entity, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_, p_177201_8_);
+      getMainModel().render(em, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_, p_177201_8_);
       func_177105_a(em, p_177201_4_);
       GlStateManager.disableBlend();
       GlStateManager.enableAlpha();

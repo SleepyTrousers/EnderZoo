@@ -84,7 +84,7 @@ dimensionExclude attributes:
  -->
 <SpawnConfig>
 
-  <entry id="ConcussionCreeper" mobName="enderzoo.ConcussionCreeper" creatureType="MONSTER" rate="40"
+  <entry id="ConcussionCreeper" mobName="EnderZoo.enderzoo.ConcussionCreeper" creatureType="MONSTER" rate="40"
     minGroupSize="1" maxGroupSize="3" remove="false">
     <biomeFilter type="any">
       <biome type="BASE_LAND_TYPES" />
@@ -96,7 +96,7 @@ dimensionExclude attributes:
     <dimensionExclude name="Dungeon"/>
   </entry>
 
-  <entry id="EnderMiny" mobName="enderzoo.Enderminy" rate="30">
+  <entry id="EnderMiny" mobName="EnderZoo.enderzoo.Enderminy" rate="30">
     <biomeFilter type="any">
       <biome type="FOREST" />
       <biome type="SWAMP" />
@@ -107,7 +107,7 @@ dimensionExclude attributes:
     <dimensionExclude name="Twilight Forest"/>
   </entry>
 
-  <entry id="FallenKnight" mobName="enderzoo.FallenKnight" rate="30" minGroupSize="1" maxGroupSize="4">
+  <entry id="FallenKnight" mobName="EnderZoo.enderzoo.FallenKnight" rate="30" minGroupSize="1" maxGroupSize="4">
     <biomeFilter type="any">
       <biome type="PLAINS" />
       <biome type="NETHER" exclude="true" />
@@ -116,7 +116,7 @@ dimensionExclude attributes:
     <dimensionExclude name="Twilight Forest"/>
   </entry>
 
-  <entry id="WitherWitch" mobName="enderzoo.WitherWitch" rate="5" minGroupSize="1" maxGroupSize="1">
+  <entry id="WitherWitch" mobName="EnderZoo.enderzoo.WitherWitch" rate="5" minGroupSize="1" maxGroupSize="1">
     <biomeFilter type="any">
       <biome type="FOREST" />
       <biome type="SWAMP" />
@@ -129,7 +129,7 @@ dimensionExclude attributes:
     <dimensionExclude name="Twilight Forest"/>
   </entry>
   
-  <entry id="DireWolf" mobName="enderzoo.DireWolf" rate="30" minGroupSize="2" maxGroupSize="6">
+  <entry id="DireWolf" mobName="EnderZoo.enderzoo.DireWolf" rate="30" minGroupSize="2" maxGroupSize="6">
     <biomeFilter type="all">
       <biome type="SNOWY" />
       <biome type="CONIFEROUS" />      

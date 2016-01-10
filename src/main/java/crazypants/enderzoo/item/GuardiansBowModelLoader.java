@@ -1,19 +1,19 @@
 package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZoo;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class GuardiansBowModelLoader {
 
-  public static final String[] NAMES = new String[] { EnderZoo.MODID + ":" + ItemGuardiansBow.NAME,
-      EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_0",
-      EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_1",
-      EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_2" };
+  public static final ResourceLocation[] NAMES = new ResourceLocation[] { 
+      new ResourceLocation(EnderZoo.MODID + ":" + ItemGuardiansBow.NAME),
+      new ResourceLocation(EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_0"),
+      new ResourceLocation(EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_1"),
+      new ResourceLocation(EnderZoo.MODID + ":" + ItemGuardiansBow.NAME + "_pulling_2") };
 
   public static final ModelResourceLocation[] MODELS;
 
@@ -41,7 +41,7 @@ public class GuardiansBowModelLoader {
   }
 
   public static void registerVariants() {
-    ModelBakery.addVariantName(EnderZoo.itemGuardiansBow, GuardiansBowModelLoader.NAMES);
+    ModelBakery.registerItemVariants(EnderZoo.itemGuardiansBow, GuardiansBowModelLoader.NAMES);    
   }
 
 }

@@ -31,6 +31,7 @@ import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -40,6 +41,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 
@@ -58,34 +60,88 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void load() {
     super.load();
-
+    
     RenderManager rm = Minecraft.getMinecraft().getRenderManager();
     if(Config.enderminyEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityEnderminy.class, new RenderEnderminy(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityEnderminy.class, new IRenderFactory<EntityEnderminy>() {
+//        @Override
+//        public Render<? super EntityEnderminy> createRenderFor(RenderManager manager) {
+//          return new RenderEnderminy(manager);
+//        }        
+//      });
     }
     if(Config.concussionCreeperEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityConcussionCreeper.class, new RenderConcussionCreeper(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityConcussionCreeper.class, new IRenderFactory<EntityConcussionCreeper>() {
+//        @Override
+//        public Render<? super EntityConcussionCreeper> createRenderFor(RenderManager manager) {
+//          return new RenderConcussionCreeper(manager);
+//        }        
+//      });
     }
     if(Config.fallenKnightEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new RenderFallenKnight(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityFallenKnight.class, new IRenderFactory<EntityFallenKnight>() {
+//        @Override
+//        public Render<? super EntityFallenKnight> createRenderFor(RenderManager manager) {
+//          return new RenderFallenKnight(manager);
+//        }        
+//      });
     }
     if(Config.fallenMountEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityFallenMount.class, new RenderFallenMount(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityFallenMount.class, new IRenderFactory<EntityFallenMount>() {
+//        @Override
+//        public Render<? super EntityFallenMount> createRenderFor(RenderManager manager) {
+//          return new RenderFallenMount(manager);
+//        }        
+//      });
     }
     if(Config.witherWitchEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherWitch.class, new RenderWitherWitch(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityWitherWitch.class, new IRenderFactory<EntityWitherWitch>() {
+//        @Override
+//        public Render<? super EntityWitherWitch> createRenderFor(RenderManager manager) {
+//          return new RenderWitherWitch(manager);
+//        }        
+//      });
     }
     if(Config.witherCatEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityWitherCat.class, new RenderWitherCat(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityWitherCat.class, new IRenderFactory<EntityWitherCat>() {
+//        @Override
+//        public Render<? super EntityWitherCat> createRenderFor(RenderManager manager) {
+//          return new RenderWitherCat(manager);
+//        }        
+//      });
     }
     if(Config.direWolfEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new RenderDirewolf(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityDireWolf.class, new IRenderFactory<EntityDireWolf>() {
+//        @Override
+//        public Render<? super EntityDireWolf> createRenderFor(RenderManager manager) {
+//          return new RenderDirewolf(manager);
+//        }        
+//      });
     }
     if (Config.direSlimeEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, new RenderDireSlime(rm));
+//      RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, new IRenderFactory<EntityDireSlime>() {
+//        @Override
+//        public Render<? super EntityDireSlime> createRenderFor(RenderManager manager) {
+//          return new RenderDireSlime(manager);
+//        }        
+//      });
     }
 
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new RenderPrimedCharge(rm));
+//    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, new IRenderFactory<EntityPrimedCharge>() {
+//      @Override
+//      public Render<? super EntityPrimedCharge> createRenderFor(RenderManager manager) {
+//        return new RenderPrimedCharge(manager);
+//      }        
+//    });
 
     regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
     regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
@@ -142,5 +198,7 @@ public class ClientProxy extends CommonProxy {
     ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, false, true));
     Minecraft.getMinecraft().thePlayer.timeInPortal = 1;
   }
+  
+ 
 
 }

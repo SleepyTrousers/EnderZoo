@@ -34,7 +34,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   public static final double MOUNTED_ATTACK_MOVE_SPEED = Config.fallenMountChargeSpeed;;
 
   private boolean wasRidden = false;
-  private final EntityAINearestAttackableTarget findTargetAI;
+  private final EntityAINearestAttackableTarget<EntityPlayer> findTargetAI;
   private EntityAIAttackOnCollide attackAI;
 
   private ItemStack armor;
@@ -50,7 +50,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     tasks.addTask(7, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(8, new EntityAILookIdle(this));
 
-    findTargetAI = new EntityAINearestAttackableTarget(this, EntityPlayer.class, true);
+    findTargetAI = new EntityAINearestAttackableTarget<EntityPlayer>(this, EntityPlayer.class, true);
     attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
     updateAttackAI(); 
   }
@@ -105,7 +105,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   }
 
   @Override
-  public IEntityLivingData onSpawnFirstTime(DifficultyInstance di, IEntityLivingData data) {  
+  public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData data) {  
     setHorseType(3);
     setHorseSaddled(true);    
     setGrowingAge(0);

@@ -2,12 +2,13 @@ package crazypants.enderzoo.item;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.entity.MobInfo;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
@@ -18,8 +19,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import crazypants.enderzoo.EnderZooTab;
-import crazypants.enderzoo.entity.MobInfo;
 
 public class ItemSpawnEgg extends Item {
 
@@ -67,7 +66,7 @@ public class ItemSpawnEgg extends Item {
   }
 
   @Override
-  public void getSubItems(Item item, CreativeTabs tab, List list) {
+  public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
     for (MobInfo mob : MobInfo.values()) {
       if(mob.isEnabled()) {
         list.add(new ItemStack(item, 1, mob.ordinal()));
@@ -101,27 +100,21 @@ public class ItemSpawnEgg extends Item {
   public static final int[] offsetsZForSide = new int[] { 0, 0, -1, 1, 0, 0 };
 
   public static EntityLiving activateSpawnEgg(ItemStack stack, World world, double posX, double posY, double posZ, int side) {
-    Block i1 = world.getBlockState(new BlockPos((int) posX, (int) posY, (int) posZ)).getBlock();
    
     posX += offsetsXForSide[side];
     posY += offsetsYForSide[side];
     posZ += offsetsZForSide[side];
 
-    double d0 = 0.0D;
-    if(side == 1 && i1 != null && i1.getRenderType() == 11) {
-      d0 = 0.5D;
-    }
-
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    EntityLiving entity = (EntityLiving) EntityList.createEntityByName(MobInfo.values()[damage].getName(), world);
+    EntityLiving entity = (EntityLiving) EntityList.createEntityByName(EnderZoo.MODID + "." + MobInfo.values()[damage].getName(), world);
     spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
     return entity;
   }
 
   public static void spawnEntity(double x, double y, double z, EntityLiving entity, World world) {
-    if(!world.isRemote) {
+    if(!world.isRemote && entity != null) {
       entity.setPosition(x, y, z);
-      entity.onSpawnFirstTime(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
+      entity.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
       world.spawnEntityInWorld(entity);
     }
   }

@@ -1,7 +1,9 @@
 package crazypants.enderzoo.entity.render;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,25 +33,25 @@ public final class RenderUtil {
 
       
       WorldRenderer tes = Tessellator.getInstance().getWorldRenderer();
-      
-      tes.startDrawingQuads();
-      tes.setColorOpaque_F(1, 1, 1);
-
+            
       double width = (bb.maxX - bb.minX) / 2;
       double height = bb.maxY - bb.minY;
       double depth = (bb.maxZ - bb.minZ) / 2;
 
-      tes.addVertex(-width, 0, 0);
-      tes.addVertex(width, 0, 0);
-      tes.addVertex(width, height, 0);
-      tes.addVertex(-width, height, 0);
-
-      tes.addVertex(0, 0, -depth);
-      tes.addVertex(0, 0, depth);
-      tes.addVertex(0, height, depth);
-      tes.addVertex(0, height, -depth);
       
-      //tes.finishDrawing();
+      GlStateManager.color(1, 1, 1, 1);      
+      tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);      
+      
+      tes.pos(-width, 0, 0).endVertex();
+      tes.pos(width, 0, 0).endVertex();
+      tes.pos(width, height, 0).endVertex();
+      tes.pos(-width, height, 0).endVertex();
+
+      tes.pos(0, 0, -depth).endVertex();
+      tes.pos(0, 0, depth).endVertex();
+      tes.pos(0, height, depth).endVertex();
+      tes.pos(0, height, -depth).endVertex();
+      
       Tessellator.getInstance().draw();
 
       GL11.glPopMatrix();

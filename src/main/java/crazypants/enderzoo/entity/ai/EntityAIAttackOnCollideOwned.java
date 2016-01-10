@@ -1,5 +1,6 @@
 package crazypants.enderzoo.entity.ai;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -12,7 +13,7 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
   private boolean retreating;
   private EntityAIFollowOwner followTask;
 
-  public EntityAIAttackOnCollideOwned(IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable, Class<?> p_i1635_2_, double p_i1635_3_,
+  public EntityAIAttackOnCollideOwned(IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable, Class<? extends Entity> p_i1635_2_, double p_i1635_3_,
       boolean p_i1635_5_, EntityAIFollowOwner followTask) {
     super(ownable.asEntity(), p_i1635_2_, p_i1635_3_, p_i1635_5_);
     this.ownable = ownable;
