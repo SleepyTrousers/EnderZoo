@@ -32,7 +32,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     NONE, GROW, SHRINK
   };
 
-  public static final String NAME = "enderzoo.WitherCat";
+  public static final String NAME = "WitherCat";
   public static final int EGG_BG_COL = 0x303030;
   public static final int EGG_FG_COL = 0xFFFFFF;
 

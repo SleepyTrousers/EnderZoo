@@ -21,4 +21,5 @@ bin
 *.bak
 /run
 /*.launch
-/build/tmp/makeStart/extracted
+/build
+

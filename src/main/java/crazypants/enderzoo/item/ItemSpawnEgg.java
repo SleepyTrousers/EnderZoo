@@ -40,25 +40,11 @@ public class ItemSpawnEgg extends Item {
     GameRegistry.registerItem(this, NAME);
   }
 
-  //  @Override
-  //  public void registerIcons(IIconRegister iconRegister) {
-  //  }
-  //
-  //  @Override
-  //  public boolean requiresMultipleRenderPasses() {
-  //    return true;
-  //  }
-  //
-  //  @Override
-  //  public IIcon getIconFromDamageForRenderPass(int par1, int par2) {
-  //    return Items.spawn_egg.getIconFromDamageForRenderPass(par1, par2);
-  //  }
-
   @Override
   public String getItemStackDisplayName(ItemStack stack) {
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     String s = ("" + StatCollector.translateToLocal(getUnlocalizedName() + ".name")).trim();
-    String s1 = MobInfo.values()[damage].getName();
+    String s1 = EnderZoo.MODID + "." + MobInfo.values()[damage].getName();
     if(s1 != null) {
       s = s + " " + StatCollector.translateToLocal("entity." + s1 + ".name");
     }

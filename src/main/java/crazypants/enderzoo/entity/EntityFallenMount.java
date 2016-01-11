@@ -29,7 +29,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   public static final int EGG_BG_COL = 0x365A25;
   public static final int EGG_FG_COL = 0xA0A0A0;
-  public static String NAME = "enderzoo.FallenMount";
+  public static String NAME = "FallenMount";
 
   public static final double MOUNTED_ATTACK_MOVE_SPEED = Config.fallenMountChargeSpeed;;
 

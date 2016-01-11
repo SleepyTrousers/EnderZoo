@@ -28,7 +28,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   public static final int EGG_FG_COL = 0x365A25;
   public static final int EGG_BG_COL = 0xA0A0A0;
 
-  public static String NAME = "enderzoo.FallenKnight";
+  public static String NAME = "FallenKnight";
 
   private static final double ATTACK_MOVE_SPEED = Config.fallenKnightChargeSpeed;
 
