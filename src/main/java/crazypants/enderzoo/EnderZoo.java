@@ -95,6 +95,7 @@ public class EnderZoo {
     //        DebugUtil.instance.setEnabled(true);
 
     FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
+    proxy.preInit();
   }
 
   private void registerEntity(MobInfo mob) {
@@ -107,7 +108,7 @@ public class EnderZoo {
   @EventHandler
   public void load(FMLInitializationEvent event) {
     instance = this;
-    proxy.load();
+    proxy.init();
   }
 
   @EventHandler

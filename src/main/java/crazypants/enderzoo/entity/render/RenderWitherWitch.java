@@ -4,14 +4,18 @@ import org.lwjgl.opengl.GL11;
 
 import crazypants.enderzoo.entity.EntityWitherWitch;
 import net.minecraft.client.model.ModelWitch;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 //Pretty much a copy / paste from RenderWitch
 public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
+  public static final Factory FACTORY = new Factory();
+  
   private static final ResourceLocation witchTextures = new ResourceLocation("enderzoo:entity/wither_witch.png");
   private final ModelWitch witchModel;
 
@@ -97,6 +101,14 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
   protected ResourceLocation getEntityTexture(EntityWitherWitch p_110775_1_) {
     return witchTextures;
+  }
+  
+  public static class Factory implements IRenderFactory<EntityWitherWitch> {
+
+    @Override
+    public Render<? super EntityWitherWitch> createRenderFor(RenderManager manager) {
+      return new RenderWitherWitch(manager);
+    }
   }
 
 }

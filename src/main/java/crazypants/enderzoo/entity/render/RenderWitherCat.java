@@ -6,13 +6,17 @@ import org.lwjgl.opengl.GL14;
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderWitherCat extends RenderLiving<EntityWitherCat> {
 
+  public static final Factory FACTORY = new Factory();
+  
   private ResourceLocation texture = new ResourceLocation("enderzoo:entity/wither_cat.png");
   private ResourceLocation angryTexture = new ResourceLocation("enderzoo:entity/wither_cat_angry.png");
 
@@ -88,6 +92,15 @@ public class RenderWitherCat extends RenderLiving<EntityWitherCat> {
       return false;
     }
 
+  }
+  
+  
+  public static class Factory implements IRenderFactory<EntityWitherCat> {
+
+    @Override
+    public Render<? super EntityWitherCat> createRenderFor(RenderManager manager) {
+      return new RenderWitherCat(manager);
+    }
   }
 
 }

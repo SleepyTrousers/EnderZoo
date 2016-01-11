@@ -9,14 +9,17 @@ import crazypants.enderzoo.entity.EntityEnderminy;
 import net.minecraft.client.model.ModelEnderman;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderEnderminy extends RenderLiving<EntityEnderminy> {
 
-
+  public static final Factory FACTORY = new Factory();
+  
   private static final String PATH = Config.enderminyOldTexture ? "entity/old/" : "entity/";
   private static final ResourceLocation endermanEyesTexture = new ResourceLocation("enderzoo:" + PATH + "enderminy_eyes.png");
   private static final ResourceLocation endermanTextures = new ResourceLocation("enderzoo:" + PATH + "enderminy.png");
@@ -89,6 +92,14 @@ public class RenderEnderminy extends RenderLiving<EntityEnderminy> {
       return false;
     }
 
+  }
+  
+  public static class Factory implements IRenderFactory<EntityEnderminy> {
+
+    @Override
+    public Render<? super EntityEnderminy> createRenderFor(RenderManager manager) {
+      return new RenderEnderminy(manager);
+    }
   }
 
 }

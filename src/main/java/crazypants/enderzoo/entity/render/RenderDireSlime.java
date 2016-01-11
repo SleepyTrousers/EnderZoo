@@ -3,16 +3,20 @@ package crazypants.enderzoo.entity.render;
 import org.lwjgl.opengl.GL11;
 
 import crazypants.enderzoo.entity.EntityDireSlime;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class RenderDireSlime extends RenderLiving<EntityDireSlime> {
 
+  public static final Factory FACTORY = new Factory();
+  
   private static final ResourceLocation magmaCubeTextures = new ResourceLocation("enderzoo:entity/direslime.png");
 
   public RenderDireSlime(RenderManager p_i46186_1_) {
@@ -39,6 +43,14 @@ public class RenderDireSlime extends RenderLiving<EntityDireSlime> {
       float f3 = (p_77043_1_.deathTime + p_77043_4_ - 1.0F) / 20.0F * 1.6F;
       f3 = Math.max(MathHelper.sqrt_float(f3), 1.0F);
       GL11.glRotatef(f3 * this.getDeathMaxRotation(p_77043_1_), 0.0F, 0.0F, 1.0F);
+    }
+  }
+  
+  public static class Factory implements IRenderFactory<EntityDireSlime> {
+
+    @Override
+    public Render<? super EntityDireSlime> createRenderFor(RenderManager manager) {
+      return new RenderDireSlime(manager);
     }
   }
 

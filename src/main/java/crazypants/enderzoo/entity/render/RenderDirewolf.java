@@ -3,15 +3,16 @@ package crazypants.enderzoo.entity.render;
 import org.lwjgl.opengl.GL11;
 
 import crazypants.enderzoo.entity.EntityDireWolf;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderDirewolf extends RenderLiving<EntityDireWolf> {
 
+  public static final Factory FACTORY = new Factory();
   
-
-  //private static final ResourceLocation wolfTextures = new ResourceLocation("enderzoo:entity/dire_wolf.png");
   private ResourceLocation wolfTextures = new ResourceLocation("enderzoo:entity/dire_wolf.png");
 
   private int debugCounter = 0;
@@ -68,6 +69,14 @@ public class RenderDirewolf extends RenderLiving<EntityDireWolf> {
   @Override
   protected ResourceLocation getEntityTexture(EntityDireWolf p_110775_1_) {
     return wolfTextures;
+  }
+  
+  public static class Factory implements IRenderFactory<EntityDireWolf> {
+
+    @Override
+    public Render<? super EntityDireWolf> createRenderFor(RenderManager manager) {
+      return new RenderDirewolf(manager);
+    }
   }
 
 }

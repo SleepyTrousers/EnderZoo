@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderPrimedCharge extends Render<EntityPrimedCharge> {
 
+  public static final Factory FACTORY = new Factory();
+  
   public RenderPrimedCharge(RenderManager renderManager) {
     super(renderManager);
     shadowSize = 0.5F;
@@ -63,6 +66,14 @@ public class RenderPrimedCharge extends Render<EntityPrimedCharge> {
   @Override
   protected ResourceLocation getEntityTexture(EntityPrimedCharge p_110775_1_) {
     return TextureMap.locationBlocksTexture;
+  }
+  
+  public static class Factory implements IRenderFactory<EntityPrimedCharge> {
+
+    @Override
+    public Render<? super EntityPrimedCharge> createRenderFor(RenderManager manager) {
+      return new RenderPrimedCharge(manager);
+    }
   }
 
 }

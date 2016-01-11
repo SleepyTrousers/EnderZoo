@@ -2,18 +2,22 @@ package crazypants.enderzoo.entity.render;
 
 import java.util.Map;
 
+import com.google.common.collect.Maps;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelHorse;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderHorse;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.LayeredTexture;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.util.ResourceLocation;
-
-import com.google.common.collect.Maps;
+import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderFallenMount extends RenderHorse {
 
+  public static final Factory FACTORY = new Factory();
+  
   private static final String[] horseArmorTextures = new String[] {
       null,
       "textures/entity/horse/armor/horse_armor_iron.png",
@@ -46,6 +50,14 @@ public class RenderFallenMount extends RenderHorse {
       textureCache.put(s, resourcelocation);
     }
     return resourcelocation;
+  }
+  
+  public static class Factory implements IRenderFactory<EntityHorse> {
+
+    @Override
+    public Render<? super EntityHorse> createRenderFor(RenderManager manager) {
+      return new RenderFallenMount(manager);
+    }
   }
 
 }

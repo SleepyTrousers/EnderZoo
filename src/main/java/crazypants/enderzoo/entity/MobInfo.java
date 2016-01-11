@@ -69,8 +69,7 @@ public enum MobInfo {
   }
 
   public int getEntityId() {
-    // TODO Auto-generated method stub
-    return 0;
+    return entityId;
   }
 
 }
