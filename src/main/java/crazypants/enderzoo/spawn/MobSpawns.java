@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.config.SpawnConfig;
+import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 
 public final class MobSpawns {
@@ -42,12 +43,18 @@ public final class MobSpawns {
     if (entry == null) {
       return;
     }
+    
     spawnEntries.add(entry);
 
     @SuppressWarnings("unchecked")
     Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.stringToClassMapping.get(entry.getMobName());
     if (clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
+      return;
+    }
+    
+    if(MobInfo.isDisabled(clz)) {
+      Log.info(entry.getMobName() + " is disabled");
       return;
     }
 

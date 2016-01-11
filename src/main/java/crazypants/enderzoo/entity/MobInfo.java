@@ -1,11 +1,12 @@
 package crazypants.enderzoo.entity;
 
+import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import crazypants.enderzoo.config.Config;
 
 public enum MobInfo {
+  
   ENDERMINY(EntityEnderminy.class, EntityEnderminy.NAME, EntityEnderminy.EGG_BG_COL, EntityEnderminy.EGG_FG_COL, Config.enderminyEnabled,
       Config.enderminyHealth, Config.enderminyAttackDamage, Config.enderminyId),
   CONCUSSION_CREEPER(EntityConcussionCreeper.class, EntityConcussionCreeper.NAME, EntityConcussionCreeper.EGG_BG_COL, EntityConcussionCreeper.EGG_FG_COL,
@@ -23,6 +24,19 @@ public enum MobInfo {
   DIRE_SLIME(EntityDireSlime.class, EntityDireSlime.NAME, EntityDireSlime.EGG_BG_COL, EntityDireSlime.EGG_FG_COL, Config.direSlimeEnabled,
       Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId);
 
+  
+  public static boolean isDisabled(Class<? extends EntityLiving> clz) {
+    if(clz == null) {
+      return false;
+    }    
+    for(MobInfo info : values()) {
+      if(clz == info.getClz() && !info.isEnabled()) {
+        return true;
+      }
+    }    
+    return false;
+  }
+  
   final Class<? extends EntityLiving> clz;
   final String name;
   final int bgCol;

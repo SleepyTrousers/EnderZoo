@@ -290,11 +290,13 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   public void setPosition(double x, double y, double z) {
     posX = x;
     posY = y;
-    posZ = z;
-    
-    updateBounds();
-    
-    
+    posZ = z;   
+    updateBounds();        
+  }
+  
+  @Override
+  protected boolean isValidLightLevel() {
+    return true;
   }
 
   @Override
