@@ -228,8 +228,8 @@ public class MobSpawnEventHandler {
   }
 
   public static boolean isToolEffective(IBlockState state, ItemStack stack) {
-    if(stack == null) {
-      return false;
+    if(stack == null) { //don't spawn them with an empty hand, helps newly spawned players
+      return true;
     }
     for (String type : stack.getItem().getToolClasses(stack)) {
       if (state.getBlock().isToolEffective(type, state)) {
