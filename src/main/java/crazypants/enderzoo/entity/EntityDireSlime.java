@@ -165,5 +165,13 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
       this.playSound("mob.attack", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
     }
   }
+  
+  @Override
+  protected float applyArmorCalculations(DamageSource p_70655_1_, float p_70655_2_) {
+      if (!p_70655_1_.isUnblockable()) {
+        return Math.min(Math.max(p_70655_2_ - 3 - this.getSlimeSize(), this.getSlimeSize()) / 2, p_70655_2_);
+      }
+      return p_70655_2_;
+  }
 
 }
