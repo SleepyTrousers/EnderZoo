@@ -29,11 +29,6 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   public static final String NAME = "blockConfusingCharge";
 
-  // @SideOnly(Side.CLIENT)
-  // private IIcon bottomIcon;
-  // @SideOnly(Side.CLIENT)
-  // private IIcon topIcon;
-
   private int chargeId;
 
   public static BlockConfusingCharge create() {
