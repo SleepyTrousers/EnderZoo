@@ -5,6 +5,8 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 
 public class ModelOwl extends ModelBase {
 
@@ -82,17 +84,44 @@ public class ModelOwl extends ModelBase {
       body.render(scale);
       rightwing.render(scale);
       leftwing.render(scale);
+      
+      Vec3 offset = getLegOffset(entity);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(offset.xCoord, offset.yCoord, offset.zCoord);
       rightleg.render(scale);
       leftleg.render(scale);
+      GlStateManager.popMatrix();
+      
       GlStateManager.popMatrix();
     } else {
       head.render(scale);
       body.render(scale);
       rightwing.render(scale);
       leftwing.render(scale);
+      
+      GlStateManager.pushMatrix();
+      Vec3 offset = getLegOffset(entity);
+      GlStateManager.translate(offset.xCoord, offset.yCoord, offset.zCoord);
       rightleg.render(scale);
       leftleg.render(scale);
+      GlStateManager.popMatrix();
     }
+  }
+
+  private Vec3 getLegOffset(Entity entity) {
+    if (! (entity instanceof EntityOwl)) { 
+      return new Vec3(0,0,0);
+    }
+        
+    EntityOwl owl = (EntityOwl) entity;
+    float angle = owl.getBodyAngle();
+    double bodyHeight = 16;
+    
+    double val = Math.cos(angle) * bodyHeight;
+    double yDelta = (val - bodyHeight) * 0.0625 * 0.5;    
+    val = Math.sin(angle) * bodyHeight * 0.0625 * 0.5;         
+    return new Vec3(0,yDelta ,val);
+    
   }
 
   private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -111,16 +140,17 @@ public class ModelOwl extends ModelBase {
       EntityOwl owl = (EntityOwl) entity;
       body.rotateAngleX = owl.getBodyAngle();
       rightwing.rotateAngleZ = owl.getWingAngle();
-      leftwing.rotateAngleZ = -owl.getWingAngle();
+      leftwing.rotateAngleZ = -owl.getWingAngle();          
     } else {
       body.rotateAngleX = 0;
       rightwing.rotateAngleZ = 0;
-      leftwing.rotateAngleZ = 0;
+      leftwing.rotateAngleZ = 0;      
     }
 
-    if (!entity.isAirBorne) {
-//      rightleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F) * 1.4F * limbSwing2;
-//      leftleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F + (float) Math.PI) * 1.4F * limbSwing2;
+    if (!entity.isAirBorne) {      
+      float limbSpeed = 2.5f; 
+      rightleg.rotateAngleX = MathHelper.cos(limbSwing1 * limbSpeed) * 1.4F * limbSwing2;
+      leftleg.rotateAngleX = MathHelper.cos(limbSwing1 * limbSpeed + (float) Math.PI) * 1.4F * limbSwing2;
     } else {
       rightleg.rotateAngleX = 0;
       leftleg.rotateAngleX = 0;

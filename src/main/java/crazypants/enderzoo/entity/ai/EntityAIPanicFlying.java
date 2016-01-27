@@ -28,14 +28,11 @@ public class EntityAIPanicFlying extends EntityAIBase {
     if (vec3 == null) {
       return false;
     }
-    double yOffset = theEntityCreature.worldObj.rand.nextInt(4);
+    double yOffset = 1 + theEntityCreature.worldObj.rand.nextInt(3);
+    //double yOffset = 0;
     randPosX = vec3.xCoord;
     randPosY = vec3.yCoord + yOffset;
     randPosZ = vec3.zCoord;
-    
-//    randPosX = theEntityCreature.posX + 6;
-//    randPosY = theEntityCreature.posY + 6;
-//    randPosZ = theEntityCreature.posZ;
     return true;
   }
 

@@ -14,10 +14,10 @@ public class FlyNodeProcessor extends SwimNodeProcessor {
   public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
     int i = 0;
 
-    for (EnumFacing enumfacing : EnumFacing.values()) {
+    for (EnumFacing enumfacing : EnumFacing.values()) {      
       PathPoint pathpoint = this.getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
           currentPoint.zCoord + enumfacing.getFrontOffsetZ());
-      if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance || true)) {
+      if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance || true)) { //TODO: || true
         pathOptions[i++] = pathpoint;
       }
     }
