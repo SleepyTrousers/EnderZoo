@@ -12,6 +12,7 @@ import crazypants.enderzoo.entity.EntityDireWolf;
 import crazypants.enderzoo.entity.EntityEnderminy;
 import crazypants.enderzoo.entity.EntityFallenKnight;
 import crazypants.enderzoo.entity.EntityFallenMount;
+import crazypants.enderzoo.entity.EntityOwl;
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherWitch;
 import crazypants.enderzoo.entity.MobInfo;
@@ -21,6 +22,7 @@ import crazypants.enderzoo.entity.render.RenderDirewolf;
 import crazypants.enderzoo.entity.render.RenderEnderminy;
 import crazypants.enderzoo.entity.render.RenderFallenKnight;
 import crazypants.enderzoo.entity.render.RenderFallenMount;
+import crazypants.enderzoo.entity.render.RenderOwl;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
 import crazypants.enderzoo.item.GuardiansBowModelLoader;
@@ -81,6 +83,8 @@ public class ClientProxy extends CommonProxy {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, RenderDireSlime.FACTORY);
     }
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);
+        
+    RenderingRegistry.registerEntityRenderingHandler(EntityOwl.class, RenderOwl.FACTORY);    
   }
 
   @Override

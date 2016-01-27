@@ -22,7 +22,9 @@ public enum MobInfo {
   DIRE_WOLF(EntityDireWolf.class, EntityDireWolf.NAME, EntityDireWolf.EGG_BG_COL, EntityDireWolf.EGG_FG_COL, Config.direWolfEnabled, Config.direWolfHealth,
       Config.direWolfAttackDamage, Config.direWolfId),
   DIRE_SLIME(EntityDireSlime.class, EntityDireSlime.NAME, EntityDireSlime.EGG_BG_COL, EntityDireSlime.EGG_FG_COL, Config.direSlimeEnabled,
-      Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId);
+      Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId),
+  OWL(EntityOwl.class, EntityOwl.NAME, EntityOwl.EGG_BG_COL, EntityOwl.EGG_FG_COL, true,
+      14, 2, 38697251);
 
   
   public static boolean isDisabled(Class<? extends EntityLiving> clz) {

@@ -1,0 +1,52 @@
+package crazypants.enderzoo.entity.ai;
+
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.Vec3;
+
+public class EntityAIPanicFlying extends EntityAIBase {
+
+  private EntityCreature theEntityCreature;
+  protected double speed;
+  private double randPosX;
+  private double randPosY;
+  private double randPosZ;
+
+  public EntityAIPanicFlying(EntityCreature creature, double speedIn) {
+    theEntityCreature = creature;
+    speed = speedIn;
+    setMutexBits(1);
+  }
+
+  @Override
+  public boolean shouldExecute() {
+    if (theEntityCreature.getAITarget() == null && !theEntityCreature.isBurning()) {
+      return false;
+    }
+    Vec3 vec3 = RandomPositionGenerator.findRandomTarget(theEntityCreature, 5, 4);
+    if (vec3 == null) {
+      return false;
+    }
+    double yOffset = theEntityCreature.worldObj.rand.nextInt(4);
+    randPosX = vec3.xCoord;
+    randPosY = vec3.yCoord + yOffset;
+    randPosZ = vec3.zCoord;
+    
+//    randPosX = theEntityCreature.posX + 6;
+//    randPosY = theEntityCreature.posY + 6;
+//    randPosZ = theEntityCreature.posZ;
+    return true;
+  }
+
+  @Override
+  public void startExecuting() {
+    theEntityCreature.getNavigator().tryMoveToXYZ(randPosX, randPosY, randPosZ, speed);
+  }
+
+  @Override
+  public boolean continueExecuting() {
+    return !theEntityCreature.getNavigator().noPath();
+  }
+
+}
