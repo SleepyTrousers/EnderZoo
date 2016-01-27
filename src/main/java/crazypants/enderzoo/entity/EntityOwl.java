@@ -1,17 +1,21 @@
 package crazypants.enderzoo.entity;
 
+import java.util.List;
+
 import crazypants.enderzoo.entity.ai.EntityAIPanicFlying;
 import crazypants.enderzoo.entity.ai.PathNavigateFlyer;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -39,7 +43,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     stepHeight = 1.0F;
 
     // tasks.addTask(0, new EntityAISwimming(this));
-    tasks.addTask(1, new EntityAIPanicFlying(this, 0.5D));
+    tasks.addTask(1, new EntityAIPanicFlying(this,2D));
     // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
     // false));
     // tasks.addTask(5, new EntityAIWander(this, 1.0D));
@@ -70,6 +74,10 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   @Override
   public void fall(float distance, float damageMultiplier) {
+  }
+
+  @Override
+  protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos) {
   }
 
   @Override
@@ -114,7 +122,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
     destPos = (float) (destPos + (onGround ? -1 : 4) * 0.3D);
-    //destPos = (float) (destPos + 4 * 0.3);
+    // destPos = (float) (destPos + 4 * 0.3);
     destPos = MathHelper.clamp_float(destPos, 0.0F, 1.0F);
     if (!onGround && wingRotDelta < 1.0F) {
       wingRotDelta = 1.0F;
@@ -140,17 +148,27 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
   }
 
   @Override
-  public void moveEntityWithHeading(float strafe, float forward) {   
-    if (!onGround) {
-      moveFlying(strafe, forward, 0.1f);
-      moveEntity(motionX, motionY, motionZ);
-      motionX *= 0.8;
-      motionY *= 0.8;
-      motionZ *= 0.8;
+  public void moveEntityWithHeading(float strafe, float forward) {
 
-    } else {
-      super.moveEntityWithHeading(strafe, forward);
+    moveFlying(strafe, forward, 0.1f);
+    if (!onGround && strafe == 0 && forward == 0) {
+      //Drift down if not moving and in the air
+      motionY -= 0.01;
     }
+    moveEntity(motionX, motionY, motionZ);
+    // drag
+    motionX *= 0.8;
+    motionY *= 0.8;
+    motionZ *= 0.8;
+
+    // Check for landing
+    List<AxisAlignedBB> collides = worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox().offset(0, -0.05, 0));
+    if (collides != null && !collides.isEmpty()) {
+      onGround = true;
+    } else {
+      onGround = false;
+    }
+    isAirBorne = !onGround;
   }
 
   private void calculateWingAngle(float partialTicks) {
@@ -200,7 +218,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
     @Override
     public void onUpdateMoveHelper() {
-      
+
       if (update && !owl.getNavigator().noPath()) {
         double xDelta = posX - owl.posX;
         double yDelta = posY - owl.posY;
@@ -209,29 +227,36 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
         double dist = MathHelper.sqrt_double(distSq);
         yDelta = yDelta / dist;
         float yawAngle = (float) (MathHelper.atan2(zDelta, xDelta) * 180.0D / Math.PI) - 90.0F;
-        owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, 30.0F);
+        // owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, 30.0F);
+        owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, 10.0F);
         owl.renderYawOffset = owl.rotationYaw;
 
         float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
-        owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * 0.125F);
+        // float moveFactor = 0.125F;        
+        float moveFactor = 1;
+//        if(owl.onGround) {
+//          moveFactor = 0.1f;
+//        }
+        climbRate = 0.25;
+        owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * moveFactor);
         owl.motionY += owl.getAIMoveSpeed() * yDelta * climbRate;
 
-        //Look
-//        double d7 = owl.posX + (xDelta / dist * 2.0D);
-//        double d8 = owl.getEyeHeight() + owl.posY + (yDelta / dist * 1.0D);
-//        double d9 = owl.posZ + (zDelta / dist * 2.0D);
-//
-//        EntityLookHelper entitylookhelper = owl.getLookHelper();
-//        double lookX = entitylookhelper.getLookPosX();
-//        double lookY = entitylookhelper.getLookPosY();
-//        double lookZ = entitylookhelper.getLookPosZ();
-//
-//        if (!entitylookhelper.getIsLooking()) {
-//          lookX = d7;
-//          lookY = d8;
-//          lookZ = d9;
-//        }
-//        owl.getLookHelper().setLookPosition(lookX + (d7 - lookX) * 0.125D, lookY + (d8 - lookY) * 0.125D, lookZ + (d9 - lookZ) * 0.125D, 10.0F, 40.0F);
+        // Look
+        double d7 = owl.posX + (xDelta / dist * 2.0D);
+        double d8 = owl.getEyeHeight() + owl.posY + (yDelta / dist * 1.0D);
+        double d9 = owl.posZ + (zDelta / dist * 2.0D);
+
+        EntityLookHelper entitylookhelper = owl.getLookHelper();
+        double lookX = entitylookhelper.getLookPosX();
+        double lookY = entitylookhelper.getLookPosY();
+        double lookZ = entitylookhelper.getLookPosZ();
+
+        if (!entitylookhelper.getIsLooking()) {
+          lookX = d7;
+          lookY = d8;
+          lookZ = d9;
+        }
+        owl.getLookHelper().setLookPosition(lookX + (d7 - lookX) * 0.125D, lookY + (d8 - lookY) * 0.125D, lookZ + (d9 - lookZ) * 0.125D, 10.0F, 40.0F);
       } else {
         owl.setAIMoveSpeed(0.0F);
       }

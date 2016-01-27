@@ -5,7 +5,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 
 public class ModelOwl extends ModelBase {
 
@@ -120,8 +119,8 @@ public class ModelOwl extends ModelBase {
     }
 
     if (!entity.isAirBorne) {
-      rightleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F) * 1.4F * limbSwing2;
-      leftleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F + (float) Math.PI) * 1.4F * limbSwing2;
+//      rightleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F) * 1.4F * limbSwing2;
+//      leftleg.rotateAngleX = MathHelper.cos(limbSwing1 * 0.6662F + (float) Math.PI) * 1.4F * limbSwing2;
     } else {
       rightleg.rotateAngleX = 0;
       leftleg.rotateAngleX = 0;
