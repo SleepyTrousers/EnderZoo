@@ -3,7 +3,7 @@ package crazypants.enderzoo.entity;
 import java.util.List;
 
 import crazypants.enderzoo.entity.ai.EntityAIPanicFlying;
-import crazypants.enderzoo.entity.ai.PathNavigateFlyer;
+import crazypants.enderzoo.entity.ai.FlyingPathNavigate;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -52,7 +52,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
     // tasks.addTask(0, new EntityAISwimming(this));
     tasks.addTask(1, new EntityAIPanicFlying(this, 2D));
-    this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
+    tasks.addTask(2, new EntityAIMate(this, 1.0D));
     // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
     // false));
     // tasks.addTask(5, new EntityAIWander(this, 1.0D));
@@ -73,7 +73,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   @Override
   protected PathNavigate getNewNavigator(World worldIn) {
-    return new PathNavigateFlyer(this, worldIn);
+    return new FlyingPathNavigate(this, worldIn);
   }
 
   @Override
@@ -81,7 +81,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     if (!super.interact(playerIn)) {
       if (!worldObj.isRemote) {
         System.out.println("EntityOwl.interact: ");
-        if (!getNavigator().tryMoveToXYZ(posX + 10, posY + 10, posZ + 5, 2)) {
+        if (!getNavigator().tryMoveToXYZ(posX + 18, posY, posZ + 8, 2)) {
           System.out.println("EntityOwl.interact: No path");
         }
       }
@@ -122,7 +122,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     moveFlying(strafe, forward, 0.1f);
     if (!onGround && strafe == 0 && forward == 0) {
       // Drift down if not moving and in the air
-      motionY -= 0.01;
+//      motionY -= 0.01;
     }
     moveEntity(motionX, motionY, motionZ);
     // drag
