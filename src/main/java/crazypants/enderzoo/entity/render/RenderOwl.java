@@ -22,13 +22,16 @@ public class RenderOwl extends RenderLiving<EntityOwl> {
 
   @Override
   public void doRender(EntityOwl entity, double x, double y, double z, float entityYaw, float partialTicks) {
-//    debug2 = 0;
+    
+//    RenderUtil.renderEntityBoundingBox(entity, x, y, z);    
+//    debug2 = 1;
     if (debug1 == debug2) {
       mainModel = new ModelOwl();
       debug1++;
     }
     entity.calculateAngles(partialTicks);
-    super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    super.doRender(entity, x, y, z, entityYaw, partialTicks);    
+    
   }
 
   @Override

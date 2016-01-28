@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
@@ -46,15 +47,16 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   public EntityOwl(World worldIn) {
     super(worldIn);
-    setSize(0.3F, 0.8F);
+    setSize(0.5F, 0.95F);
     stepHeight = 1.0F;
 
     // tasks.addTask(0, new EntityAISwimming(this));
     tasks.addTask(1, new EntityAIPanicFlying(this, 2D));
+    this.tasks.addTask(2, new EntityAIMate(this, 1.0D));
     // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
     // false));
     // tasks.addTask(5, new EntityAIWander(this, 1.0D));
-    
+
     tasks.addTask(6, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(7, new EntityAILookIdle(this));
 
@@ -76,22 +78,22 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   @Override
   public boolean interact(EntityPlayer playerIn) {
-    boolean debug = true;
-    if (debug) {
+    if (!super.interact(playerIn)) {
       if (!worldObj.isRemote) {
         System.out.println("EntityOwl.interact: ");
-        if(!getNavigator().tryMoveToXYZ(posX + 5, posY + 5, posZ + 5, 2)) {
+        if (!getNavigator().tryMoveToXYZ(posX + 10, posY + 10, posZ + 5, 2)) {
           System.out.println("EntityOwl.interact: No path");
         }
       }
-      return true;
+
     }
-    return super.interactFirst(playerIn);
+    return true;
   }
 
   @Override
   public void onLivingUpdate() {
-//     setDead();
+    
+    // setDead();
     super.onLivingUpdate();
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
@@ -104,16 +106,16 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     wingRotDelta = (float) (wingRotDelta * 0.9D);
     float flapSpeed = 2f;
     double yDelta = Math.abs(posY - prevPosY);
-    if(yDelta != 0) {
-      //normalise between 0 and 0.02
-      yDelta = Math.min(1, yDelta/0.02);
+    if (yDelta != 0) {
+      // normalise between 0 and 0.02
+      yDelta = Math.min(1, yDelta / 0.02);
       yDelta = Math.max(yDelta, 0.75);
-      flapSpeed *= yDelta;      
+      flapSpeed *= yDelta;
     }
     wingRotation += wingRotDelta * flapSpeed;
 
   }
-   
+
   @Override
   public void moveEntityWithHeading(float strafe, float forward) {
 
@@ -159,36 +161,36 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     wingAngle = (MathHelper.sin(flapComletion) + 1.0F) * onGroundTimerThing;
 
     if (onGround) {
-      wingAngle = 0;
+      wingAngle = (float)Math.toRadians(3);
     }
   }
 
   private void calculateBodyAngle(float partialTicks) {
 
-    if(onGround) {
-      bodyAngle = 5;
-      targetBodyAngle = 5;
+    if (onGround) {
+      bodyAngle = 7;
+      targetBodyAngle = 7;
       return;
     }
-    
-    //ignore y as we want no tilt going straight up or down
-    Vec3 motionVec = new Vec3(motionX, 0, motionZ);    
+
+    // ignore y as we want no tilt going straight up or down
+    Vec3 motionVec = new Vec3(motionX, 0, motionZ);
     double speed = motionVec.lengthVector();
-    //normalise between 0 - 0.1
+    // normalise between 0 - 0.1
     speed = Math.min(1, speed * 10);
-    targetBodyAngle = 20 + ((float)speed * 30);
+    targetBodyAngle = 20 + ((float) speed * 30);
 
     if (targetBodyAngle == bodyAngle) {
       return;
     }
     if (targetBodyAngle > bodyAngle) {
       bodyAngle += (2 * partialTicks);
-      if(bodyAngle > targetBodyAngle) {
+      if (bodyAngle > targetBodyAngle) {
         bodyAngle = targetBodyAngle;
       }
     } else {
       bodyAngle -= (1 * partialTicks);
-      if(bodyAngle < targetBodyAngle) {
+      if (bodyAngle < targetBodyAngle) {
         bodyAngle = targetBodyAngle;
       }
     }

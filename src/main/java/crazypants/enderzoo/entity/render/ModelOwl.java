@@ -28,10 +28,10 @@ public class ModelOwl extends ModelBase {
     setRotation(head, 0F, 0F, 0F);
     // eye1
     head.setTextureOffset(0, 23);
-    head.addBox(1F, -7F, -4F, 2, 2, 1);
+    head.addBox(1F, -6F, -4F, 2, 2, 1);
     // eye1
     head.setTextureOffset(7, 23);
-    head.addBox(-3F, -7F, -4F, 2, 2, 1);
+    head.addBox(-3F, -6F, -4F, 2, 2, 1);
     // beak
     head.setTextureOffset(3, 27);
     head.addBox(-1F, -3F, -4F, 2, 3, 1);
@@ -72,15 +72,26 @@ public class ModelOwl extends ModelBase {
 
     setRotationAngles(time, limbSwing, f2, headY, headX, scale, entity);
 
+    float height = 25;
+    float owlScale = 0.7f;
+    float transFactor = 1 - owlScale;
+    
     if (isChild) {
-      float f = 2.0F;
+      
+      
+      float headScale = owlScale * 0.7f;
+      owlScale *= 0.5f;
+      float translateScale = 1 - owlScale;
       GlStateManager.pushMatrix();
-      GlStateManager.translate(0.0F, 5.0F * scale, 2.0F * scale);
+      GlStateManager.translate(0.0F, translateScale * (height - 2) * scale , 0.0F);
+      GlStateManager.scale(headScale, headScale, headScale);
       head.render(scale);
       GlStateManager.popMatrix();
+
       GlStateManager.pushMatrix();
-      GlStateManager.scale(1.0F / f, 1.0F / f, 1.0F / f);
-      GlStateManager.translate(0.0F, 24.0F * scale, 0.0F);
+      GlStateManager.translate(0.0F, translateScale * height * scale , 0.0F);
+      GlStateManager.scale(owlScale, owlScale, owlScale);
+      
       body.render(scale);
       rightwing.render(scale);
       leftwing.render(scale);
@@ -89,11 +100,16 @@ public class ModelOwl extends ModelBase {
       GlStateManager.pushMatrix();
       GlStateManager.translate(offset.xCoord, offset.yCoord, offset.zCoord);
       rightleg.render(scale);
-      leftleg.render(scale);
+      leftleg.render(scale);      
       GlStateManager.popMatrix();
       
       GlStateManager.popMatrix();
     } else {
+            
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0.0F, transFactor * height * scale , 0.0F);
+      GlStateManager.scale(owlScale, owlScale, owlScale);      
+      
       head.render(scale);
       body.render(scale);
       rightwing.render(scale);
@@ -104,6 +120,8 @@ public class ModelOwl extends ModelBase {
       GlStateManager.translate(offset.xCoord, offset.yCoord, offset.zCoord);
       rightleg.render(scale);
       leftleg.render(scale);
+      GlStateManager.popMatrix();
+      
       GlStateManager.popMatrix();
     }
   }
