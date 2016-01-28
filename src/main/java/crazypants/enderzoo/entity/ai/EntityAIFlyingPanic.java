@@ -5,7 +5,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
 
-public class EntityAIPanicFlying extends EntityAIBase {
+public class EntityAIFlyingPanic extends EntityAIBase {
 
   private EntityCreature theEntityCreature;
   protected double speed;
@@ -13,7 +13,7 @@ public class EntityAIPanicFlying extends EntityAIBase {
   private double randPosY;
   private double randPosZ;
 
-  public EntityAIPanicFlying(EntityCreature creature, double speedIn) {
+  public EntityAIFlyingPanic(EntityCreature creature, double speedIn) {
     theEntityCreature = creature;
     speed = speedIn;
     setMutexBits(1);

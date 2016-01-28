@@ -43,7 +43,7 @@ public class FlyingPathFinder extends PathFinder {
     double yDelta = targ.yCoord - ePos.yCoord;
 
     int climbY = 0;
-    if (totalDist > 4) {
+    if (totalDist > 4 && entityIn.onGround) {
       climbY = 1 * MathHelper.clamp_int((int)(totalDist/8), 1, 3);
       if (yDelta >= 1) {
         climbY += yDelta;
@@ -102,6 +102,9 @@ public class FlyingPathFinder extends PathFinder {
     nodeProcessor.initProcessor(blockaccess, entityIn);
     PathPoint[] points = addToPath(entityIn, startPoint, endPoint, distance);
     nodeProcessor.postProcess();
+    if(points == null) {
+      return null;
+    }
     return new PathEntity(points);
   }
 

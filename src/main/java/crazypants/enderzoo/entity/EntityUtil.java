@@ -3,11 +3,15 @@ package crazypants.enderzoo.entity;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -16,11 +20,16 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.IShearable;
+import net.minecraftforge.fluids.FluidRegistry;
 
 public class EntityUtil {
 
@@ -100,6 +109,73 @@ public class EntityUtil {
   public static boolean isPlayerWithinRange(Entity entity, double range) {
     List<EntityPlayer> res = entity.worldObj.getEntitiesWithinAABB(EntityPlayer.class, getBoundsAround(entity, range));
     return res != null && !res.isEmpty();
+  }
+  
+  public static final Random RND = new Random();
+
+  public static boolean isPlant(Block block, World world, int x, int y, int z) {
+    return block instanceof IShearable || block instanceof IPlantable || block.isLeaves(world, new BlockPos(x, y, z))
+        || block.isWood(world, new BlockPos(x, y, z));
+  }
+
+  /**
+   * If true, this block should be ignored (treated as 'air') when determining
+   * the surface height.
+   *
+   * @param world
+   * @param x
+   * @param z
+   * @param y
+   * @param blk
+   * @param ignorePlants
+   * @param ignoreFluids
+   * @return
+   */
+  public static boolean isIgnoredAsSurface(World world, int x, int z, int y, IBlockState bs, boolean ignorePlants, boolean ignoreFluids) {
+    Block blk = bs.getBlock();
+    //the first one will get a lot of hits, so it gets its own check
+    return blk == Blocks.air || blk == Blocks.snow_layer || blk == Blocks.web || blk.isAir(world, new BlockPos(x, y, z)) ||
+        (ignorePlants && isPlant(blk, world, x, y, z) ||
+            (ignoreFluids && FluidRegistry.lookupFluidForBlock(blk) != null));
+  }
+
+  public static IBlockState getSurfaceBlock(World world, int x, int z, Point3i blockLocationResult, boolean ignorePlants, boolean ignoreFluids) {
+    return getSurfaceBlock(world, x, z, 0, 256, blockLocationResult, ignorePlants, ignoreFluids);
+  }
+
+  public static IBlockState getSurfaceBlock(World world, int x, int z, int minY, int maxY, Point3i blockLocationResult, boolean ignorePlants, boolean ignoreFluids) {
+
+    //Find the surface y
+    IBlockState blk;
+
+    int y = maxY;
+    blk = world.getBlockState(new BlockPos(x, y, z));
+    while (isIgnoredAsSurface(world, x, z, y, blk, ignorePlants, ignoreFluids)) {
+      --y;
+      if(y < minY) {
+        return null;
+      }
+      blk = world.getBlockState(new BlockPos(x, y, z));
+    }
+
+    if(blk == null) {
+      return null;
+    }
+
+    if(y == maxY && !isIgnoredAsSurface(world, x, z, y + 1, blk, ignorePlants, ignoreFluids)) {
+      //found a solid block in the first sample, so need to check if it has 'air/ignored' block above it
+      return null;
+    }
+
+    if(blockLocationResult != null) {
+      blockLocationResult.set(x, y, z);
+    }
+    return blk;
+  }
+
+  public static boolean isOnGround(EntityCreature entity) {
+    List<AxisAlignedBB> collides = entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.05, 0));
+    return collides != null && !collides.isEmpty();     
   }
 
 }
