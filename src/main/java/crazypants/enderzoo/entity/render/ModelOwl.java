@@ -27,11 +27,11 @@ public class ModelOwl extends ModelBase {
     // head.mirror = true;
     setRotation(head, 0F, 0F, 0F);
     // eye1
-    head.setTextureOffset(0, 23);
-    head.addBox(1F, -6F, -4F, 2, 2, 1);
-    // eye1
-    head.setTextureOffset(7, 23);
-    head.addBox(-3F, -6F, -4F, 2, 2, 1);
+//    head.setTextureOffset(0, 23);
+//    head.addBox(1F, -6F, -4F, 2, 2, 1);
+//    // eye1
+//    head.setTextureOffset(7, 23);
+//    head.addBox(-3F, -6F, -4F, 2, 2, 1);
     // beak
     head.setTextureOffset(3, 27);
     head.addBox(-1F, -3F, -4F, 2, 3, 1);

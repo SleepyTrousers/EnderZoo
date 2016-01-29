@@ -6,7 +6,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
 
 public class EntityAIFlyingLand extends EntityAIBase {
 
@@ -17,6 +16,9 @@ public class EntityAIFlyingLand extends EntityAIBase {
   private double targetZ;
 
   private int onGroundCount = 0;
+  private int defSearchRange = 3;
+  private int maxSearchRange = 16;
+  private int searchRange = 4;
 
   public EntityAIFlyingLand(EntityCreature creature, double speedIn) {
     entity = creature;
@@ -26,48 +28,51 @@ public class EntityAIFlyingLand extends EntityAIBase {
 
   @Override
   public boolean shouldExecute() {
-    if (entity.onGround || !entity.getNavigator().noPath()) {
+    
+    if (entity.onGround || !entity.getNavigator().noPath()) {      
       return false;
-    }
-
-    int xSearchRange = 3;
+    }    
+    
     int ySearchRange = 4;
-    Vec3 target = null;
+    Point3i target = null;
 
-    BlockPos ep = entity.getPosition();
-    Point3i blockLocationResult = new Point3i();
-    IBlockState block = EntityUtil.getSurfaceBlock(entity.worldObj, ep.getX(), ep.getZ(), 1, ep.getY(), blockLocationResult, true, false);
-    if (block != null) {
+    BlockPos ep = entity.getPosition();     
+    Point3i blockLocationResult = EntityUtil.getClearSurfaceLocation(entity, ep.getX(), ep.getZ(), 1, ep.getY());
+    if (blockLocationResult != null) {
       int distFromGround = ep.getY() - blockLocationResult.y;
-      if (distFromGround < 2) {
-        target = new Vec3(blockLocationResult.x + 0.5, blockLocationResult.y + 1, blockLocationResult.z);
+      if (distFromGround < 2) {        
+        target = blockLocationResult;
       } else {
         ySearchRange += ep.getY() - blockLocationResult.y;
       }
     }
     if (target == null) {
-      target = findLandingTarget(xSearchRange, ySearchRange);
+      target = findLandingTarget(searchRange, ySearchRange);
     }
     if (target == null) {
-      // System.out.println("EntityAIFlyingLand.shouldExecute: no target
-      // found");
+      searchRange = Math.min(searchRange + 1, maxSearchRange);
       return false;
     }
-    targetX = target.xCoord;
-    targetY = target.yCoord;
-    targetZ = target.zCoord;
+    
+    if(target.equals(entity.getPosition())) {
+      return false;
+    }
+    
+    searchRange = defSearchRange;    
+    targetX = target.x + 0.5;
+    targetY = target.y;
+    targetZ = target.z + 0.5;
     return true;
   }
 
-  private Vec3 findLandingTarget(int horizSearchRange, int ySearchRange) {
-    BlockPos ep = entity.getPosition();
-    Point3i surfaceLoc = new Point3i();
+  private Point3i findLandingTarget(int horizSearchRange, int ySearchRange) {    
+    BlockPos ep = entity.getPosition();    
     for (int x = -horizSearchRange; x <= horizSearchRange; x++) {
       for (int z = -horizSearchRange; z <= horizSearchRange; z++) {
-        IBlockState res = EntityUtil.getSurfaceBlock(entity.worldObj, ep.getX() + x, ep.getZ() + z, 1, ep.getY(), surfaceLoc, false, false);
-        if (res != null) {
-          return new Vec3(surfaceLoc.x + 0.5, surfaceLoc.y + 1, surfaceLoc.z + 0.5);
-        }
+        Point3i res = EntityUtil.getClearSurfaceLocation(entity, ep.getX() + x, ep.getZ() + z, 1, ep.getY());
+        if(res != null) {
+          return res;
+        }        
       }
     }
 
@@ -77,13 +82,15 @@ public class EntityAIFlyingLand extends EntityAIBase {
   @Override
   public void startExecuting() {
     onGroundCount = 0;
-    entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed);
+    if(!entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed)) {
+      //System.out.println("EntityAIFlyingLand.startExecuting: No path to target");
+    }
   }
 
   @Override
   public boolean continueExecuting() {
-    if (entity.onGround) {
-      
+    
+    if (entity.onGround) {      
       onGroundCount++;
       if(onGroundCount >= 40) {
         //If we have been on the ground for a couple of seconds
@@ -101,7 +108,6 @@ public class EntityAIFlyingLand extends EntityAIBase {
         IBlockState bs = entity.worldObj.getBlockState(bellow);
         if (!bs.getBlock().isAir(entity.worldObj, bellow)) {
           entity.getNavigator().clearPathEntity();
-          //System.out.println("EntityAIFlyingLand.continueExecuting: Stop " + entity.posX + " " + entity.posZ);
           return false;
         }
       }

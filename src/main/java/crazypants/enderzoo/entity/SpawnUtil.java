@@ -2,16 +2,15 @@ package crazypants.enderzoo.entity;
 
 import java.util.List;
 
+import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import crazypants.enderzoo.vec.Point3i;
-import crazypants.enderzoo.vec.VecUtil;
 
 public class SpawnUtil {
 
@@ -82,11 +81,7 @@ public class SpawnUtil {
   }
 
   public static boolean isSpaceAvailableForSpawn(World worldObj, EntityLiving entity, EntityCreature asCreature, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
-    int i = MathHelper.floor_double(entity.posX);
-    int j = MathHelper.floor_double(entity.getEntityBoundingBox().minY);
-    int k = MathHelper.floor_double(entity.posZ);
-    
-    if(asCreature != null && asCreature.getBlockPathWeight(VecUtil.bpos(i, j, k)) < 0) {
+    if(asCreature != null && asCreature.getBlockPathWeight(entity.getPosition()) < 0) {
       return false;
     }
     if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.getEntityBoundingBox())) {
@@ -104,9 +99,12 @@ public class SpawnUtil {
   public static boolean isSpaceAvailableForSpawn(World worldObj, EntityCreature entityCreature, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
     return isSpaceAvailableForSpawn(worldObj, entityCreature, entityCreature, checkEntityCollisions, false);
   }
+  public static boolean isSpaceAvailableForSpawn(World worldObj, EntityLiving entity, boolean checkEntityCollisions, boolean canSpawnInLiquid) {
+    return isSpaceAvailableForSpawn(worldObj, entity, entity instanceof EntityCreature ? ((EntityCreature)entity) : null, checkEntityCollisions, canSpawnInLiquid);
+  }
   
   public static boolean isSpaceAvailableForSpawn(World worldObj, EntityLiving spawn, boolean checkEntityCollisions) {
-    return isSpaceAvailableForSpawn(worldObj, spawn, null, checkEntityCollisions, false);
+    return isSpaceAvailableForSpawn(worldObj, spawn, checkEntityCollisions, false);
   }
 
   
