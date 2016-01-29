@@ -56,6 +56,10 @@ public class EntityUtil {
     return getBoundsAround(pos.xCoord, pos.yCoord, pos.zCoord, range);
   }
 
+  public static AxisAlignedBB getBoundsAround(BlockPos pos, int range) {
+    return getBoundsAround(pos.getX(), pos.getY(), pos.getZ(), range);
+  }
+  
   public static AxisAlignedBB getBoundsAround(double x, double y, double z, double range) {
     return new AxisAlignedBB(
         x - range, y - range, z - range,
@@ -120,9 +124,28 @@ public class EntityUtil {
     return true;     
   }
 
+  public static BlockPos findRandomLandingSurface(EntityCreature entity, int searchRange, int minY, int maxY, int searchAttempts) {
+    for(int i=0;i<searchAttempts;i++) {
+      BlockPos res = findRandomLandingSurface(entity, searchRange, minY, maxY);
+      if(res != null) {
+        return res;
+      }
+    }
+    return null;    
+  }
+
+  
+  public static BlockPos findRandomLandingSurface(EntityLiving entity, int searchRange, int minY, int maxY) {
+    BlockPos ep = entity.getPosition(); 
+    int x = ep.getX() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
+    int z = ep.getZ() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
+//    System.out.println("EntityUtil.findRandomLandingSurface: testing ep=" + ep + " testing: " + x + "," + z);
+    return findClearLandingSurface(entity, x, z, minY, maxY);
+  }
+
   
   
-  public static Point3i getClearSurfaceLocation(EntityLiving ent, int x, int z, int minY, int maxY) {
+  public static BlockPos findClearLandingSurface(EntityLiving ent, int x, int z, int minY, int maxY) {
     
     double origX = ent.posX;
     double origY = ent.posY;
@@ -141,27 +164,33 @@ public class EntityUtil {
     ent.setPosition(origX, origY, origZ);
     
     if(canLand) {
-      return new Point3i(x,y,z);
+      return new BlockPos(x,y,z);
     }
     return null;
   }
 
   private static boolean canLandAtLocation(EntityLiving ent, int x, int y, int z) {
+    
     World world = ent.worldObj;
     ent.setPosition(x + 0.5, y, z + 0.5);
     if(!SpawnUtil.isSpaceAvailableForSpawn(world, ent, false, false)) {
       return false;
     }
     
+    
     BlockPos bellow = new BlockPos(x,y,z).down();
     IBlockState bs = world.getBlockState(bellow);
-    Block block = bs.getBlock();
-    if(!block.getMaterial().isSolid()) {
+    Block block = bs.getBlock();    
+    if(!block.getMaterial().isSolid()) {      
       return false;
     }
+       
     AxisAlignedBB collides = block.getCollisionBoundingBox(world, bellow, bs);    
     return collides != null;
   }
 
+  
+
+  
 
 }

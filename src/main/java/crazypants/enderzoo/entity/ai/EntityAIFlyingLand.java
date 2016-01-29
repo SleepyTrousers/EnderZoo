@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity.ai;
 
 import crazypants.enderzoo.entity.EntityUtil;
-import crazypants.enderzoo.vec.Point3i;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -19,6 +18,7 @@ public class EntityAIFlyingLand extends EntityAIBase {
   private int defSearchRange = 3;
   private int maxSearchRange = 16;
   private int searchRange = 4;
+  private int searchAttempts = 10;
 
   public EntityAIFlyingLand(EntityCreature creature, double speedIn) {
     entity = creature;
@@ -32,24 +32,24 @@ public class EntityAIFlyingLand extends EntityAIBase {
     if (entity.onGround || !entity.getNavigator().noPath()) {      
       return false;
     }    
-    
-    int ySearchRange = 4;
-    Point3i target = null;
+        
+    BlockPos target = null;
 
     BlockPos ep = entity.getPosition();     
-    Point3i blockLocationResult = EntityUtil.getClearSurfaceLocation(entity, ep.getX(), ep.getZ(), 1, ep.getY());
+    //Land just bellow us if we can
+    BlockPos blockLocationResult = EntityUtil.findClearLandingSurface(entity, ep.getX(), ep.getZ(), 1, ep.getY());
     if (blockLocationResult != null) {
-      int distFromGround = ep.getY() - blockLocationResult.y;
+      int distFromGround = ep.getY() - blockLocationResult.getY();
       if (distFromGround < 2) {        
         target = blockLocationResult;
-      } else {
-        ySearchRange += ep.getY() - blockLocationResult.y;
-      }
+      } 
+    }
+    //otherwise randomly search for somewhere to land
+    if (target == null) {      
+      target = EntityUtil.findRandomLandingSurface(entity, searchRange, 1, ep.getY() + 1, searchAttempts);
     }
     if (target == null) {
-      target = findLandingTarget(searchRange, ySearchRange);
-    }
-    if (target == null) {
+      //failed so increase the seach range for next time
       searchRange = Math.min(searchRange + 1, maxSearchRange);
       return false;
     }
@@ -59,24 +59,10 @@ public class EntityAIFlyingLand extends EntityAIBase {
     }
     
     searchRange = defSearchRange;    
-    targetX = target.x + 0.5;
-    targetY = target.y;
-    targetZ = target.z + 0.5;
+    targetX = target.getX() + 0.5;
+    targetY = target.getY();
+    targetZ = target.getZ() + 0.5;
     return true;
-  }
-
-  private Point3i findLandingTarget(int horizSearchRange, int ySearchRange) {    
-    BlockPos ep = entity.getPosition();    
-    for (int x = -horizSearchRange; x <= horizSearchRange; x++) {
-      for (int z = -horizSearchRange; z <= horizSearchRange; z++) {
-        Point3i res = EntityUtil.getClearSurfaceLocation(entity, ep.getX() + x, ep.getZ() + z, 1, ep.getY());
-        if(res != null) {
-          return res;
-        }        
-      }
-    }
-
-    return null;
   }
 
   @Override

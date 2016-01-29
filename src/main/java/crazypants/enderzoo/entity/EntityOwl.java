@@ -1,5 +1,6 @@
 package crazypants.enderzoo.entity;
 
+import crazypants.enderzoo.entity.ai.EntityAIFlyingFindPerch;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingLand;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingPanic;
 import crazypants.enderzoo.entity.ai.FlyingPathNavigate;
@@ -50,12 +51,11 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
     int pri = 0;
     // tasks.addTask(0, new EntityAISwimming(this));
-    tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2D));
-    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2D));    
-    tasks.addTask(++pri, new EntityAIMate(this, 1.0D));
-    // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
-    // false));
-    // tasks.addTask(5, new EntityAIWander(this, 1.0D));
+    tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
+    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));    
+    tasks.addTask(++pri, new EntityAIMate(this, 1.0));    
+//    tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds, false));
+     tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 60));
 
     tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(++pri, new EntityAILookIdle(this));
@@ -81,7 +81,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     if (!super.interact(playerIn)) {
       if (!worldObj.isRemote) {
         System.out.println("EntityOwl.interact: ");
-        if (!getNavigator().tryMoveToXYZ(posX, posY + 3, posZ, 2)) {
+        if (!getNavigator().tryMoveToXYZ(posX - 10, posY + 8, posZ - 10, 2)) {
           System.out.println("EntityOwl.interact: No path");
         }
       }
@@ -93,7 +93,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
   @Override
   public void onLivingUpdate() {
     
-    // setDead();
+//     setDead();
     super.onLivingUpdate();
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
@@ -264,7 +264,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
     @Override
     public void onUpdateMoveHelper() {
-
+      
       if (update && !owl.getNavigator().noPath()) {
         double xDelta = posX - owl.posX;
         double yDelta = posY - owl.posY;
@@ -280,9 +280,9 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
         float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
         // float moveFactor = 0.125F;
         float moveFactor = 1;
-        
-        if(yDelta > 0) {
-          //Ensure enough lift to get up to the target
+//        System.out.println("EntityOwl.OwlMoveHelper.onUpdateMoveHelper: " + owl.posZ + " " + posZ);
+        if(yDelta > 0) {          
+          //Ensure enough lift to get up to the target          
           yDelta = Math.max(0.1, yDelta);
         }
         
