@@ -111,7 +111,7 @@ public class EntityUtil {
   }
 
   public static boolean isOnGround(EntityCreature entity) {
-    List<AxisAlignedBB> collides = entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.05, 0));
+    List<AxisAlignedBB> collides = entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
     if(collides == null || collides.isEmpty()) {
       return false;
     }

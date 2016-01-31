@@ -5,6 +5,8 @@ import crazypants.enderzoo.entity.ai.EntityAIFlyingLand;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingPanic;
 import crazypants.enderzoo.entity.ai.FlyingPathNavigate;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
@@ -18,6 +20,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigate;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -42,21 +45,21 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   private double groundSpeedRatio = 0.25;
   private double climbRate = 0.25;
-  private float turnRate = 10.0F;
+  private float turnRate = 30.0F;
 
   public EntityOwl(World worldIn) {
     super(worldIn);
-    setSize(0.5F, 0.95F);
+    setSize(0.4F, 0.9F);
     stepHeight = 1.0F;
 
     int pri = 0;
     // tasks.addTask(0, new EntityAISwimming(this));
     tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
-    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));    
-    tasks.addTask(++pri, new EntityAIMate(this, 1.0));    
-//    tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds, false));
-     tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 60));
-
+    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));
+    tasks.addTask(++pri, new EntityAIMate(this, 1.0));
+    // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
+    // false));
+    tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 100));
     tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
     tasks.addTask(++pri, new EntityAILookIdle(this));
 
@@ -92,8 +95,8 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
   @Override
   public void onLivingUpdate() {
-    
-//     setDead();
+
+    // setDead();
     super.onLivingUpdate();
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
@@ -113,9 +116,9 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
       flapSpeed *= yDelta;
     }
     wingRotation += wingRotDelta * flapSpeed;
-    
-    if(!isDead && !onGround && motionY < -0.1) {
-//      System.out.println("EntityOwl.onLivingUpdate: Slow fall");
+
+    if (!isDead && !onGround && motionY < -0.1) {
+      // System.out.println("EntityOwl.onLivingUpdate: Slow fall");
       motionY = -0.1;
     }
 
@@ -124,15 +127,36 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
   @Override
   public void moveEntityWithHeading(float strafe, float forward) {
 
-    moveFlying(strafe, forward, 0.1f);   
+    moveFlying(strafe, forward, 0.1f);
+
+    // Dont fly up inot things
+    AxisAlignedBB movedBB = getEntityBoundingBox().offset(0, motionY, 0);
+    BlockPos ep = getPosition();
+    BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
+    IBlockState bs = worldObj.getBlockState(pos);
+    Block block = bs.getBlock();
+    if (block.getMaterial() != Material.air) {
+      AxisAlignedBB bb = block.getCollisionBoundingBox(worldObj, pos, bs);
+      if (bb != null) {
+        double ouch = movedBB.maxY - bb.minY;
+        // motionY -= (ouch * 2);
+        if (ouch == 0) {
+          motionY = -0.02;
+          System.out.println("EntityOwl.moveEntityWithHeading: " + ouch);
+        } else {
+          motionY = 0;
+        }
+      }
+    }
     moveEntity(motionX, motionY, motionZ);
+
     // drag
     motionX *= 0.8;
     motionY *= 0.8;
     motionZ *= 0.8;
 
     // Check for landing
-    onGround = EntityUtil.isOnGround(this);    
+    onGround = EntityUtil.isOnGround(this);
     isAirBorne = !onGround;
 
     if (onGround) {
@@ -151,13 +175,51 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     limbSwing += limbSwingAmount;
   }
 
+
+  // @Override
+  // protected void damageEntity(DamageSource damageSrc, float damageAmount) {
+  // if(DamageSource.inWall == damageSrc) {
+  // System.out.println("EntityOwl.damageEntity: ");
+  // return;
+  // }
+  // super.damageEntity(damageSrc, damageAmount);
+  // }
+
+  @Override
+  public boolean isEntityInsideOpaqueBlock() {
+    if (noClip) {
+      return false;
+    } else {
+      BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+      for (int i = 0; i < 8; ++i) {
+        int x = MathHelper.floor_double(posX + ((i >> 1) % 2 - 0.5F) * width * 0.8F);
+        int y = MathHelper.floor_double(posY + ((i >> 0) % 2 - 0.5F) * 0.1F + getEyeHeight());
+        // I added this check as it was sometimes clipping into the block above
+        if (y > getEntityBoundingBox().maxY) {
+          y = MathHelper.floor_double(getEntityBoundingBox().maxY);
+        }
+        int z = MathHelper.floor_double(posZ + ((i >> 2) % 2 - 0.5F) * width * 0.8F);
+
+        if (pos.getX() != x || pos.getY() != y || pos.getZ() != z) {
+          pos.set(x, y, z);
+          if (worldObj.getBlockState(pos).getBlock().isVisuallyOpaque()) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+  }
+
   private void calculateWingAngle(float partialTicks) {
     float flapComletion = prevWingRotation + (wingRotation - prevWingRotation) * partialTicks;
     float onGroundTimerThing = prevDestPos + (destPos - prevDestPos) * partialTicks;
     wingAngle = (MathHelper.sin(flapComletion) + 1.0F) * onGroundTimerThing;
 
     if (onGround) {
-      wingAngle = (float)Math.toRadians(3);
+      wingAngle = (float) Math.toRadians(3);
     }
   }
 
@@ -264,7 +326,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
 
     @Override
     public void onUpdateMoveHelper() {
-      
+
       if (update && !owl.getNavigator().noPath()) {
         double xDelta = posX - owl.posX;
         double yDelta = posY - owl.posY;
@@ -273,21 +335,19 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
         double dist = MathHelper.sqrt_double(distSq);
         yDelta = yDelta / dist;
         float yawAngle = (float) (MathHelper.atan2(zDelta, xDelta) * 180.0D / Math.PI) - 90.0F;
-        // owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, 30.0F);
         owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, owl.turnRate);
         owl.renderYawOffset = owl.rotationYaw;
 
-        float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
-        // float moveFactor = 0.125F;
         float moveFactor = 1;
-//        System.out.println("EntityOwl.OwlMoveHelper.onUpdateMoveHelper: " + owl.posZ + " " + posZ);
-        if(yDelta > 0) {          
-          //Ensure enough lift to get up to the target          
+        float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+        owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * moveFactor);
+
+        if (yDelta > 0) {
+          // Ensure enough lift to get up to the target
           yDelta = Math.max(0.1, yDelta);
         }
-        
-        owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * moveFactor);
-        owl.motionY += owl.getAIMoveSpeed() * yDelta * owl.climbRate;
+        double yMove = owl.getAIMoveSpeed() * yDelta * owl.climbRate;
+        owl.motionY += yMove;
 
         // Look
         double d7 = owl.posX + (xDelta / dist * 2.0D);

@@ -2,22 +2,35 @@ package crazypants.enderzoo.entity.ai;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.world.pathfinder.SwimNodeProcessor;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.pathfinder.WalkNodeProcessor;
 
-public class FlyNodeProcessor extends SwimNodeProcessor {
+public class FlyNodeProcessor extends WalkNodeProcessor {
+
+  @Override
+  public PathPoint getPathPointTo(Entity entityIn) {
+    return openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D),
+        MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
+  }
+
+  @Override
+  public PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double z) {      
+    return openPoint(MathHelper.floor_double(x - entityIn.width / 2.0F), MathHelper.floor_double(y), MathHelper.floor_double(z - entityIn.width / 2.0F));       
+  }
 
   @Override
   public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
     int i = 0;
-
-    for (EnumFacing enumfacing : EnumFacing.values()) {      
-      PathPoint pathpoint = this.getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
+    for (EnumFacing enumfacing : EnumFacing.values()) {
+      PathPoint pathpoint = getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
           currentPoint.zCoord + enumfacing.getFrontOffsetZ());
-      if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance || true)) { //TODO: || true
+      if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance)) {
         pathOptions[i++] = pathpoint;
       }
     }
@@ -25,26 +38,29 @@ public class FlyNodeProcessor extends SwimNodeProcessor {
   }
 
   private PathPoint getSafePoint(Entity entityIn, int x, int y, int z) {
-     int i = this.func_176186_b(entityIn, x, y, z);
-     return i == -1 ? this.openPoint(x, y, z) : null;
+    boolean i = entityFits(entityIn, x, y, z);
+    return i ? openPoint(x, y, z) : null;
   }
 
-  private int func_176186_b(Entity entityIn, int x, int y, int z) {
+  private boolean entityFits(Entity entityIn, int x, int y, int z) {
 
-    BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-
-    for (int i = x; i < x + this.entitySizeX; ++i) {
-      for (int j = y; j < y + this.entitySizeY; ++j) {
-        for (int k = z; k < z + this.entitySizeZ; ++k) {
-          Block block = this.blockaccess.getBlockState(blockpos$mutableblockpos.set(i, j, k)).getBlock();
+    BlockPos.MutableBlockPos mutableblockpos = new BlockPos.MutableBlockPos();
+    for (int i = x; i < x + entitySizeX; ++i) {
+      for (int j = y; j < y + entitySizeY; ++j) {
+        for (int k = z; k < z + entitySizeZ; ++k) {
+          IBlockState bs = blockaccess.getBlockState(mutableblockpos.set(i, j, k));
+          Block block = bs.getBlock();
           if (block.getMaterial() != Material.air) {
-            return 0;
+            AxisAlignedBB bb = block.getCollisionBoundingBox(entityIn.worldObj, mutableblockpos, bs);
+            if(bb != null) {
+              return false;
+            }
           }
         }
       }
     }
 
-    return -1;
+    return true;
   }
 
 }

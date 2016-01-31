@@ -19,6 +19,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   private int executionChance;
   private int searchRange = 6;
   private int searchAttempts = 30;
+  private boolean foundFirstPerch = false;
 
   public EntityAIFlyingFindPerch(EntityCreature creatureIn, double speedIn) {
     this(creatureIn, speedIn, 120);
@@ -35,12 +36,16 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   public boolean shouldExecute() {
     int chance = executionChance;
     if (isOnLeaves()) { // if we are already on leaves, don't look for a new perch so often
-      chance *= 4;
+      chance *= 10;
+    } else if(!foundFirstPerch) {
+      chance = 60;
     }
     if (entity.getRNG().nextInt(chance) != 0) {
       return false;
     }
 
+    foundFirstPerch = true;
+    
     BlockPos targetPos = EntityUtil.findRandomLandingSurface(entity, searchRange, entity.getPosition().getY() + 1, 250, searchAttempts);
     if (targetPos != null) {
       List<EntityCreature> others = entity.worldObj.getEntitiesWithinAABB(entity.getClass(), EntityUtil.getBoundsAround(targetPos, 4));

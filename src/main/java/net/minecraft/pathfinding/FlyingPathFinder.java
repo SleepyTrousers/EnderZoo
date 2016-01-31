@@ -12,6 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.pathfinder.NodeProcessor;
 
 public class FlyingPathFinder extends PathFinder {
+  
   private Path path = new Path();
   private PathPoint[] pathOptions = new PathPoint[32];
   private NodeProcessor nodeProcessor;
@@ -22,20 +23,23 @@ public class FlyingPathFinder extends PathFinder {
   }
 
   @Override
-  public PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityFrom, Entity entityTo, float dist) {
-    return this.createEntityPathTo(blockaccess, entityFrom, entityTo.posX, entityTo.getEntityBoundingBox().minY, entityTo.posZ, dist);
+  public PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityFrom, Entity entityTo, float dist) {   
+    return createEntityPathTo(blockaccess, entityFrom, entityTo.posX, entityTo.getEntityBoundingBox().minY, entityTo.posZ, dist);
   }
 
   @Override
   public PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityIn, BlockPos targetPos, float dist) {
-    return this.createEntityPathTo(blockaccess, entityIn, targetPos.getX() + 0.5F, targetPos.getY() + 0.5F, targetPos.getZ() + 0.5F, dist);
+    return createEntityPathTo(blockaccess, entityIn, targetPos.getX() + 0.5F, targetPos.getY() + 0.5F, targetPos.getZ() + 0.5F, dist);
   }
 
   private PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityIn, double x, double y, double z, float distance) {
 
+    path.clearPath();
+    nodeProcessor.initProcessor(blockaccess, entityIn);
+    
     PathPoint startPoint = nodeProcessor.getPathPointTo(entityIn);
     PathPoint endPoint = nodeProcessor.getPathPointToCoords(entityIn, x, y, z);
-
+    
     Vec3 targ = new Vec3(x, y, z);
     Vec3 ePos = entityIn.getPositionVector();
     double totalDistSq = ePos.squareDistanceTo(targ);
@@ -53,7 +57,7 @@ public class FlyingPathFinder extends PathFinder {
     }
 
     if (climbY == 0) {
-      return createDefault(blockaccess, entityIn, distance, startPoint, endPoint);
+      return createDefault(blockaccess, entityIn, distance, x,y,z);
     }    
     
     List<PathPoint> resPoints = new ArrayList<PathPoint>();
@@ -64,26 +68,26 @@ public class FlyingPathFinder extends PathFinder {
     horizDirVec = horizDirVec.normalize();
     Vec3 offset = new Vec3(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
     
-    PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));    
-    path.clearPath();
-    nodeProcessor.initProcessor(blockaccess, entityIn);
-    PathPoint[] points = addToPath(entityIn, startPoint, climbPoint, distance);
+    PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));        
+    
+    PathPoint[] points = addToPath(entityIn, startPoint, climbPoint, distance);    
     nodeProcessor.postProcess();
-
+        
     if (points == null) { //failed to climb so go default      
-      return createDefault(blockaccess, entityIn, distance, startPoint, endPoint);
+      return createDefault(blockaccess, entityIn, distance, x,y,z);
     }
     resPoints.addAll(Arrays.asList(points));
-
+    
     //then path from the climb point to destination
     path.clearPath();    
     nodeProcessor.initProcessor(blockaccess, entityIn);
-    climbPoint.index = -1;
+    //climbPoint.index = -1;
+    climbPoint = new PathPoint(climbPoint.xCoord, climbPoint.yCoord, climbPoint.zCoord);
     points = addToPath(entityIn, climbPoint, endPoint, distance);
     nodeProcessor.postProcess();
 
     if (points == null) {
-      return createDefault(blockaccess, entityIn, distance, startPoint, endPoint);
+      return createDefault(blockaccess, entityIn, distance, x,y,z);
     }
     resPoints.addAll(Arrays.asList(points));
     if(resPoints.isEmpty()) {
@@ -91,21 +95,6 @@ public class FlyingPathFinder extends PathFinder {
     }
     return new PathEntity(resPoints.toArray(new PathPoint[resPoints.size()]));
 
-  }
-
-  private int rnd(double d) {
-    return (int)Math.round(d);
-  }
-
-  private PathEntity createDefault(IBlockAccess blockaccess, Entity entityIn, float distance, PathPoint startPoint, PathPoint endPoint) {
-    path.clearPath();
-    nodeProcessor.initProcessor(blockaccess, entityIn);
-    PathPoint[] points = addToPath(entityIn, startPoint, endPoint, distance);
-    nodeProcessor.postProcess();
-    if(points == null) {
-      return null;
-    }
-    return new PathEntity(points);
   }
 
   private PathPoint[] addToPath(Entity entityIn, PathPoint pathpointStart, PathPoint pathpointEnd, float maxDistance) {
@@ -168,7 +157,7 @@ public class FlyingPathFinder extends PathFinder {
 //      } else {
 //        cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
 //        path.addPoint(cadidatePoint);
-//      }
+//      }           
       
       
       
@@ -181,6 +170,26 @@ public class FlyingPathFinder extends PathFinder {
     }
   }
 
+  private int rnd(double d) {
+    return (int)Math.round(d);
+  }
+
+  private PathEntity createDefault(IBlockAccess blockaccess, Entity entityIn, float distance, double x, double y, double z) {
+    this.path.clearPath();
+    this.nodeProcessor.initProcessor(blockaccess, entityIn);
+    PathPoint pathpoint = nodeProcessor.getPathPointTo(entityIn);
+    PathPoint pathpoint1 =nodeProcessor.getPathPointToCoords(entityIn, x, y, z);
+    PathPoint[] p = addToPath(entityIn, pathpoint, pathpoint1, distance);
+    PathEntity res;
+    if(p == null) {
+      res = null;
+    } else {
+      res = new PathEntity(p);  
+    }     
+    this.nodeProcessor.postProcess();
+    return res;
+  }
+  
   private static PathPoint[] createEntityPath(PathPoint start, PathPoint end) {
     int i = 1;
 

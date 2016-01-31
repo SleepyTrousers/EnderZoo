@@ -54,10 +54,6 @@ public class EntityAIFlyingLand extends EntityAIBase {
       return false;
     }
     
-    if(target.equals(entity.getPosition())) {
-      return false;
-    }
-    
     searchRange = defSearchRange;    
     targetX = target.getX() + 0.5;
     targetY = target.getY();
@@ -100,10 +96,10 @@ public class EntityAIFlyingLand extends EntityAIBase {
     }
 
     boolean isStillNavigating = !entity.getNavigator().noPath();
-    if (!isStillNavigating) {
+    if (!isStillNavigating) {      
       entity.onGround = EntityUtil.isOnGround(entity);
       entity.isAirBorne = !entity.onGround;
-    }    
+    }  
     return isStillNavigating;
   }
 
