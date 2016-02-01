@@ -145,19 +145,18 @@ public class FlyingPathFinder extends PathFinder {
           }
         }
       }
-      
-//      System.out.println("FlyingPathFinder.addToPath: Direct path");      
-//      PathPoint cadidatePoint = new PathPoint(pathpointEnd.xCoord, pathpointEnd.yCoord, pathpointEnd.zCoord);
-//      float newTotalDistance = dequeued.totalPathDistance + dequeued.distanceToSquared(cadidatePoint);
-//      cadidatePoint.previous = dequeued;
-//      cadidatePoint.totalPathDistance = newTotalDistance;
-//      cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
-//      if (cadidatePoint.isAssigned()) {
-//        path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
-//      } else {
-//        cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
-//        path.addPoint(cadidatePoint);
-//      }           
+         
+      PathPoint cadidatePoint = new PathPoint(pathpointEnd.xCoord, pathpointEnd.yCoord, pathpointEnd.zCoord);
+      float newTotalDistance = dequeued.totalPathDistance + dequeued.distanceToSquared(cadidatePoint);
+      cadidatePoint.previous = dequeued;
+      cadidatePoint.totalPathDistance = newTotalDistance;
+      cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
+      if (cadidatePoint.isAssigned()) {
+        path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
+      } else {
+        cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
+        path.addPoint(cadidatePoint);
+      }           
       
       
       

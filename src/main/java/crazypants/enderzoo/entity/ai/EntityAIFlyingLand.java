@@ -65,7 +65,7 @@ public class EntityAIFlyingLand extends EntityAIBase {
   public void startExecuting() {
     onGroundCount = 0;
     if(!entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed)) {
-      //System.out.println("EntityAIFlyingLand.startExecuting: No path to target");
+//      System.out.println("EntityAIFlyingLand.startExecuting: No path to target");
     }
   }
 
@@ -85,7 +85,6 @@ public class EntityAIFlyingLand extends EntityAIBase {
       double fx = entity.posX - Math.floor(entity.posX);
       double fz = entity.posX - Math.floor(entity.posX);
       if (fx > 0.4 && fx < 0.6 && fz > 0.4 && fz < 0.6) {
-        // System.out.println("EntityAIFlyingLand.continueExecuting: Stop");
         BlockPos bellow = entity.getPosition().down();
         IBlockState bs = entity.worldObj.getBlockState(bellow);
         if (!bs.getBlock().isAir(entity.worldObj, bellow)) {
@@ -99,6 +98,9 @@ public class EntityAIFlyingLand extends EntityAIBase {
     if (!isStillNavigating) {      
       entity.onGround = EntityUtil.isOnGround(entity);
       entity.isAirBorne = !entity.onGround;
+      if(!entity.onGround) { //gravity
+        entity.setPosition(entity.posX, entity.posY - 0.01, entity.posZ);
+      }
     }  
     return isStillNavigating;
   }

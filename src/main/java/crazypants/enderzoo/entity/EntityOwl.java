@@ -56,12 +56,12 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     // tasks.addTask(0, new EntityAISwimming(this));
     tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
     tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));
-    tasks.addTask(++pri, new EntityAIMate(this, 1.0));
-    // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
-    // false));
-    tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 100));
-    tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-    tasks.addTask(++pri, new EntityAILookIdle(this));
+     tasks.addTask(++pri, new EntityAIMate(this, 1.0));
+    // // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
+    // // false));
+     tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 100));
+     tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class,6.0F));
+     tasks.addTask(++pri, new EntityAILookIdle(this));
 
     moveHelper = new OwlMoveHelper(this);
 
@@ -96,7 +96,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
   @Override
   public void onLivingUpdate() {
 
-    // setDead();
+//     setDead();
     super.onLivingUpdate();
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
@@ -139,10 +139,8 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
       AxisAlignedBB bb = block.getCollisionBoundingBox(worldObj, pos, bs);
       if (bb != null) {
         double ouch = movedBB.maxY - bb.minY;
-        // motionY -= (ouch * 2);
         if (ouch == 0) {
-          motionY = -0.02;
-          System.out.println("EntityOwl.moveEntityWithHeading: " + ouch);
+          motionY = -0.1;
         } else {
           motionY = 0;
         }
@@ -174,7 +172,6 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     limbSwingAmount += (f7 - limbSwingAmount) * 0.4F;
     limbSwing += limbSwingAmount;
   }
-
 
   // @Override
   // protected void damageEntity(DamageSource damageSrc, float damageAmount) {
@@ -331,23 +328,29 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
         double xDelta = posX - owl.posX;
         double yDelta = posY - owl.posY;
         double zDelta = posZ - owl.posZ;
-        double distSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
-        double dist = MathHelper.sqrt_double(distSq);
-        yDelta = yDelta / dist;
-        float yawAngle = (float) (MathHelper.atan2(zDelta, xDelta) * 180.0D / Math.PI) - 90.0F;
-        owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, owl.turnRate);
-        owl.renderYawOffset = owl.rotationYaw;
 
         float moveFactor = 1;
         float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
         owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * moveFactor);
 
+        double distSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
+        double dist = MathHelper.sqrt_double(distSq);
+        yDelta = yDelta / dist;
         if (yDelta > 0) {
           // Ensure enough lift to get up to the target
           yDelta = Math.max(0.1, yDelta);
         }
         double yMove = owl.getAIMoveSpeed() * yDelta * owl.climbRate;
         owl.motionY += yMove;
+
+        //Limit crazy spinning when going straight down
+        float tr = owl.turnRate;
+        if(yMove < -0.12) {
+          tr = 10;
+        }
+        float yawAngle = (float) (MathHelper.atan2(zDelta, xDelta) * 180.0D / Math.PI) - 90.0F;
+        owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, tr);
+        owl.renderYawOffset = owl.rotationYaw;
 
         // Look
         double d7 = owl.posX + (xDelta / dist * 2.0D);

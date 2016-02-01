@@ -74,22 +74,11 @@ public class FlyingPathNavigate extends PathNavigateGround {
         }
       }
 
-      if (!noPath()) { // if we have a poath
+      if (!noPath()) { // if we have a path
         Vec3 targetPos = currentPath.getPosition(theEntity);
-
         if (targetPos == null) {
           return;
         }
-//        AxisAlignedBB axisalignedbb1 = (new AxisAlignedBB(targetPos.xCoord, targetPos.yCoord, targetPos.zCoord, targetPos.xCoord, targetPos.yCoord,
-//            targetPos.zCoord)).expand(0.5D, 0.5D, 0.5D);
-//        List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this.theEntity, axisalignedbb1.addCoord(0.0D, -1.0D, 0.0D));
-//        double d0 = -1.0D;
-//        axisalignedbb1 = axisalignedbb1.offset(0.0D, 1.0D, 0.0D);
-//
-//        for (AxisAlignedBB axisalignedbb : list) {
-//          d0 = axisalignedbb.calculateYOffset(axisalignedbb1, d0);
-//        }
-        // theEntity.getMoveHelper().setMoveTo(targetPos.xCoord, targetPos.yCoord + d0, targetPos.zCoord, speed);
         theEntity.getMoveHelper().setMoveTo(targetPos.xCoord, targetPos.yCoord, targetPos.zCoord, speed);
       }
     }
@@ -126,9 +115,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
 
   @Override
   protected boolean isDirectPathBetweenPoints(Vec3 startPos, Vec3 endPos, int sizeX, int sizeY, int sizeZ) {
-//    if (true) {
-//      return super.isDirectPathBetweenPoints(startPos, endPos, sizeX, sizeY, sizeZ);
-//    }
+
     Vec3 target = new Vec3(endPos.xCoord, endPos.yCoord + theEntity.height * 0.5D, endPos.zCoord);
     if (!isClear(startPos, target)) {
       return false;
@@ -150,12 +137,15 @@ public class FlyingPathNavigate extends PathNavigateGround {
   @Override
   protected void checkForStuck(Vec3 positionVec3) {  
     
-//    if(true) {
-//      return;
-//    }
+    if (totalTicks - ticksAtLastPos > 5 && positionVec3.squareDistanceTo(lastPosCheck) < 0.25D) {      
+      clearPathEntity();      
+      ticksAtLastPos = totalTicks;
+      lastPosCheck = positionVec3;    
+      return;
+    }
     
-    if (totalTicks - ticksAtLastPos > 100) {
-      if (positionVec3.squareDistanceTo(this.lastPosCheck) < 2.25D) {
+    if (totalTicks - ticksAtLastPos > 50) {
+      if (positionVec3.squareDistanceTo(lastPosCheck) < 2.25D) {
         clearPathEntity();
       }
 

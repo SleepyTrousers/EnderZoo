@@ -40,6 +40,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
     } else if(!foundFirstPerch) {
       chance = 60;
     }
+//    chance = 5;
     if (entity.getRNG().nextInt(chance) != 0) {
       return false;
     }
@@ -50,16 +51,13 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
     if (targetPos != null) {
       List<EntityCreature> others = entity.worldObj.getEntitiesWithinAABB(entity.getClass(), EntityUtil.getBoundsAround(targetPos, 4));
       if (others != null && others.size() > 1) {
-//        System.out.println("EntityAIFlyingFindPerch.shouldExecute: Crowded perch");
         return false;
       }
-//      System.out.println("EntityAIFlyingFindPerch.shouldExecute: Perch at pos " + targetPos + " entity at " + entity.getPosition());
       xPosition = targetPos.getX() + 0.5;
       yPosition = targetPos.getY();
       zPosition = targetPos.getZ() + 0.5;
       return true;
     }
-//    System.out.println("EntityAIFlyingFindPerch.shouldExecute: No perch");
     return false;
 
   }
