@@ -11,7 +11,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-//public class FlyingPathNavigate extends PathNavigateSwimmer {
+
 public class FlyingPathNavigate extends PathNavigateGround {
 
   private int totalTicks;
@@ -115,7 +115,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
 
   @Override
   protected boolean isDirectPathBetweenPoints(Vec3 startPos, Vec3 endPos, int sizeX, int sizeY, int sizeZ) {
-
+   
     Vec3 target = new Vec3(endPos.xCoord, endPos.yCoord + theEntity.height * 0.5D, endPos.zCoord);
     if (!isClear(startPos, target)) {
       return false;
@@ -135,9 +135,9 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   @Override
-  protected void checkForStuck(Vec3 positionVec3) {  
+  protected void checkForStuck(Vec3 positionVec3) {   
     
-    if (totalTicks - ticksAtLastPos > 5 && positionVec3.squareDistanceTo(lastPosCheck) < 0.25D) {      
+    if (totalTicks - ticksAtLastPos > 5 && positionVec3.squareDistanceTo(lastPosCheck) < 0.0625) {      
       clearPathEntity();      
       ticksAtLastPos = totalTicks;
       lastPosCheck = positionVec3;    

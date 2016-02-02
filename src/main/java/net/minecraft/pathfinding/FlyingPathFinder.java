@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import crazypants.enderzoo.entity.SpawnUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -42,13 +44,13 @@ public class FlyingPathFinder extends PathFinder {
     
     Vec3 targ = new Vec3(x, y, z);
     Vec3 ePos = entityIn.getPositionVector();
-    double totalDistSq = ePos.squareDistanceTo(targ);
-    double totalDist = Math.sqrt(totalDistSq);
     double yDelta = targ.yCoord - ePos.yCoord;
 
+    double horizDist = new Vec3(x,0,z).distanceTo(new Vec3(ePos.xCoord,0,ePos.zCoord));
+    
     int climbY = 0;
-    if (totalDist > 4 && entityIn.onGround) {
-      climbY = 1 * MathHelper.clamp_int((int)(totalDist/8), 1, 3);
+    if (horizDist > 4 && entityIn.onGround) {
+      climbY = 1 * MathHelper.clamp_int((int)(horizDist/8), 1, 3);
       if (yDelta >= 1) {
         climbY += yDelta;
       } else {
@@ -62,13 +64,16 @@ public class FlyingPathFinder extends PathFinder {
     
     List<PathPoint> resPoints = new ArrayList<PathPoint>();
     // climb, then descend
-    double climbDistance = Math.min(totalDist / 2.0, climbY);
+    double climbDistance = Math.min(horizDist / 2.0, climbY);
     Vec3 horizDirVec = new Vec3(targ.xCoord,0,targ.yCoord);
     horizDirVec = horizDirVec.subtract(new Vec3(ePos.xCoord, 0, ePos.yCoord));
     horizDirVec = horizDirVec.normalize();
     Vec3 offset = new Vec3(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
     
     PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));        
+    if(!SpawnUtil.isSpaceAvailableForSpawn(entityIn.worldObj, (EntityLiving)entityIn, false)) {
+      return createDefault(blockaccess, entityIn, distance, x,y,z);
+    }
     
     PathPoint[] points = addToPath(entityIn, startPoint, climbPoint, distance);    
     nodeProcessor.postProcess();
@@ -146,20 +151,17 @@ public class FlyingPathFinder extends PathFinder {
         }
       }
          
-      PathPoint cadidatePoint = new PathPoint(pathpointEnd.xCoord, pathpointEnd.yCoord, pathpointEnd.zCoord);
-      float newTotalDistance = dequeued.totalPathDistance + dequeued.distanceToSquared(cadidatePoint);
-      cadidatePoint.previous = dequeued;
-      cadidatePoint.totalPathDistance = newTotalDistance;
-      cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
-      if (cadidatePoint.isAssigned()) {
-        path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
-      } else {
-        cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
-        path.addPoint(cadidatePoint);
-      }           
-      
-      
-      
+//      PathPoint cadidatePoint = new PathPoint(pathpointEnd.xCoord, pathpointEnd.yCoord, pathpointEnd.zCoord);
+//      float newTotalDistance = dequeued.totalPathDistance + dequeued.distanceToSquared(cadidatePoint);
+//      cadidatePoint.previous = dequeued;
+//      cadidatePoint.totalPathDistance = newTotalDistance;
+//      cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
+//      if (cadidatePoint.isAssigned()) {
+//        path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
+//      } else {
+//        cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
+//        path.addPoint(cadidatePoint);
+//      }                 
     }
 
     if (curPoint == pathpointStart) {

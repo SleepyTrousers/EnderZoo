@@ -139,12 +139,9 @@ public class EntityUtil {
     BlockPos ep = entity.getPosition(); 
     int x = ep.getX() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
     int z = ep.getZ() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
-//    System.out.println("EntityUtil.findRandomLandingSurface: testing ep=" + ep + " testing: " + x + "," + z);
     return findClearLandingSurface(entity, x, z, minY, maxY);
   }
 
-  
-  
   public static BlockPos findClearLandingSurface(EntityLiving ent, int x, int z, int minY, int maxY) {
     
     double origX = ent.posX;
