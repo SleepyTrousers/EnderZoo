@@ -73,7 +73,7 @@ public class ModelOwl extends ModelBase {
     setRotationAngles(time, limbSwing, f2, headY, headX, scale, entity);
 
     float height = 25;
-    float owlScale = 0.7f;
+    float owlScale = 0.65f;
     float transFactor = 1 - owlScale;
     
     if (isChild) {

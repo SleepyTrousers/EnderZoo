@@ -1,19 +1,24 @@
 package crazypants.enderzoo.entity;
 
+import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingFindPerch;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingLand;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingPanic;
-import crazypants.enderzoo.entity.ai.FlyingPathNavigate;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingShortWander;
+import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;
+import crazypants.enderzoo.entity.navigate.FlyingMoveHelper;
+import crazypants.enderzoo.entity.navigate.FlyingPathNavigate;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
-import net.minecraft.entity.ai.EntityLookHelper;
-import net.minecraft.entity.ai.EntityMoveHelper;
+import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -22,11 +27,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class EntityOwl extends EntityAnimal implements IEnderZooMob {
+public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   public static final String NAME = "Owl";
   public static final int EGG_BG_COL = 0x27624D;
@@ -44,27 +50,37 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
   private float wingAngle;
 
   private double groundSpeedRatio = 0.25;
-  private double climbRate = 0.25;
-  private float turnRate = 30.0F;
+  private float climbRate = 0.25f;
+  private float turnRate = 30;
+  
+//  private FlyingPathNavigate flyingNav;
 
   public EntityOwl(World worldIn) {
     super(worldIn);
-    setSize(0.4F, 0.9F);
+    setSize(0.4F, 0.85F);
     stepHeight = 1.0F;
 
     int pri = 0;
-    // tasks.addTask(0, new EntityAISwimming(this));
-    tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
+    tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));    
+    tasks.addTask(++pri, new EntityAIFlyingAttackOnCollide(this, 2.5, false));
     tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));
-     tasks.addTask(++pri, new EntityAIMate(this, 1.0));
+    tasks.addTask(++pri, new EntityAIMate(this, 1.0));
     // // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
     // // false));
-     tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 100));
-     tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class,6.0F));
-     tasks.addTask(++pri, new EntityAILookIdle(this));
+    tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 80));
+    tasks.addTask(++pri, new EntityAIFlyingShortWander(this, 2, 150));
 
-    moveHelper = new OwlMoveHelper(this);
+    tasks.addTask(++pri, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+    tasks.addTask(++pri, new EntityAILookIdle(this));
 
+    EntityAINearestAttackableTargetBounded<EntitySpider> targetSpiders = new EntityAINearestAttackableTargetBounded<EntitySpider>(this, EntitySpider.class, true, true);
+    targetSpiders.setMaxDistanceToTarget(12);
+    targetSpiders.setMaxVerticalDistanceToTarget(24);
+    targetTasks.addTask(0, targetSpiders);
+
+    moveHelper = new FlyingMoveHelper(this);
+
+    
   }
 
   @Override
@@ -72,11 +88,17 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     super.applyEntityAttributes();
     getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
     getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    MobInfo.OWL.applyAttributes(this);
   }
 
   @Override
   protected PathNavigate getNewNavigator(World worldIn) {
     return new FlyingPathNavigate(this, worldIn);
+  }
+
+  @Override
+  public FlyingPathNavigate getFlyingNavigator() {  
+    return (FlyingPathNavigate)getNavigator();
   }
 
   @Override
@@ -92,6 +114,16 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     }
     return true;
   }
+  
+  @Override
+  public boolean attackEntityAsMob(Entity entityIn) {
+    super.attackEntityAsMob(entityIn);
+    float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    if(entityIn instanceof EntitySpider) {
+      attackDamage *= 2;
+    }    
+    return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
+  }
 
   @Override
   public void onLivingUpdate() {
@@ -101,7 +133,6 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
     destPos = (float) (destPos + (onGround ? -1 : 4) * 0.3D);
-    // destPos = (float) (destPos + 4 * 0.3);
     destPos = MathHelper.clamp_float(destPos, 0.0F, 1.0F);
     if (!onGround && wingRotDelta < 1.0F) {
       wingRotDelta = 1.0F;
@@ -117,12 +148,8 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     }
     wingRotation += wingRotDelta * flapSpeed;
 
-    if (!isDead && !onGround && motionY < -0.1) {
-      // System.out.println("EntityOwl.onLivingUpdate: Slow fall");
-      motionY = -0.1;
-    }
-
   }
+
 
   @Override
   public void moveEntityWithHeading(float strafe, float forward) {
@@ -146,6 +173,7 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
         }
       }
     }
+    
     moveEntity(motionX, motionY, motionZ);
 
     // drag
@@ -153,18 +181,18 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     motionY *= 0.8;
     motionZ *= 0.8;
 
-    // Check for landing
     onGround = EntityUtil.isOnGround(this);
-    isAirBorne = !onGround;
 
+    isAirBorne = !onGround;
+    
     if (onGround) {
       motionX *= groundSpeedRatio;
       motionZ *= groundSpeedRatio;
     }
 
     prevLimbSwingAmount = limbSwingAmount;
-    double deltaX = this.posX - this.prevPosX;
-    double deltaZ = this.posZ - this.prevPosZ;
+    double deltaX = posX - prevPosX;
+    double deltaZ = posZ - prevPosZ;
     float f7 = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ) * 4.0F;
     if (f7 > 1.0F) {
       f7 = 1.0F;
@@ -172,15 +200,6 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     limbSwingAmount += (f7 - limbSwingAmount) * 0.4F;
     limbSwing += limbSwingAmount;
   }
-
-  // @Override
-  // protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-  // if(DamageSource.inWall == damageSrc) {
-  // System.out.println("EntityOwl.damageEntity: ");
-  // return;
-  // }
-  // super.damageEntity(damageSrc, damageAmount);
-  // }
 
   @Override
   public boolean isEntityInsideOpaqueBlock() {
@@ -312,67 +331,19 @@ public class EntityOwl extends EntityAnimal implements IEnderZooMob {
     return Items.feather;
   }
 
-  public static class OwlMoveHelper extends EntityMoveHelper {
+  @Override
+  public float getMaxTurnRate() {
+    return turnRate;
+  }
 
-    private EntityOwl owl;
+  @Override
+  public float getMaxClimbRate() {
+    return climbRate;
+  }
 
-    public OwlMoveHelper(EntityOwl owl) {
-      super(owl);
-      this.owl = owl;
-    }
-
-    @Override
-    public void onUpdateMoveHelper() {
-
-      if (update && !owl.getNavigator().noPath()) {
-        double xDelta = posX - owl.posX;
-        double yDelta = posY - owl.posY;
-        double zDelta = posZ - owl.posZ;
-
-        float moveFactor = 1;
-        float moveSpeed = (float) (speed * owl.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
-        owl.setAIMoveSpeed(owl.getAIMoveSpeed() + (moveSpeed - owl.getAIMoveSpeed()) * moveFactor);
-
-        double distSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
-        double dist = MathHelper.sqrt_double(distSq);
-        yDelta = yDelta / dist;
-        if (yDelta > 0) {
-          // Ensure enough lift to get up to the target
-          yDelta = Math.max(0.1, yDelta);
-        }
-        double yMove = owl.getAIMoveSpeed() * yDelta * owl.climbRate;
-        owl.motionY += yMove;
-
-        //Limit crazy spinning when going straight down
-        float tr = owl.turnRate;
-        if(yMove < -0.12) {
-          tr = 10;
-        }
-        float yawAngle = (float) (MathHelper.atan2(zDelta, xDelta) * 180.0D / Math.PI) - 90.0F;
-        owl.rotationYaw = limitAngle(owl.rotationYaw, yawAngle, tr);
-        owl.renderYawOffset = owl.rotationYaw;
-
-        // Look
-        double d7 = owl.posX + (xDelta / dist * 2.0D);
-        double d8 = owl.getEyeHeight() + owl.posY + (yDelta / dist * 1.0D);
-        double d9 = owl.posZ + (zDelta / dist * 2.0D);
-
-        EntityLookHelper entitylookhelper = owl.getLookHelper();
-        double lookX = entitylookhelper.getLookPosX();
-        double lookY = entitylookhelper.getLookPosY();
-        double lookZ = entitylookhelper.getLookPosZ();
-
-        if (!entitylookhelper.getIsLooking()) {
-          lookX = d7;
-          lookY = d8;
-          lookZ = d9;
-        }
-        owl.getLookHelper().setLookPosition(lookX + (d7 - lookX) * 0.125D, lookY + (d8 - lookY) * 0.125D, lookZ + (d9 - lookZ) * 0.125D, 10.0F, 40.0F);
-      } else {
-        owl.setAIMoveSpeed(0.0F);
-      }
-    }
-
+  @Override
+  public EntityCreature asEntityCreature() {    
+    return this;
   }
 
 }

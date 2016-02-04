@@ -65,8 +65,9 @@ public class FlyingPathFinder extends PathFinder {
     List<PathPoint> resPoints = new ArrayList<PathPoint>();
     // climb, then descend
     double climbDistance = Math.min(horizDist / 2.0, climbY);
-    Vec3 horizDirVec = new Vec3(targ.xCoord,0,targ.yCoord);
-    horizDirVec = horizDirVec.subtract(new Vec3(ePos.xCoord, 0, ePos.yCoord));
+
+    Vec3 horizDirVec = new Vec3(targ.xCoord,0,targ.zCoord);
+    horizDirVec = horizDirVec.subtract(new Vec3(ePos.xCoord, 0, ePos.zCoord));
     horizDirVec = horizDirVec.normalize();
     Vec3 offset = new Vec3(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
     

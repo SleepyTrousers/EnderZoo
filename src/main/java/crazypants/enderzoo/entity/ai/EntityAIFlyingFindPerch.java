@@ -19,7 +19,6 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   private int executionChance;
   private int searchRange = 6;
   private int searchAttempts = 30;
-  private boolean foundFirstPerch = false;
 
   public EntityAIFlyingFindPerch(EntityCreature creatureIn, double speedIn) {
     this(creatureIn, speedIn, 120);
@@ -37,16 +36,12 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
     int chance = executionChance;
     if (isOnLeaves()) { // if we are already on leaves, don't look for a new perch so often
       chance *= 10;
-    } else if(!foundFirstPerch) {
-      chance = 60;
-    }
+    } 
 //    chance = 5;
     if (entity.getRNG().nextInt(chance) != 0) {
       return false;
     }
 
-    foundFirstPerch = true;
-    
     BlockPos targetPos = EntityUtil.findRandomLandingSurface(entity, searchRange, entity.getPosition().getY() + 1, 250, searchAttempts);
     if (targetPos != null) {
       List<EntityCreature> others = entity.worldObj.getEntitiesWithinAABB(entity.getClass(), EntityUtil.getBoundsAround(targetPos, 4));
@@ -63,7 +58,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   }
 
   private boolean isOnLeaves() {
-    IBlockState bs = entity.worldObj.getBlockState(entity.getPosition());
+    IBlockState bs = entity.worldObj.getBlockState(entity.getPosition().down());
     Block block = bs.getBlock();
     return block.getMaterial() == Material.leaves;
   }

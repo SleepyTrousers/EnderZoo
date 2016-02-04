@@ -1,42 +1,88 @@
 package crazypants.enderzoo.entity.ai;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.EntitySelectors;
 
 public class EntityAINearestAttackableTargetBounded<T extends EntityLivingBase> extends EntityAINearestAttackableTarget<T> {
 
-  private double distanceOverride = -1;  
+  private double distanceOverride = -1;
+  private final int targetChance;
+  private double vertDistOverride = -1;
 
-  public EntityAINearestAttackableTargetBounded(EntityCreature p_i45879_1_, Class<T> p_i45879_2_, boolean p_i45879_3_, boolean p_i45879_4_) {
-    super(p_i45879_1_, p_i45879_2_, p_i45879_3_, p_i45879_4_);
+  public EntityAINearestAttackableTargetBounded(EntityCreature creature, Class<T> classTarget, boolean checkSight) {
+    this(creature, classTarget, checkSight, false);
   }
 
-  public EntityAINearestAttackableTargetBounded(EntityCreature p_i45878_1_, Class<T> p_i45878_2_, boolean p_i45878_3_) {
-    super(p_i45878_1_, p_i45878_2_, p_i45878_3_);
+  public EntityAINearestAttackableTargetBounded(EntityCreature creature, Class<T> classTarget, boolean checkSight, boolean onlyNearby) {
+    this(creature, classTarget, 10, checkSight, onlyNearby, (Predicate<? super T>) null);
   }
 
-  public EntityAINearestAttackableTargetBounded(EntityCreature p_i45880_1_, Class<T> p_i45880_2_, int p_i45880_3_, boolean p_i45880_4_, boolean p_i45880_5_,
-      Predicate<? super EntityLivingBase> p_i45880_6_) {
-    super(p_i45880_1_, p_i45880_2_, p_i45880_3_, p_i45880_4_, p_i45880_5_, p_i45880_6_);
+  public EntityAINearestAttackableTargetBounded(EntityCreature creature, Class<T> classTarget, int chance, boolean checkSight, boolean onlyNearby,
+      final Predicate<? super T> targetSelector) {
+    super(creature, classTarget, chance, checkSight, onlyNearby, targetSelector);
+    targetChance = chance;
   }
 
   public double getMaxDistanceToTarget() {
     return distanceOverride;
   }
 
-  public void setMaxDistanceToTarget(double distanceOverride) {
-    this.distanceOverride = distanceOverride;
+  public void setMaxDistanceToTarget(double distance) {
+    this.distanceOverride = distance;
   }
   
+  public double getMaxVerticalDistanceToTarget() {
+    return distanceOverride;
+  }
+
+  public void setMaxVerticalDistanceToTarget(double vertDist) {
+    vertDistOverride = vertDist; 
+  }
+
   @Override
   protected double getTargetDistance() {
-    if(distanceOverride > 0) {
+    if (distanceOverride > 0) {
       return distanceOverride;
     }
     return super.getTargetDistance();
+  }
+
+  @Override
+  public boolean shouldExecute() {
+    if (targetChance > 0 && taskOwner.getRNG().nextInt(targetChance) != 0) {
+      return false;
+    } else {
+      double horizDist = getTargetDistance();
+      double vertDist = getVerticalDistance();
+      
+      AxisAlignedBB bb = taskOwner.getEntityBoundingBox().expand(horizDist, vertDist, horizDist);
+      List<T> list = taskOwner.worldObj.<T> getEntitiesWithinAABB(targetClass, bb,
+          Predicates.<T> and(targetEntitySelector, EntitySelectors.NOT_SPECTATING));
+      Collections.sort(list, theNearestAttackableTargetSorter);
+
+      if (list.isEmpty()) {
+        return false;
+      } else {
+        this.targetEntity = list.get(0);
+        return true;
+      }
+    }
+  }
+
+  private double getVerticalDistance() {
+    if(vertDistOverride > 0) {
+      return vertDistOverride;
+    }
+    return 4;
   }
 
 }
