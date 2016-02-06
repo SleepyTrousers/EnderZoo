@@ -192,6 +192,10 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
+  //TODO: 
+  public static float owlHootVolumeMult = 0.8f;
+  public static int owlHootInterval = 1000;
+
   public static void load(FMLPreInitializationEvent event) {    
     MinecraftForge.EVENT_BUS.register(new Config());
     configDirectory = new File(event.getModConfigurationDirectory(), EnderZoo.MODID.toLowerCase());
