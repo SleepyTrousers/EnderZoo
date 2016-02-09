@@ -1,4 +1,4 @@
-package net.minecraft.pathfinding;
+package crazypants.enderzoo.entity.navigate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,6 +7,10 @@ import java.util.List;
 import crazypants.enderzoo.entity.SpawnUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.pathfinding.Path;
+import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.PathFinder;
+import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -105,10 +109,17 @@ public class FlyingPathFinder extends PathFinder {
 
   private PathPoint[] addToPath(Entity entityIn, PathPoint pathpointStart, PathPoint pathpointEnd, float maxDistance) {
     // set start point values
-    pathpointStart.totalPathDistance = 0.0F;
-    pathpointStart.distanceToNext = pathpointStart.distanceToSquared(pathpointEnd);
-    pathpointStart.distanceToTarget = pathpointStart.distanceToNext;
-    pathpointStart.index = -1;
+    
+//    pathpointStart.totalPathDistance = 0.0F;
+//    pathpointStart.distanceToNext = pathpointStart.distanceToSquared(pathpointEnd);
+//    pathpointStart.distanceToTarget = pathpointStart.distanceToNext;
+//    pathpointStart.index = -1;        
+    PPUtil.setTotalPathDistance(pathpointStart, 0f);
+    float dist = pathpointStart.distanceToSquared(pathpointEnd);
+    PPUtil.setDistanceToNext(pathpointStart, dist);
+    PPUtil.setDistanceToTarget(pathpointStart, dist);
+    PPUtil.setIndex(pathpointStart, -1);
+    
 
     // clear and add out start point to the path
     path.clearPath();
@@ -136,17 +147,20 @@ public class FlyingPathFinder extends PathFinder {
       int numPathOptions = nodeProcessor.findPathOptions(pathOptions, entityIn, dequeued, pathpointEnd, maxDistance);
 
       for (int j = 0; j < numPathOptions; ++j) {
-        PathPoint cadidatePoint = pathOptions[j];
-        float newTotalDistance = dequeued.totalPathDistance + dequeued.distanceToSquared(cadidatePoint);
-
-        if (newTotalDistance < maxDistance * 2.0F && (!cadidatePoint.isAssigned() || newTotalDistance < cadidatePoint.totalPathDistance)) {
-          cadidatePoint.previous = dequeued;
-          cadidatePoint.totalPathDistance = newTotalDistance;
-          cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
+        PathPoint cadidatePoint = pathOptions[j];        
+        float newTotalDistance = PPUtil.getTotalPathDistance(dequeued) + dequeued.distanceToSquared(cadidatePoint);
+        if (newTotalDistance < maxDistance * 2.0F && (!cadidatePoint.isAssigned() || newTotalDistance < PPUtil.getTotalPathDistance(cadidatePoint))) {
+          //cadidatePoint.previous = dequeued;
+          PPUtil.setPrevious(cadidatePoint, dequeued);
+          //cadidatePoint.totalPathDistance = newTotalDistance;
+          PPUtil.setTotalPathDistance(cadidatePoint, newTotalDistance);        
+          //cadidatePoint.distanceToNext = cadidatePoint.distanceToSquared(pathpointEnd);
+          PPUtil.setDistanceToNext(cadidatePoint, cadidatePoint.distanceToSquared(pathpointEnd));
           if (cadidatePoint.isAssigned()) {
-            path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
-          } else {
-            cadidatePoint.distanceToTarget = cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext;
+            //path.changeDistance(cadidatePoint, cadidatePoint.totalPathDistance + cadidatePoint.distanceToNext);
+            path.changeDistance(cadidatePoint, PPUtil.getTotalPathDistance(cadidatePoint) + PPUtil.getDistanceToNext(cadidatePoint));
+          } else {            
+            PPUtil.setDistanceToTarget(cadidatePoint, PPUtil.getTotalPathDistance(cadidatePoint) + PPUtil.getDistanceToNext(cadidatePoint));
             path.addPoint(cadidatePoint);
           }
         }
@@ -195,15 +209,16 @@ public class FlyingPathFinder extends PathFinder {
   private static PathPoint[] createEntityPath(PathPoint start, PathPoint end) {
     int i = 1;
 
-    for (PathPoint pathpoint = end; pathpoint.previous != null; pathpoint = pathpoint.previous) {
+    
+    for (PathPoint pathpoint = end; PPUtil.getPrevious(pathpoint) != null; pathpoint = PPUtil.getPrevious(pathpoint)) {
       ++i;
     }
 
     PathPoint[] apathpoint = new PathPoint[i];
     PathPoint pathpoint1 = end;
     --i;
-    for (apathpoint[i] = end; pathpoint1.previous != null; apathpoint[i] = pathpoint1) {
-      pathpoint1 = pathpoint1.previous;
+    for (apathpoint[i] = end; PPUtil.getPrevious(pathpoint1) != null; apathpoint[i] = pathpoint1) {
+      pathpoint1 = PPUtil.getPrevious(pathpoint1);
       --i;
     }
 

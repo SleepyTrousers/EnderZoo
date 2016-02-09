@@ -33,7 +33,8 @@ public class EntityUtil {
   }
 
   public static float getDifficultyMultiplierForLocation(World world, double x, double y, double z) {
-    //Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been occupied
+    // Value between 0 and 1 (normal) - 1.5 based on how long a chunk has been
+    // occupied
     float occupiedDiffcultyMultiplier = world.getDifficultyForLocation(VecUtil.bpos(x, y, z)).getClampedAdditionalDifficulty();
     occupiedDiffcultyMultiplier /= 1.5f; // normalize
     return occupiedDiffcultyMultiplier;
@@ -44,7 +45,7 @@ public class EntityUtil {
   }
 
   public static Vec3 getEntityPosition(Entity entity) {
-	  
+
     return new Vec3(entity.posX, entity.posY, entity.posZ);
   }
 
@@ -59,11 +60,9 @@ public class EntityUtil {
   public static AxisAlignedBB getBoundsAround(BlockPos pos, int range) {
     return getBoundsAround(pos.getX(), pos.getY(), pos.getZ(), range);
   }
-  
+
   public static AxisAlignedBB getBoundsAround(double x, double y, double z, double range) {
-    return new AxisAlignedBB(
-        x - range, y - range, z - range,
-        x + range, y + range, z + range);
+    return new AxisAlignedBB(x - range, y - range, z - range, x + range, y + range, z + range);
   }
 
   public static Point3i getEntityPositionI(Entity entity) {
@@ -75,11 +74,12 @@ public class EntityUtil {
     List<EntityAITasks.EntityAITaskEntry> currentTasks = new ArrayList<EntityAITasks.EntityAITaskEntry>();
     while (iterator.hasNext()) {
       EntityAITaskEntry entityaitaskentry = iterator.next();
-      if(entityaitaskentry != null) {
+      if (entityaitaskentry != null) {
         currentTasks.add(entityaitaskentry);
       }
     }
-    //Only available way to stop current execution is to remove all current tasks, then re-add them 
+    // Only available way to stop current execution is to remove all current
+    // tasks, then re-add them
     for (EntityAITaskEntry task : currentTasks) {
       ent.tasks.removeTask(task.action);
       ent.tasks.addTask(task.priority, task.action);
@@ -90,7 +90,7 @@ public class EntityUtil {
   public static IAttributeInstance removeModifier(EntityLivingBase ent, IAttribute p, UUID u) {
     IAttributeInstance att = ent.getEntityAttribute(p);
     AttributeModifier curmod = att.getModifier(u);
-    if(curmod != null) {
+    if (curmod != null) {
       att.removeModifier(curmod);
     }
     return att;
@@ -99,7 +99,7 @@ public class EntityUtil {
   public static double getDistanceSqToNearestPlayer(Entity entity, double maxRange) {
     AxisAlignedBB bounds = getBoundsAround(entity, maxRange);
     EntityPlayer nearest = (EntityPlayer) entity.worldObj.findNearestEntityWithinAABB(EntityPlayer.class, bounds, entity);
-    if(nearest == null) {
+    if (nearest == null) {
       return 1;
     }
     return nearest.getDistanceSqToEntity(entity);
@@ -112,82 +112,95 @@ public class EntityUtil {
 
   public static boolean isOnGround(EntityCreature entity) {
     List<AxisAlignedBB> collides = entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
-    if(collides == null || collides.isEmpty()) {
+    if (collides == null || collides.isEmpty()) {
       return false;
     }
     BlockPos groundPos = entity.getPosition().down();
     IBlockState bs = entity.worldObj.getBlockState(groundPos);
     Block block = bs.getBlock();
-    if(block.getMaterial().isLiquid()) {
+    if (block.getMaterial().isLiquid()) {
       return false;
     }
-    return true;     
+    return true;
   }
 
   public static BlockPos findRandomLandingSurface(EntityCreature entity, int searchRange, int minY, int maxY, int searchAttempts) {
-    for(int i=0;i<searchAttempts;i++) {
+    for (int i = 0; i < searchAttempts; i++) {
       BlockPos res = findRandomLandingSurface(entity, searchRange, minY, maxY);
-      if(res != null) {
+      if (res != null) {
         return res;
       }
     }
-    return null;    
+    return null;
   }
 
-  
+  public static BlockPos findRandomClearArea(EntityCreature entity, int searchRange, int minY, int maxY, int searchAttempts) {
+    BlockPos ep = entity.getPosition();
+    Vec3 pos = entity.getPositionVector();
+    for (int i = 0; i < searchAttempts; i++) {
+      int x = ep.getX() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
+      int y = minY + entity.worldObj.rand.nextInt(maxY - minY + 1);
+      int z = ep.getZ() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);      
+      entity.setPosition(x + 0.5, y, z + 0.5);
+      boolean isSpace = SpawnUtil.isSpaceAvailableForSpawn(entity.worldObj, entity, false);
+      entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+      if(isSpace) {
+        return new BlockPos(x,y,z);
+      } else {
+        System.out.println("EntityUtil.findRandomClearArea: " + new BlockPos(x,y,z));
+      }
+    }
+    return null;
+  }
+
   public static BlockPos findRandomLandingSurface(EntityLiving entity, int searchRange, int minY, int maxY) {
-    BlockPos ep = entity.getPosition(); 
+    BlockPos ep = entity.getPosition();
     int x = ep.getX() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
     int z = ep.getZ() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
     return findClearLandingSurface(entity, x, z, minY, maxY);
   }
 
   public static BlockPos findClearLandingSurface(EntityLiving ent, int x, int z, int minY, int maxY) {
-    
+
     double origX = ent.posX;
     double origY = ent.posY;
     double origZ = ent.posZ;
 
     int y = maxY;
-    
+
     boolean canLand = canLandAtLocation(ent, x, y, z);
-    while(!canLand) {
+    while (!canLand) {
       --y;
-      if(y < minY) {
+      if (y < minY) {
         break;
       }
       canLand = canLandAtLocation(ent, x, y, z);
-    }    
+    }
     ent.setPosition(origX, origY, origZ);
-    
-    if(canLand) {
-      return new BlockPos(x,y,z);
+
+    if (canLand) {
+      return new BlockPos(x, y, z);
     }
     return null;
   }
 
   private static boolean canLandAtLocation(EntityLiving ent, int x, int y, int z) {
-    
+
     World world = ent.worldObj;
     ent.setPosition(x + 0.5, y, z + 0.5);
-    if(!SpawnUtil.isSpaceAvailableForSpawn(world, ent, false, false)) {
+    if (!SpawnUtil.isSpaceAvailableForSpawn(world, ent, false, false)) {
       return false;
     }
-    
-    
-    BlockPos bellow = new BlockPos(x,y,z).down();
+
+    BlockPos bellow = new BlockPos(x, y, z).down();
     IBlockState bs = world.getBlockState(bellow);
-    Block block = bs.getBlock();    
-    if(!block.getMaterial().isSolid()) {      
+    Block block = bs.getBlock();
+    if (!block.getMaterial().isSolid()) {
       return false;
     }
-       
-    AxisAlignedBB collides = block.getCollisionBoundingBox(world, bellow, bs);    
+
+    AxisAlignedBB collides = block.getCollisionBoundingBox(world, bellow, bs);
     return collides != null;
   }
-
-  
-
-  
 
 }

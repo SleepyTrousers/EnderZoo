@@ -156,6 +156,13 @@ public final class Config {
   public static double direSlimeChance = 0.2;
   public static double direSlimeChanceLarge = 0.2;
   public static double direSlimeChanceMedium = 0.4;
+  
+//TODO: 
+  public static float owlHootVolumeMult = 0.8f;
+  public static int owlHootInterval = 1000;
+  public static int owlHealth = 10;
+  public static int owlAttachDamage = 4;
+  public static int owlId = 689998;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
@@ -192,9 +199,7 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
-  //TODO: 
-  public static float owlHootVolumeMult = 0.8f;
-  public static int owlHootInterval = 1000;
+  
 
   public static void load(FMLPreInitializationEvent event) {    
     MinecraftForge.EVENT_BUS.register(new Config());

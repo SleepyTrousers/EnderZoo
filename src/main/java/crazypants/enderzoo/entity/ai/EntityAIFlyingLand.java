@@ -28,60 +28,69 @@ public class EntityAIFlyingLand extends EntityAIBase {
 
   @Override
   public boolean shouldExecute() {
-    
-    if (entity.onGround || !entity.getNavigator().noPath()) {      
+
+    if (entity.onGround || !entity.getNavigator().noPath()) {
       return false;
-    }    
-        
+    }
+
     BlockPos target = null;
 
-    BlockPos ep = entity.getPosition();     
-    //Land just bellow us if we can
+    BlockPos ep = entity.getPosition();
+    // Land just bellow us if we can
     BlockPos blockLocationResult = EntityUtil.findClearLandingSurface(entity, ep.getX(), ep.getZ(), 1, ep.getY());
     if (blockLocationResult != null) {
       int distFromGround = ep.getY() - blockLocationResult.getY();
-      if (distFromGround < 2) {        
+      if (distFromGround < 2) {
         target = blockLocationResult;
-      } 
+      }
     }
-    //otherwise randomly search for somewhere to land
-    if (target == null) {      
+    // otherwise randomly search for somewhere to land
+    if (target == null) {
       target = EntityUtil.findRandomLandingSurface(entity, searchRange, 1, ep.getY() + 1, searchAttempts);
     }
+
+    if (target != null) {
+      int distFromGround = ep.getY() - target.getY();
+      if (distFromGround > 12) {        
+        target = EntityUtil.findRandomClearArea(entity, searchRange, ep.getY() - 10, ep.getY() - 5, searchAttempts);
+      }
+    }
+
     if (target == null) {
-      //failed so increase the seach range for next time
+      // failed so increase the seach range for next time
       searchRange = Math.min(searchRange + 1, maxSearchRange);
       return false;
     }
-    
-    searchRange = defSearchRange;    
+
+    searchRange = defSearchRange;
     targetX = target.getX() + 0.5;
     targetY = target.getY();
     targetZ = target.getZ() + 0.5;
+
     return true;
   }
 
   @Override
   public void startExecuting() {
     onGroundCount = 0;
-    if(!entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed)) {
+    if (!entity.getNavigator().tryMoveToXYZ(targetX, targetY, targetZ, speed)) {
 //      System.out.println("EntityAIFlyingLand.startExecuting: No path to target");
     }
   }
 
   @Override
   public boolean continueExecuting() {
-    
-    if (entity.onGround) {      
+
+    if (entity.onGround) {
       onGroundCount++;
-      if(onGroundCount >= 40) {
-        //If we have been on the ground for a couple of seconds
-        //time to chill no matter what
+      if (onGroundCount >= 40) {
+        // If we have been on the ground for a couple of seconds
+        // time to chill no matter what
         entity.getNavigator().clearPathEntity();
         return false;
       }
-      
-      //Stop if we are on the ground in the middle of a block
+
+      // Stop if we are on the ground in the middle of a block
       double fx = entity.posX - Math.floor(entity.posX);
       double fz = entity.posX - Math.floor(entity.posX);
       if (fx > 0.4 && fx < 0.6 && fz > 0.4 && fz < 0.6) {
@@ -95,13 +104,13 @@ public class EntityAIFlyingLand extends EntityAIBase {
     }
 
     boolean isStillNavigating = !entity.getNavigator().noPath();
-    if (!isStillNavigating) {      
+    if (!isStillNavigating) {
       entity.onGround = EntityUtil.isOnGround(entity);
       entity.isAirBorne = !entity.onGround;
-      if(!entity.onGround) { //gravity
+      if (!entity.onGround) { // gravity
         entity.setPosition(entity.posX, entity.posY - 0.01, entity.posZ);
       }
-    }  
+    }
     return isStillNavigating;
   }
 

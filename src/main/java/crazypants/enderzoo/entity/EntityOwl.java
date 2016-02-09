@@ -41,6 +41,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   private static final String SND_HOOT = "enderzoo:owl.hootSingle";
   private static final String SND_HOOT2 = "enderzoo:owl.hootDouble";
+  private static final String SND_HURT = "enderzoo:owl.hurt";
 
   private float wingRotation;
   private float prevWingRotation;
@@ -103,17 +104,23 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  public boolean interact(EntityPlayer playerIn) {
-    if (!super.interact(playerIn)) {
-      if (!worldObj.isRemote) {
-        System.out.println("EntityOwl.interact: ");
-        if (!getNavigator().tryMoveToXYZ(posX - 10, posY + 8, posZ - 10, 2)) {
-          System.out.println("EntityOwl.interact: No path");
-        }
-      }
+  public float getBlockPathWeight(BlockPos pos) {
+    return this.worldObj.getBlockState(pos.down()).getBlock().getMaterial() == Material.leaves ? 10.0F : 0;
+  }
 
-    }
-    return true;
+  @Override
+  public boolean interact(EntityPlayer playerIn) {
+    return super.interact(playerIn);
+    // if (!super.interact(playerIn)) {
+    // if (!worldObj.isRemote) {
+    // System.out.println("EntityOwl.interact: ");
+    // if (!getNavigator().tryMoveToXYZ(posX - 10, posY + 8, posZ - 10, 2)) {
+    // System.out.println("EntityOwl.interact: No path");
+    // }
+    // }
+    //
+    // }
+    // return true;
   }
 
   @Override
@@ -304,18 +311,18 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   public void playLivingSound() {
     String snd = getLivingSound();
-    if(snd == null) {
+    if (snd == null) {
       return;
     }
-    
-    if(worldObj != null && !worldObj.isRemote && worldObj.isDaytime()) {
+
+    if (worldObj != null && !worldObj.isRemote && worldObj.isDaytime()) {
       return;
     }
-    
+
     float volume = getSoundVolume() * Config.owlHootVolumeMult;
     float pitch = 0.8f * getSoundPitch();
     playSound(snd, volume, pitch);
-    
+
   }
 
   @Override
@@ -329,12 +336,12 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   protected String getHurtSound() {
-    return "mob.chicken.hurt";
+    return SND_HURT;
   }
 
   @Override
   protected String getDeathSound() {
-    return "mob.chicken.hurt";
+    return SND_HURT;
   }
 
   @Override

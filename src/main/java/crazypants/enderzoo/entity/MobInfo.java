@@ -25,7 +25,7 @@ public enum MobInfo {
   DIRE_SLIME(EntityDireSlime.class, EntityDireSlime.NAME, EntityDireSlime.EGG_BG_COL, EntityDireSlime.EGG_FG_COL, Config.direSlimeEnabled,
       Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId),
   OWL(EntityOwl.class, EntityOwl.NAME, EntityOwl.EGG_BG_COL, EntityOwl.EGG_FG_COL, true,
-      12, 4, 38697251);
+      Config.owlHealth, Config.owlAttachDamage, Config.owlId);
 
   
   public static boolean isDisabled(Class<? extends EntityLiving> clz) {

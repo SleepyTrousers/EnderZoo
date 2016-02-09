@@ -36,5 +36,11 @@
     "sounds": [
       "owl/hootSingle"
     ]
+  },
+   "owl.hurt": {
+    "category": "neutral",
+    "sounds": [
+      "owl/hurt"
+    ]
   }
 }
