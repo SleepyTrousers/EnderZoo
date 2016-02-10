@@ -126,9 +126,9 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   public boolean attackEntityAsMob(Entity entityIn) {
     super.attackEntityAsMob(entityIn);
-    float attackDamage = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    float attackDamage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
     if (entityIn instanceof EntitySpider) {
-      attackDamage *= 2;
+      attackDamage *= Config.owlSpiderDamageMultiplier;
     }
     return entityIn.attackEntityFrom(DamageSource.causeMobDamage(this), attackDamage);
   }

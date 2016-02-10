@@ -156,13 +156,14 @@ public final class Config {
   public static double direSlimeChance = 0.2;
   public static double direSlimeChanceLarge = 0.2;
   public static double direSlimeChanceMedium = 0.4;
-  
-//TODO: 
-  public static float owlHootVolumeMult = 0.8f;
-  public static int owlHootInterval = 1000;
+   
+  public static final Section sectionOwl = new Section("Owl", "owl");
+  public static int owlId = 689998;
   public static int owlHealth = 10;
   public static int owlAttachDamage = 4;
-  public static int owlId = 689998;
+  public static float owlSpiderDamageMultiplier = 2;
+  public static float owlHootVolumeMult = 0.8f;
+  public static int owlHootInterval = 1000;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
@@ -385,6 +386,14 @@ public final class Config {
         "The chance a medium will spawn when a small Dire Slimes is killed (eg 0.12 for a 12% chance).").getDouble(direSlimeChanceMedium);
     direSlimeChanceLarge = config.get(sectionDireSlime.name, "direSlimeChanceLarge", direSlimeChanceLarge,
         "The chance a large will spawn when a medium Dire Slimes is killed (eg 0.02 for a 2% chance)").getDouble(direSlimeChanceLarge);
+    
+    owlId = config.get(sectionOwl.name, "owlId", owlId, "Mob ID").getInt(owlId);    
+    owlHealth = config.get(sectionOwl.name, "owlHealth", owlHealth, "Owl Health").getInt(owlHealth);
+    owlAttachDamage = config.get(sectionOwl.name, "owlAttachDamage", owlAttachDamage, "Owl Attack Damage").getInt(owlAttachDamage);
+    owlSpiderDamageMultiplier = (float)config.get(sectionOwl.name, "owlSpiderDamageMultiplier", owlSpiderDamageMultiplier, "Damage multiplier against spiders").getDouble(owlSpiderDamageMultiplier);
+    owlHootVolumeMult = (float) config.get(sectionDireSlime.name, "owlHootVolumeMult", owlHootVolumeMult,
+        "Adjusts the owls hoot volume. Higher value is loader").getDouble(owlHootVolumeMult);
+    owlHootInterval = config.get(sectionOwl.name, "owlHootInterval", owlHootInterval, "Aprox. number of ticks between hoots").getInt(owlHootInterval);
 
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
