@@ -29,8 +29,8 @@ public class TeleportHelper {
   }
 
   public static boolean teleportToEntity(EntityLivingBase entity, Entity toEntity) {
-    Vec3 vec3 = new Vec3(entity.posX - toEntity.posX, entity.getEntityBoundingBox().minY + (double) (entity.height / 2.0F) - toEntity.posY
-        + (double) toEntity.getEyeHeight(), entity.posZ - toEntity.posZ);
+    Vec3 vec3 = new Vec3(entity.posX - toEntity.posX,
+        entity.getEntityBoundingBox().minY + entity.height / 2.0F - toEntity.posY + toEntity.getEyeHeight(), entity.posZ - toEntity.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
     double d1 = entity.posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
@@ -48,26 +48,24 @@ public class TeleportHelper {
       }
     }
 
-    double d3 = entity.posX;
-    double d4 = entity.posY;
-    double d5 = entity.posZ;
+    double origX = entity.posX;
+    double origY = entity.posY;
+    double origZ = entity.posZ;
     entity.posX = event.targetX;
     entity.posY = event.targetY;
     entity.posZ = event.targetZ;
 
     int xInt = MathHelper.floor_double(entity.posX);
-    int yInt = Math.max(1,MathHelper.floor_double(entity.posY));
+    int yInt = Math.max(1, MathHelper.floor_double(entity.posY));
     int zInt = MathHelper.floor_double(entity.posZ);
 
-    boolean flag = false;
-    if(entity.worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt), true)) {
-
+    boolean doTeleport = false;
+    
+    if (entity.worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt), true)) {
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
-        //Block block = entity.worldObj.getBlock(xInt, yInt - 1, zInt);
-    	IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
-    	if(bs != null && bs.getBlock() != null && bs.getBlock().getMaterial().blocksMovement()) {
-
+        IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
+        if (bs != null && bs.getBlock() != null && bs.getBlock().getMaterial().blocksMovement()) {
           foundGround = true;
         } else {
           --entity.posY;
@@ -77,16 +75,17 @@ public class TeleportHelper {
 
       if (foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
-        if(entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty() && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
-          flag = true;
+        if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty()
+            && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
+          doTeleport = true;
         } else if (yInt <= 0) {
-          flag = true;
+          doTeleport = false;
         }
       }
     }
 
-    if (!flag) {
-      entity.setPosition(d3, d4, d5);
+    if (!doTeleport) {
+      entity.setPosition(origX, origY, origZ);
       return false;
     }
 
@@ -98,13 +97,13 @@ public class TeleportHelper {
       float f = (rand.nextFloat() - 0.5F) * 0.2F;
       float f1 = (rand.nextFloat() - 0.5F) * 0.2F;
       float f2 = (rand.nextFloat() - 0.5F) * 0.2F;
-      double d7 = d3 + (entity.posX - d3) * d6 + (rand.nextDouble() - 0.5D) * (double) entity.width * 2.0D;
-      double d8 = d4 + (entity.posY - d4) * d6 + rand.nextDouble() * (double) entity.height;
-      double d9 = d5 + (entity.posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * (double) entity.width * 2.0D;
-      entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, (double) f, (double) f1, (double) f2);
+      double d7 = origX + (entity.posX - origX) * d6 + (rand.nextDouble() - 0.5D) * entity.width * 2.0D;
+      double d8 = origY + (entity.posY - origY) * d6 + rand.nextDouble() * entity.height;
+      double d9 = origZ + (entity.posZ - origZ) * d6 + (rand.nextDouble() - 0.5D) * entity.width * 2.0D;
+      entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+    entity.worldObj.playSoundEffect(origX, origY, origZ, "mob.endermen.portal", 1.0F, 1.0F);
     entity.playSound("mob.endermen.portal", 1.0F, 1.0F);
     return true;
 
