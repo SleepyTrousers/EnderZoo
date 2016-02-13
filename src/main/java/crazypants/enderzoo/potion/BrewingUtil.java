@@ -2,11 +2,14 @@ package crazypants.enderzoo.potion;
 
 import java.util.List;
 
+import crazypants.enderzoo.EnderZoo;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
-import crazypants.enderzoo.EnderZoo;
 
 public class BrewingUtil {
 
@@ -98,6 +101,27 @@ public class BrewingUtil {
   public static int addPotionEffect(int targetMetaData, ItemStack ingredient) {
     return ingredient == null ? targetMetaData : (ingredient.getItem().isPotionIngredient(ingredient) ? PotionHelper.applyIngredient(targetMetaData, ingredient
         .getItem().getPotionEffect(ingredient)) : targetMetaData);
+  }
+  
+  public static void writeCustomEffectToNBT(PotionEffect effect, ItemStack stack) {
+    NBTTagCompound nbt;
+    if(stack.hasTagCompound()) {
+      nbt = stack.getTagCompound();
+    } else {
+      nbt = new NBTTagCompound();
+      stack.setTagCompound(nbt);
+    }    
+    writeCustomEffectToNBT(effect, nbt);    
+  }
+
+  public static void writeCustomEffectToNBT(PotionEffect effect, NBTTagCompound nbt) {
+    NBTTagCompound effectNBT = new NBTTagCompound();        
+    effect.writeCustomPotionEffectToNBT(effectNBT);
+    
+    NBTTagList effectList = new NBTTagList();
+    effectList.appendTag(effectNBT);            
+    
+    nbt.setTag("CustomPotionEffects", effectList);
   }
 
 }

@@ -3,6 +3,26 @@ package crazypants.enderzoo;
 import static crazypants.enderzoo.EnderZoo.MODID;
 import static crazypants.enderzoo.EnderZoo.MOD_NAME;
 import static crazypants.enderzoo.EnderZoo.VERSION;
+
+import crazypants.enderzoo.charge.BlockConcussionCharge;
+import crazypants.enderzoo.charge.BlockConfusingCharge;
+import crazypants.enderzoo.charge.BlockEnderCharge;
+import crazypants.enderzoo.charge.EntityPrimedCharge;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.enchantment.Enchantments;
+import crazypants.enderzoo.entity.MobInfo;
+import crazypants.enderzoo.item.ItemConfusingDust;
+import crazypants.enderzoo.item.ItemEnderFragment;
+import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
+import crazypants.enderzoo.item.ItemGuardiansBow;
+import crazypants.enderzoo.item.ItemOwlEgg;
+import crazypants.enderzoo.item.ItemSpawnEgg;
+import crazypants.enderzoo.item.ItemWitheringDust;
+import crazypants.enderzoo.potion.FloatingPotion;
+import crazypants.enderzoo.potion.ItemPotionEZ;
+import crazypants.enderzoo.potion.PacketSpawnSplashEffects;
+import crazypants.enderzoo.spawn.MobSpawnEventHandler;
+import crazypants.enderzoo.spawn.MobSpawns;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -16,22 +36,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
-import crazypants.enderzoo.charge.BlockConcussionCharge;
-import crazypants.enderzoo.charge.BlockConfusingCharge;
-import crazypants.enderzoo.charge.BlockEnderCharge;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.enchantment.Enchantments;
-import crazypants.enderzoo.entity.MobInfo;
-import crazypants.enderzoo.item.ItemConfusingDust;
-import crazypants.enderzoo.item.ItemEnderFragment;
-import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
-import crazypants.enderzoo.item.ItemGuardiansBow;
-import crazypants.enderzoo.item.ItemSpawnEgg;
-import crazypants.enderzoo.item.ItemWitheringDust;
-import crazypants.enderzoo.spawn.MobSpawnEventHandler;
-import crazypants.enderzoo.spawn.MobSpawns;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
 public class EnderZoo {
@@ -52,7 +59,12 @@ public class EnderZoo {
   public static ItemEnderFragment itemEnderFragment;
   public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
   public static ItemGuardiansBow itemGuardiansBow;
+  public static ItemOwlEgg itemOwlEgg;
+  
+  public static ItemPotionEZ itemPotionEZ;  
 
+  public static FloatingPotion floatingPotion;
+  
   public static BlockConfusingCharge blockConfusingCharge;
   public static BlockEnderCharge blockEnderCharge;
   public static BlockConcussionCharge blockConcussionCharge;
@@ -68,11 +80,19 @@ public class EnderZoo {
     for (MobInfo mob : MobInfo.values()) {
       registerEntity(mob);
     }
+    
+    floatingPotion = new FloatingPotion();
+    EntityRegistry.registerModEntity(EntityPrimedCharge.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
+    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
+    
     itemSpawnEgg = ItemSpawnEgg.create();
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
     itemEnderFragment = ItemEnderFragment.create();
-    itemGuardiansBow = ItemGuardiansBow.create();    
+    itemGuardiansBow = ItemGuardiansBow.create();   
+    itemOwlEgg = ItemOwlEgg.create();
+    
+    itemPotionEZ = ItemPotionEZ.create();
 
     if (Config.confusingChargeEnabled) {
       blockConfusingCharge = BlockConfusingCharge.create();
@@ -99,9 +119,6 @@ public class EnderZoo {
   }
 
   private void registerEntity(MobInfo mob) {
-//    if (!mob.isEnabled()) {
-//      return;
-//    }
     EntityRegistry.registerModEntity(mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
   }
 

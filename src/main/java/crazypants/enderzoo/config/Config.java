@@ -158,6 +158,7 @@ public final class Config {
   public static double direSlimeChanceMedium = 0.4;
    
   public static final Section sectionOwl = new Section("Owl", "owl");
+  public static boolean owlEnabled = true;
   public static int owlId = 689998;
   public static int owlHealth = 10;
   public static int owlAttachDamage = 4;
@@ -200,7 +201,17 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
+  //TODO
+  public static boolean floatingPotionEnabled = true;
+  public static int floatingPotionId = -1;
+  public static double floatingPotionSpeed = 0.15;
+  public static double floatingPotionAcceleration = 0.085;
+  public static double floatingPotionTwoSpeed = 0.75;
+  public static double floatingPotionTwoAcceleration = 0.25;
+  public static int entityPotionId = 679990;
+
   
+
 
   public static void load(FMLPreInitializationEvent event) {    
     MinecraftForge.EVENT_BUS.register(new Config());
@@ -387,6 +398,7 @@ public final class Config {
     direSlimeChanceLarge = config.get(sectionDireSlime.name, "direSlimeChanceLarge", direSlimeChanceLarge,
         "The chance a large will spawn when a medium Dire Slimes is killed (eg 0.02 for a 2% chance)").getDouble(direSlimeChanceLarge);
     
+    owlEnabled = config.getBoolean("owlEnabled", sectionOwl.name, owlEnabled, "If false Owl will be disabled");
     owlId = config.get(sectionOwl.name, "owlId", owlId, "Mob ID").getInt(owlId);    
     owlHealth = config.get(sectionOwl.name, "owlHealth", owlHealth, "Owl Health").getInt(owlHealth);
     owlAttachDamage = config.get(sectionOwl.name, "owlAttachDamage", owlAttachDamage, "Owl Attack Damage").getInt(owlAttachDamage);
