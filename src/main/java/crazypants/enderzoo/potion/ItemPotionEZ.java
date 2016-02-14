@@ -1,5 +1,6 @@
 package crazypants.enderzoo.potion;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import crazypants.enderzoo.EnderZoo;
@@ -20,6 +21,8 @@ public class ItemPotionEZ extends ItemPotion {
 
   public static final String NAME = "potionEZ";
 
+  private List<ItemStack> subTypes = new ArrayList<ItemStack>();
+  
   public static ItemPotionEZ create() {
     ItemPotionEZ res = new ItemPotionEZ();
     res.init();
@@ -34,8 +37,6 @@ public class ItemPotionEZ extends ItemPotion {
 
   private void init() {
     GameRegistry.registerItem(this, NAME);
-    // BrewingRecipeRegistry.addRecipe(BrewingUtil.createAwkwardPotion(), new
-    // ItemStack(this), new ItemStack(Items.apple));
   }
 
   @Override
@@ -61,7 +62,9 @@ public class ItemPotionEZ extends ItemPotion {
         --itemStackIn.stackSize;
       }
       worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+      // if(!worldIn.isRemote) {
       worldIn.spawnEntityInWorld(new EntityPotionEZ(worldIn, playerIn, itemStackIn));
+      // }
       return itemStackIn;
     } else {
       playerIn.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
@@ -72,23 +75,26 @@ public class ItemPotionEZ extends ItemPotion {
   @Override
   @SideOnly(Side.CLIENT)
   public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-
-    PotionEffect effect = new PotionEffect(EnderZoo.floatingPotion.id, 100);
-    addVariants(subItems, effect);
-
-    effect = new PotionEffect(EnderZoo.floatingPotion.id, 30, 1);
-    addVariants(subItems, effect);
+    subItems.addAll(subTypes);    
   }
-
-  private void addVariants(List<ItemStack> subItems, PotionEffect effect) {
-    ItemStack subItem;
-    subItem = new ItemStack(this, 1, 1);
-    BrewingUtil.writeCustomEffectToNBT(effect, subItem);
-    subItems.add(subItem);
-
-    subItem = new ItemStack(this, 1, 16384);
-    BrewingUtil.writeCustomEffectToNBT(effect, subItem);
-    subItems.add(subItem);
+  
+  public ItemStack addSubtype(PotionConfig config) {
+    if(config == null) {
+      return null;
+    }
+    ItemStack is = createPotionEZ(config);
+    subTypes.add(is);
+    return is;
+  }
+  
+  private ItemStack createPotionEZ(PotionConfig pc) {
+    int meta = subTypes.size() + 1;
+    if(pc.isSplash()) {
+      meta |= 16384;
+    }
+    ItemStack res = new ItemStack(EnderZoo.itemPotionEZ, 1, meta);
+    BrewingUtil.writeCustomEffectToNBT(pc.getEffect(), res);
+    return res;
   }
 
 }

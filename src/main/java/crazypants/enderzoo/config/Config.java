@@ -202,13 +202,27 @@ public final class Config {
   public static float guardiansBowFovMultiplier = 0.35F;
 
   //TODO
+  public static int entityPotionId = 679990;
+  
   public static boolean floatingPotionEnabled = true;
   public static int floatingPotionId = -1;
+  
   public static double floatingPotionSpeed = 0.15;
   public static double floatingPotionAcceleration = 0.085;
+  public static int floatingPotionDuration = 80;
+  public static int floatingPotionDurationSplash = 60;
+  public static int floatingPotionDurationLong = 120;
+  public static int floatingPotionDurationLongSplash = 100;
+  
   public static double floatingPotionTwoSpeed = 0.75;
   public static double floatingPotionTwoAcceleration = 0.25;
-  public static int entityPotionId = 679990;
+  public static int floatingPotionTwoDuration = 30;
+  public static int floatingPotionTwoDurationSplash = 25;
+
+  
+  
+
+  
 
   
 

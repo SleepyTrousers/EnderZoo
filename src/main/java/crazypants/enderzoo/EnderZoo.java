@@ -7,7 +7,6 @@ import static crazypants.enderzoo.EnderZoo.VERSION;
 import crazypants.enderzoo.charge.BlockConcussionCharge;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
 import crazypants.enderzoo.charge.BlockEnderCharge;
-import crazypants.enderzoo.charge.EntityPrimedCharge;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
@@ -18,6 +17,7 @@ import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemOwlEgg;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
+import crazypants.enderzoo.potion.EntityPotionEZ;
 import crazypants.enderzoo.potion.FloatingPotion;
 import crazypants.enderzoo.potion.ItemPotionEZ;
 import crazypants.enderzoo.potion.PacketSpawnSplashEffects;
@@ -81,10 +81,6 @@ public class EnderZoo {
       registerEntity(mob);
     }
     
-    floatingPotion = new FloatingPotion();
-    EntityRegistry.registerModEntity(EntityPrimedCharge.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
-    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
-    
     itemSpawnEgg = ItemSpawnEgg.create();
     itemWitheringDust = ItemWitheringDust.create();
     itemConfusingDust = ItemConfusingDust.create();
@@ -93,6 +89,10 @@ public class EnderZoo {
     itemOwlEgg = ItemOwlEgg.create();
     
     itemPotionEZ = ItemPotionEZ.create();
+    
+    floatingPotion = FloatingPotion.create();
+    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
+    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
 
     if (Config.confusingChargeEnabled) {
       blockConfusingCharge = BlockConfusingCharge.create();
@@ -159,6 +159,8 @@ public class EnderZoo {
       GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
     }
     GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
+    
+    floatingPotion.addRecipes();
 
   }
 
