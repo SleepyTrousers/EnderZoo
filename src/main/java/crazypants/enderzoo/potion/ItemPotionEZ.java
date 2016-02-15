@@ -62,7 +62,7 @@ public class ItemPotionEZ extends ItemPotion {
         --itemStackIn.stackSize;
       }
       worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-      // if(!worldIn.isRemote) {
+      // if(!worldIn.isRemote) { //TODO: Bug, doesnt show up on client is added only on servers
       worldIn.spawnEntityInWorld(new EntityPotionEZ(worldIn, playerIn, itemStackIn));
       // }
       return itemStackIn;
@@ -88,7 +88,8 @@ public class ItemPotionEZ extends ItemPotion {
   }
   
   private ItemStack createPotionEZ(PotionConfig pc) {
-    int meta = subTypes.size() + 1;
+    //int meta = subTypes.size() + 1;
+    int meta = 1;
     if(pc.isSplash()) {
       meta |= 16384;
     }

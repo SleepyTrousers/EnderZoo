@@ -24,7 +24,6 @@ public class FloatingPotion extends Potion {
 
   public static FloatingPotion create() {
     FloatingPotion res = new FloatingPotion();
-    res.init();
     return res;
   }
 
@@ -36,17 +35,6 @@ public class FloatingPotion extends Potion {
     setPotionName(NAME);
   }
 
-  private void init() {
-
-    // variants.add(floatingConf);
-    // variants.add(floatingLongConf);
-    // variants.add(floatingTwoConf);
-    // variants.add(floatingConfSplash);
-    // variants.add(floatingLongConfSplash);
-    // variants.add(floatingTwoConfSplash);
-
-  }
-
   public void addRecipes() {
 
     ItemStack gs = new ItemStack(Items.glowstone_dust);
@@ -56,17 +44,17 @@ public class FloatingPotion extends Potion {
     PotionEffect effect = new PotionEffect(id, Config.floatingPotionDuration, 0);
     ItemStack basePotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
 
-    effect = new PotionEffect(id, Config.floatingPotionDurationSplash, 0);
-    ItemStack basePotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
-
     effect = new PotionEffect(id, Config.floatingPotionDurationLong, 0);
     ItemStack longPotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
 
-    effect = new PotionEffect(id, Config.floatingPotionDurationLongSplash, 0);
-    ItemStack longPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
-
     effect = new PotionEffect(id, Config.floatingPotionTwoDuration, 1);
     ItemStack twoPotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
+    
+    effect = new PotionEffect(id, Config.floatingPotionDurationSplash, 0);
+    ItemStack basePotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
+            
+    effect = new PotionEffect(id, Config.floatingPotionDurationLongSplash, 0);
+    ItemStack longPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
 
     effect = new PotionEffect(id, Config.floatingPotionTwoDurationSplash, 1);
     ItemStack twoPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
@@ -99,14 +87,14 @@ public class FloatingPotion extends Potion {
   }
 
   @Override
-  public void performEffect(EntityLivingBase entityIn, int amplifier) {
+  public void performEffect(EntityLivingBase entityIn, int amplifier) {    
     if (entityIn.posY < 255) {
       if (amplifier > 0) {
-        entityIn.motionY += Config.floatingPotionTwoAcceleration;// ;
+        entityIn.motionY += Config.floatingPotionTwoAcceleration;        
         if (entityIn.motionY > Config.floatingPotionTwoSpeed) {
           entityIn.motionY = Config.floatingPotionTwoSpeed;
         }
-      } else {
+      } else {     
         entityIn.motionY += Config.floatingPotionAcceleration;
         if (entityIn.motionY > Config.floatingPotionSpeed) {
           entityIn.motionY = Config.floatingPotionSpeed;

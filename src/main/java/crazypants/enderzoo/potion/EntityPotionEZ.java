@@ -81,8 +81,8 @@ public class EntityPotionEZ extends EntityThrowable {
             if (Potion.potionTypes[pid].isInstant()) {
               Potion.potionTypes[pid].affectEntity(this, getThrower(), entity, effect.getAmplifier(), d1);
             } else {
-              int j = (int) (d1 * effect.getDuration() + 0.5D);
-              entity.addPotionEffect(new PotionEffect(pid, Math.max(21, j), effect.getAmplifier()));              
+              int j = (int) (d1 * effect.getDuration() + 0.5D);              
+              entity.addPotionEffect(new PotionEffect(pid, j, effect.getAmplifier()));
             }
           }
         }

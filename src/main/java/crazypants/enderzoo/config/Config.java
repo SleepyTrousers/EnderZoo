@@ -209,15 +209,15 @@ public final class Config {
   
   public static double floatingPotionSpeed = 0.15;
   public static double floatingPotionAcceleration = 0.085;
-  public static int floatingPotionDuration = 80;
-  public static int floatingPotionDurationSplash = 60;
+  public static int floatingPotionDuration = 70;
+  public static int floatingPotionDurationSplash = 50;
   public static int floatingPotionDurationLong = 120;
   public static int floatingPotionDurationLongSplash = 100;
   
-  public static double floatingPotionTwoSpeed = 0.75;
-  public static double floatingPotionTwoAcceleration = 0.25;
-  public static int floatingPotionTwoDuration = 30;
-  public static int floatingPotionTwoDurationSplash = 25;
+  public static double floatingPotionTwoSpeed = 1.2;
+  public static double floatingPotionTwoAcceleration = 0.3;
+  public static int floatingPotionTwoDuration = 10;
+  public static int floatingPotionTwoDurationSplash = 7;
 
   
   
