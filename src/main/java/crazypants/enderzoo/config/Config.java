@@ -165,6 +165,8 @@ public final class Config {
   public static float owlSpiderDamageMultiplier = 2;
   public static float owlHootVolumeMult = 0.8f;
   public static int owlHootInterval = 1000;
+  public static int owlTimeBetweenEggsMin = 12000;
+  public static int owlTimeBetweenEggsMax = 24000;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
@@ -201,32 +203,23 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
-  //TODO
+  public static final Section sectionPotions = new Section("Potions", "potions");  
   public static int entityPotionId = 679990;
   
   public static boolean floatingPotionEnabled = true;
-  public static int floatingPotionId = -1;
-  
+  public static int floatingPotionId = -1;  
   public static double floatingPotionSpeed = 0.15;
   public static double floatingPotionAcceleration = 0.085;
   public static int floatingPotionDuration = 70;
   public static int floatingPotionDurationSplash = 50;
   public static int floatingPotionDurationLong = 120;
-  public static int floatingPotionDurationLongSplash = 100;
-  
+  public static int floatingPotionDurationLongSplash = 100;  
   public static double floatingPotionTwoSpeed = 1.2;
   public static double floatingPotionTwoAcceleration = 0.3;
   public static int floatingPotionTwoDuration = 10;
   public static int floatingPotionTwoDurationSplash = 7;
 
   
-  
-
-  
-
-  
-
-
   public static void load(FMLPreInitializationEvent event) {    
     MinecraftForge.EVENT_BUS.register(new Config());
     configDirectory = new File(event.getModConfigurationDirectory(), EnderZoo.MODID.toLowerCase());
@@ -419,7 +412,9 @@ public final class Config {
     owlSpiderDamageMultiplier = (float)config.get(sectionOwl.name, "owlSpiderDamageMultiplier", owlSpiderDamageMultiplier, "Damage multiplier against spiders").getDouble(owlSpiderDamageMultiplier);
     owlHootVolumeMult = (float) config.get(sectionDireSlime.name, "owlHootVolumeMult", owlHootVolumeMult,
         "Adjusts the owls hoot volume. Higher value is loader").getDouble(owlHootVolumeMult);
-    owlHootInterval = config.get(sectionOwl.name, "owlHootInterval", owlHootInterval, "Aprox. number of ticks between hoots").getInt(owlHootInterval);
+    owlHootInterval = config.get(sectionOwl.name, "owlHootInterval", owlHootInterval, "Aprox. number of ticks between hoots").getInt(owlHootInterval);    
+    owlTimeBetweenEggsMin = config.get(sectionOwl.name, "owlTimeBetweenEggsMin", owlTimeBetweenEggsMin, "Min ticks between egg laying").getInt(owlTimeBetweenEggsMin);
+    owlTimeBetweenEggsMax = config.get(sectionOwl.name, "owlTimeBetweenEggsMax", owlTimeBetweenEggsMax, "Max ticks between egg laying").getInt(owlTimeBetweenEggsMax);
 
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
@@ -505,6 +500,21 @@ public final class Config {
         "Effects the speed with which arrows leave the bow. A 'vanilla' bow has a multiplier of 2.").getDouble(guardiansBowForceMultiplier);
     guardiansBowFovMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowFovMultiplier", guardiansBowFovMultiplier,
         "The reduction in FOV when the bow is fullen drawn (the zoom level). A 'vanilla' bow has a value of 0.15").getDouble(guardiansBowFovMultiplier);
+            
+    entityPotionId = config.get(sectionPotions.name, "entityPotionId", entityPotionId, "Enity ID for thrown potion").getInt(entityPotionId);
+        
+    floatingPotionEnabled = config.getBoolean("floatingPotionEnabled", sectionPotions.name, floatingPotionEnabled, "If false floating potions will be disabled");
+    floatingPotionId = config.get(sectionPotions.name, "floatingPotionId", floatingPotionId, "Potion ID. If -1, will be assigned by forge").getInt(floatingPotionId);
+    floatingPotionSpeed = config.get(sectionPotions.name, "floatingPotionSpeed", floatingPotionSpeed, "Max rising speed.").getDouble(floatingPotionSpeed);
+    floatingPotionAcceleration = config.get(sectionPotions.name, "floatingPotionAcceleration", floatingPotionAcceleration, "Vertical acceleration rate").getDouble(floatingPotionAcceleration);
+    floatingPotionDuration = config.get(sectionPotions.name, "floatingPotionDuration", floatingPotionDuration, "Effect duration (ticks)").getInt(floatingPotionDuration);
+    floatingPotionDurationSplash = config.get(sectionPotions.name, "floatingPotionDurationSplash", floatingPotionDurationSplash, "Effect duration (ticks)").getInt(floatingPotionDurationSplash);
+    floatingPotionDurationLong = config.get(sectionPotions.name, "floatingPotionDurationLong", floatingPotionDurationLong, "Effect duration (ticks)").getInt(floatingPotionDurationLong);
+    floatingPotionDurationLongSplash = config.get(sectionPotions.name, "floatingPotionDurationLongSplash", floatingPotionDurationLongSplash, "Effect duration (ticks)").getInt(floatingPotionDurationLongSplash);
+    floatingPotionTwoSpeed = config.get(sectionPotions.name, "floatingPotionTwoSpeed", floatingPotionTwoSpeed, "Max rising speed.").getDouble(floatingPotionTwoSpeed);
+    floatingPotionTwoAcceleration = config.get(sectionPotions.name, "floatingPotionTwoAcceleration", floatingPotionTwoAcceleration, "Vertical acceleration rate").getDouble(floatingPotionTwoAcceleration);
+    floatingPotionTwoDuration = config.get(sectionPotions.name, "floatingPotionTwoDuration", floatingPotionTwoDuration, "Effect duration (ticks)").getInt(floatingPotionTwoDuration);
+    floatingPotionTwoDurationSplash = config.get(sectionPotions.name, "floatingPotionTwoDurationSplash", floatingPotionTwoDurationSplash, "Effect duration (ticks)").getInt(floatingPotionTwoDurationSplash);    
 
   }
 

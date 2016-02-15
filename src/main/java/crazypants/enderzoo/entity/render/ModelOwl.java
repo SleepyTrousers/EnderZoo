@@ -132,7 +132,7 @@ public class ModelOwl extends ModelBase {
 
     if (isChild) {
 
-      float headScale = owlScale * 0.7f;
+      float headScale = owlScale * 0.6f;
       owlScale *= 0.5f;
       float translateScale = 1 - owlScale;
       GlStateManager.pushMatrix();

@@ -34,7 +34,8 @@ public class FlyingPathNavigate extends PathNavigateGround {
 
   @Override
   protected PathFinder getPathFinder() {
-    return new FlyingPathFinder(new FlyNodeProcessor());
+    nodeProcessor = new FlyNodeProcessor();
+    return new FlyingPathFinder(nodeProcessor);
   }
 
   @Override

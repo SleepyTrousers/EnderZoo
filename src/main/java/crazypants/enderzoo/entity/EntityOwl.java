@@ -1,5 +1,6 @@
 package crazypants.enderzoo.entity;
 
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingFindPerch;
@@ -16,8 +17,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
+import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -25,6 +28,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -36,8 +40,8 @@ import net.minecraft.world.World;
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   public static final String NAME = "Owl";
-  public static final int EGG_BG_COL = 0x27624D;
-  public static final int EGG_FG_COL = 0x212121;
+  public static final int EGG_BG_COL = 0xC17949;
+  public static final int EGG_FG_COL = 0xFFDDC6;
 
   private static final String SND_HOOT = "enderzoo:owl.hootSingle";
   private static final String SND_HOOT2 = "enderzoo:owl.hootDouble";
@@ -58,6 +62,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   private float climbRate = 0.25f;
   private float turnRate = 30;
 
+  public int timeUntilNextEgg;;
+
   public EntityOwl(World worldIn) {
     super(worldIn);
     setSize(0.4F, 0.85F);
@@ -65,11 +71,11 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
     int pri = 0;
     tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
-    tasks.addTask(++pri, new EntityAIFlyingAttackOnCollide(this, 2.5, false));
-    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));
+    tasks.addTask(++pri, new EntityAIFlyingAttackOnCollide(this, 2.5, false));    
     tasks.addTask(++pri, new EntityAIMate(this, 1.0));
-    // // tasks.addTask(3, new EntityAITempt(this, 1.0D, Items.wheat_seeds,
-    // // false));
+    tasks.addTask(++pri, new EntityAITempt(this, 1.0D, Items.spider_eye, false));
+    tasks.addTask(++pri, new EntityAIFollowParent(this, 1.5));
+    tasks.addTask(++pri, new EntityAIFlyingLand(this, 2));
     tasks.addTask(++pri, new EntityAIFlyingFindPerch(this, 2, 80));
     tasks.addTask(++pri, new EntityAIFlyingShortWander(this, 2, 150));
 
@@ -83,6 +89,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     targetTasks.addTask(0, targetSpiders);
 
     moveHelper = new FlyingMoveHelper(this);
+
+    timeUntilNextEgg = getNextLayingTime();
   }
 
   @Override
@@ -105,7 +113,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public float getBlockPathWeight(BlockPos pos) {
-    return this.worldObj.getBlockState(pos.down()).getBlock().getMaterial() == Material.leaves ? 10.0F : 0;
+    return worldObj.getBlockState(pos.down()).getBlock().getMaterial() == Material.leaves ? 10.0F : 0;
   }
 
   @Override
@@ -156,6 +164,19 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     }
     wingRotation += wingRotDelta * flapSpeed;
 
+    if (!worldObj.isRemote && !isChild() && --timeUntilNextEgg <= 0) {
+      if (isOnLeaves()) {
+        playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+        dropItem(EnderZoo.itemOwlEgg, 1);        
+      }
+      timeUntilNextEgg = getNextLayingTime();
+    }
+
+  }
+  
+  private boolean isOnLeaves() {
+    IBlockState bs = worldObj.getBlockState(getPosition().down());    
+    return bs.getBlock().getMaterial() == Material.leaves;
   }
 
   @Override
@@ -315,7 +336,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       return;
     }
 
-    if (worldObj != null && !worldObj.isRemote && worldObj.isDaytime()) {
+    if (worldObj != null && !worldObj.isRemote && (worldObj.isDaytime() || getAttackTarget() != null)) {
       return;
     }
 
@@ -377,6 +398,25 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   public EntityCreature asEntityCreature() {
     return this;
+  }
+
+  private int getNextLayingTime() {
+    int dif = Config.owlTimeBetweenEggsMax - Config.owlTimeBetweenEggsMin;
+    return Config.owlTimeBetweenEggsMin + rand.nextInt(dif);    
+  }
+
+  @Override
+  public void readEntityFromNBT(NBTTagCompound tagCompund) {
+    super.readEntityFromNBT(tagCompund);
+    if (tagCompund.hasKey("EggLayTime")) {
+      this.timeUntilNextEgg = tagCompund.getInteger("EggLayTime");
+    }
+  }
+
+  @Override
+  public void writeEntityToNBT(NBTTagCompound tagCompound) {
+    super.writeEntityToNBT(tagCompound);
+    tagCompound.setInteger("EggLayTime", this.timeUntilNextEgg);
   }
 
 }

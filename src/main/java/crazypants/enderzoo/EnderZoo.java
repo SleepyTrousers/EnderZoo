@@ -87,12 +87,6 @@ public class EnderZoo {
     itemEnderFragment = ItemEnderFragment.create();
     itemGuardiansBow = ItemGuardiansBow.create();   
     itemOwlEgg = ItemOwlEgg.create();
-    
-    itemPotionEZ = ItemPotionEZ.create();
-    
-    floatingPotion = FloatingPotion.create();
-    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
-    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
 
     if (Config.confusingChargeEnabled) {
       blockConfusingCharge = BlockConfusingCharge.create();
@@ -102,6 +96,14 @@ public class EnderZoo {
     }
     if (Config.concussionChargeEnabled) {
       blockConcussionCharge = BlockConcussionCharge.create();
+    }
+    
+    itemPotionEZ = ItemPotionEZ.create();
+    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
+    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
+    
+    if(Config.floatingPotionEnabled) {
+      floatingPotion = FloatingPotion.create();
     }
 
     //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -160,7 +162,9 @@ public class EnderZoo {
     }
     GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
     
-    floatingPotion.addRecipes();
+    if(Config.floatingPotionEnabled) {
+      floatingPotion.addRecipes();
+    }
 
   }
 
