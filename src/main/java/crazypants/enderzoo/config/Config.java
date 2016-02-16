@@ -216,8 +216,8 @@ public final class Config {
   public static int floatingPotionDurationLongSplash = 100;  
   public static double floatingPotionTwoSpeed = 1.2;
   public static double floatingPotionTwoAcceleration = 0.3;
-  public static int floatingPotionTwoDuration = 10;
-  public static int floatingPotionTwoDurationSplash = 7;
+  public static int floatingPotionTwoDuration = 12;
+  public static int floatingPotionTwoDurationSplash = 8;
 
   
   public static void load(FMLPreInitializationEvent event) {    

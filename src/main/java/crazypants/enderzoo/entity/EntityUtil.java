@@ -146,9 +146,7 @@ public class EntityUtil {
       entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
       if(isSpace) {
         return new BlockPos(x,y,z);
-      } else {
-        System.out.println("EntityUtil.findRandomClearArea: " + new BlockPos(x,y,z));
-      }
+      } 
     }
     return null;
   }

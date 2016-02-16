@@ -137,6 +137,18 @@ dimensionExclude attributes:
       <biome type="END" exclude="true" />
     </biomeFilter>
   </entry>
+  
+   <entry id="Owl" mobName="EnderZoo.Owl" rate="10" minGroupSize="1" maxGroupSize="1">
+    <biomeFilter type="any">
+      <biome type="FOREST" />
+      <biome type="RIVER" />      
+      <biome type="WASTELAND" exclude="true" />
+      <biome type="JUNGLE" exclude="true" />
+      <biome type="SNOWY" exclude="true" />      
+      <biome type="NETHER" exclude="true" />
+      <biome type="END" exclude="true" />
+    </biomeFilter>
+  </entry>
 
 
 </SpawnConfig>
