@@ -17,10 +17,8 @@ import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemOwlEgg;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
-import crazypants.enderzoo.potion.EntityPotionEZ;
 import crazypants.enderzoo.potion.FloatingPotion;
 import crazypants.enderzoo.potion.ItemPotionEZ;
-import crazypants.enderzoo.potion.PacketSpawnSplashEffects;
 import crazypants.enderzoo.spawn.MobSpawnEventHandler;
 import crazypants.enderzoo.spawn.MobSpawns;
 import net.minecraft.init.Blocks;
@@ -36,7 +34,6 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
@@ -99,8 +96,6 @@ public class EnderZoo {
     }
     
     itemPotionEZ = ItemPotionEZ.create();
-    EntityRegistry.registerModEntity(EntityPotionEZ.class, "EntityPotionEZ", Config.entityPotionId, EnderZoo.instance, 64, 100, false);
-    PacketHandler.INSTANCE.registerMessage(PacketSpawnSplashEffects.class, PacketSpawnSplashEffects.class, PacketHandler.nextID(), Side.CLIENT);
     
     if(Config.floatingPotionEnabled) {
       floatingPotion = FloatingPotion.create();

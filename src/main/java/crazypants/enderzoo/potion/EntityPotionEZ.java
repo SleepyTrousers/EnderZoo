@@ -3,7 +3,9 @@ package crazypants.enderzoo.potion;
 import java.util.List;
 
 import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.PacketHandler;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.ItemStack;
@@ -13,8 +15,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
-public class EntityPotionEZ extends EntityThrowable {
+public class EntityPotionEZ extends EntityThrowable implements IEntityAdditionalSpawnData {
 
   private ItemStack potion;
 
@@ -81,7 +84,7 @@ public class EntityPotionEZ extends EntityThrowable {
             if (Potion.potionTypes[pid].isInstant()) {
               Potion.potionTypes[pid].affectEntity(this, getThrower(), entity, effect.getAmplifier(), d1);
             } else {
-              int j = (int) (d1 * effect.getDuration() + 0.5D);              
+              int j = (int) (d1 * effect.getDuration() + 0.5D);
               entity.addPotionEffect(new PotionEffect(pid, j, effect.getAmplifier()));
             }
           }
@@ -105,6 +108,27 @@ public class EntityPotionEZ extends EntityThrowable {
     super.writeEntityToNBT(tagCompound);
     if (potion != null) {
       tagCompound.setTag("Potion", potion.writeToNBT(new NBTTagCompound()));
+    }
+  }
+
+  @Override
+  public void writeSpawnData(ByteBuf buffer) {
+
+    if (potion != null) {
+      IoUtil.writeNBTTagCompound(potion.writeToNBT(new NBTTagCompound()), buffer);
+    } else {
+      IoUtil.writeNBTTagCompound(null, buffer);
+    }
+
+  }
+
+  @Override
+  public void readSpawnData(ByteBuf additionalData) {
+    NBTTagCompound nbt = IoUtil.readNBTTagCompound(additionalData);
+    if(nbt != null) {
+      potion = ItemStack.loadItemStackFromNBT(nbt);
+    } else {
+      potion = null;
     }
   }
 }
