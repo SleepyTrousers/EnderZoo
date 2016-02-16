@@ -1,5 +1,6 @@
 package crazypants.enderzoo.enchantment;
 
+import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
@@ -7,7 +8,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import crazypants.enderzoo.config.Config;
 
 public class EnchantmentWitherArrow extends Enchantment {
 
@@ -17,12 +17,12 @@ public class EnchantmentWitherArrow extends Enchantment {
   }
 
   @Override
-  public int getMinEnchantability(int p_77321_1_) {
+  public int getMinEnchantability(int enchantmentLevel) {
     return Config.enchantmentWitherArrowMinEnchantability;
   }
 
   @Override
-  public int getMaxEnchantability(int p_77317_1_) {
+  public int getMaxEnchantability(int enchantmentLevel) {
     return Config.enchantmentWitherArrowMaxEnchantability;
   }
 
@@ -32,18 +32,11 @@ public class EnchantmentWitherArrow extends Enchantment {
   }
 
   @Override
-  //public void func_151368_a(EntityLivingBase source, Entity entityHit, int p_151368_3_) {
   public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if (entityHit instanceof EntityLivingBase) {
       ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(Potion.wither.getId(), Config.enchantmentWitherArrowDuration));
     }
   }
-
-  //  @Override
-  //  public void func_151367_b(EntityLivingBase entityHit, Entity damageSource, int p_151367_3_) {
-  //    //other calculate modifier
-  //    //System.out.println("EnchantmentWitherArrow.func_151367_b: ");
-  //  }
-
+ 
 }

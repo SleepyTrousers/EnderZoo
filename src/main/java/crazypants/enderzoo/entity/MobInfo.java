@@ -4,6 +4,7 @@ import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 
 public enum MobInfo {
   
@@ -22,7 +23,9 @@ public enum MobInfo {
   DIRE_WOLF(EntityDireWolf.class, EntityDireWolf.NAME, EntityDireWolf.EGG_BG_COL, EntityDireWolf.EGG_FG_COL, Config.direWolfEnabled, Config.direWolfHealth,
       Config.direWolfAttackDamage, Config.direWolfId),
   DIRE_SLIME(EntityDireSlime.class, EntityDireSlime.NAME, EntityDireSlime.EGG_BG_COL, EntityDireSlime.EGG_FG_COL, Config.direSlimeEnabled,
-      Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId);
+      Config.direSlimeHealth, Config.direSlimeAttackDamage, Config.direSlimeId),
+  OWL(EntityOwl.class, EntityOwl.NAME, EntityOwl.EGG_BG_COL, EntityOwl.EGG_FG_COL, Config.owlEnabled,
+      Config.owlHealth, Config.owlAttachDamage, Config.owlId);
 
   
   public static boolean isDisabled(Class<? extends EntityLiving> clz) {
@@ -79,7 +82,12 @@ public enum MobInfo {
 
   public void applyAttributes(EntityLivingBase entity) {
     entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
-    entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(attackDamage);
+    IAttributeInstance ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+    if(ai == null) {
+      entity.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+      ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+    }
+    ai.setBaseValue(attackDamage);
   }
 
   public int getEntityId() {

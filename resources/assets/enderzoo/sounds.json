@@ -24,5 +24,23 @@
     "sounds": [
       "direwolf/howl"
     ]
+  },
+  "owl.hootDouble": {
+    "category": "neutral",
+    "sounds": [
+      "owl/hootDouble"
+    ]
+  },
+  "owl.hootSingle": {
+    "category": "neutral",
+    "sounds": [
+      "owl/hootSingle"
+    ]
+  },
+   "owl.hurt": {
+    "category": "neutral",
+    "sounds": [
+      "owl/hurt"
+    ]
   }
 }

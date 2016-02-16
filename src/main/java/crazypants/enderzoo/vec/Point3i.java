@@ -23,6 +23,12 @@ public class Point3i {
     y = other.y;
     z = other.z;
   }
+  
+  public void set(int x, int y, int z) {
+    this.x= x;
+    this.y= y;
+    this.z= z;    
+  }
 
   @Override
   public String toString() {
@@ -56,6 +62,8 @@ public class Point3i {
       return false;
     return true;
   }
+
+  
 
   
   

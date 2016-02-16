@@ -6,6 +6,7 @@ item.witheringDust.name=Withering Dust
 item.confusingDust.name=Confusing Powder
 item.enderFragment.name=Ender Fragment
 item.guardiansBow.name=Guardians Bow
+item.owlEgg.name=Owl Egg
 
 
 //Mobs
@@ -17,6 +18,7 @@ entity.EnderZoo.WitherWitch.name=Wither Witch
 entity.EnderZoo.WitherCat.name=Wither Cat
 entity.EnderZoo.DireWolf.name=Dire Wolf
 entity.EnderZoo.DireSlime.name=Khndrel Keght
+entity.EnderZoo.Owl.name=Owl
 
 //Waila
 entity.EnderZoo.Enderminy.desc.1=Neutral Mob,
@@ -32,6 +34,10 @@ entity.EnderZoo.WitherWitch.desc.1=Throws wither potions
 //Enchants
 enchantment.enderzoo.witherArrow=Withering 
 enchantment.enderzoo.witherWeapon=Decay
+
+//Potions
+EnderZoo.floatingPotion=Floating
+EnderZoo.floatingPotion.postfix=Potion of Rising
 
 //Blocks
 tile.blockConfusingCharge.name=Confusing Charge

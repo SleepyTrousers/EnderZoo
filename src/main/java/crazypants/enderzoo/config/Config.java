@@ -157,6 +157,18 @@ public final class Config {
   public static double direSlimeChanceLarge = 0.2;
   public static double direSlimeChanceMedium = 0.4;
 
+  public static final Section sectionOwl = new Section("Owl", "owl");
+  public static boolean owlEnabled = true;
+  public static int owlId = 689998;
+  public static int owlHealth = 10;
+  public static int owlAttachDamage = 4;
+  public static float owlSpiderDamageMultiplier = 2;
+  public static float owlHootVolumeMult = 0.8f;
+  public static int owlHootInterval = 1000;
+  public static int owlTimeBetweenEggsMin = 12000;
+  public static int owlTimeBetweenEggsMax = 24000;
+  public static int entityOwlEggId = 679991;
+
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
   public static int enchantmentWitherArrowId = -1;
   public static int enchantmentWitherArrowWeight = 2;
@@ -170,7 +182,7 @@ public final class Config {
   public static int enchantmentWitherWeaponMinEnchantability = 20;
   public static int enchantmentWitherWeaponMaxEnchantability = 50;
 
-  public static final Section sectionCharges = new Section("Charges", "charges");  
+  public static final Section sectionCharges = new Section("Charges", "charges");
   public static int entityPrimedChargeId = 689998;
   public static boolean confusingChargeEnabled = true;
   public static double confusingChargeRange = 6;
@@ -192,7 +204,23 @@ public final class Config {
   public static float guardiansBowForceMultiplier = 3;
   public static float guardiansBowFovMultiplier = 0.35F;
 
-  public static void load(FMLPreInitializationEvent event) {    
+  public static final Section sectionPotions = new Section("Potions", "potions");
+  public static int entityPotionId = 679990;
+
+  public static boolean floatingPotionEnabled = true;
+  public static int floatingPotionId = -1;
+  public static double floatingPotionSpeed = 0.15;
+  public static double floatingPotionAcceleration = 0.085;
+  public static int floatingPotionDuration = 70;
+  public static int floatingPotionDurationSplash = 50;
+  public static int floatingPotionDurationLong = 120;
+  public static int floatingPotionDurationLongSplash = 100;
+  public static double floatingPotionTwoSpeed = 1.2;
+  public static double floatingPotionTwoAcceleration = 0.3;
+  public static int floatingPotionTwoDuration = 12;
+  public static int floatingPotionTwoDurationSplash = 8;
+
+  public static void load(FMLPreInitializationEvent event) {
     MinecraftForge.EVENT_BUS.register(new Config());
     configDirectory = new File(event.getModConfigurationDirectory(), EnderZoo.MODID.toLowerCase());
     if (!configDirectory.exists()) {
@@ -233,14 +261,16 @@ public final class Config {
         "When true an Enderminy will attack a player if it looks at them, otherwise they are neutral mobs.");
     enderminyAttacksCreepers = config.getBoolean("enderminyAttacksCreepers", sectionEnderminy.name, enderminyAttacksCreepers,
         "When true Enderminies will attack creepers");
-    enderminyAttackDamage = config.get(sectionEnderminy.name, "enderminyAttackDamage", enderminyAttackDamage,
-        "Attack damage of Enderminies. 7=Enderman damage, 3=Zombie damage").getInt(enderminyAttackDamage);
+    enderminyAttackDamage = config
+        .get(sectionEnderminy.name, "enderminyAttackDamage", enderminyAttackDamage, "Attack damage of Enderminies. 7=Enderman damage, 3=Zombie damage")
+        .getInt(enderminyAttackDamage);
     enderminyHealth = config.get(sectionEnderminy.name, "enderminyHealth", enderminyHealth, "Health of Enderminies. 40=Enderman health, 20=Zombie health")
         .getInt(enderminyHealth);
     enderminyGroupAgro = config.getBoolean("enderminyGroupAgro", sectionEnderminy.name, enderminyGroupAgro,
         "When true attacking one Enderminy will cause other Enderminies who witness the attack to attack the player as well");
-    enderminyMaxGroupSize = config.get(sectionEnderminy.name, "enderminyMaxGroupSize", enderminyMaxGroupSize,
-        "Maximum number of Enderminies that will spawn in a single group").getInt(enderminyMaxGroupSize);
+    enderminyMaxGroupSize = config
+        .get(sectionEnderminy.name, "enderminyMaxGroupSize", enderminyMaxGroupSize, "Maximum number of Enderminies that will spawn in a single group")
+        .getInt(enderminyMaxGroupSize);
     enderminySpawnInLitAreas = config.getBoolean("enderminySpawnInLitAreas", sectionEnderminy.name, enderminySpawnInLitAreas,
         "When true enderminies will spawn in well lit areas, when false they will only spawn in dark areas.");
     enderminySpawnOnlyOnGrass = config.getBoolean("enderminySpawnOnlyOnGrass", sectionEnderminy.name, enderminySpawnOnlyOnGrass,
@@ -257,37 +287,46 @@ public final class Config {
         "Sets the max range entites can be telported when the creeper explodes").getInt(concussionCreeperMaxTeleportRange);
     concussionCreeperConfusionDuration = config.get(sectionConCreeper.name, "concussionCreeperConfusionDuration", concussionCreeperConfusionDuration,
         "Sets the durtaion in ticks of the confusion effect applied on explosion").getInt(concussionCreeperConfusionDuration);
-    concussionCreeperExplosionRange = config.get(sectionConCreeper.name, "concussionCreeperExplosionRange", concussionCreeperExplosionRange,
-        "The range of the 'teleport explosion'").getInt(concussionCreeperExplosionRange);
-    concussionCreeperHealth = config.get(sectionConCreeper.name, "concussionCreeperHealth", concussionCreeperHealth,
-        "Health of Concussion Creeper. 40=Enderman health, 20=Zombie health").getDouble(concussionCreeperHealth);
-    concussionCreeperOldTexture = config.get(sectionConCreeper.name, "concussionCreeperOldTexture", concussionCreeperOldTexture,
-        "If true, uses the old texture for the Concussion Creeper.").getBoolean();
+    concussionCreeperExplosionRange = config
+        .get(sectionConCreeper.name, "concussionCreeperExplosionRange", concussionCreeperExplosionRange, "The range of the 'teleport explosion'")
+        .getInt(concussionCreeperExplosionRange);
+    concussionCreeperHealth = config
+        .get(sectionConCreeper.name, "concussionCreeperHealth", concussionCreeperHealth, "Health of Concussion Creeper. 40=Enderman health, 20=Zombie health")
+        .getDouble(concussionCreeperHealth);
+    concussionCreeperOldTexture = config
+        .get(sectionConCreeper.name, "concussionCreeperOldTexture", concussionCreeperOldTexture, "If true, uses the old texture for the Concussion Creeper.")
+        .getBoolean();
 
     fallenKnightId = config.get(sectionFallenKnight.name, "fallenKnightId", fallenKnightId, "Mob ID").getInt(fallenKnightId);
     fallenKnightEnabled = config.getBoolean("fallenKnightEnabled", sectionFallenKnight.name, fallenKnightEnabled, "Wether Fallen Knights are enabled");
-    fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight").getDouble(
-        fallenKnightBaseDamage);
+    fallenKnightBaseDamage = config.get(sectionFallenKnight.name, "fallenKnightBaseDamage", fallenKnightBaseDamage, "Base damage of a knight")
+        .getDouble(fallenKnightBaseDamage);
     fallenKnightHealth = config.get(sectionFallenKnight.name, "fallenKnightHealth", fallenKnightHealth, "Health of a knight").getDouble(fallenKnightHealth);
-    fallenKnightFollowRange = config.get(sectionFallenKnight.name, "fallenKnightFollowRange", fallenKnightFollowRange, "Follow range of a knight").getDouble(
-        fallenKnightFollowRange);
-    fallenKnightChargeSpeed = config.get(sectionFallenKnight.name, "fallenKnightChargeSpeed", fallenKnightChargeSpeed,
-        "The speed at which a knight will charge its target").getDouble(fallenKnightChargeSpeed);
-    fallenKnightRangedMinAttackPause = config.get(sectionFallenKnight.name, "fallenKnightRangedMinAttackPause", fallenKnightRangedMinAttackPause,
-        "The min number of ticks between ranged attacks").getInt(fallenKnightRangedMinAttackPause);
-    fallenKnightRangedMaxAttackPause = config.get(sectionFallenKnight.name, "fallenKnightRangedMaxAttackPause", fallenKnightRangedMaxAttackPause,
-        "The max number of ticks between ranged attacks").getInt(fallenKnightRangedMaxAttackPause);
-    fallenKnightRangedMaxRange = (float) config.get(sectionFallenKnight.name, "fallenKnightRangedMaxRange", fallenKnightRangedMaxRange,
-        "The max attack range when using a bow").getDouble(fallenKnightRangedMaxRange);
+    fallenKnightFollowRange = config.get(sectionFallenKnight.name, "fallenKnightFollowRange", fallenKnightFollowRange, "Follow range of a knight")
+        .getDouble(fallenKnightFollowRange);
+    fallenKnightChargeSpeed = config
+        .get(sectionFallenKnight.name, "fallenKnightChargeSpeed", fallenKnightChargeSpeed, "The speed at which a knight will charge its target")
+        .getDouble(fallenKnightChargeSpeed);
+    fallenKnightRangedMinAttackPause = config
+        .get(sectionFallenKnight.name, "fallenKnightRangedMinAttackPause", fallenKnightRangedMinAttackPause, "The min number of ticks between ranged attacks")
+        .getInt(fallenKnightRangedMinAttackPause);
+    fallenKnightRangedMaxAttackPause = config
+        .get(sectionFallenKnight.name, "fallenKnightRangedMaxAttackPause", fallenKnightRangedMaxAttackPause, "The max number of ticks between ranged attacks")
+        .getInt(fallenKnightRangedMaxAttackPause);
+    fallenKnightRangedMaxRange = (float) config
+        .get(sectionFallenKnight.name, "fallenKnightRangedMaxRange", fallenKnightRangedMaxRange, "The max attack range when using a bow")
+        .getDouble(fallenKnightRangedMaxRange);
     fallenKnightChancePerArmorPiece = (float) config.get(sectionFallenKnight.name, "fallenKnightChancePerArmorPiece", fallenKnightChancePerArmorPiece,
         "The chance each armor piece has of being added to a spawned knight").getDouble(fallenKnightChancePerArmorPiece);
     fallenKnightChancePerArmorPieceHard = (float) config.get(sectionFallenKnight.name, "fallenKnightChancePerArmorPieceHard",
-        fallenKnightChancePerArmorPieceHard, "The chance each armor piece has of being added to a spawned knight when difficulty is set to hard").getDouble(
-        fallenKnightChancePerArmorPieceHard);
-    fallenKnightRangedRatio = (float) config.get(sectionFallenKnight.name, "fallenKnightRangedRatio", fallenKnightRangedRatio,
-        "The precentage of spawned knoghts equipped with bows").getDouble(fallenKnightRangedRatio);
-    fallenKnightChanceMounted = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceMounted", fallenKnightChanceMounted,
-        "The chance a spawned knight will be mounted").getDouble(fallenKnightChanceMounted);
+        fallenKnightChancePerArmorPieceHard, "The chance each armor piece has of being added to a spawned knight when difficulty is set to hard")
+        .getDouble(fallenKnightChancePerArmorPieceHard);
+    fallenKnightRangedRatio = (float) config
+        .get(sectionFallenKnight.name, "fallenKnightRangedRatio", fallenKnightRangedRatio, "The precentage of spawned knoghts equipped with bows")
+        .getDouble(fallenKnightRangedRatio);
+    fallenKnightChanceMounted = (float) config
+        .get(sectionFallenKnight.name, "fallenKnightChanceMounted", fallenKnightChanceMounted, "The chance a spawned knight will be mounted")
+        .getDouble(fallenKnightChanceMounted);
     fallenKnightChanceArmorUpgradeHard = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgradeHard", fallenKnightChanceArmorUpgradeHard,
         "The chance the type of armor equipped will be improved when dificult is hard").getDouble(fallenKnightChanceArmorUpgradeHard);
     fallenKnightChanceArmorUpgrade = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgrade", fallenKnightChanceArmorUpgrade,
@@ -300,55 +339,60 @@ public final class Config {
 
     fallenMountId = config.get(sectionFallenMount.name, "fallenMountId", fallenMountId, "Mob ID").getInt(fallenMountId);
     fallenMountEnabled = config.getBoolean("fallenMountEnabled", sectionFallenMount.name, fallenMountEnabled, "If false fallen mounts will be disabled");
-    fallenMountChargeSpeed = config.get(sectionFallenMount.name, "fallenMountChargeSpeed", fallenMountChargeSpeed,
-        "he speed at which a mount will charge its target").getDouble(fallenMountChargeSpeed);
-    fallenMountBaseAttackDamage = config.get(sectionFallenMount.name, "fallenMountBaseAttackDamage", fallenMountBaseAttackDamage,
-        "Base attack damage of the mount").getDouble(fallenMountBaseAttackDamage);
-    fallenMountHealth = config.get(sectionFallenMount.name, "fallenMountHealth", fallenMountHealth, "Base attack health of the mount").getDouble(
-        fallenMountHealth);
+    fallenMountChargeSpeed = config
+        .get(sectionFallenMount.name, "fallenMountChargeSpeed", fallenMountChargeSpeed, "he speed at which a mount will charge its target")
+        .getDouble(fallenMountChargeSpeed);
+    fallenMountBaseAttackDamage = config
+        .get(sectionFallenMount.name, "fallenMountBaseAttackDamage", fallenMountBaseAttackDamage, "Base attack damage of the mount")
+        .getDouble(fallenMountBaseAttackDamage);
+    fallenMountHealth = config.get(sectionFallenMount.name, "fallenMountHealth", fallenMountHealth, "Base attack health of the mount")
+        .getDouble(fallenMountHealth);
     fallenMountShadedByRider = config.getBoolean("fallenMountShadedByRider", sectionFallenMount.name, fallenMountShadedByRider,
         "When true a mount will not burn in the sun unless its rider is");
-    fallenMountChanceArmored = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmored", fallenMountChanceArmored,
-        "The chance a spawned mount will be armored").getDouble(fallenMountChanceArmored);
+    fallenMountChanceArmored = (float) config
+        .get(sectionFallenMount.name, "fallenMountChanceArmored", fallenMountChanceArmored, "The chance a spawned mount will be armored")
+        .getDouble(fallenMountChanceArmored);
     fallenMountChanceArmoredHard = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmoredHard", fallenMountChanceArmoredHard,
         "The chance a spawned mount will be armored when difficult is hard").getDouble(fallenMountChanceArmoredHard);
-    fallenMountChanceArmorUpgrade = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmorUpgrade", fallenMountChanceArmorUpgrade,
-        "The chance a mount's armor will be upgraded").getDouble(fallenMountChanceArmorUpgrade);
+    fallenMountChanceArmorUpgrade = (float) config
+        .get(sectionFallenMount.name, "fallenMountChanceArmorUpgrade", fallenMountChanceArmorUpgrade, "The chance a mount's armor will be upgraded")
+        .getDouble(fallenMountChanceArmorUpgrade);
     fallenMountChanceArmorUpgradeHard = (float) config.get(sectionFallenMount.name, "fallenMountChanceArmorUpgradeHard", fallenMountChanceArmorUpgradeHard,
         "The chance a mount's armor will be upgraded when difficulty is hard").getDouble(fallenMountChanceArmorUpgradeHard);
 
     witherWitchId = config.get(sectionWitherWitch.name, "witherWitchId", witherWitchId, "Mob ID").getInt(witherWitchId);
     witherWitchEnabled = config.getBoolean("witherWitchEnabled", sectionWitherWitch.name, witherWitchEnabled, "If false Wither Witches will be disabled");
-    witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth, "Base attack damage of the mount").getDouble(
-        witherWitchHealth);
-    witherWitchMinCats = config
-        .get(sectionWitherWitch.name, "witherWitchMinCats", witherWitchMinCats, "The minimum number of cats spawned with a Wither Witch").getInt(
-            witherWitchMinCats);
-    witherWitchMaxCats = config
-        .get(sectionWitherWitch.name, "witherWitchMaxCats", witherWitchMaxCats, "The maximum number of cats spawned with a Wither Witch").getInt(
-            witherWitchMaxCats);
+    witherWitchHealth = config.get(sectionWitherWitch.name, "witherWitchHealth", witherWitchHealth, "Base attack damage of the mount")
+        .getDouble(witherWitchHealth);
+    witherWitchMinCats = config.get(sectionWitherWitch.name, "witherWitchMinCats", witherWitchMinCats, "The minimum number of cats spawned with a Wither Witch")
+        .getInt(witherWitchMinCats);
+    witherWitchMaxCats = config.get(sectionWitherWitch.name, "witherWitchMaxCats", witherWitchMaxCats, "The maximum number of cats spawned with a Wither Witch")
+        .getInt(witherWitchMaxCats);
 
     witherCatId = config.get(sectionWitherCat.name, "witherCatId", witherCatId, "Mob ID").getInt(witherCatId);
     witherCatEnabled = config.getBoolean("witherCatEnabled", sectionWitherCat.name, witherCatEnabled, "If false Wither Cats will be disabled");
     witherCatHealth = config.get(sectionWitherCat.name, "witherCatHealth", witherCatHealth, "Base health of the wither cat").getDouble(witherCatHealth);
     witherCatAttackDamage = config.get(sectionWitherCat.name, "witherCatAttackDamage", witherCatAttackDamage, "Base attack damage of the wither cat")
         .getDouble(witherCatAttackDamage);
-    witherCatAngryAttackDamageHardModifier = config.get(sectionWitherCat.name, "witherCatAngryAttackDamageHardModifier",
-        witherCatAngryAttackDamageHardModifier, "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
+    witherCatAngryAttackDamageHardModifier = config.get(sectionWitherCat.name, "witherCatAngryAttackDamageHardModifier", witherCatAngryAttackDamageHardModifier,
+        "The increase to damage when playing on hard").getDouble(witherCatAngryAttackDamageHardModifier);
 
     direWolfId = config.get(sectionDireWolf.name, "direWolfId", direWolfId, "Mob ID").getInt(direWolfId);
     direWolfEnabled = config.getBoolean("direWolfEnabled", sectionDireWolf.name, direWolfEnabled, "If false Dire Wolves will be disabled");
     direWolfPackAttackEnabled = config.getBoolean("direWolfPackAttackEnabled", sectionDireWolf.name, direWolfPackAttackEnabled,
         "When true all nearby dire wolves will join an attack");
     direWolfHealth = config.get(sectionDireWolf.name, "direWolfHealth", direWolfHealth, "Base health of the Dire Wolf").getDouble(direWolfHealth);
-    direWolfAttackDamage = config.get(sectionDireWolf.name, "direWolfAttackDamage", direWolfAttackDamage, "Base attack damage of the dire wolf").getDouble(
-        direWolfAttackDamage);
-    direWolfHardAttackModifier = config.get(sectionDireWolf.name, "direWolfHardAttackModifier", direWolfHardAttackModifier,
-        "The increase to damage when playing on hard").getDouble(direWolfHardAttackModifier);
-    direWolfAggresiveRange = config.get(sectionDireWolf.name, "direWolfAggresiveRange", direWolfAggresiveRange,
-        "If a player gets within this range they will be attacked").getDouble(direWolfAggresiveRange);
-    direWolfHowlVolumeMult = config.get(sectionDireWolf.name, "direWolfHowlVolumeMult", direWolfHowlVolumeMult,
-        "The volume multiplier for the dire wolf's howl. 12 is default.").getDouble();
+    direWolfAttackDamage = config.get(sectionDireWolf.name, "direWolfAttackDamage", direWolfAttackDamage, "Base attack damage of the dire wolf")
+        .getDouble(direWolfAttackDamage);
+    direWolfHardAttackModifier = config
+        .get(sectionDireWolf.name, "direWolfHardAttackModifier", direWolfHardAttackModifier, "The increase to damage when playing on hard")
+        .getDouble(direWolfHardAttackModifier);
+    direWolfAggresiveRange = config
+        .get(sectionDireWolf.name, "direWolfAggresiveRange", direWolfAggresiveRange, "If a player gets within this range they will be attacked")
+        .getDouble(direWolfAggresiveRange);
+    direWolfHowlVolumeMult = config
+        .get(sectionDireWolf.name, "direWolfHowlVolumeMult", direWolfHowlVolumeMult, "The volume multiplier for the dire wolf's howl. 12 is default.")
+        .getDouble();
     direWolfHowlChance = config.get(sectionDireWolf.name, "direWolfHowlChance", direWolfHowlChance,
         "The chance a dire wolf will howl when it is asked to play a sound. Defaults to 0.1 (10%)").getDouble();
     direWolfPackHowlChance = config.get(sectionDireWolf.name, "direWolfPackHowlChance", direWolfPackHowlChance,
@@ -360,49 +404,75 @@ public final class Config {
     direSlimeEnabled = config.getBoolean("direSlimeEnabled", sectionDireSlime.name, direSlimeEnabled, "If false Dire Slime will be disabled");
     direSlimeAttackDamage = config.get(sectionDireSlime.name, "direSlimeAttackDamage", direSlimeAttackDamage, "Base attack damage of the dire slime.")
         .getDouble(direSlimeAttackDamage);
-    direSlimeAttackDamageMedium = config.get(sectionDireSlime.name, "direSlimeAttackDamageMedium", direSlimeAttackDamageMedium,
-        "Base attack damage of the medium dire slime.").getDouble(direSlimeAttackDamageMedium);
-    direSlimeAttackDamageLarge = config.get(sectionDireSlime.name, "direSlimeAttackDamageLarge", direSlimeAttackDamageLarge,
-        "Base attack damage of the large dire slime.").getDouble(direSlimeAttackDamageLarge);
+    direSlimeAttackDamageMedium = config
+        .get(sectionDireSlime.name, "direSlimeAttackDamageMedium", direSlimeAttackDamageMedium, "Base attack damage of the medium dire slime.")
+        .getDouble(direSlimeAttackDamageMedium);
+    direSlimeAttackDamageLarge = config
+        .get(sectionDireSlime.name, "direSlimeAttackDamageLarge", direSlimeAttackDamageLarge, "Base attack damage of the large dire slime.")
+        .getDouble(direSlimeAttackDamageLarge);
     direSlimeHealth = config.get(sectionDireSlime.name, "direSlimeHealth", direSlimeHealth, "Base health of the Dire Slime. ").getDouble(direSlimeHealth);
     direSlimeHealthMedium = config.get(sectionDireSlime.name, "direSlimeHealthMedium", direSlimeHealthMedium, "Base health of the medium Dire Slime. ")
         .getDouble(direSlimeHealthMedium);
-    direSlimeHealthLarge = config.get(sectionDireSlime.name, "direSlimeHealthLarge", direSlimeHealthLarge, "Base health of the medium Dire Slime. ").getDouble(
-        direSlimeHealthLarge);
+    direSlimeHealthLarge = config.get(sectionDireSlime.name, "direSlimeHealthLarge", direSlimeHealthLarge, "Base health of the medium Dire Slime. ")
+        .getDouble(direSlimeHealthLarge);
 
-    direSlimeChance = config.get(sectionDireSlime.name, "direSlimeChance", direSlimeChance,
-        "The chance that a Dire Slime will be spawned (0 = never, 1 = always).").getDouble(direSlimeChance);
+    direSlimeChance = config
+        .get(sectionDireSlime.name, "direSlimeChance", direSlimeChance, "The chance that a Dire Slime will be spawned (0 = never, 1 = always).")
+        .getDouble(direSlimeChance);
     direSlimeChanceMedium = config.get(sectionDireSlime.name, "direSlimeChanceMedium", direSlimeChanceMedium,
         "The chance a medium will spawn when a small Dire Slimes is killed (eg 0.12 for a 12% chance).").getDouble(direSlimeChanceMedium);
     direSlimeChanceLarge = config.get(sectionDireSlime.name, "direSlimeChanceLarge", direSlimeChanceLarge,
         "The chance a large will spawn when a medium Dire Slimes is killed (eg 0.02 for a 2% chance)").getDouble(direSlimeChanceLarge);
 
+    owlEnabled = config.getBoolean("owlEnabled", sectionOwl.name, owlEnabled, "If false Owl will be disabled");
+    owlId = config.get(sectionOwl.name, "owlId", owlId, "Mob ID").getInt(owlId);
+    owlHealth = config.get(sectionOwl.name, "owlHealth", owlHealth, "Owl Health").getInt(owlHealth);
+    owlAttachDamage = config.get(sectionOwl.name, "owlAttachDamage", owlAttachDamage, "Owl Attack Damage").getInt(owlAttachDamage);
+    owlSpiderDamageMultiplier = (float) config.get(sectionOwl.name, "owlSpiderDamageMultiplier", owlSpiderDamageMultiplier, "Damage multiplier against spiders")
+        .getDouble(owlSpiderDamageMultiplier);
+    owlHootVolumeMult = (float) config
+        .get(sectionDireSlime.name, "owlHootVolumeMult", owlHootVolumeMult, "Adjusts the owls hoot volume. Higher value is loader")
+        .getDouble(owlHootVolumeMult);
+    owlHootInterval = config.get(sectionOwl.name, "owlHootInterval", owlHootInterval, "Aprox. number of ticks between hoots").getInt(owlHootInterval);
+    owlTimeBetweenEggsMin = config.get(sectionOwl.name, "owlTimeBetweenEggsMin", owlTimeBetweenEggsMin, "Min ticks between egg laying")
+        .getInt(owlTimeBetweenEggsMin);
+    owlTimeBetweenEggsMax = config.get(sectionOwl.name, "owlTimeBetweenEggsMax", owlTimeBetweenEggsMax, "Max ticks between egg laying")
+        .getInt(owlTimeBetweenEggsMax);
+
+    entityOwlEggId = config.get(sectionOwl.name, "entityOwlEggId", entityOwlEggId, "ID for thrown owl egg Entity").getInt(entityOwlEggId);
+
     enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
-    enchantmentWitherArrowWeight = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
-        "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
-        enchantmentWitherArrowWeight);
-    enchantmentWitherArrowDuration = config.get(sectionEnchants.name, "enchantmentWitherArrowDuration", enchantmentWitherArrowDuration,
-        "Duration of the wither effect in ticks").getInt(enchantmentWitherArrowDuration);
+    enchantmentWitherArrowWeight = config
+        .get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
+            "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1")
+        .getInt(enchantmentWitherArrowWeight);
+    enchantmentWitherArrowDuration = config
+        .get(sectionEnchants.name, "enchantmentWitherArrowDuration", enchantmentWitherArrowDuration, "Duration of the wither effect in ticks")
+        .getInt(enchantmentWitherArrowDuration);
     enchantmentWitherArrowMinEnchantability = config.get(sectionEnchants.name, "enchantmentWitherArrowMinEnchantability",
         enchantmentWitherArrowMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherArrowMinEnchantability);
-    enchantmentWitherArrowMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherArrowMaxEnchantability",
-        enchantmentWitherArrowMaxEnchantability, "The maximum required level").getInt(enchantmentWitherArrowMaxEnchantability);
+    enchantmentWitherArrowMaxEnchantability = config
+        .get(sectionEnchants.name, "enchantmentWitherArrowMaxEnchantability", enchantmentWitherArrowMaxEnchantability, "The maximum required level")
+        .getInt(enchantmentWitherArrowMaxEnchantability);
 
     enchantmentWitherWeaponId = config.get(sectionEnchants.name, "enchantmentWitherWeaponId", enchantmentWitherWeaponId,
         "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherWeaponId);
-    enchantmentWitherWeaponWeight = config.get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponWeight,
-        "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1").getInt(
-        enchantmentWitherWeaponWeight);
-    enchantmentWitherWeaponDuration = config.get(sectionEnchants.name, "enchantmentWitherWeaponDuration", enchantmentWitherWeaponDuration,
-        "Duration of the wither effect in ticks").getInt(enchantmentWitherWeaponDuration);
+    enchantmentWitherWeaponWeight = config
+        .get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponWeight,
+            "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1")
+        .getInt(enchantmentWitherWeaponWeight);
+    enchantmentWitherWeaponDuration = config
+        .get(sectionEnchants.name, "enchantmentWitherWeaponDuration", enchantmentWitherWeaponDuration, "Duration of the wither effect in ticks")
+        .getInt(enchantmentWitherWeaponDuration);
     enchantmentWitherWeaponMinEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMinEnchantability",
         enchantmentWitherWeaponMinEnchantability, "The minimum required enchantability level").getInt(enchantmentWitherWeaponMinEnchantability);
-    enchantmentWitherWeaponMaxEnchantability = config.get(sectionEnchants.name, "enchantmentWitherWeaponMaxEnchantability",
-        enchantmentWitherWeaponMaxEnchantability, "The maximum required level").getInt(enchantmentWitherWeaponMaxEnchantability);
-    
+    enchantmentWitherWeaponMaxEnchantability = config
+        .get(sectionEnchants.name, "enchantmentWitherWeaponMaxEnchantability", enchantmentWitherWeaponMaxEnchantability, "The maximum required level")
+        .getInt(enchantmentWitherWeaponMaxEnchantability);
+
     entityPrimedChargeId = config.get(sectionCharges.name, "entityPrimedChargeId", entityPrimedChargeId, "ID for charge entities").getInt(entityPrimedChargeId);
-    
+
     confusingChargeEnabled = config.getBoolean("confusingChargeEnabled", sectionCharges.name, confusingChargeEnabled,
         "If false Confusing Charges will be disabled");
     confusingChargeRange = config.get(sectionCharges.name, "confusingChargeRange", confusingChargeRange, "The range of the confusion charges effect")
@@ -411,8 +481,8 @@ public final class Config {
         "Numer of ticks the confusion effect active. Scales with distance from the expolosion").getInt(confusingChargeEffectDuration);
 
     enderChargeEnabled = config.getBoolean("enderChargeEnabled", sectionCharges.name, enderChargeEnabled, "If false Ender Charges will be disabled");
-    enderChargeRange = config.get(sectionCharges.name, "enderChargeRange", enderChargeRange, "The range of the ender charges effect").getDouble(
-        enderChargeRange);
+    enderChargeRange = config.get(sectionCharges.name, "enderChargeRange", enderChargeRange, "The range of the ender charges effect")
+        .getDouble(enderChargeRange);
     enderChargeMaxTeleportRange = config.get(sectionCharges.name, "enderChargeMaxTeleportRange", enderChargeMaxTeleportRange,
         "The max range effected entities will be teleported. Distance is randomised").getInt(enderChargeMaxTeleportRange);
 
@@ -455,12 +525,42 @@ public final class Config {
     guardiansBowEnabled = config.getBoolean("guardiansBowEnabled", sectionGuardian.name, guardiansBowEnabled, "If false the Guardians Bow will be disabled");
     guardiansBowDrawTime = config.get(sectionGuardian.name, "guardiansBowDrawTime", guardiansBowDrawTime,
         "The number of ticks it takes to fully draw the guardians bow. A 'vanilla' bow takes 20 ticks.").getInt(guardiansBowDrawTime);
-    guardiansBowDamageBonus = (float) config.get(sectionGuardian.name, "guardiansBowDamageBonus", guardiansBowDamageBonus,
-        "The damage bonus applied to arrows fire from the bow.").getDouble(guardiansBowDamageBonus);
+    guardiansBowDamageBonus = (float) config
+        .get(sectionGuardian.name, "guardiansBowDamageBonus", guardiansBowDamageBonus, "The damage bonus applied to arrows fire from the bow.")
+        .getDouble(guardiansBowDamageBonus);
     guardiansBowForceMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowForceMultiplier", guardiansBowForceMultiplier,
         "Effects the speed with which arrows leave the bow. A 'vanilla' bow has a multiplier of 2.").getDouble(guardiansBowForceMultiplier);
     guardiansBowFovMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowFovMultiplier", guardiansBowFovMultiplier,
         "The reduction in FOV when the bow is fullen drawn (the zoom level). A 'vanilla' bow has a value of 0.15").getDouble(guardiansBowFovMultiplier);
+
+    entityPotionId = config.get(sectionPotions.name, "entityPotionId", entityPotionId, "Enity ID for thrown potion").getInt(entityPotionId);
+
+    floatingPotionEnabled = config.getBoolean("floatingPotionEnabled", sectionPotions.name, floatingPotionEnabled,
+        "If false floating potions will be disabled");
+    floatingPotionId = config.get(sectionPotions.name, "floatingPotionId", floatingPotionId, "Potion ID. If -1, will be assigned by forge")
+        .getInt(floatingPotionId);
+    floatingPotionSpeed = config.get(sectionPotions.name, "floatingPotionSpeed", floatingPotionSpeed, "Max rising speed.").getDouble(floatingPotionSpeed);
+    floatingPotionAcceleration = config.get(sectionPotions.name, "floatingPotionAcceleration", floatingPotionAcceleration, "Vertical acceleration rate")
+        .getDouble(floatingPotionAcceleration);
+    floatingPotionDuration = config.get(sectionPotions.name, "floatingPotionDuration", floatingPotionDuration, "Effect duration (ticks)")
+        .getInt(floatingPotionDuration);
+    floatingPotionDurationSplash = config.get(sectionPotions.name, "floatingPotionDurationSplash", floatingPotionDurationSplash, "Effect duration (ticks)")
+        .getInt(floatingPotionDurationSplash);
+    floatingPotionDurationLong = config.get(sectionPotions.name, "floatingPotionDurationLong", floatingPotionDurationLong, "Effect duration (ticks)")
+        .getInt(floatingPotionDurationLong);
+    floatingPotionDurationLongSplash = config
+        .get(sectionPotions.name, "floatingPotionDurationLongSplash", floatingPotionDurationLongSplash, "Effect duration (ticks)")
+        .getInt(floatingPotionDurationLongSplash);
+    floatingPotionTwoSpeed = config.get(sectionPotions.name, "floatingPotionTwoSpeed", floatingPotionTwoSpeed, "Max rising speed.")
+        .getDouble(floatingPotionTwoSpeed);
+    floatingPotionTwoAcceleration = config
+        .get(sectionPotions.name, "floatingPotionTwoAcceleration", floatingPotionTwoAcceleration, "Vertical acceleration rate")
+        .getDouble(floatingPotionTwoAcceleration);
+    floatingPotionTwoDuration = config.get(sectionPotions.name, "floatingPotionTwoDuration", floatingPotionTwoDuration, "Effect duration (ticks)")
+        .getInt(floatingPotionTwoDuration);
+    floatingPotionTwoDurationSplash = config
+        .get(sectionPotions.name, "floatingPotionTwoDurationSplash", floatingPotionTwoDurationSplash, "Effect duration (ticks)")
+        .getInt(floatingPotionTwoDurationSplash);
 
   }
 
