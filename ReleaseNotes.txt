@@ -3,7 +3,7 @@ Version 1.1.3
 -------------------------------------------
 
 New 
-- Owl (model and texture by Inap)
+- Owl (model and texture by yulife)
   - hunts spiders
   - breed/tempt using spider eyes
   - lays Owl eggs, used to making Potion of Rising
