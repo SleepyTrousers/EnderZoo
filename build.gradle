@@ -52,7 +52,7 @@ repositories {
 }
 
 dependencies {
-    compile "mcp.mobius.waila:Waila:${waila_version}"
+    deobfCompile "mcp.mobius.waila:Waila:${waila_version}"
 }
 
 sourceSets {

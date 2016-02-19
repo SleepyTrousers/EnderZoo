@@ -1,15 +1,12 @@
 package crazypants.enderzoo.entity;
 
-import crazypants.enderzoo.EnderZoo;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
-import crazypants.enderzoo.entity.ai.EntityAIFlyingFindPerch;
-import crazypants.enderzoo.entity.ai.EntityAIFlyingLand;
-import crazypants.enderzoo.entity.ai.EntityAIFlyingPanic;
-import crazypants.enderzoo.entity.ai.EntityAIFlyingShortWander;
-import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;
-import crazypants.enderzoo.entity.navigate.FlyingMoveHelper;
-import crazypants.enderzoo.entity.navigate.FlyingPathNavigate;
+import info.loenwind.owlgen.IGene;
+import info.loenwind.owlgen.IGenome;
+import info.loenwind.owlgen.impl.Genome;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -32,13 +29,30 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.config.Config;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingFindPerch;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingLand;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingPanic;
+import crazypants.enderzoo.entity.ai.EntityAIFlyingShortWander;
+import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;
+import crazypants.enderzoo.entity.genes.OwlBeakColor;
+import crazypants.enderzoo.entity.genes.OwlCoatColor;
+import crazypants.enderzoo.entity.genes.OwlLegColor;
+import crazypants.enderzoo.entity.genes.OwlShade;
+import crazypants.enderzoo.entity.genes.OwlSize;
+import crazypants.enderzoo.entity.navigate.FlyingMoveHelper;
+import crazypants.enderzoo.entity.navigate.FlyingPathNavigate;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
+  private static final int GENOME_ID = 13;
   public static final String NAME = "Owl";
   public static final int EGG_BG_COL = 0xC17949;
   public static final int EGG_FG_COL = 0xFFDDC6;
@@ -62,9 +76,25 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   private float climbRate = 0.25f;
   private float turnRate = 30;
 
-  public int timeUntilNextEgg;;
+  public int timeUntilNextEgg;
+
+  public static final List<Class<? extends IGene>> genetemplate = new ArrayList<Class<? extends IGene>>();
+  private IGenome genome;
+  static {
+    genetemplate.add(OwlCoatColor.class); // body, tail
+    genetemplate.add(OwlCoatColor.class); // head
+    genetemplate.add(OwlCoatColor.class); // wings
+    genetemplate.add(OwlLegColor.class); /// legs, feet
+    genetemplate.add(OwlBeakColor.class); // beak
+    genetemplate.add(OwlSize.class);
+    genetemplate.add(OwlShade.class);
+  }
 
   public EntityOwl(World worldIn) {
+    this(worldIn, true);
+  }
+
+  private EntityOwl(World worldIn, boolean makeGenome) {
     super(worldIn);
     setSize(0.4F, 0.85F);
     stepHeight = 1.0F;
@@ -91,6 +121,30 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     moveHelper = new FlyingMoveHelper(this);
 
     timeUntilNextEgg = getNextLayingTime();
+
+    if (makeGenome) {
+      genome = new Genome(dataWatcher, GENOME_ID, genetemplate);
+      if (!worldObj.isRemote) {
+        /**
+         * Most random owls start their life with wings and heads matching their
+         * body coloring.
+         */
+        List<IGene> genes0 = genome.getGenes0();
+        List<IGene> genes1 = genome.getGenes1();
+        List<IGene> genesE = genome.getGenesE();
+        if (Math.random() < 0.95) {
+          genes0.set(1, genes0.get(0));
+          genes1.set(1, genes1.get(0));
+          genesE.set(1, genesE.get(0));
+        }
+        if (Math.random() < 0.975) {
+          genes0.set(2, genes0.get(0));
+          genes1.set(2, genes1.get(0));
+          genesE.set(2, genesE.get(0));
+        }
+      }
+      genome.startSync();
+    }
   }
 
   @Override
@@ -118,6 +172,12 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public boolean interact(EntityPlayer playerIn) {
+    if (playerIn.capabilities.isCreativeMode) {
+      ItemStack stack = playerIn.inventory.getCurrentItem();
+      if (stack != null && stack.getItem() == Items.stick) {
+        playerIn.addChatMessage(new ChatComponentText("Genome: " + genome.getGenesE() + (worldObj.isRemote ? " on client" : " on server")));
+      }
+    }
     return super.interact(playerIn);
     // if (!super.interact(playerIn)) {
     // if (!worldObj.isRemote) {
@@ -331,19 +391,18 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public void playLivingSound() {
-    String snd = getLivingSound();
-    if (snd == null) {
+    if (worldObj == null || worldObj.isRemote || worldObj.isDaytime() || getAttackTarget() != null) {
       return;
     }
 
-    if (worldObj != null && !worldObj.isRemote && (worldObj.isDaytime() || getAttackTarget() != null)) {
+    String snd = getLivingSound();
+    if (snd == null) {
       return;
     }
 
     float volume = getSoundVolume() * Config.owlHootVolumeMult;
     float pitch = 0.8f * getSoundPitch();
     playSound(snd, volume, pitch);
-
   }
 
   @Override
@@ -367,7 +426,17 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public EntityOwl createChild(EntityAgeable ageable) {
-    return new EntityOwl(worldObj);
+    EntityOwl baby = new EntityOwl(worldObj, false);
+
+    if (ageable instanceof EntityOwl) {
+      EntityOwl otherOwl = (EntityOwl) ageable;
+      baby.genome = new Genome(baby.dataWatcher, GENOME_ID, this.genome, otherOwl.genome);
+    } else {
+      baby.genome = new Genome(baby.dataWatcher, GENOME_ID, genetemplate, this.genome);
+    }
+    baby.genome.startSync();
+
+    return baby;
   }
 
   @Override
@@ -411,12 +480,20 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     if (tagCompund.hasKey("EggLayTime")) {
       this.timeUntilNextEgg = tagCompund.getInteger("EggLayTime");
     }
+    if (tagCompund.hasKey("genome")) {
+      genome.setData(tagCompund.getString("genome"));
+    }
   }
 
   @Override
   public void writeEntityToNBT(NBTTagCompound tagCompound) {
     super.writeEntityToNBT(tagCompound);
     tagCompound.setInteger("EggLayTime", this.timeUntilNextEgg);
+    tagCompound.setString("genome", genome.getData());
+  }
+
+  public IGenome getGenome() {
+    return genome;
   }
 
 }
