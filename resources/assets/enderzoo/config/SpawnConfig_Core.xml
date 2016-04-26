@@ -138,7 +138,7 @@ dimensionExclude attributes:
     </biomeFilter>
   </entry>
   
-   <entry id="Owl" mobName="EnderZoo.Owl" rate="10" minGroupSize="1" maxGroupSize="1">
+   <entry id="Owl" mobName="EnderZoo.Owl" rate="5" minGroupSize="1" maxGroupSize="1" creatureType="CREATURE">
     <biomeFilter type="any">
       <biome type="FOREST" />
       <biome type="RIVER" />      
