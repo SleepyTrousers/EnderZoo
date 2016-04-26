@@ -29,7 +29,7 @@ public class ModelOwl extends ModelBase {
   public ModelRenderer tail2;
   public ModelRenderer tail3;
 
-  private boolean useEars = false;
+  private boolean useEars = true;
 
   public ModelOwl() {
 

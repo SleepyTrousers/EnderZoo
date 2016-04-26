@@ -1,5 +1,7 @@
 package crazypants.enderzoo.enchantment;
 
+import crazypants.enderzoo.EnderZoo;
+import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
@@ -7,13 +9,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import crazypants.enderzoo.config.Config;
 
 public class EnchantmentWitherWeapon extends Enchantment {
 
   protected EnchantmentWitherWeapon(int id) {
-    super(id, new ResourceLocation("enderzoo.witherWeapon"), Config.enchantmentWitherWeaponWeight, EnumEnchantmentType.WEAPON);
-    setName("enderzoo.witherWeapon");
+    super(id, new ResourceLocation(EnderZoo.MODID, "witherWeapon"), Config.enchantmentWitherWeaponWeight, EnumEnchantmentType.WEAPON);
+    setName("witherWeapon");
 
   }
 

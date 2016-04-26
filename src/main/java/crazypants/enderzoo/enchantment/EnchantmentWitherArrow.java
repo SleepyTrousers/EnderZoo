@@ -1,5 +1,6 @@
 package crazypants.enderzoo.enchantment;
 
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
@@ -12,8 +13,8 @@ import net.minecraft.util.ResourceLocation;
 public class EnchantmentWitherArrow extends Enchantment {
 
   protected EnchantmentWitherArrow(int id) {
-    super(id, new ResourceLocation("enderzoo.witherArrow"), Config.enchantmentWitherArrowWeight, EnumEnchantmentType.BOW);
-    setName("enderzoo.witherArrow");
+    super(id, new ResourceLocation(EnderZoo.MODID, "witherArrow"), Config.enchantmentWitherArrowWeight, EnumEnchantmentType.BOW);
+    setName("witherArrow");
   }
 
   @Override
