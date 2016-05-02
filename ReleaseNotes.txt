@@ -1,4 +1,19 @@
 -------------------------------------------
+Version 1.1.5
+-------------------------------------------
+
+- Fixed entity ID conflict between primed charges and owl
+
+
+-------------------------------------------
+Version 1.1.4
+-------------------------------------------
+
+- Fixed owls spawning as hostile mobs instead of animals
+- Small fixes to enchantment registration
+- Added owl ears (should have always been there, oops, sorry yulife)
+
+-------------------------------------------
 Version 1.1.3
 -------------------------------------------
 

@@ -183,7 +183,7 @@ public final class Config {
   public static int enchantmentWitherWeaponMaxEnchantability = 50;
 
   public static final Section sectionCharges = new Section("Charges", "charges");
-  public static int entityPrimedChargeId = 689998;
+  public static int entityPrimedChargeId = 699998;
   public static boolean confusingChargeEnabled = true;
   public static double confusingChargeRange = 6;
   public static int confusingChargeEffectDuration = 300;
