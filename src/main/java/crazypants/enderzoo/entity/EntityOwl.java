@@ -30,11 +30,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
+import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.math.text.translation.Vec3;
 import net.minecraft.world.World;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {

@@ -5,10 +5,12 @@ import java.util.Random;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
@@ -29,7 +31,7 @@ public class TeleportHelper {
   }
 
   public static boolean teleportToEntity(EntityLivingBase entity, Entity toEntity) {
-    Vec3 vec3 = new Vec3(entity.posX - toEntity.posX,
+    Vec3d vec3 = new Vec3d(entity.posX - toEntity.posX,
         entity.getEntityBoundingBox().minY + entity.height / 2.0F - toEntity.posY + toEntity.getEyeHeight(), entity.posZ - toEntity.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
@@ -51,9 +53,9 @@ public class TeleportHelper {
     double origX = entity.posX;
     double origY = entity.posY;
     double origZ = entity.posZ;
-    entity.posX = event.targetX;
-    entity.posY = event.targetY;
-    entity.posZ = event.targetZ;
+    entity.posX = event.getTargetX();
+    entity.posY = event.getTargetY();
+    entity.posZ = event.getTargetZ();
 
     int xInt = MathHelper.floor_double(entity.posX);
     int yInt = Math.max(1, MathHelper.floor_double(entity.posY));
@@ -65,7 +67,7 @@ public class TeleportHelper {
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
         IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
-        if (bs != null && bs.getBlock() != null && bs.getBlock().getMaterial().blocksMovement()) {
+        if (bs != null && bs.getBlock() != null && bs.getBlock().getMaterial(bs).blocksMovement()) {
           foundGround = true;
         } else {
           --entity.posY;
@@ -75,7 +77,7 @@ public class TeleportHelper {
 
       if (foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
-        if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty()
+        if (entity.worldObj.getCubes(entity, entity.getEntityBoundingBox()).isEmpty()
             && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
           doTeleport = true;
         } else if (yInt <= 0) {
@@ -103,8 +105,8 @@ public class TeleportHelper {
       entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    entity.worldObj.playSoundEffect(origX, origY, origZ, "mob.endermen.portal", 1.0F, 1.0F);
-    entity.playSound("mob.endermen.portal", 1.0F, 1.0F);
+    entity.worldObj.playSound(origX, origY, origZ, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);
+    entity.playSound(SoundEvents.entity_endermen_teleport, 1.0F, 1.0F);
     return true;
 
   }

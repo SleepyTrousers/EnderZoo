@@ -38,15 +38,15 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
     for (BiomeDictionary.Type exType : typeExcludes) {
       if (BiomeDictionary.isBiomeOfType(candidate, exType)) {
         if (Config.spawnConfigPrintDetailedOutput) {
-          System.out.print("Excluded " + candidate.biomeName + ", ");
+          System.out.print("Excluded " + candidate.getBiomeName() + ", ");
         }
         return true;
 
       }
     }
     for (String exName : nameExcludes) {
-      if (exName != null && exName.equals(candidate.biomeName)) {
-        System.out.print("Excluded " + candidate.biomeName + ", ");
+      if (exName != null && exName.equals(candidate.getBiomeName())) {
+        System.out.print("Excluded " + candidate.getBiomeName() + ", ");
         return false;
       }
     }

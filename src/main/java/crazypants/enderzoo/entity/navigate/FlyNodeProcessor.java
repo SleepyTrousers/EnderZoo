@@ -5,10 +5,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
+import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.math.text.translation.MathHelper;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
 
 public class FlyNodeProcessor extends WalkNodeProcessor {

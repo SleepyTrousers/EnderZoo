@@ -25,8 +25,7 @@ public class Enchantments {
       Log.error("Could not find an empty enchantment ID to add enchanments");
       return;
     }
-    EnchantmentWitherArrow wa = new EnchantmentWitherArrow(id);
-    Enchantment.addToBookList(wa);
+    EnchantmentWitherArrow wa = new EnchantmentWitherArrow();
 
     id = Config.enchantmentWitherWeaponId;
     if(id < 0) {
@@ -37,7 +36,6 @@ public class Enchantments {
       return;
     }
     EnchantmentWitherWeapon ww = new EnchantmentWitherWeapon(id);
-    Enchantment.addToBookList(ww);
   }
 
   private int getEmptyEnchantId() {

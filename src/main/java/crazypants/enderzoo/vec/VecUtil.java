@@ -1,7 +1,7 @@
 package crazypants.enderzoo.vec;
 
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class VecUtil {
 
@@ -13,20 +13,20 @@ public class VecUtil {
 	 return new BlockPos(x, y, z); 
   }
 	
-  public static Vec3 scale(Vec3 vec, double scale) {
-	  return new Vec3(vec.xCoord * scale, vec.yCoord * scale, vec.zCoord * scale);
+  public static Vec3d scale(Vec3d vec, double scale) {
+	  return new Vec3d(vec.xCoord * scale, vec.yCoord * scale, vec.zCoord * scale);
   }
 
-  public static Vec3 copy(Vec3 vec) {
-    return new Vec3(vec.xCoord, vec.yCoord, vec.zCoord);
+  public static Vec3d copy(Vec3d vec) {
+    return new Vec3d(vec.xCoord, vec.yCoord, vec.zCoord);
   }
 
-  public static Vec3 subtract(Vec3 a, Vec3 b) {    
-    return new Vec3(a.xCoord - b.xCoord, a.yCoord - b.yCoord, a.zCoord - b.zCoord);
+  public static Vec3d subtract(Vec3d a, Vec3d b) {    
+    return new Vec3d(a.xCoord - b.xCoord, a.yCoord - b.yCoord, a.zCoord - b.zCoord);
   }
 
-  public static Vec3 add(Vec3 a, Vec3 b) {    
-    return new Vec3(a.xCoord + b.xCoord, a.yCoord+ b.yCoord, a.zCoord+ b.zCoord);
+  public static Vec3d add(Vec3d a, Vec3d b) {    
+    return new Vec3d(a.xCoord + b.xCoord, a.yCoord+ b.yCoord, a.zCoord+ b.zCoord);
   }
 
 }

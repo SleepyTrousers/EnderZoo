@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.math.text.translation.MathHelper;
 
 public class FlyingMoveHelper extends EntityMoveHelper {
 

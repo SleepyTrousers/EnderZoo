@@ -3,8 +3,8 @@ package crazypants.enderzoo.entity.render;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.entity.EntityOwlEgg;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.ItemStack;
@@ -27,10 +27,10 @@ public class RenderEntityOwlEgg extends RenderSnowball<EntityOwlEgg> {
   }
 
   @Override
-  public ItemStack func_177082_d(EntityOwlEgg entityIn) {    
+  public ItemStack getPotion(EntityOwlEgg entityIn) {    
     return new ItemStack(EnderZoo.itemOwlEgg);
   }
-  
+    
   public static class Factory implements IRenderFactory<EntityOwlEgg> {
 
     @Override

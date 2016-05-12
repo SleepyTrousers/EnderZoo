@@ -1,6 +1,7 @@
 package crazypants.enderzoo.spawn.impl;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.world.biome.BiomeGenBase;
@@ -14,12 +15,15 @@ public class BiomeFilterAll extends AbstractBiomeFilter {
     if (types.isEmpty() && names.isEmpty()) {
       return new BiomeGenBase[0];
     }
+    
     Set<BiomeGenBase> result = new HashSet<BiomeGenBase>();
-    for (BiomeGenBase candidate : BiomeGenBase.getBiomeGenArray()) {
+    Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+    while(it.hasNext()) {
+      BiomeGenBase candidate = it.next();
       if (candidate != null && isMatchingBiome(candidate)) {
         result.add(candidate);
       }
-    }
+    }    
     return result.toArray(new BiomeGenBase[result.size()]);
   }
 
@@ -29,7 +33,7 @@ public class BiomeFilterAll extends AbstractBiomeFilter {
     if (isExcluded(biome)) {
       return false;
     }
-    if (!names.isEmpty() && !names.contains(biome.biomeName)) {
+    if (!names.isEmpty() && !names.contains(biome.getBiomeName())) {
       return false;
     }
     for (BiomeDictionary.Type type : types) {

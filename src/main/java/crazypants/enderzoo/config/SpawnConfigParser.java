@@ -10,11 +10,6 @@ import java.util.List;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeDictionary.Type;
-
 import org.apache.commons.io.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -30,6 +25,10 @@ import crazypants.enderzoo.spawn.impl.BiomeFilterAll;
 import crazypants.enderzoo.spawn.impl.BiomeFilterAny;
 import crazypants.enderzoo.spawn.impl.DimensionFilter;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 
 public class SpawnConfigParser extends DefaultHandler {
 

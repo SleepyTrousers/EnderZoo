@@ -21,9 +21,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherCat, EntityWitherWitch>, IEnderZooMob {

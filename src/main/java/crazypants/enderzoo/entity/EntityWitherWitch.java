@@ -22,15 +22,17 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityPotion;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -82,7 +84,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     MobInfo.WITHER_WITCH.applyAttributes(this);
   }
 
@@ -101,7 +103,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   @Override
   public boolean isPotionApplicable(PotionEffect potion) {
-    return potion.getPotionID() != Potion.wither.id && super.isPotionApplicable(potion);
+    return potion.getPotion() != MobEffects.wither && super.isPotionApplicable(potion);
   }
 
   @Override
@@ -125,7 +127,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     }
     float distToSrc = getDistanceToEntity(target);
     if(distToSrc > getNavigator().getPathSearchRange() && distToSrc < 50) {
-      getAttributeMap().getAttributeInstance(SharedMonsterAttributes.followRange).setBaseValue(distToSrc + 2);
+      getAttributeMap().getAttributeInstance(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(distToSrc + 2);
     }
   }
 
@@ -174,21 +176,21 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       } else {
         potion = BrewingUtil.createHealthPotion(false, false, true);
       }
-      setCurrentItemOrArmor(0, potion);
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, potion);
       healTimer = 10;
       isHealing = true;
-    } else if(target != null && getHeldItem() == null) {
+    } else if(target != null && getHeldItem(EnumHand.MAIN_HAND) == null) {
       ItemStack potion;
-      if(getActiveTarget().isPotionActive(Potion.wither)) {
+      if(getActiveTarget().isPotionActive(MobEffects.wither)) {
         potion = BrewingUtil.createHarmingPotion(EntityUtil.isHardDifficulty(worldObj), true);
       } else {
         potion = BrewingUtil.createWitherPotion(false, true);
       }
-      setCurrentItemOrArmor(0, potion);
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, potion);
       attackTimer = 10;
       healTimer = 40;
-    } else if(noActiveTargetTime > 40 && !isHealing && getHeldItem() != null) {
-      setCurrentItemOrArmor(0, null);
+    } else if(noActiveTargetTime > 40 && !isHealing && getHeldItem(EnumHand.MAIN_HAND) != null) {
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
       attackedWithPotion = null;
     }
     if(isHealing && healTimer <= 0) {
@@ -206,7 +208,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   protected boolean shouldStartHeal() {
-    if(isPotionActive(Potion.regeneration)) {
+    if(isPotionActive(MobEffects.regeneration)) {
       return false;
     }
     return getHealth() < getMaxHealth() * 0.75 && rand.nextFloat() > 0.5 && healTimer <= 0;
@@ -214,7 +216,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   @Override
   public void attackEntityWithRangedAttack(EntityLivingBase entity, float rangeRatio) {
-    if(attackTimer <= 0 && getHeldItem() != null && !isHealing) {
+    if(attackTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND) != null && !isHealing) {
 
       attackedWithPotion = entity;
 
@@ -223,26 +225,26 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       double z = entity.posZ + entity.motionZ - posZ;
       float groundDistance = MathHelper.sqrt_double(x * x + z * z);
 
-      ItemStack potion = getHeldItem();
-      attackTimer = getHeldItem().getMaxItemUseDuration();
+      ItemStack potion = getHeldItem(EnumHand.MAIN_HAND);
+      attackTimer = getHeldItem(EnumHand.MAIN_HAND).getMaxItemUseDuration();
 
       EntityPotion entitypotion = new EntityPotion(worldObj, this, potion);
       entitypotion.rotationPitch -= -20.0F;
       entitypotion.setThrowableHeading(x, y + groundDistance * 0.2F, z, 0.75F, 8.0F);
       worldObj.spawnEntityInWorld(entitypotion);
 
-      setCurrentItemOrArmor(0, null);
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
     }
   }
 
   protected void throwHealthPotion() {
-    ItemStack potion = getHeldItem();
+    ItemStack potion = getHeldItem(EnumHand.MAIN_HAND);
     EntityPotion entitypotion = new EntityPotion(worldObj, this, potion);
-    Vec3 lookVec = getLookVec();
+    Vec3d lookVec = getLookVec();
 
     entitypotion.setThrowableHeading(lookVec.xCoord * 0.5, -1, lookVec.zCoord * 0.5, 0.75F, 1.0F);
     worldObj.spawnEntityInWorld(entitypotion);
-    setCurrentItemOrArmor(0, null);
+    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
     healTimer = 80;
   }
 

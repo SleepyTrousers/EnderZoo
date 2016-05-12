@@ -5,11 +5,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
+import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.math.text.translation.MovingObjectPosition;
+import net.minecraft.util.math.math.text.translation.Vec3;
 import net.minecraft.world.World;
 
 public class FlyingPathNavigate extends PathNavigateGround {

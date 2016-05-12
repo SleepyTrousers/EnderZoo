@@ -71,16 +71,16 @@ public class MobSpawnEventHandler {
 
   @SubscribeEvent
   public void onCheckSpawn(CheckSpawn evt) {
-    if (evt.entityLiving == null) {
+    if (evt.getEntityLiving() == null) {
       return;
     }
-    String name = EntityList.getEntityString(evt.entityLiving);
+    String name = EntityList.getEntityString(evt.getEntityLiving());
     if (name == null) {
       return;
     }
     for (ISpawnEntry ent : MobSpawns.instance.getEntries()) {
       if (name.equals(ent.getMobName())) {
-        if (!ent.canSpawnInDimension(evt.world)) {
+        if (!ent.canSpawnInDimension(evt.getWorld())) {
           evt.setResult(Result.DENY);
         }
       }
@@ -90,16 +90,16 @@ public class MobSpawnEventHandler {
 
   @SubscribeEvent
   public void onEntityJoinWorld(EntityJoinWorldEvent evt) {
-    if (evt.world == null || evt.world.isRemote) {
+    if (evt.getWorld() == null || evt.getWorld().isRemote) {
       return;
     }
-    if (Config.enderZooDifficultyModifierEnabled && evt.entity instanceof IEnderZooMob) {
-      EntityLivingBase ent = (EntityLivingBase) evt.entity;
+    if (Config.enderZooDifficultyModifierEnabled && evt.getEntity() instanceof IEnderZooMob) {
+      EntityLivingBase ent = (EntityLivingBase) evt.getEntity();
       if (!ent.getEntityData().getBoolean(APPLIED_KEY)) {
         toApplyEZ.add(ent);
       }
-    } else if (Config.globalDifficultyModifierEnabled && evt.entity instanceof IMob && evt.entity instanceof EntityLivingBase) {
-      EntityLivingBase ent = (EntityLivingBase) evt.entity;
+    } else if (Config.globalDifficultyModifierEnabled && evt.getEntity() instanceof IMob && evt.getEntity() instanceof EntityLivingBase) {
+      EntityLivingBase ent = (EntityLivingBase) evt.getEntity();
       if (!ent.getEntityData().getBoolean(APPLIED_KEY)) {
         toApplyOthers.add(ent);
       }
@@ -157,7 +157,7 @@ public class MobSpawnEventHandler {
   }
 
   protected void addjustBaseHealth(EntityLivingBase ent, double healthModifier) {
-    IAttributeInstance att = ent.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.maxHealth);
+    IAttributeInstance att = ent.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH);
     if (att == null) {
       return;
     }
@@ -180,7 +180,7 @@ public class MobSpawnEventHandler {
   }
 
   protected void adjustBaseAttack(EntityLivingBase ent, double attackModifier) {
-    IAttributeInstance att = ent.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+    IAttributeInstance att = ent.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
     if (att == null) {
       return;
     }
@@ -194,32 +194,32 @@ public class MobSpawnEventHandler {
   @SubscribeEvent
   public void onBlockHarvest(HarvestDropsEvent event) {
 
-    if (!Config.direSlimeEnabled || event.isCanceled() || event.world == null || event.world.isRemote) {
+    if (!Config.direSlimeEnabled || event.isCanceled() || event.getWorld() == null || event.getWorld().isRemote) {
       return;
     }
-    if (event.harvester == null || event.harvester.capabilities.isCreativeMode) {
+    if (event.getHarvester() == null || event.getHarvester().capabilities.isCreativeMode) {
       return;
     }
-    if (!(event.state.getBlock() instanceof BlockDirt || event.state.getBlock() instanceof BlockGrass)) {
+    if (!(event.getState().getBlock() instanceof BlockDirt || event.getState().getBlock() instanceof BlockGrass)) {
       return;
     }    
-    if (Config.direSlimeChance < event.world.rand.nextFloat()) {
+    if (Config.direSlimeChance < event.getWorld().rand.nextFloat()) {
       return;
     }       
-    if (!isToolEffective(event.state, event.harvester.getCurrentEquippedItem())) {
+    if (!isToolEffective(event.getState(), event.getHarvester().getHeldItemMainhand())) {
 
-      EntityDireSlime direSlime = new EntityDireSlime(event.world);
-      direSlime.setPosition(event.pos.getX() + 0.5, event.pos.getY() + 0.0, event.pos.getZ() + 0.5);
-      event.world.spawnEntityInWorld(direSlime);
+      EntityDireSlime direSlime = new EntityDireSlime(event.getWorld());
+      direSlime.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.0, event.getPos().getZ() + 0.5);
+      event.getWorld().spawnEntityInWorld(direSlime);
       direSlime.playLivingSound();
-      for (ItemStack drop : event.drops) {
+      for (ItemStack drop : event.getDrops()) {
         if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.dirt)) {
           if (drop.stackSize > 1) {
             drop.stackSize--;
-          } else if (event.drops.size() == 1) {
-            event.drops.clear();
+          } else if (event.getDrops().size() == 1) {
+            event.getDrops().clear();
           } else {
-            event.drops.remove(drop);
+            event.getDrops().remove(drop);
           }
           return;
         }

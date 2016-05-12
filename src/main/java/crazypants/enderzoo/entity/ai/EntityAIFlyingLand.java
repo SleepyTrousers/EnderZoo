@@ -4,7 +4,7 @@ import crazypants.enderzoo.entity.EntityUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.math.text.translation.BlockPos;
 
 public class EntityAIFlyingLand extends EntityAIBase {
 

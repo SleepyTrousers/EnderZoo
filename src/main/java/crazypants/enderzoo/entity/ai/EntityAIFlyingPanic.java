@@ -3,7 +3,7 @@ package crazypants.enderzoo.entity.ai;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.math.text.translation.Vec3;
 
 public class EntityAIFlyingPanic extends EntityAIBase {
 

@@ -19,10 +19,10 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -41,19 +41,19 @@ public class EntityUtil {
   }
 
   public static String getDisplayNameForEntity(String mobName) {
-    return StatCollector.translateToLocal("entity." + mobName + ".name");
+    return I18n.translateToLocal("entity." + mobName + ".name");
   }
 
-  public static Vec3 getEntityPosition(Entity entity) {
+  public static Vec3d getEntityPosition(Entity entity) {
 
-    return new Vec3(entity.posX, entity.posY, entity.posZ);
+    return new Vec3d(entity.posX, entity.posY, entity.posZ);
   }
 
   public static AxisAlignedBB getBoundsAround(Entity entity, double range) {
     return getBoundsAround(entity.posX, entity.posY, entity.posZ, range);
   }
 
-  public static AxisAlignedBB getBoundsAround(Vec3 pos, double range) {
+  public static AxisAlignedBB getBoundsAround(Vec3d pos, double range) {
     return getBoundsAround(pos.xCoord, pos.yCoord, pos.zCoord, range);
   }
 
@@ -111,14 +111,14 @@ public class EntityUtil {
   }
 
   public static boolean isOnGround(EntityCreature entity) {
-    List<AxisAlignedBB> collides = entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
+    List<AxisAlignedBB> collides = entity.worldObj.getCubes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
     if (collides == null || collides.isEmpty()) {
       return false;
     }
     BlockPos groundPos = entity.getPosition().down();
     IBlockState bs = entity.worldObj.getBlockState(groundPos);
     Block block = bs.getBlock();
-    if (block.getMaterial().isLiquid()) {
+    if (block.getMaterial(bs).isLiquid()) {
       return false;
     }
     return true;
@@ -136,7 +136,7 @@ public class EntityUtil {
 
   public static BlockPos findRandomClearArea(EntityCreature entity, int searchRange, int minY, int maxY, int searchAttempts) {
     BlockPos ep = entity.getPosition();
-    Vec3 pos = entity.getPositionVector();
+    Vec3d pos = entity.getPositionVector();
     for (int i = 0; i < searchAttempts; i++) {
       int x = ep.getX() + -searchRange + (entity.worldObj.rand.nextInt(searchRange + 1) * 2);
       int y = minY + entity.worldObj.rand.nextInt(maxY - minY + 1);
@@ -193,11 +193,11 @@ public class EntityUtil {
     BlockPos bellow = new BlockPos(x, y, z).down();
     IBlockState bs = world.getBlockState(bellow);
     Block block = bs.getBlock();
-    if (!block.getMaterial().isSolid()) {
+    if (!block.getMaterial(bs).isSolid()) {
       return false;
     }
 
-    AxisAlignedBB collides = block.getCollisionBoundingBox(world, bellow, bs);
+    AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
     return collides != null;
   }
 

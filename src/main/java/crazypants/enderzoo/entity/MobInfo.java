@@ -81,11 +81,11 @@ public enum MobInfo {
   }
 
   public void applyAttributes(EntityLivingBase entity) {
-    entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
-    IAttributeInstance ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+    entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(maxHealth);
+    IAttributeInstance ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
     if(ai == null) {
-      entity.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
-      ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+      entity.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
+      ai = entity.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
     ai.setBaseValue(attackDamage);
   }

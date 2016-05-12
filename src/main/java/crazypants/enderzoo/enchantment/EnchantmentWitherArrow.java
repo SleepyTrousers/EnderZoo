@@ -1,19 +1,18 @@
 package crazypants.enderzoo.enchantment;
 
-import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 
 public class EnchantmentWitherArrow extends Enchantment {
 
-  protected EnchantmentWitherArrow(int id) {
-    super(id, new ResourceLocation(EnderZoo.MODID, "witherArrow"), Config.enchantmentWitherArrowWeight, EnumEnchantmentType.BOW);
+  protected EnchantmentWitherArrow() {
+    super(Config.enchantmentWitherArrowRarity, EnumEnchantmentType.BOW, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
     setName("witherArrow");
   }
 
@@ -36,7 +35,7 @@ public class EnchantmentWitherArrow extends Enchantment {
   public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if (entityHit instanceof EntityLivingBase) {
-      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(Potion.wither.getId(), Config.enchantmentWitherArrowDuration));
+      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.wither, Config.enchantmentWitherArrowDuration));
     }
   }
  

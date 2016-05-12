@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -50,13 +50,13 @@ public class DebugUtil {
     if (evt.side != Side.CLIENT || evt.phase != Phase.END) {
       return;
     }
-    MovingObjectPosition mo = Minecraft.getMinecraft().objectMouseOver;
+    RayTraceResult mo = Minecraft.getMinecraft().objectMouseOver;
     if (mo != null && mo.entityHit != null && mo.entityHit instanceof EntityLivingBase) {
       EntityLivingBase el = (EntityLivingBase) mo.entityHit;
       if (el != lastMouseOver) {
         double baseAttack = 0;
         double attack = 0;
-        IAttributeInstance damAtt = el.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage);
+        IAttributeInstance damAtt = el.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE);
         if (damAtt != null) {
           baseAttack = damAtt.getBaseValue();
           attack = damAtt.getAttributeValue();
@@ -72,7 +72,7 @@ public class DebugUtil {
 
   @SubscribeEvent
   public void onMonsterSpawn(LivingSpawnEvent evt) {
-    if (evt.entityLiving != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
+    if (evt.getEntityLiving() != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
       //      evt.setResult(Result.DENY);
     }
   }

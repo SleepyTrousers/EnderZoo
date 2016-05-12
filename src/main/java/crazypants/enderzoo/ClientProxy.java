@@ -39,13 +39,13 @@ import crazypants.enderzoo.potion.EntityPotionEZ;
 import crazypants.enderzoo.potion.RenderEntityPotionEZ;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPotion;
+import net.minecraft.item.ItemSplashPotion;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
@@ -95,7 +95,7 @@ public class ClientProxy extends CommonProxy {
     }
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);
     RenderingRegistry.registerEntityRenderingHandler(EntityPotionEZ.class, RenderEntityPotionEZ.FACTORY);
-    RenderingRegistry.registerEntityRenderingHandler(EntityOwlEgg.class, RenderEntityOwlEgg.FACTORY);    
+    RenderingRegistry.registerEntityRenderingHandler(EntityOwlEgg.class, RenderEntityOwlEgg.FACTORY);
 
   }
 
@@ -133,8 +133,15 @@ public class ClientProxy extends CommonProxy {
     renderItem.getItemModelMesher().register(EnderZoo.itemPotionEZ, new ItemMeshDefinition() {
       @Override
       public ModelResourceLocation getModelLocation(ItemStack stack) {
-        return ItemPotion.isSplash(stack.getMetadata()) ? new ModelResourceLocation("bottle_splash", "inventory")
-            : new ModelResourceLocation("bottle_drinkable", "inventory");
+        // TODO: 1.9
+        if (stack.getItem() instanceof ItemSplashPotion) {
+          return new ModelResourceLocation("bottle_splash", "inventory");
+        }
+        return new ModelResourceLocation("bottle_drinkable", "inventory");
+
+        // return ItemPotion.isSplash(stack.getMetadata()) ? new
+        // ModelResourceLocation("bottle_splash", "inventory")
+        // : new ModelResourceLocation("bottle_drinkable", "inventory");
       }
     });
   }
@@ -161,7 +168,7 @@ public class ClientProxy extends CommonProxy {
 
   @Override
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
-    ent.addPotionEffect(new PotionEffect(Potion.confusion.getId(), duration, 1, false, true));
+    ent.addPotionEffect(new PotionEffect(MobEffects.confusion, duration, 1, false, true));
     Minecraft.getMinecraft().thePlayer.timeInPortal = 1;
   }
 

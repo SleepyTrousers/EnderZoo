@@ -1,14 +1,13 @@
 package crazypants.enderzoo.entity.render;
 
+import org.lwjgl.opengl.GL11;
+
+import crazypants.enderzoo.entity.EntityWitherCat;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.MathHelper;
-
-import org.lwjgl.opengl.GL11;
-
-import crazypants.enderzoo.entity.EntityWitherCat;
+import net.minecraft.util.math.MathHelper;
 
 //Copied straight from ModelOelot to remove the casts
 public class ModelWitherCat extends ModelBase {

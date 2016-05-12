@@ -6,7 +6,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.math.text.translation.MovingObjectPosition;
 import net.minecraft.world.World;
 
 public class EntityOwlEgg extends EntityThrowable {

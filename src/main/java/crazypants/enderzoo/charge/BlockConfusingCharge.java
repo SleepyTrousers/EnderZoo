@@ -16,8 +16,14 @@ import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.util.BlockPos;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionHelper;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -82,11 +88,11 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   public void explode(EntityPrimedCharge entity) {
     World world = entity.worldObj;
 
-    world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_tnt_primed, SoundCategory.BLOCKS, 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
     PacketHandler.sendToAllAround(new PacketExplodeEffect(entity, this), entity);
   }
-
+  
   public void explode(World world, BlockPos pos, IBlockState state, EntityLivingBase igniter) {
     if (!world.isRemote) {
       if (((Boolean) state.getValue(EXPLODE)).booleanValue()) {
@@ -99,7 +105,8 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
         EntityPrimedCharge entity = new EntityPrimedCharge(this, world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, igniter);
         world.spawnEntityInWorld(entity);
-        world.playSoundAtEntity(entity, "game.tnt.primed", 1.0F, 1.0F);
+        world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_tnt_primed, SoundCategory.BLOCKS, 1, 1);
+        
         world.updateEntity(entity);
       }
     }
@@ -127,7 +134,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     // world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
     world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0D, 0.0D, 0.0D);
 
-    int col = Items.potionitem.getColorFromDamage(8231);
+    int col = MobEffects.confusion.getLiquidColor();
     float r = (col >> 16 & 255) / 255.0F;
     float g = (col >> 8 & 255) / 255.0F;
     float b = (col >> 0 & 255) / 255.0F;

@@ -9,7 +9,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class SpawnUtil {
@@ -74,7 +74,7 @@ public class SpawnUtil {
 		return false;
 	}
     Block block = bs.getBlock();
-    if(block.getMaterial().isLiquid()) {
+    if(block.getMaterial(bs).isLiquid()) {
       return true;
     }
     return false;
@@ -87,7 +87,7 @@ public class SpawnUtil {
     if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.getEntityBoundingBox())) {
       return false;
     }
-    if(!worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty()) {
+    if(!worldObj.getCubes(entity, entity.getEntityBoundingBox()).isEmpty()) {
       return false;
     }    
     if(!canSpawnInLiquid && worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {

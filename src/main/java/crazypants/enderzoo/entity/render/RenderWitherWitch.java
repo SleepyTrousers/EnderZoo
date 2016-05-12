@@ -16,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
@@ -34,7 +35,7 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
   }
 
   public void doRender(EntityWitherWitch p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
-    ItemStack itemstack = p_76986_1_.getHeldItem();
+    ItemStack itemstack = p_76986_1_.getHeldItem(EnumHand.MAIN_HAND);
     this.witchModel.field_82900_g = itemstack != null;
     super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
@@ -69,7 +70,7 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
     public void doRenderLayer(EntityWitherWitch entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_,
         float p_177141_6_, float p_177141_7_, float scale) {
-      ItemStack itemstack = entitylivingbaseIn.getHeldItem();
+      ItemStack itemstack = entitylivingbaseIn.getHeldItem(EnumHand.MAIN_HAND);
 
       if (itemstack != null) {
         GlStateManager.color(1.0F, 1.0F, 1.0F);
@@ -87,13 +88,14 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
         Item item = itemstack.getItem();
         Minecraft minecraft = Minecraft.getMinecraft();
 
-        if (item instanceof ItemBlock && minecraft.getBlockRendererDispatcher().isRenderTypeChest(Block.getBlockFromItem(item), itemstack.getMetadata())) {
+        if (item instanceof ItemBlock && minecraft.getBlockRendererDispatcher().isEntityBlockAnimated(Block.getBlockFromItem(item))) {
           GlStateManager.translate(0.0F, 0.0625F, -0.25F);
           GlStateManager.rotate(30.0F, 1.0F, 0.0F, 0.0F);
           GlStateManager.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
           float f4 = 0.375F;
           GlStateManager.scale(f4, -f4, f4);
-        } else if (item == Items.bow) {
+        } else 
+          if (item == Items.bow) {
           GlStateManager.translate(0.0F, 0.125F, -0.125F);
           GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
           float f1 = 0.625F;
@@ -123,7 +125,7 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
         GlStateManager.rotate(-15.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(40.0F, 0.0F, 0.0F, 1.0F);
-        minecraft.getItemRenderer().renderItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON);
+        minecraft.getItemRenderer().renderItem(entitylivingbaseIn, itemstack, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
         GlStateManager.popMatrix();
       }
     }

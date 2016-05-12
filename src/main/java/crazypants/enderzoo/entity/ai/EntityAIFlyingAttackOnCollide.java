@@ -7,9 +7,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
   
@@ -66,7 +67,7 @@ public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
   }
 
   private void setPathTo(EntityLivingBase target) {
-    Vec3 targPos = target.getPositionVector();
+    Vec3d targPos = target.getPositionVector();
     AxisAlignedBB targBB = target.getEntityBoundingBox();
     entityPathEntity = attacker.getNavigator().getPathToPos(new BlockPos(targPos.xCoord, targBB.maxY + 1, targPos.zCoord));    
   }
@@ -135,8 +136,8 @@ public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
 
     if (distToTargSq <= attackRangSq && attackTick <= 0) {
       attackTick = 20;
-      if (attacker.getHeldItem() != null) {
-        attacker.swingItem();
+      if (attacker.getHeldItem(EnumHand.MAIN_HAND) != null) {
+        attacker.swingArm(EnumHand.MAIN_HAND);
       }
       attacker.attackEntityAsMob(entitylivingbase);
     }

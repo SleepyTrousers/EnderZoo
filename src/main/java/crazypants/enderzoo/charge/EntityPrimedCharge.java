@@ -4,13 +4,18 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 
 public class EntityPrimedCharge extends Entity {
 
-  private static final int CHARGE_ID_KEY = 5;
+//  private static final int CHARGE_ID_KEY = EntityDataManager.createKey(EntityPrimedCharge.class, );
 
+  private static final DataParameter<Integer> CHARGE_ID_KEY = EntityDataManager.<Integer>createKey(EntityPrimedCharge.class, DataSerializers.VARINT);
+  
   int fuse = 80;
   private EntityLivingBase chargePlacedBy;
   private ICharge charge;
@@ -19,7 +24,8 @@ public class EntityPrimedCharge extends Entity {
     super(world);
     preventEntitySpawning = true;
     setSize(0.98F, 0.98F);
-    dataWatcher.addObjectByDataType(CHARGE_ID_KEY, 2);
+    
+//    dataWatcher.register(, 2);
   }
 
   public EntityPrimedCharge(ICharge charge, World world, double x, double y, double z, EntityLivingBase placedBy) {
@@ -36,8 +42,9 @@ public class EntityPrimedCharge extends Entity {
     prevPosY = y;
     prevPosZ = z;
     chargePlacedBy = placedBy;
-    dataWatcher.updateObject(CHARGE_ID_KEY, charge.getID());
+    dataWatcher.set(CHARGE_ID_KEY, charge.getID());
   }
+  
 
   public int getFuse() {
     return fuse;
@@ -49,6 +56,7 @@ public class EntityPrimedCharge extends Entity {
 
   @Override
   protected void entityInit() {
+    this.dataWatcher.register(CHARGE_ID_KEY, Integer.valueOf(80));
   }
 
   @Override
@@ -109,7 +117,7 @@ public class EntityPrimedCharge extends Entity {
     fuse = root.getByte("Fuse");
     if(root.hasKey("charge")) {
       int id = root.getInteger("chargeID");
-      getDataWatcher().updateObject(CHARGE_ID_KEY, id);
+      dataWatcher.set(CHARGE_ID_KEY, id);
       charge = ChargeRegister.instance.getCharge(id);
     }
   }
@@ -119,7 +127,7 @@ public class EntityPrimedCharge extends Entity {
   }
 
   public Block getBlock() {
-    int id = dataWatcher.getWatchableObjectInt(CHARGE_ID_KEY);
+    int id = dataWatcher.get(CHARGE_ID_KEY);
     charge = ChargeRegister.instance.getCharge(id);
     if(charge != null) {
       return charge.getBlock();

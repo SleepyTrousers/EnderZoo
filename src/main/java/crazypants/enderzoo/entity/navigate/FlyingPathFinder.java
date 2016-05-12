@@ -11,9 +11,9 @@ import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.math.text.translation.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.pathfinder.NodeProcessor;
 

@@ -1,19 +1,18 @@
 package crazypants.enderzoo.enchantment;
 
-import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 
 public class EnchantmentWitherWeapon extends Enchantment {
 
-  protected EnchantmentWitherWeapon(int id) {
-    super(id, new ResourceLocation(EnderZoo.MODID, "witherWeapon"), Config.enchantmentWitherWeaponWeight, EnumEnchantmentType.WEAPON);
+  protected EnchantmentWitherWeapon() {
+    super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
     setName("witherWeapon");
 
   }
@@ -38,7 +37,7 @@ public class EnchantmentWitherWeapon extends Enchantment {
   public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if (entityHit instanceof EntityLivingBase) {
-      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(Potion.wither.getId(), Config.enchantmentWitherWeaponDuration));
+      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.wither, Config.enchantmentWitherWeaponDuration));
     }
   }
 

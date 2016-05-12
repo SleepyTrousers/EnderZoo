@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
@@ -141,8 +142,8 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
 
     if (distToTargetSq <= attachRange && ticksToNextAttack <= 20) {
       ticksToNextAttack = attackFrequency;
-      if (attacker.getHeldItem() != null) {
-        attacker.swingItem();
+      if (attacker.getHeldItem(EnumHand.MAIN_HAND) != null) {        
+        attacker.swingArm(EnumHand.MAIN_HAND);
       }
       attacker.attackEntityAsMob(entitylivingbase);
     }

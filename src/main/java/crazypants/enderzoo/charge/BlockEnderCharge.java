@@ -3,19 +3,22 @@ package crazypants.enderzoo.charge;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntityPortalFX;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import crazypants.enderzoo.PacketHandler;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityUtil;
 import crazypants.enderzoo.entity.TeleportHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.EntityPortalFX;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnderCharge extends BlockConfusingCharge {
 
@@ -50,9 +53,9 @@ public class BlockEnderCharge extends BlockConfusingCharge {
 
   public static void doEntityTeleport(EntityPrimedCharge entity) {
     World world = entity.worldObj;
-    world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "random.explode", 1F,
-        1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
-    world.playSoundEffect(entity.posX, entity.posY, entity.posZ, "mob.endermen.portal", 2F,
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_generic_explode, SoundCategory.BLOCKS, 1F,
+        1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));    
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 2F,
         1 + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
     AxisAlignedBB bb = EntityUtil.getBoundsAround(entity, Config.enderChargeRange);

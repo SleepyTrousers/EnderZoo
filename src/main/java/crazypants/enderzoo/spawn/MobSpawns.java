@@ -97,7 +97,7 @@ public final class MobSpawns {
   protected static void printBiomeNames(BiomeGenBase[] biomes) {
     for (BiomeGenBase biome : biomes) {
       if (biome != null) {
-        System.out.print(biome.biomeName + ", ");
+        System.out.print(biome.getBiomeName() + ", ");
       } else {
         System.out.print("null, ");
       }

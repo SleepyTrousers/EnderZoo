@@ -6,6 +6,7 @@ import java.util.List;
 
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
+import net.minecraft.enchantment.Enchantment.Rarity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
@@ -170,14 +171,12 @@ public final class Config {
   public static int entityOwlEggId = 679991;
 
   public static final Section sectionEnchants = new Section("Enchantments", "enchantments");
-  public static int enchantmentWitherArrowId = -1;
-  public static int enchantmentWitherArrowWeight = 2;
+  public static Rarity enchantmentWitherArrowRarity = Rarity.UNCOMMON;
   public static int enchantmentWitherArrowDuration = 200;
   public static int enchantmentWitherArrowMinEnchantability = 20;
   public static int enchantmentWitherArrowMaxEnchantability = 50;
 
-  public static int enchantmentWitherWeaponId = -1;
-  public static int enchantmentWitherWeaponWeight = 2;
+  public static Rarity enchantmentWitherWeaponRarity = Rarity.UNCOMMON;
   public static int enchantmentWitherWeaponDuration = 200;
   public static int enchantmentWitherWeaponMinEnchantability = 20;
   public static int enchantmentWitherWeaponMaxEnchantability = 50;
@@ -247,7 +246,7 @@ public final class Config {
 
   @SubscribeEvent
   public void onConfigChanged(OnConfigChangedEvent event) {
-    if (event.modID.equals(EnderZoo.MODID)) {
+    if (event.getModID().equals(EnderZoo.MODID)) {
       Log.info("Updating config...");
       syncConfig();
     }
@@ -441,12 +440,15 @@ public final class Config {
 
     entityOwlEggId = config.get(sectionOwl.name, "entityOwlEggId", entityOwlEggId, "ID for thrown owl egg Entity").getInt(entityOwlEggId);
 
-    enchantmentWitherArrowId = config.get(sectionEnchants.name, "enchantmentWitherArrowId", enchantmentWitherArrowId,
-        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherArrowId);
-    enchantmentWitherArrowWeight = config
-        .get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowWeight,
-            "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1")
-        .getInt(enchantmentWitherArrowWeight);
+    String rareStr = config.get(sectionEnchants.name, "enchantmentWitherArrowWeight", enchantmentWitherArrowRarity.toString(),
+        "The rarity of the enchantment. COMMON, UNCOMMON, RARE, VERY_RARE ").getString();
+    try {
+      enchantmentWitherArrowRarity = Rarity.valueOf(rareStr);
+    } catch (Exception e) {
+      Log.warn("Could not set value config entry enchantmentWitherArrowRarity Specified value " + rareStr);
+      e.printStackTrace();
+    }
+
     enchantmentWitherArrowDuration = config
         .get(sectionEnchants.name, "enchantmentWitherArrowDuration", enchantmentWitherArrowDuration, "Duration of the wither effect in ticks")
         .getInt(enchantmentWitherArrowDuration);
@@ -455,13 +457,16 @@ public final class Config {
     enchantmentWitherArrowMaxEnchantability = config
         .get(sectionEnchants.name, "enchantmentWitherArrowMaxEnchantability", enchantmentWitherArrowMaxEnchantability, "The maximum required level")
         .getInt(enchantmentWitherArrowMaxEnchantability);
-
-    enchantmentWitherWeaponId = config.get(sectionEnchants.name, "enchantmentWitherWeaponId", enchantmentWitherWeaponId,
-        "The id of the enchantment. If set to -1 the lowest unassigned id will be used.").getInt(enchantmentWitherWeaponId);
-    enchantmentWitherWeaponWeight = config
-        .get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponWeight,
-            "The weight (or chance of getting) the enchantment. eg sharpness=10, knockback = 5, fire aspect = 2, silk touch = 1")
-        .getInt(enchantmentWitherWeaponWeight);
+   
+    rareStr = config.get(sectionEnchants.name, "enchantmentWitherWeaponWeight", enchantmentWitherWeaponRarity.toString(),
+        "The rarity of the enchantment. COMMON, UNCOMMON, RARE, VERY_RARE ").getString();
+    try {
+      enchantmentWitherWeaponRarity = Rarity.valueOf(rareStr);
+    } catch (Exception e) {
+      Log.warn("Could not set value config entry enchantmentWitherArrowRarity Specified value " + rareStr);
+      e.printStackTrace();
+    }
+    
     enchantmentWitherWeaponDuration = config
         .get(sectionEnchants.name, "enchantmentWitherWeaponDuration", enchantmentWitherWeaponDuration, "Duration of the wither effect in ticks")
         .getInt(enchantmentWitherWeaponDuration);

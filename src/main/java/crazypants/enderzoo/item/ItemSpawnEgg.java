@@ -11,10 +11,10 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -43,10 +43,10 @@ public class ItemSpawnEgg extends Item {
   @Override
   public String getItemStackDisplayName(ItemStack stack) {
     int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    String s = ("" + StatCollector.translateToLocal(getUnlocalizedName() + ".name")).trim();
+    String s = ("" + I18n.translateToLocal(getUnlocalizedName() + ".name")).trim();
     String s1 = EnderZoo.MODID + "." + MobInfo.values()[damage].getName();
     if(s1 != null) {
-      s = s + " " + StatCollector.translateToLocal("entity." + s1 + ".name");
+      s = s + " " + I18n.translateToLocal("entity." + s1 + ".name");
     }
     return s;
   }

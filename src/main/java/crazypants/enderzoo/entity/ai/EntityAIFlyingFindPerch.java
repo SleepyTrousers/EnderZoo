@@ -8,7 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.math.text.translation.BlockPos;
 
 public class EntityAIFlyingFindPerch extends EntityAIBase {
   private EntityCreature entity;
