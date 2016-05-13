@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 public class EntityAIMountedAttackOnCollide extends EntityAIBase {
@@ -144,8 +145,8 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
     double d1 = getAttackReach(target);
     if(distanceFromAttackerSq <= d1 && attackPause <= 20) {
       attackPause = 20;
-      if(attacker.getHeldItem() != null) {
-        attacker.swingItem();
+      if(attacker.getHeldItem(EnumHand.MAIN_HAND) != null) {
+        attacker.swingArm(EnumHand.MAIN_HAND);
       }
       attacker.attackEntityAsMob(target);
     }
@@ -160,7 +161,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
 
   protected PathNavigate getNavigator() {
     if(attacker.isRiding()) {
-      Entity ent = attacker.ridingEntity;
+      Entity ent = attacker.getRidingEntity();
       if(ent instanceof EntityLiving) {
         return ((EntityLiving)ent).getNavigator();
       }

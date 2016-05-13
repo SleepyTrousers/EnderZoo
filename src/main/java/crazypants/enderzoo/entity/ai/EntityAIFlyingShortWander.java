@@ -6,7 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityAIFlyingShortWander extends EntityAIBase {
 
@@ -34,7 +34,7 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
       return false;
     }
     
-    Vec3 vec3 = RandomPositionGenerator.findRandomTarget(entity, 4, 2);    
+    Vec3d vec3 = RandomPositionGenerator.findRandomTarget(entity, 4, 2);    
     if (vec3 == null || entity.posY - vec3.yCoord < -2) {
       return false;
     }    
@@ -57,6 +57,6 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
   private boolean isOnLeaves() {
     IBlockState bs = entity.worldObj.getBlockState(entity.getPosition().down());
     Block block = bs.getBlock();
-    return block.getMaterial() == Material.leaves;
+    return block.getMaterial(bs) == Material.leaves;
   }
 }

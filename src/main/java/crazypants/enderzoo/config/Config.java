@@ -206,8 +206,7 @@ public final class Config {
   public static final Section sectionPotions = new Section("Potions", "potions");
   public static int entityPotionId = 679990;
 
-  public static boolean floatingPotionEnabled = true;
-  public static int floatingPotionId = -1;
+  public static boolean floatingPotionEnabled = true;  
   public static double floatingPotionSpeed = 0.15;
   public static double floatingPotionAcceleration = 0.085;
   public static int floatingPotionDuration = 70;
@@ -541,9 +540,7 @@ public final class Config {
     entityPotionId = config.get(sectionPotions.name, "entityPotionId", entityPotionId, "Enity ID for thrown potion").getInt(entityPotionId);
 
     floatingPotionEnabled = config.getBoolean("floatingPotionEnabled", sectionPotions.name, floatingPotionEnabled,
-        "If false floating potions will be disabled");
-    floatingPotionId = config.get(sectionPotions.name, "floatingPotionId", floatingPotionId, "Potion ID. If -1, will be assigned by forge")
-        .getInt(floatingPotionId);
+        "If false floating potions will be disabled");    
     floatingPotionSpeed = config.get(sectionPotions.name, "floatingPotionSpeed", floatingPotionSpeed, "Max rising speed.").getDouble(floatingPotionSpeed);
     floatingPotionAcceleration = config.get(sectionPotions.name, "floatingPotionAcceleration", floatingPotionAcceleration, "Vertical acceleration rate")
         .getDouble(floatingPotionAcceleration);

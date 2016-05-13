@@ -1,8 +1,8 @@
 package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZoo;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +26,7 @@ public class GuardiansBowModelLoader {
 
   public static ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
     ModelResourceLocation modelresourcelocation = MODELS[0];
-    if(player.getItemInUse() != null) {
+    if(player.getActiveItemStack() != null) {
       int useTime = stack.getMaxItemUseDuration() - useRemaining;
       int drawTime = EnderZoo.itemGuardiansBow.getDrawTime();
       if(useTime >= drawTime - 2) {

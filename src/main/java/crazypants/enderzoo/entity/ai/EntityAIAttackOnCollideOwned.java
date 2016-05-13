@@ -1,12 +1,12 @@
 package crazypants.enderzoo.entity.ai;
 
+import crazypants.enderzoo.entity.IOwnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import crazypants.enderzoo.entity.IOwnable;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 
-public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
+public class EntityAIAttackOnCollideOwned extends EntityAIAttackMelee {
 
   private IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable;
 
@@ -15,7 +15,7 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackOnCollide {
 
   public EntityAIAttackOnCollideOwned(IOwnable<? extends EntityCreature, ? extends EntityLivingBase> ownable, Class<? extends Entity> p_i1635_2_, double p_i1635_3_,
       boolean p_i1635_5_, EntityAIFollowOwner followTask) {
-    super(ownable.asEntity(), p_i1635_2_, p_i1635_3_, p_i1635_5_);
+    super(ownable.asEntity(), p_i1635_3_, p_i1635_5_);
     this.ownable = ownable;
     this.followTask = followTask;
   }

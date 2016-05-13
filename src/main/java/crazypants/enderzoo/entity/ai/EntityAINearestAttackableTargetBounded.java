@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
 
 public class EntityAINearestAttackableTargetBounded<T extends EntityLivingBase> extends EntityAINearestAttackableTarget<T> {
 

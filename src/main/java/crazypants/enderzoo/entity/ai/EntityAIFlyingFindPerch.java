@@ -8,7 +8,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class EntityAIFlyingFindPerch extends EntityAIBase {
   private EntityCreature entity;
@@ -60,7 +60,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   private boolean isOnLeaves() {
     IBlockState bs = entity.worldObj.getBlockState(entity.getPosition().down());
     Block block = bs.getBlock();
-    return block.getMaterial() == Material.leaves;
+    return block.getMaterial(bs) == Material.leaves;
   }
 
   @Override

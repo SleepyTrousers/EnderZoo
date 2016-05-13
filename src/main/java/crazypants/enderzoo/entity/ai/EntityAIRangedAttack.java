@@ -6,7 +6,7 @@ import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class EntityAIRangedAttack extends EntityAIBase {
 
@@ -62,7 +62,7 @@ public class EntityAIRangedAttack extends EntityAIBase {
   }
 
   protected double getTargetDistance() {
-    IAttributeInstance iattributeinstance = entityHost.getEntityAttribute(SharedMonsterAttributes.followRange);
+    IAttributeInstance iattributeinstance = entityHost.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE);
     return iattributeinstance == null ? 16.0D : iattributeinstance.getAttributeValue();
   }
 

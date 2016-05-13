@@ -1,5 +1,9 @@
 package crazypants.enderzoo.entity.ai;
 
+import crazypants.enderzoo.entity.EntityUtil;
+import crazypants.enderzoo.entity.SpawnUtil;
+import crazypants.enderzoo.vec.Point3i;
+import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -7,13 +11,9 @@ import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import crazypants.enderzoo.entity.EntityUtil;
-import crazypants.enderzoo.entity.SpawnUtil;
-import crazypants.enderzoo.vec.Point3i;
-import crazypants.enderzoo.vec.VecUtil;
 
 public class EntityAIMountedArrowAttack extends EntityAIBase {
 
@@ -149,8 +149,8 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     }
     
     runAwayTimer = 40;
-    Vec3 targetDir = new Vec3(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
-    Vec3 entityPos = EntityUtil.getEntityPosition(entityHost);
+    Vec3d targetDir = new Vec3d(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
+    Vec3d entityPos = EntityUtil.getEntityPosition(entityHost);
     targetDir = VecUtil.subtract(targetDir, entityPos);        
     targetDir = VecUtil.scale(targetDir, -1);
     targetDir = targetDir.normalize();
@@ -187,7 +187,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
 
   protected PathNavigate getNavigator() {
     if(entityHost.isRiding()) {
-      Entity ent = entityHost.ridingEntity;
+      Entity ent = entityHost.getRidingEntity();
       if(ent instanceof EntityLiving) {
         return ((EntityLiving) ent).getNavigator();
       }

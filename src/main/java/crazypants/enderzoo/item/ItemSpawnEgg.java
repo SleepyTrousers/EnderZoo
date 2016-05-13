@@ -11,14 +11,14 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemSpawnEgg extends Item {
 
@@ -37,7 +37,8 @@ public class ItemSpawnEgg extends Item {
   }
 
   private void init() {
-    GameRegistry.registerItem(this, NAME);
+    GameRegistry.register(this);
+    
   }
 
   @Override
@@ -60,24 +61,24 @@ public class ItemSpawnEgg extends Item {
     }
   }
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public int getColorFromItemStack(ItemStack stack, int pass) {
-    int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    MobInfo mob = MobInfo.values()[damage];
-    return pass == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();
-  }
+  //TODO: 1.9
+//  @Override
+//  @SideOnly(Side.CLIENT)
+//  public int getColorFromItemStack(ItemStack stack, int pass) {
+//    int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+//    MobInfo mob = MobInfo.values()[damage];
+//    return pass == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();  
+//  }
 
   @Override
-  public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-    //  public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int posX, int posY, int posZ, int par7, float par8, float par9, float par10) {
+  public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     if(!world.isRemote) {
-      activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), side.ordinal());
+      activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), facing.ordinal());
       if(!player.capabilities.isCreativeMode) {
         --stack.stackSize;
       }
     }
-    return true;
+    return EnumActionResult.SUCCESS;
   }
 
   //TODO: Copied from MC1.7. Used to be in Facing class but cant find it now

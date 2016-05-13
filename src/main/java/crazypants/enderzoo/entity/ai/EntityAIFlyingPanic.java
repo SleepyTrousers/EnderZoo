@@ -3,7 +3,7 @@ package crazypants.enderzoo.entity.ai;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 public class EntityAIFlyingPanic extends EntityAIBase {
 
@@ -24,7 +24,7 @@ public class EntityAIFlyingPanic extends EntityAIBase {
     if (theEntityCreature.getAITarget() == null && !theEntityCreature.isBurning()) {
       return false;
     }
-    Vec3 vec3 = RandomPositionGenerator.findRandomTarget(theEntityCreature, 5, 4);
+    Vec3d vec3 = RandomPositionGenerator.findRandomTarget(theEntityCreature, 5, 4);
     if (vec3 == null) {
       return false;
     }

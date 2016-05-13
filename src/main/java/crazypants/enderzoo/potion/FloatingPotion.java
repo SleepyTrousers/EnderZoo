@@ -13,10 +13,10 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FloatingPotion extends Potion {
 
@@ -24,14 +24,12 @@ public class FloatingPotion extends Potion {
 
   public static FloatingPotion create() {
     FloatingPotion res = new FloatingPotion();
+    GameRegistry.register(res);
     return res;
   }
 
-  // By default will be -1, as requested by forge, just add the config option
-  // incase of conflicts with other mods
-  @SuppressWarnings("deprecation")
   private FloatingPotion() {
-    super(Config.floatingPotionId, new ResourceLocation(NAME), false, 0);
+    super(false, 0);
     setPotionName(NAME);
   }
 
@@ -41,22 +39,22 @@ public class FloatingPotion extends Potion {
     ItemStack rs = new ItemStack(Items.redstone);
     ItemStack gp = new ItemStack(Items.gunpowder);
 
-    PotionEffect effect = new PotionEffect(id, Config.floatingPotionDuration, 0);
+    PotionEffect effect = new PotionEffect(this, Config.floatingPotionDuration, 0);
     ItemStack basePotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
 
-    effect = new PotionEffect(id, Config.floatingPotionDurationLong, 0);
+    effect = new PotionEffect(this, Config.floatingPotionDurationLong, 0);
     ItemStack longPotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
 
-    effect = new PotionEffect(id, Config.floatingPotionTwoDuration, 1);
+    effect = new PotionEffect(this, Config.floatingPotionTwoDuration, 1);
     ItemStack twoPotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
     
-    effect = new PotionEffect(id, Config.floatingPotionDurationSplash, 0);
+    effect = new PotionEffect(this, Config.floatingPotionDurationSplash, 0);
     ItemStack basePotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
             
-    effect = new PotionEffect(id, Config.floatingPotionDurationLongSplash, 0);
+    effect = new PotionEffect(this, Config.floatingPotionDurationLongSplash, 0);
     ItemStack longPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
 
-    effect = new PotionEffect(id, Config.floatingPotionTwoDurationSplash, 1);
+    effect = new PotionEffect(this, Config.floatingPotionTwoDurationSplash, 1);
     ItemStack twoPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
 
     BrewingRecipeRegistry.addRecipe(BrewingUtil.createAwkwardPotion(), new ItemStack(EnderZoo.itemOwlEgg), basePotion);

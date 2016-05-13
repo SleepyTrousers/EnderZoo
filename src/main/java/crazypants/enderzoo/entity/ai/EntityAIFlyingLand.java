@@ -4,7 +4,7 @@ import crazypants.enderzoo.entity.EntityUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 public class EntityAIFlyingLand extends EntityAIBase {
 
@@ -96,7 +96,7 @@ public class EntityAIFlyingLand extends EntityAIBase {
       if (fx > 0.4 && fx < 0.6 && fz > 0.4 && fz < 0.6) {
         BlockPos bellow = entity.getPosition().down();
         IBlockState bs = entity.worldObj.getBlockState(bellow);
-        if (!bs.getBlock().isAir(entity.worldObj, bellow)) {
+        if (!bs.getBlock().isAir(bs, entity.worldObj, bellow)) {
           entity.getNavigator().clearPathEntity();
           return false;
         }
