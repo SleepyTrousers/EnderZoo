@@ -23,9 +23,7 @@ public class EntityPrimedCharge extends Entity {
   public EntityPrimedCharge(World world) {
     super(world);
     preventEntitySpawning = true;
-    setSize(0.98F, 0.98F);
-    
-//    dataWatcher.register(, 2);
+    setSize(0.98F, 0.98F);    
   }
 
   public EntityPrimedCharge(ICharge charge, World world, double x, double y, double z, EntityLivingBase placedBy) {

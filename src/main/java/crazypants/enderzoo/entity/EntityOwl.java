@@ -26,15 +26,18 @@ import net.minecraft.entity.monster.EntitySpider;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
@@ -43,9 +46,9 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   public static final int EGG_BG_COL = 0xC17949;
   public static final int EGG_FG_COL = 0xFFDDC6;
 
-  private static final String SND_HOOT = "enderzoo:owl.hootSingle";
-  private static final String SND_HOOT2 = "enderzoo:owl.hootDouble";
-  private static final String SND_HURT = "enderzoo:owl.hurt";
+  private static final SoundEvent SND_HOOT = new SoundEvent(new ResourceLocation("enderzoo:owl.hootSingle"));
+  private static final SoundEvent SND_HOOT2 = new SoundEvent(new ResourceLocation("enderzoo:owl.hootDouble"));
+  private static final SoundEvent SND_HURT = new SoundEvent(new ResourceLocation("enderzoo:owl.hurt"));
 
   private float wingRotation;
   private float prevWingRotation;
@@ -96,9 +99,10 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(4.0D);
-    getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.25D);
+    getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(4.0D);
+    getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.25D);
     MobInfo.OWL.applyAttributes(this);
+    
   }
 
   @Override
@@ -113,28 +117,14 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public float getBlockPathWeight(BlockPos pos) {
-    return worldObj.getBlockState(pos.down()).getBlock().getMaterial() == Material.leaves ? 10.0F : 0;
-  }
-
-  @Override
-  public boolean interact(EntityPlayer playerIn) {
-    return super.interact(playerIn);
-    // if (!super.interact(playerIn)) {
-    // if (!worldObj.isRemote) {
-    // System.out.println("EntityOwl.interact: ");
-    // if (!getNavigator().tryMoveToXYZ(posX - 10, posY + 8, posZ - 10, 2)) {
-    // System.out.println("EntityOwl.interact: No path");
-    // }
-    // }
-    //
-    // }
-    // return true;
+    IBlockState bs = worldObj.getBlockState(pos.down());
+    return bs.getBlock().getMaterial(bs) == Material.leaves ? 10.0F : 0;
   }
 
   @Override
   public boolean attackEntityAsMob(Entity entityIn) {
     super.attackEntityAsMob(entityIn);
-    float attackDamage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    float attackDamage = (float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
     if (entityIn instanceof EntitySpider) {
       attackDamage *= Config.owlSpiderDamageMultiplier;
     }
@@ -166,7 +156,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
     if (!worldObj.isRemote && !isChild() && --timeUntilNextEgg <= 0) {
       if (isOnLeaves()) {
-        playSound("mob.chicken.plop", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+        playSound(SoundEvents.entity_chicken_egg, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
         dropItem(EnderZoo.itemOwlEgg, 1);        
       }
       timeUntilNextEgg = getNextLayingTime();
@@ -176,7 +166,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   
   private boolean isOnLeaves() {
     IBlockState bs = worldObj.getBlockState(getPosition().down());    
-    return bs.getBlock().getMaterial() == Material.leaves;
+    return bs.getBlock().getMaterial(bs) == Material.leaves;
   }
 
   @Override
@@ -190,8 +180,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
     IBlockState bs = worldObj.getBlockState(pos);
     Block block = bs.getBlock();
-    if (block.getMaterial() != Material.air) {
-      AxisAlignedBB bb = block.getCollisionBoundingBox(worldObj, pos, bs);
+    if (block.getMaterial(bs) != Material.air) {
+      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, worldObj, pos);
       if (bb != null) {
         double ouch = movedBB.maxY - bb.minY;
         if (ouch == 0) {
@@ -276,7 +266,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     }
 
     // ignore y as we want no tilt going straight up or down
-    Vec3 motionVec = new Vec3(motionX, 0, motionZ);
+    Vec3d motionVec = new Vec3d(motionX, 0, motionZ);
     double speed = motionVec.lengthVector();
     // normalise between 0 - 0.1
     speed = Math.min(1, speed * 10);
@@ -317,11 +307,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  public void fall(float distance, float damageMultiplier) {
-  }
-
-  @Override
-  protected void updateFallState(double y, boolean onGroundIn, Block blockIn, BlockPos pos) {
+  protected void updateFallState(double y, boolean onGroundIn, IBlockState blockIn, BlockPos pos) {
   }
 
   @Override
@@ -331,7 +317,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public void playLivingSound() {
-    String snd = getLivingSound();
+    SoundEvent snd = getAmbientSound();
     if (snd == null) {
       return;
     }
@@ -347,7 +333,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected String getLivingSound() {
+  protected SoundEvent getAmbientSound() {
     if (worldObj.rand.nextBoolean()) {
       return SND_HOOT2;
     } else {
@@ -356,12 +342,12 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected String getHurtSound() {
+  protected SoundEvent getHurtSound() {    
     return SND_HURT;
   }
 
   @Override
-  protected String getDeathSound() {
+  protected SoundEvent getDeathSound() {
     return SND_HURT;
   }
 
@@ -377,7 +363,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   protected void playStepSound(BlockPos pos, Block blockIn) {
-    playSound("mob.chicken.step", 0.15F, 1.0F);
+    playSound(SoundEvents.entity_chicken_step, 0.15F, 1.0F);
   }
 
   @Override

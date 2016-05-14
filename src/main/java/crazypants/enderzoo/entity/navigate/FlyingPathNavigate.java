@@ -5,18 +5,18 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.util.math.math.text.translation.MovingObjectPosition;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class FlyingPathNavigate extends PathNavigateGround {
 
   private int totalTicks;
   private int ticksAtLastPos;
-  private Vec3 lastPosCheck = new Vec3(0.0D, 0.0D, 0.0D);
+  private Vec3d lastPosCheck = new Vec3d(0.0D, 0.0D, 0.0D);
 
   private boolean forceFlying = false;
 
@@ -44,9 +44,9 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   @Override
-  protected Vec3 getEntityPosition() {
+  protected Vec3d getEntityPosition() {
     int y = (int) (theEntity.getEntityBoundingBox().minY + 0.5D);
-    return new Vec3(theEntity.posX, y, theEntity.posZ);
+    return new Vec3d(theEntity.posX, y, theEntity.posZ);
   }
 
   public boolean tryFlyToXYZ(double x, double y, double z, double speedIn) {
@@ -93,7 +93,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
       // theEntity.isAirBorne = true;
       pathFollow(); // follow it
       if (!noPath()) { // if we haven't finished, then set the new move point
-        Vec3 targetPos = currentPath.getPosition(theEntity);
+        Vec3d targetPos = currentPath.getPosition(theEntity);
         if (targetPos == null) {
           return;
         }
@@ -113,14 +113,14 @@ public class FlyingPathNavigate extends PathNavigateGround {
   @Override
   protected void pathFollow() {
 
-    Vec3 entPos = getEntityPosition();
+    Vec3d entPos = getEntityPosition();
     float entWidthSq = theEntity.width * theEntity.width;
     if (currentPath.getCurrentPathIndex() == currentPath.getCurrentPathLength() - 1 && theEntity.onGround) {
       entWidthSq = 0.01f; // we need to be right on top of the last point if on
                           // the ground so we don't hang on ledges
     }
 
-    Vec3 targetPos = currentPath.getVectorFromIndex(theEntity, currentPath.getCurrentPathIndex());
+    Vec3d targetPos = currentPath.getVectorFromIndex(theEntity, currentPath.getCurrentPathIndex());
 
     double distToCurrTargSq = entPos.squareDistanceTo(targetPos);
     if (distToCurrTargSq < entWidthSq) {
@@ -140,14 +140,14 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   @Override
-  protected boolean isDirectPathBetweenPoints(Vec3 startPos, Vec3 endPos, int sizeX, int sizeY, int sizeZ) {
+  protected boolean isDirectPathBetweenPoints(Vec3d startPos, Vec3d endPos, int sizeX, int sizeY, int sizeZ) {
 
-    Vec3 target = new Vec3(endPos.xCoord, endPos.yCoord + theEntity.height * 0.5D, endPos.zCoord);
+    Vec3d target = new Vec3d(endPos.xCoord, endPos.yCoord + theEntity.height * 0.5D, endPos.zCoord);
     if (!isClear(startPos, target)) {
       return false;
     }
     AxisAlignedBB bb = theEntity.getEntityBoundingBox();
-    startPos = new Vec3(bb.maxX, bb.maxY, bb.maxZ);
+    startPos = new Vec3d(bb.maxX, bb.maxY, bb.maxZ);
     if (!isClear(startPos, target)) {
       return false;
     }
@@ -155,13 +155,13 @@ public class FlyingPathNavigate extends PathNavigateGround {
 
   }
 
-  private boolean isClear(Vec3 startPos, Vec3 target) {
-    MovingObjectPosition hit = worldObj.rayTraceBlocks(startPos, target, true, true, false);
-    return hit == null || hit.typeOfHit == MovingObjectPosition.MovingObjectType.MISS;
+  private boolean isClear(Vec3d startPos, Vec3d target) {
+    RayTraceResult hit = worldObj.rayTraceBlocks(startPos, target, true, true, false);
+    return hit == null || hit.typeOfHit == RayTraceResult.Type.MISS;
   }
 
   @Override
-  protected void checkForStuck(Vec3 positionVec3) {
+  protected void checkForStuck(Vec3d positionVec3) {
 
     if (totalTicks - ticksAtLastPos > 10 && positionVec3.squareDistanceTo(lastPosCheck) < 0.0625) {
       clearPathEntity();

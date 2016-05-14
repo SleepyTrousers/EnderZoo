@@ -6,10 +6,11 @@ import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,8 +66,8 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   public void setSlimeSize(int size) {
     super.setSlimeSize(size);
     SlimeConf conf = SlimeConf.getConfForSize(size);
-    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.attackDamage).setBaseValue(conf.attackDamage);
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(conf.health);
+    getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(conf.attackDamage);
+    getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(conf.health);
     setHealth(getMaxHealth());
   }
 
@@ -140,12 +141,12 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+    getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
   }
 
   @Override
   protected int getAttackStrength() {
-    int res = (int) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    int res = (int) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
     return res;
   }
 
@@ -158,11 +159,10 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   public void onCollideWithPlayer(EntityPlayer p_70100_1_) {
-    int i = this.getSlimeSize();
-
-    if (this.canEntityBeSeen(p_70100_1_) && this.getDistanceSqToEntity(p_70100_1_) < (double) i * (double) i
-        && p_70100_1_.attackEntityFrom(DamageSource.causeMobDamage(this), this.getAttackStrength())) {
-      this.playSound("mob.attack", 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
+    int i = getSlimeSize();
+    if (canEntityBeSeen(p_70100_1_) && this.getDistanceSqToEntity(p_70100_1_) < (double) i * (double) i
+        && p_70100_1_.attackEntityFrom(DamageSource.causeMobDamage(this), getAttackStrength())) {
+      playSound(SoundEvents.entity_slime_attack, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
     }
   }
   

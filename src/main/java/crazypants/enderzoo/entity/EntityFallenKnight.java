@@ -15,11 +15,14 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
@@ -53,7 +56,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Config.fallenKnightFollowRange);
+    getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(Config.fallenKnightFollowRange);
     MobInfo.FALLEN_KNIGHT.applyAttributes(this);
   }
 
@@ -92,18 +95,18 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  protected String getLivingSound() {
-    return "mob.zombie.say";
+  protected SoundEvent getAmbientSound() {
+    return SoundEvents.entity_zombie_ambient;
   }
 
   @Override
-  protected String getHurtSound() {
-    return "mob.zombie.hurt";
+  protected SoundEvent getHurtSound() {
+    return SoundEvents.entity_zombie_hurt;    
   }
 
   @Override
-  protected String getDeathSound() {
-    return "mob.zombie.death";
+  protected SoundEvent getDeathSound() {
+    return SoundEvents.entity_zombie_death;
   }
 
   @Override
@@ -177,7 +180,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private boolean isRanged() {
-    ItemStack itemstack = getHeldItem();
+    ItemStack itemstack = getHeldItem(EnumHand.MAIN_HAND);
     return itemstack != null && itemstack.getItem() == Items.bow;
   }
 
@@ -262,7 +265,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     spawned = true;
 
     //From base entity living class
-    getEntityAttribute(SharedMonsterAttributes.followRange).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
+    getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
     setSkeletonType(0);
     addRandomArmor();
     setEnchantmentBasedOnDifficulty(di); //enchantEquipment();

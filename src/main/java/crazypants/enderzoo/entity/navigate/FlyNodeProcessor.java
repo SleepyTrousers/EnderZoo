@@ -4,28 +4,35 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.PathPoint;
+import net.minecraft.pathfinding.WalkNodeProcessor;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.world.pathfinder.WalkNodeProcessor;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class FlyNodeProcessor extends WalkNodeProcessor {
 
+  //getPathPointTo(Entity entityIn) 
   @Override
-  public PathPoint getPathPointTo(Entity entityIn) {
+  public PathPoint func_186318_b() {
+    EntityLiving entityIn = field_186326_b;
     return openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D),
         MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
   }
 
+  //getPathPointToCoords
   @Override
-  public PathPoint getPathPointToCoords(Entity entityIn, double x, double y, double z) {      
+  public PathPoint func_186325_a(double x, double y, double z) {
+    EntityLiving entityIn = field_186326_b;
     return openPoint(MathHelper.floor_double(x - entityIn.width / 2.0F), MathHelper.floor_double(y), MathHelper.floor_double(z - entityIn.width / 2.0F));       
   }
 
+  //findPathOptions
   @Override
-  public int findPathOptions(PathPoint[] pathOptions, Entity entityIn, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
+  public int func_186320_a(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
+    EntityLiving entityIn = field_186326_b;
     int i = 0;
     for (EnumFacing enumfacing : EnumFacing.values()) {
       PathPoint pathpoint = getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
@@ -50,8 +57,8 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
         for (int k = z; k < z + entitySizeZ; ++k) {
           IBlockState bs = blockaccess.getBlockState(mutableblockpos.set(i, j, k));
           Block block = bs.getBlock();
-          if (block.getMaterial() != Material.air) {
-            AxisAlignedBB bb = block.getCollisionBoundingBox(entityIn.worldObj, mutableblockpos, bs);
+          if (block.getMaterial(bs) != Material.air) {
+            AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.worldObj, mutableblockpos);
             if(bb != null) {
               return false;
             }

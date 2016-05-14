@@ -7,15 +7,15 @@ import java.util.List;
 import crazypants.enderzoo.entity.SpawnUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.pathfinder.NodeProcessor;
 
 public class FlyingPathFinder extends PathFinder {
   
@@ -28,29 +28,43 @@ public class FlyingPathFinder extends PathFinder {
     this.nodeProcessor = nodeProcessorIn;
   }
 
+  //createEntityPathTo
   @Override
-  public PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityFrom, Entity entityTo, float dist) {   
+  public PathEntity func_186333_a(IBlockAccess blockaccess, EntityLiving entityFrom, Entity entityTo, float dist) {   
     return createEntityPathTo(blockaccess, entityFrom, entityTo.posX, entityTo.getEntityBoundingBox().minY, entityTo.posZ, dist);
   }
 
+//createEntityPathTo
   @Override
-  public PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityIn, BlockPos targetPos, float dist) {
+  public PathEntity func_186336_a(IBlockAccess blockaccess, EntityLiving entityIn, BlockPos targetPos, float dist) {
     return createEntityPathTo(blockaccess, entityIn, targetPos.getX() + 0.5F, targetPos.getY() + 0.5F, targetPos.getZ() + 0.5F, dist);
   }
 
-  private PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity entityIn, double x, double y, double z, float distance) {
+  private PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity ent, double x, double y, double z, float distance) {
 
     path.clearPath();
-    nodeProcessor.initProcessor(blockaccess, entityIn);
     
-    PathPoint startPoint = nodeProcessor.getPathPointTo(entityIn);
-    PathPoint endPoint = nodeProcessor.getPathPointToCoords(entityIn, x, y, z);
     
-    Vec3 targ = new Vec3(x, y, z);
-    Vec3 ePos = entityIn.getPositionVector();
+    if(! (ent instanceof EntityLiving)) {
+      return null;
+    }
+    EntityLiving entityIn = (EntityLiving)ent;
+    
+    //nodeProcessor.initProcessor(blockaccess, entityIn);
+    nodeProcessor.func_186315_a(blockaccess, (EntityLiving) entityIn);
+    
+    
+//    PathPoint startPoint = nodeProcessor.getPathPointTo(entityIn); //1.8
+//    PathPoint endPoint = nodeProcessor.getPathPointToCoords(entityIn, x, y, z);
+    PathPoint startPoint = nodeProcessor.func_186318_b();
+    PathPoint endPoint = nodeProcessor.func_186325_a(x, y, z);
+    
+    
+    Vec3d targ = new Vec3d(x, y, z);
+    Vec3d ePos = entityIn.getPositionVector();
     double yDelta = targ.yCoord - ePos.yCoord;
 
-    double horizDist = new Vec3(x,0,z).distanceTo(new Vec3(ePos.xCoord,0,ePos.zCoord));
+    double horizDist = new Vec3d(x,0,z).distanceTo(new Vec3d(ePos.xCoord,0,ePos.zCoord));
     
     int climbY = 0;
     if (horizDist > 4 && entityIn.onGround) {
@@ -70,10 +84,10 @@ public class FlyingPathFinder extends PathFinder {
     // climb, then descend
     double climbDistance = Math.min(horizDist / 2.0, climbY);
 
-    Vec3 horizDirVec = new Vec3(targ.xCoord,0,targ.zCoord);
-    horizDirVec = horizDirVec.subtract(new Vec3(ePos.xCoord, 0, ePos.zCoord));
+    Vec3d horizDirVec = new Vec3d(targ.xCoord,0,targ.zCoord);
+    horizDirVec = horizDirVec.subtract(new Vec3d(ePos.xCoord, 0, ePos.zCoord));
     horizDirVec = horizDirVec.normalize();
-    Vec3 offset = new Vec3(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
+    Vec3d offset = new Vec3d(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
     
     PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));        
     if(!SpawnUtil.isSpaceAvailableForSpawn(entityIn.worldObj, (EntityLiving)entityIn, false)) {
@@ -90,7 +104,7 @@ public class FlyingPathFinder extends PathFinder {
     
     //then path from the climb point to destination
     path.clearPath();    
-    nodeProcessor.initProcessor(blockaccess, entityIn);
+    nodeProcessor.func_186315_a(blockaccess, (EntityLiving) entityIn);
     //climbPoint.index = -1;
     climbPoint = new PathPoint(climbPoint.xCoord, climbPoint.yCoord, climbPoint.zCoord);
     points = addToPath(entityIn, climbPoint, endPoint, distance);
@@ -144,7 +158,9 @@ public class FlyingPathFinder extends PathFinder {
       dequeued.visited = true;
 
       // find options for the next point in the path
-      int numPathOptions = nodeProcessor.findPathOptions(pathOptions, entityIn, dequeued, pathpointEnd, maxDistance);
+      
+      int numPathOptions = nodeProcessor.func_186320_a(pathOptions, dequeued, pathpointEnd, maxDistance);
+      //int numPathOptions = nodeProcessor.findPathOptions(pathOptions, entityIn, dequeued, pathpointEnd, maxDistance);
 
       for (int j = 0; j < numPathOptions; ++j) {
         PathPoint cadidatePoint = pathOptions[j];        
@@ -190,11 +206,15 @@ public class FlyingPathFinder extends PathFinder {
     return (int)Math.round(d);
   }
 
-  private PathEntity createDefault(IBlockAccess blockaccess, Entity entityIn, float distance, double x, double y, double z) {
+  private PathEntity createDefault(IBlockAccess blockaccess, EntityLiving entityIn, float distance, double x, double y, double z) {
     this.path.clearPath();
-    this.nodeProcessor.initProcessor(blockaccess, entityIn);
-    PathPoint pathpoint = nodeProcessor.getPathPointTo(entityIn);
-    PathPoint pathpoint1 =nodeProcessor.getPathPointToCoords(entityIn, x, y, z);
+    this.nodeProcessor.func_186315_a(blockaccess, entityIn);
+    
+//    PathPoint pathpoint = nodeProcessor.getPathPointTo(entityIn);
+//    PathPoint pathpoint1 =nodeProcessor.getPathPointToCoords(entityIn, x, y, z);    
+    PathPoint pathpoint = nodeProcessor.func_186318_b();
+    PathPoint pathpoint1 = nodeProcessor.func_186325_a(x, y, z);
+    
     PathPoint[] p = addToPath(entityIn, pathpoint, pathpoint1, distance);
     PathEntity res;
     if(p == null) {

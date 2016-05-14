@@ -16,10 +16,14 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityDireWolf extends EntityMob implements IEnderZooMob {
@@ -28,10 +32,10 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   public static final int EGG_BG_COL = 0x606060;
   public static final int EGG_FG_COL = 0xA0A0A0;
 
-  private static final String SND_HURT = "enderzoo:direwolf.hurt";
-  private static final String SND_HOWL = "enderzoo:direwolf.howl";
-  private static final String SND_GROWL = "enderzoo:direwolf.growl";
-  private static final String SND_DEATH = "enderzoo:direwolf.death";
+  private static final SoundEvent SND_HURT = new SoundEvent(new ResourceLocation("enderzoo:direwolf.hurt"));
+  private static final SoundEvent SND_HOWL = new SoundEvent(new ResourceLocation("enderzoo:direwolf.howl"));
+  private static final SoundEvent SND_GROWL = new SoundEvent(new ResourceLocation("enderzoo:direwolf.growl"));
+  private static final SoundEvent SND_DEATH = new SoundEvent(new ResourceLocation("enderzoo:direwolf.death"));
 
   private static final int ANGRY_INDEX = 12;
 
@@ -94,18 +98,18 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.5D);
-    getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(40.0D);
+    getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+    getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(40.0D);
     MobInfo.DIRE_WOLF.applyAttributes(this);
   }
 
   @Override
   protected void playStepSound(BlockPos bp, Block p_145780_4_) {
-    playSound("mob.wolf.step", 0.15F, 1.0F);
+    playSound(SoundEvents.entity_wolf_step, 0.15F, 1.0F);
   }
 
   @Override
-  protected String getLivingSound() {
+  protected SoundEvent getAmbientSound() {
     if (isAngry()) {
       return SND_GROWL;
     }
@@ -126,21 +130,21 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   }
 
   @Override
-  public void playSound(String name, float volume, float pitch) {
-    if (SND_HOWL.equals(name)) {
+  public void playSound(SoundEvent sound, float volume, float pitch) {
+    if (SND_HOWL.equals(sound)) {
       volume *= (float) Config.direWolfHowlVolumeMult;
       pitch *= 0.8f;
     }
-    worldObj.playSoundAtEntity(this, name, volume, pitch);
+    worldObj.playSound(posX,posY,posZ, sound, SoundCategory.NEUTRAL, volume, pitch, true);
   }
 
   @Override
-  protected String getHurtSound() {
+  protected SoundEvent getHurtSound() {
     return SND_HURT;
   }
 
   @Override
-  protected String getDeathSound() {
+  protected SoundEvent getDeathSound() {
     return SND_DEATH;
   }
 

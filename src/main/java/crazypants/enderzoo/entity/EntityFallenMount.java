@@ -1,10 +1,11 @@
 package crazypants.enderzoo.entity;
 
+import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -12,18 +13,19 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraft.entity.passive.HorseArmorType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import crazypants.enderzoo.config.Config;
 
 public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
@@ -35,7 +37,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   private boolean wasRidden = false;
   private final EntityAINearestAttackableTarget<EntityPlayer> findTargetAI;
-  private EntityAIAttackOnCollide attackAI;
+  private EntityAIAttackMelee attackAI;
 
   private ItemStack armor;
 
@@ -51,14 +53,14 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     tasks.addTask(8, new EntityAILookIdle(this));
 
     findTargetAI = new EntityAINearestAttackableTarget<EntityPlayer>(this, EntityPlayer.class, true);
-    attackAI = new EntityAIAttackOnCollide(this, EntityPlayer.class, MOUNTED_ATTACK_MOVE_SPEED, false);
+    attackAI = new EntityAIAttackMelee(this, MOUNTED_ATTACK_MOVE_SPEED, false);
     updateAttackAI(); 
   }
 
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+    getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     MobInfo.FALLEN_MOUNT.applyAttributes(this);
   }
 
@@ -68,10 +70,10 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   }
 
   @Override
-  public boolean interact(EntityPlayer p_70085_1_) {
-    ItemStack itemstack = p_70085_1_.inventory.getCurrentItem();
+  public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack holding) {
+    ItemStack itemstack = player.inventory.getCurrentItem();
     if(itemstack != null && itemstack.getItem() == Items.spawn_egg) {
-      return super.interact(p_70085_1_);
+      return super.processInteract(player, hand, holding);
     }
     return false;
   }
@@ -85,9 +87,9 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   public boolean canMateWith(EntityAnimal p_70878_1_) {
     return false;
   }
-
+  
   @Override
-  public boolean allowLeashing() {
+  public boolean canBeLeashedTo(EntityPlayer player) {    
     return false;
   }
 
@@ -106,11 +108,13 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   @Override
   public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData data) {  
-    setHorseType(3);
+    HorseArmorType horsearmortype = HorseArmorType.ZOMBIE;
+    setType(horsearmortype);
+    
     setHorseSaddled(true);    
     setGrowingAge(0);
-    getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Config.fallenMountHealth);
-    getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.2);
+    getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.fallenMountHealth);
+    getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.2);
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());
     
@@ -172,7 +176,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
         }
       }
     }
-    setEating(false);
+    setEatingHaystack(false);    
 
     if(wasRidden != isRidden()) {
       updateAttackAI();
@@ -191,8 +195,8 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     return getTotalArmorValue() > 0;
   }
 
-  protected boolean isRidden() {
-    return riddenByEntity != null;
+  protected boolean isRidden() {    
+    return !getPassengers().isEmpty();
   }
 
   private void updateAttackAI() {
@@ -204,13 +208,19 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     }
   }
 
-  @Override
-  public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
-    //Need to pretend we arn't being ridden else it will update as if a player was riding us    
-    Entity prev = riddenByEntity;
-    riddenByEntity = null;
-    super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
-    riddenByEntity = prev;
+//  @Override
+//  public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
+//    //Need to pretend we arn't being ridden else it will update as if a player was riding us    
+//    Entity prev = riddenByEntity;
+//    riddenByEntity = null;    
+//    super.moveEntityWithHeading(p_70612_1_, p_70612_2_);    
+//    riddenByEntity = prev;
+//  }
+  
+  //Need to pretend we arn't being ridden else it will update as if a player was riding us
+  public boolean canBeSteered() {
+    Entity entity = getControllingPassenger();
+    return entity instanceof EntityPlayer;
   }
 
   @Override
@@ -222,7 +232,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     if(!isRearing()) {
       makeHorseRearWithSound();
     }
-    float damage = (float) getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+    float damage = (float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
     return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
   }
 

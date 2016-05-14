@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityLookHelper;
 import net.minecraft.entity.ai.EntityMoveHelper;
-import net.minecraft.util.math.math.text.translation.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class FlyingMoveHelper extends EntityMoveHelper {
 
@@ -24,13 +24,13 @@ public class FlyingMoveHelper extends EntityMoveHelper {
   @Override
   public void onUpdateMoveHelper() {
 
-    if (update && !entity.getNavigator().noPath()) {
+    if (!entity.getNavigator().noPath()) {
       double xDelta = posX - entity.posX;
       double yDelta = posY - entity.posY;
       double zDelta = posZ - entity.posZ;
 
       float moveFactor = 1;
-      float moveSpeed = (float) (speed * entity.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getAttributeValue());
+      float moveSpeed = (float) (speed * entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getAttributeValue());
       entity.setAIMoveSpeed(entity.getAIMoveSpeed() + (moveSpeed - entity.getAIMoveSpeed()) * moveFactor);
 
       double distSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;

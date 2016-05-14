@@ -8,9 +8,10 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -24,16 +25,19 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.BlockPos;
-import net.minecraft.util.math.math.text.translation.MathHelper;
-import net.minecraft.util.math.math.text.translation.Vec3;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
@@ -64,7 +68,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     stepHeight = 1.0F;
 
     tasks.addTask(0, new EntityAISwimming(this));
-    tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0D, false));
+    tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, false));
     tasks.addTask(7, new EntityAIWander(this, 1.0D));
     tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
     tasks.addTask(8, new EntityAILookIdle(this));
@@ -88,7 +92,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   protected void applyEntityAttributes() {
     super.applyEntityAttributes();
-    getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.3);
+    getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.3);
     MobInfo.ENDERMINY.applyAttributes(this);
   }
 
@@ -120,7 +124,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       return false;
     } else {
 
-      Vec3 relativePlayerEyePos = new Vec3(
+      Vec3d relativePlayerEyePos = new Vec3d(
           posX - player.posX,
           getEntityBoundingBox().minY + height / 2.0F - (player.posY + player.getEyeHeight()),
           posZ - player.posZ);
@@ -130,7 +134,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       //NB: inverse of normal enderman, attack when this guy looks at the player instead of the other
       //way around
-      Vec3 lookVec = getLook(1.0F).normalize();
+      Vec3d lookVec = getLook(1.0F).normalize();
       double dotTangent = -lookVec.dotProduct(relativePlayerEyePos);
 
       return dotTangent > 1.0D - 0.025D / distance;
@@ -171,7 +175,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   protected boolean teleportToEntity(Entity p_70816_1_) {
-    Vec3 vec3 = new Vec3(posX - p_70816_1_.posX, getEntityBoundingBox().minY + height / 2.0F - p_70816_1_.posY
+    Vec3d vec3 = new Vec3d(posX - p_70816_1_.posX, getEntityBoundingBox().minY + height / 2.0F - p_70816_1_.posY
         + p_70816_1_.getEyeHeight(), posZ - p_70816_1_.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
@@ -190,9 +194,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     double d3 = posX;
     double d4 = posY;
     double d5 = posZ;
-    posX = event.targetX;
-    posY = event.targetY;
-    posZ = event.targetZ;
+    posX = event.getTargetX();
+    posY = event.getTargetY();
+    posZ = event.getTargetZ();
 
     int xInt = MathHelper.floor_double(posX);
     int yInt = MathHelper.floor_double(posY);
@@ -203,8 +207,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
-        Block block = worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt)).getBlock();
-        if(block.getMaterial().blocksMovement()) {
+        IBlockState bs = worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
+        Block block = bs.getBlock();
+        if(block.getMaterial(bs).blocksMovement()) {
           foundGround = true;
         } else {
           --posY;
@@ -214,7 +219,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       if(foundGround) {
         setPosition(posX, posY, posZ);
-        if(worldObj.getCollidingBoundingBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox())) {
+        if(worldObj.getCubes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox())) {
           flag = true;
         }
       }
@@ -237,25 +242,25 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
-    playSound("mob.endermen.portal", 1.0F, 1.0F);
+    worldObj.playSound(d3, d4, d5, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);    
+    playSound(SoundEvents.entity_endermen_teleport, 1.0F, 1.0F);
     return true;
 
   }
 
   @Override
-  protected String getLivingSound() {
-    return isScreaming() ? "mob.endermen.scream" : "mob.endermen.idle";
+  protected SoundEvent getAmbientSound() {
+    return isScreaming() ? SoundEvents.entity_endermen_scream : SoundEvents.entity_endermen_ambient;
   }
 
   @Override
-  protected String getHurtSound() {
-    return "mob.endermen.hit";
+  protected SoundEvent getHurtSound() {
+    return SoundEvents.entity_endermen_hurt;
   }
 
   @Override
-  protected String getDeathSound() {
-    return "mob.endermen.death";
+  protected SoundEvent getDeathSound() {
+    return SoundEvents.entity_endermen_death;
   }
 
   @Override
@@ -413,7 +418,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     public void resetTask() {
       targetPlayer = null;
       enderminy.setScreaming(false);
-      IAttributeInstance iattributeinstance = enderminy.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+      IAttributeInstance iattributeinstance = enderminy.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
       iattributeinstance.removeModifier(EntityEnderminy.attackingSpeedBoostModifier);
       super.resetTask();
     }
@@ -444,9 +449,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
           targetEntity = targetPlayer;
           targetPlayer = null;
           super.startExecuting();
-          enderminy.playSound("mob.endermen.stare", 1.0F, 1.0F);
+          enderminy.playSound(SoundEvents.entity_endermen_stare, 1.0F, 1.0F);
           enderminy.setScreaming(true);
-          IAttributeInstance iattributeinstance = enderminy.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+          IAttributeInstance iattributeinstance = enderminy.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
           iattributeinstance.applyModifier(EntityEnderminy.attackingSpeedBoostModifier);
         }
       } else {

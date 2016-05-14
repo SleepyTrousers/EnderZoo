@@ -6,7 +6,7 @@ import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.math.text.translation.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 public class EntityOwlEgg extends EntityThrowable {
@@ -24,7 +24,7 @@ public class EntityOwlEgg extends EntityThrowable {
   }
 
   @Override
-  protected void onImpact(MovingObjectPosition impact) {
+  protected void onImpact(RayTraceResult impact) {
     if (impact.entityHit != null) {
       impact.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0.0F);
     }

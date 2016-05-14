@@ -10,9 +10,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -63,15 +65,15 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
               }
             }
             if (ent instanceof EntityPlayer) {
-              worldObj.playSoundEffect(ent.posX, ent.posY, ent.posZ, "mob.endermen.portal", 1.0F, 1.0F);
+              worldObj.playSound(ent.posX, ent.posY, ent.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.HOSTILE, 1.0F, 1.0F, false);
               EnderZoo.proxy.setInstantConfusionOnPlayer((EntityPlayer) ent, Config.concussionCreeperConfusionDuration);
             }
           }
         }
 
 
-        worldObj.playSoundEffect(posX, posY, posZ, "random.explode", 4.0F,
-            (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+        worldObj.playSound(posX, posY, posZ, SoundEvents.entity_generic_explode, SoundCategory.HOSTILE, 4.0F,
+            (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F, false);
         worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, posX, posY, posZ, 1.0D, 0.0D, 0.0D);
         setDead();
       }
