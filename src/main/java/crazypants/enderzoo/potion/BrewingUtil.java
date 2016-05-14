@@ -1,15 +1,11 @@
 package crazypants.enderzoo.potion;
 
-import java.util.List;
-
 import crazypants.enderzoo.EnderZoo;
 import net.minecraft.init.Items;
-import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
 
 public class BrewingUtil {
 
@@ -84,23 +80,32 @@ public class BrewingUtil {
   }
 
   public static void addIngredientToPotion(ItemStack targetPotion, ItemStack ingredient) {
-    int originalMetaData = targetPotion.getItemDamage();
-    int metaWithAddedIngredient = addPotionEffect(originalMetaData, ingredient);
-    List<?> originalEffects = Items.potionitem.getEffects(originalMetaData);
-    List<?> withAddedEffects = Items.potionitem.getEffects(metaWithAddedIngredient);
-    if ((originalMetaData <= 0 || originalEffects != withAddedEffects)
-        && (originalEffects == null || !originalEffects.equals(withAddedEffects) && withAddedEffects != null)) {
-      if (originalMetaData != metaWithAddedIngredient) {
-        targetPotion.setItemDamage(metaWithAddedIngredient);
-      }
-    } else if (!ItemPotion.isSplash(originalMetaData) && ItemPotion.isSplash(metaWithAddedIngredient)) {
-      targetPotion.setItemDamage(metaWithAddedIngredient);
-    }
+    //TODO: 1.9
+//    int originalMetaData = targetPotion.getItemDamage();
+//    int metaWithAddedIngredient = addPotionEffect(originalMetaData, ingredient);
+//    
+//    List<PotionEffect> effects = PotionUtils.getEffectsFromStack(potion);
+//    if (effects.isEmpty()) {
+//      return;
+//    }
+//    
+//    List<?> originalEffects = Items.potionitem.getEffects(originalMetaData);
+//    List<?> withAddedEffects = Items.potionitem.getEffects(metaWithAddedIngredient);
+//    if ((originalMetaData <= 0 || originalEffects != withAddedEffects)
+//        && (originalEffects == null || !originalEffects.equals(withAddedEffects) && withAddedEffects != null)) {
+//      if (originalMetaData != metaWithAddedIngredient) {
+//        targetPotion.setItemDamage(metaWithAddedIngredient);
+//      }
+//    } else if (!ItemPotion.isSplash(originalMetaData) && ItemPotion.isSplash(metaWithAddedIngredient)) {
+//      targetPotion.setItemDamage(metaWithAddedIngredient);
+//    }
   }
 
-  public static int addPotionEffect(int targetMetaData, ItemStack ingredient) {
-    return ingredient == null ? targetMetaData : (ingredient.getItem().isPotionIngredient(ingredient) ? PotionHelper.applyIngredient(targetMetaData, ingredient
-        .getItem().getPotionEffect(ingredient)) : targetMetaData);
+  public static int addPotionEffect(int targetMetaData, ItemStack ingredient) {    
+    //TODO: 1.9
+    return targetMetaData;
+//    return ingredient == null ? targetMetaData : (ingredient.getItem().isPotionIngredient(ingredient) ? PotionHelper.applyIngredient(targetMetaData, ingredient
+//        .getItem().getPotionEffect(ingredient)) : targetMetaData);
   }
   
   public static void writeCustomEffectToNBT(PotionEffect effect, ItemStack stack) {

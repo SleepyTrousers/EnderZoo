@@ -1,22 +1,7 @@
 package crazypants.enderzoo.item;
 
-import java.lang.reflect.Field;
-import java.util.List;
-
-import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
-import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.potion.BrewingUtil;
-import crazypants.enderzoo.potion.PotionConfig;
-import jline.internal.Log;
-import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraftforge.common.brewing.BrewingRecipe;
-import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
-import net.minecraftforge.common.brewing.IBrewingRecipe;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemConfusingDust extends Item {
@@ -31,6 +16,7 @@ public class ItemConfusingDust extends Item {
 
   private ItemConfusingDust() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }
@@ -39,12 +25,12 @@ public class ItemConfusingDust extends Item {
     GameRegistry.register(this);
      
     //TODO: 1.9
-    ItemStack gs = new ItemStack(Items.glowstone_dust);
-    ItemStack rs = new ItemStack(Items.redstone);
-    ItemStack gp = new ItemStack(Items.gunpowder);
+//    ItemStack gs = new ItemStack(Items.glowstone_dust);
+//    ItemStack rs = new ItemStack(Items.redstone);
+//    ItemStack gp = new ItemStack(Items.gunpowder);
 
-    PotionEffect effect = new PotionEffect(MobEffects.confusion, 300, 1);
-    ItemStack basePotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
+//    PotionEffect effect = new PotionEffect(MobEffects.confusion, 300, 1);
+//    ItemStack basePotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
 
 //    effect = new PotionEffect(this, Config.floatingPotionDurationLong, 0);
 //    ItemStack longPotion = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, false));
@@ -61,7 +47,7 @@ public class ItemConfusingDust extends Item {
 //    effect = new PotionEffect(this, Config.floatingPotionTwoDurationSplash, 1);
 //    ItemStack twoPotionSplash = EnderZoo.itemPotionEZ.addSubtype(new PotionConfig(effect, true));
 
-    BrewingRecipeRegistry.addRecipe(BrewingUtil.createAwkwardPotion(), new ItemStack(this), basePotion);
+//    BrewingRecipeRegistry.addRecipe(BrewingUtil.createAwkwardPotion(), new ItemStack(this), basePotion);
 
 
 //    BrewingRecipeRegistry.addRecipe(basePotion, gp, basePotionSplash);

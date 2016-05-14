@@ -2,7 +2,6 @@ package crazypants.enderzoo.potion;
 
 import java.util.List;
 
-import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.PacketHandler;
 import io.netty.buffer.ByteBuf;
@@ -12,8 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.math.math.text.translation.AxisAlignedBB;
-import net.minecraft.util.math.math.text.translation.MovingObjectPosition;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 
@@ -27,7 +27,7 @@ public class EntityPotionEZ extends EntityThrowable implements IEntityAdditional
 
   public EntityPotionEZ(World worldIn, EntityLivingBase throwerIn, ItemStack potion) {
     super(worldIn, throwerIn);
-    this.potion = potion;
+    this.potion = potion;   
   }
 
   public EntityPotionEZ(World worldIn, double x, double y, double z) {
@@ -39,15 +39,16 @@ public class EntityPotionEZ extends EntityThrowable implements IEntityAdditional
     return 0.05F;
   }
 
-  @Override
-  protected float getVelocity() {
-    return 0.5F;
-  }
-
-  @Override
-  protected float getInaccuracy() {
-    return -20.0F;
-  }
+  //TODO: 1.9 not needed?  
+//  @Override
+//  protected float getVelocity() {
+//    return 0.5F;
+//  }
+//
+//  @Override
+//  protected float getInaccuracy() {
+//    return -20.0F;
+//  }
 
   public ItemStack getPotion() {
     return potion;
@@ -58,10 +59,10 @@ public class EntityPotionEZ extends EntityThrowable implements IEntityAdditional
   }
 
   @Override
-  protected void onImpact(MovingObjectPosition p_70184_1_) {
+  protected void onImpact(RayTraceResult p_70184_1_) {
     if (!worldObj.isRemote && potion != null) {
-
-      List<PotionEffect> effects = EnderZoo.itemPotionEZ.getEffects(potion);
+      
+      List<PotionEffect> effects = PotionUtils.getEffectsFromStack(potion);
       if (effects.isEmpty()) {
         return;
       }
@@ -80,17 +81,17 @@ public class EntityPotionEZ extends EntityThrowable implements IEntityAdditional
           }
 
           for (PotionEffect effect : effects) {
-            int pid = effect.getPotionID();
-            if (Potion.potionTypes[pid].isInstant()) {
-              Potion.potionTypes[pid].affectEntity(this, getThrower(), entity, effect.getAmplifier(), d1);
+            Potion pot = effect.getPotion();
+            if (pot.isInstant()) {
+              pot.affectEntity(this, getThrower(), entity, effect.getAmplifier(), d1);
             } else {
               int j = (int) (d1 * effect.getDuration() + 0.5D);
-              entity.addPotionEffect(new PotionEffect(pid, j, effect.getAmplifier()));
+              entity.addPotionEffect(new PotionEffect(pot, j, effect.getAmplifier()));
             }
           }
         }
       }
-      PacketHandler.sendToAllAround(new PacketSpawnSplashEffects(this, effects.get(0).getPotionID()), this);
+      PacketHandler.sendToAllAround(new PacketSpawnSplashEffects(this, effects.get(0).getPotion()), this);
       setDead();
     }
   }
@@ -131,4 +132,6 @@ public class EntityPotionEZ extends EntityThrowable implements IEntityAdditional
       potion = null;
     }
   }
+
+ 
 }

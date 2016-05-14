@@ -16,11 +16,12 @@ public class ItemEnderFragment extends Item {
 
   private ItemEnderFragment() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);    
     setHasSubtypes(false);
   }
 
   private void init() {
-    GameRegistry.registerItem(this, NAME);
+    GameRegistry.register(this);
   }
 }

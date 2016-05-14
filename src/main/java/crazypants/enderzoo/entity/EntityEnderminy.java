@@ -28,6 +28,9 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -50,7 +53,8 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   private static final int MAX_RND_TP_DISTANCE = 32;
 
-  private static final int SCREAMING_INDEX = 30;
+//  private static final int SCREAMING_INDEX = 30;
+  private static final DataParameter<Boolean> SCREAMING_INDEX = EntityDataManager.<Boolean>createKey(EntityEnderminy.class, DataSerializers.BOOLEAN);  
 
   private static final UUID attackingSpeedBoostModifierUUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291B0");
   private static final AttributeModifier attackingSpeedBoostModifier = (new AttributeModifier(attackingSpeedBoostModifierUUID, "Attacking speed boost",
@@ -99,7 +103,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   protected void entityInit() {
     super.entityInit();
-    dataWatcher.addObject(SCREAMING_INDEX, new Byte((byte) 0));
+    dataWatcher.register(SCREAMING_INDEX, Boolean.valueOf(false));
   }
 
   @Override
@@ -350,11 +354,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   public boolean isScreaming() {
-    return dataWatcher.getWatchableObjectByte(SCREAMING_INDEX) > 0;
+    return dataWatcher.get(SCREAMING_INDEX);
   }
 
   public void setScreaming(boolean p_70819_1_) {
-    dataWatcher.updateObject(SCREAMING_INDEX, Byte.valueOf((byte) (p_70819_1_ ? 1 : 0)));
+    dataWatcher.set(SCREAMING_INDEX, Boolean.valueOf(p_70819_1_));
   }
 
 //  private final class ClosestEntityComparator implements Comparator<EntityCreeper> {

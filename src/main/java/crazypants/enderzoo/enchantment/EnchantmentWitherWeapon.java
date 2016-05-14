@@ -11,9 +11,12 @@ import net.minecraft.potion.PotionEffect;
 
 public class EnchantmentWitherWeapon extends Enchantment {
 
+  private static final String NAME = "witherWeapon";
+
   protected EnchantmentWitherWeapon() {
-    super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
-    setName("witherWeapon");
+    super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});    
+    setName(NAME);
+    setRegistryName(NAME);
 
   }
 

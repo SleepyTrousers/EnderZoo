@@ -18,7 +18,9 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
-import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -37,7 +39,8 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   private static final SoundEvent SND_GROWL = new SoundEvent(new ResourceLocation("enderzoo:direwolf.growl"));
   private static final SoundEvent SND_DEATH = new SoundEvent(new ResourceLocation("enderzoo:direwolf.death"));
 
-  private static final int ANGRY_INDEX = 12;
+//  private static final int ANGRY_INDEX = 12;
+  private static final DataParameter<Boolean> ANGRY_INDEX = EntityDataManager.<Boolean>createKey(EntityDireWolf.class, DataSerializers.BOOLEAN);
 
   private EntityLivingBase previsousAttackTarget;
 
@@ -48,7 +51,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     super(world);
     setSize(0.8F, 1.2F);
     //getNavigator().setAvoidsWater(true);
-    ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+//    ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
     tasks.addTask(1, new EntityAISwimming(this));
     tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
     tasks.addTask(4, new EntityAIAttackOnCollideAggressive(this, 1.1D, true).setAttackFrequency(20));
@@ -67,12 +70,12 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   @Override
   protected void entityInit() {
     super.entityInit();
-    getDataWatcher().addObject(ANGRY_INDEX, (byte) 0);
+    dataWatcher.register(ANGRY_INDEX, Boolean.FALSE);
     updateAngry();
   }
 
   public boolean isAngry() {
-    return getDataWatcher().getWatchableObjectByte(ANGRY_INDEX) == 1;
+    return dataWatcher.get(ANGRY_INDEX);
   }
 
   @Override
@@ -92,7 +95,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   //  }
 
   private void updateAngry() {
-    getDataWatcher().updateObject(ANGRY_INDEX, getAttackTarget() != null ? (byte) 1 : (byte) 0);
+    dataWatcher.set(ANGRY_INDEX, getAttackTarget() != null ? Boolean.TRUE : Boolean.FALSE);
   }
 
   @Override

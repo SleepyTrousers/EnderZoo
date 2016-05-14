@@ -8,13 +8,9 @@ import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.PacketHandler;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -40,44 +36,47 @@ public class ItemPotionEZ extends ItemPotion {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(true);
+    setRegistryName(NAME);
   }
 
   private void init() {
-    GameRegistry.registerItem(this, NAME);        
+    GameRegistry.register(this);      
   }
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public int getColorFromDamage(int meta) {
-    return PotionHelper.getLiquidColor(meta, false);
-  }
+  //TODO: 1.9
+//  @Override
+//  @SideOnly(Side.CLIENT)
+//  public int getColorFromDamage(int meta) {
+//    return PotionHelper.getLiquidColor(meta, false);
+//  }
+//
+//  @Override
+//  @SideOnly(Side.CLIENT)
+//  public int getColorFromItemStack(ItemStack stack, int renderPass) {
+//    if (renderPass > 0) {
+//      return 16777215;
+//    }
+//    List<PotionEffect> effects = getEffects(stack);
+//    return PotionHelper.calcPotionLiquidColor(effects);
+//  }
 
-  @Override
-  @SideOnly(Side.CLIENT)
-  public int getColorFromItemStack(ItemStack stack, int renderPass) {
-    if (renderPass > 0) {
-      return 16777215;
-    }
-    List<PotionEffect> effects = getEffects(stack);
-    return PotionHelper.calcPotionLiquidColor(effects);
-  }
-
-  @Override
-  public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-    if (isSplash(itemStackIn.getMetadata())) {
-      if (!playerIn.capabilities.isCreativeMode) {
-        --itemStackIn.stackSize;
-      }
-      worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-      if (!worldIn.isRemote) {         
-        worldIn.spawnEntityInWorld(new EntityPotionEZ(worldIn, playerIn, itemStackIn));
-      }
-      return itemStackIn;
-    } else {
-      playerIn.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
-      return itemStackIn;
-    }
-  }
+  //TODO: 1.9
+//  @Override
+//  public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+//    if (isSplash(itemStackIn.getMetadata())) {
+//      if (!playerIn.capabilities.isCreativeMode) {
+//        --itemStackIn.stackSize;
+//      }
+//      worldIn.playSoundAtEntity(playerIn, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+//      if (!worldIn.isRemote) {         
+//        worldIn.spawnEntityInWorld(new EntityPotionEZ(worldIn, playerIn, itemStackIn));
+//      }
+//      return itemStackIn;
+//    } else {
+//      playerIn.setItemInUse(itemStackIn, getMaxItemUseDuration(itemStackIn));
+//      return itemStackIn;
+//    }
+//  }
 
   @Override
   @SideOnly(Side.CLIENT)

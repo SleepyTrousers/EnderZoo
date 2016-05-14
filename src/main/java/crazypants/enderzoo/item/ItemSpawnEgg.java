@@ -34,6 +34,7 @@ public class ItemSpawnEgg extends Item {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(true);
+    setRegistryName(NAME);
   }
 
   private void init() {

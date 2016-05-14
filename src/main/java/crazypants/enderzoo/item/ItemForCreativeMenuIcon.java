@@ -15,12 +15,13 @@ public class ItemForCreativeMenuIcon extends Item {
 
   private ItemForCreativeMenuIcon() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(null);    
     setHasSubtypes(false);
   }
 
   private void init() {
-    GameRegistry.registerItem(this, NAME);
+    GameRegistry.register(this);
   }
 
 }

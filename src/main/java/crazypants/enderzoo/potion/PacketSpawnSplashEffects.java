@@ -10,10 +10,12 @@ import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.math.math.text.translation.BlockPos;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -29,13 +31,6 @@ public class PacketSpawnSplashEffects implements IMessage, IMessageHandler<Packe
   public PacketSpawnSplashEffects() {
   }
 
-  public PacketSpawnSplashEffects(Entity ent, int potionId) {
-    x = ent.posX;
-    y = ent.posY;
-    z = ent.posZ;
-    potion = Potion.potionTypes[potionId];
-  }
-
   public PacketSpawnSplashEffects(Entity ent, Potion potion) {
     x = ent.posX;
     y = ent.posY;
@@ -47,8 +42,8 @@ public class PacketSpawnSplashEffects implements IMessage, IMessageHandler<Packe
   public void toBytes(ByteBuf buf) {
     buf.writeDouble(x);
     buf.writeDouble(y);
-    buf.writeDouble(z);
-    buf.writeInt(potion.id);
+    buf.writeDouble(z);    
+    buf.writeInt(Potion.getIdFromPotion(potion));
 
   }
 
@@ -58,7 +53,7 @@ public class PacketSpawnSplashEffects implements IMessage, IMessageHandler<Packe
     y = buf.readDouble();
     z = buf.readDouble();
     int potionId = buf.readInt();
-    potion = Potion.potionTypes[potionId];
+    potion = Potion.getPotionById(potionId);
   }
 
   @Override
@@ -89,9 +84,10 @@ public class PacketSpawnSplashEffects implements IMessage, IMessageHandler<Packe
     float f2 = (j1 >> 0 & 255) / 255.0F;
     EnumParticleTypes enumparticletypes = EnumParticleTypes.SPELL;
 
-    if (Items.potionitem.isEffectInstant(data)) {
-      enumparticletypes = EnumParticleTypes.SPELL_INSTANT;
-    }
+    //TODO: 1.9
+//    if (Items.potionitem.isEffectInstant(data)) {
+//      enumparticletypes = EnumParticleTypes.SPELL_INSTANT;
+//    }
 
     for (int l1 = 0; l1 < 100; ++l1) {
       double d22 = random.nextDouble() * 4.0D;
@@ -110,7 +106,7 @@ public class PacketSpawnSplashEffects implements IMessage, IMessageHandler<Packe
       }
     }
 
-    world.playSoundAtPos(new BlockPos(x, y, z), "game.potion.smash", 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
+    world.playSound(new BlockPos(x, y, z),SoundEvents.entity_splash_potion_break, SoundCategory.BLOCKS, 1.0F, random.nextFloat() * 0.1F + 0.9F, false);
   }
 
   private EntityFX spawnEntityFX(Random rand, int particleID, boolean ignoreRange, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset,

@@ -31,6 +31,7 @@ public class FloatingPotion extends Potion {
   private FloatingPotion() {
     super(false, 0);
     setPotionName(NAME);
+    setRegistryName(NAME);
   }
 
   public void addRecipes() {

@@ -58,14 +58,14 @@ public class TeleportHelper {
     entity.posZ = event.getTargetZ();
 
     int xInt = MathHelper.floor_double(entity.posX);
-    int yInt = Math.max(1, MathHelper.floor_double(entity.posY));
+    int yInt = Math.max(2, MathHelper.floor_double(entity.posY));
     int zInt = MathHelper.floor_double(entity.posZ);
 
     boolean doTeleport = false;
     
     if (entity.worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt), true)) {
       boolean foundGround = false;
-      while (!foundGround && yInt > 0) {
+      while (!foundGround && yInt > 2) {
         IBlockState bs = entity.worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
         if (bs != null && bs.getBlock() != null && bs.getBlock().getMaterial(bs).blocksMovement()) {
           foundGround = true;

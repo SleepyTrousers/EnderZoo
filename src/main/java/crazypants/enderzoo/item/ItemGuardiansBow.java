@@ -43,13 +43,14 @@ public class ItemGuardiansBow extends ItemBow {
 
   protected ItemGuardiansBow() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setMaxDamage(800);
     setHasSubtypes(false);
   }
 
   protected void init() {
-    GameRegistry.registerItem(this, NAME);    
+    GameRegistry.register(this);    
   }
 
   public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {

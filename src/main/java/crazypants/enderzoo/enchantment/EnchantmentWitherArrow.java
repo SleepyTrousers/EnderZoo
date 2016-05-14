@@ -11,9 +11,12 @@ import net.minecraft.potion.PotionEffect;
 
 public class EnchantmentWitherArrow extends Enchantment {
 
+  private static final String NAME = "witherArrow";
+
   protected EnchantmentWitherArrow() {
     super(Config.enchantmentWitherArrowRarity, EnumEnchantmentType.BOW, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
-    setName("witherArrow");
+    setName(NAME);
+    setRegistryName(NAME);
   }
 
   @Override

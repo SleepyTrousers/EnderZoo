@@ -16,6 +16,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -100,7 +101,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {
+  protected SoundEvent getHurtSound() {    
     return SoundEvents.entity_zombie_hurt;    
   }
 
@@ -118,7 +119,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
 
     if(isRidingMount()) {
-      EntityLiving entLiving = ((EntityLiving) ridingEntity);
+      EntityLiving entLiving = ((EntityLiving) getRidingEntity());
       if(lastAttackTarget != getAttackTarget() || firstUpdate) {
         EntityUtil.cancelCurrentTasks(entLiving);
         lastAttackTarget = getAttackTarget();
@@ -133,21 +134,21 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
       isMounted = isRidingMount();
     }
     if(isBurning() && isRidingMount()) {
-      ridingEntity.setFire(8);
+      getRidingEntity().setFire(8);
     }
     if(Config.fallenKnightArchersSwitchToMelee && (!isMounted || !Config.fallKnightMountedArchesMaintainDistance)
-        && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {
-      setCurrentItemOrArmor(0, getSwordForLevel(getRandomEquipmentLevel()));
+        && getAttackTarget() != null && isRanged() && getDistanceSqToEntity(getAttackTarget()) < 5) {     
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getSwordForLevel(getRandomEquipmentLevel()));      
     }
   }
 
   private boolean isRidingMount() {
-    return isRiding() && ridingEntity.getClass() == EntityFallenMount.class;
+    return isRiding() && getRidingEntity().getClass() == EntityFallenMount.class;
   }
 
   @Override
   protected void despawnEntity() {
-    Entity mount = ridingEntity;
+    Entity mount = getRidingEntity();
     super.despawnEntity();
     if(isDead && mount != null) {
       mount.setDead();
@@ -155,7 +156,8 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private void spawnMount() {
-    if(ridingEntity != null || !spawned) {
+    
+    if(isRiding() || !spawned) {
       return;
     }
 
@@ -174,8 +176,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     if(mount != null) {
       setCanPickUpLoot(false);
       setCanBreakDoors(false);
-      worldObj.spawnEntityInWorld(mount);
-      mountEntity(mount);
+      worldObj.spawnEntityInWorld(mount);      
+      startRiding(mount);
+      
     }
   }
 
@@ -194,28 +197,31 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
       //Skip gold armor, I don't like it
       armorLevel++;
     }
-
     float chancePerPiece = isHardDifficulty() ? Config.fallenKnightChancePerArmorPieceHard
         : Config.fallenKnightChancePerArmorPiece;
     chancePerPiece *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
 
-    for (int slot = 1; slot < 5; slot++) {
-      ItemStack itemStack = getEquipmentInSlot(slot);
+    for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
+      ItemStack itemStack = getItemStackFromSlot(slot);
       if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
-        Item item = EntityLiving.getArmorItemForSlot(slot, armorLevel);
+        Item item = EntityLiving.func_184636_a(slot, armorLevel);
         if(item != null) {
           ItemStack stack = new ItemStack(item);
           if(armorLevel == 0) {
             ((ItemArmor) item).setColor(stack, 0);
-          }
-          setCurrentItemOrArmor(slot, stack);
+          }          
+          setItemStackToSlot(slot, stack);
         }
       }
     }
     if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
-      setCurrentItemOrArmor(0, getSwordForLevel(equipmentLevel));
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getSwordForLevel(equipmentLevel));
+      //TODO: 1.9 Config
+      if(Math.random() <= 0.5) {
+        setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getShieldForLevel(getRandomEquipmentLevel()));
+      }
     } else {
-      setCurrentItemOrArmor(0, new ItemStack(Items.bow));
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.bow));
     }
   }
 
@@ -258,6 +264,11 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
       return new ItemStack(Items.diamond_sword);
     }
     return new ItemStack(Items.iron_sword);
+  }
+  
+  private ItemStack getShieldForLevel(int swordLevel) {
+    //TODO: 1.9 Can I do something better here?
+    return new ItemStack(Items.shield);
   }
 
   @Override

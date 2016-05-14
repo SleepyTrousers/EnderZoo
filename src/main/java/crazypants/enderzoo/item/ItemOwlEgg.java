@@ -31,6 +31,7 @@ public class ItemOwlEgg extends Item {
 
   private ItemOwlEgg() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }

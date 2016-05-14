@@ -2,8 +2,8 @@ package crazypants.enderzoo.potion;
 
 import crazypants.enderzoo.EnderZoo;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.item.ItemStack;
@@ -26,7 +26,7 @@ public class RenderEntityPotionEZ extends RenderSnowball<EntityPotionEZ> {
   }
 
   @Override
-  public ItemStack func_177082_d(EntityPotionEZ entityIn) {    
+  public ItemStack getPotion(EntityPotionEZ entityIn) {    
     return entityIn.getPotion();
   }
   

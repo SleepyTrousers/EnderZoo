@@ -16,6 +16,7 @@ public class ItemWitheringDust extends Item {
 
   private ItemWitheringDust() {
     setUnlocalizedName(NAME);
+    setRegistryName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }
