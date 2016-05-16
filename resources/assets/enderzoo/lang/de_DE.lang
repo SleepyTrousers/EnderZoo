@@ -28,8 +28,8 @@ entity.enderzoo.FallenKnight.desc.1=Mit Fernwaffen ausgestatteter Zombie
 entity.enderzoo.WitherWitch.desc.1=Wirft mit Withertränken
 
 //Enchants
-enchantment.enderzoo.witherArrow=Zerfall
-enchantment.enderzoo.witherWeapon=Verfall
+enchantment.witherArrow=Zerfall
+enchantment.witherWeapon=Verfall
 
 //Blocks
 tile.blockConfusingCharge.name=Verwirrende Ladung

@@ -30,8 +30,8 @@ entity.enderzoo.FallenKnight.desc.1=Zombie en armure qui attaque à distance.
 entity.enderzoo.WitherWitch.desc.1=Jette des potions de décomposition.
 
 //Enchants
-enchantment.enderzoo.witherArrow=Décomposition (flèche)
-enchantment.enderzoo.witherWeapon=Décomposition (arme)
+enchantment.witherArrow=Décomposition (flèche)
+enchantment.witherWeapon=Décomposition (arme)
 
 //Blocks
 tile.blockConfusingCharge.name=Charge de confusion

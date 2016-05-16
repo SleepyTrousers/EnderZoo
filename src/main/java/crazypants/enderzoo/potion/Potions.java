@@ -119,6 +119,40 @@ public class Potions {
     }
   }
 
+  public PotionType getWithering() {
+    return withering;
+  }
+
+  public PotionType getWitheringLong() {
+    return witheringLong;
+  }
+
+  public PotionType getConfusion() {
+    return confusion;
+  }
+
+  public PotionType getConfusionLong() {
+    return confusionLong;
+  }
+
+  public PotionType getFloating() {
+    return floating;
+  }
+
+  public PotionType getFloatingLong() {
+    return floatingLong;
+  }
+
+  public PotionType getFloatingTwo() {
+    return floatingTwo;
+  }
+
+  public FloatingPotion getFloatingPotion() {
+    return floatingPotion;
+  }
+
+
+
   static class ItemPredicateInstance implements Predicate<ItemStack> {
     private final Item item;
     private final int meta;

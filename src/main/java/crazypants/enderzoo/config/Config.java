@@ -200,7 +200,7 @@ public final class Config {
   public static boolean guardiansBowEnabled = true;
   public static int guardiansBowDrawTime = 14;
   public static float guardiansBowDamageBonus = 0f;
-  public static float guardiansBowForceMultiplier = 3;
+  public static float guardiansBowForceMultiplier = 1.5f;
   public static float guardiansBowFovMultiplier = 0.35F;
 
   public static final Section sectionPotions = new Section("Potions", "potions");

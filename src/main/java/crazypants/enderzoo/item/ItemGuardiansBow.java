@@ -55,12 +55,6 @@ public class ItemGuardiansBow extends ItemBow {
 
   public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
     
-//    if(true) {
-//      System.out.println("asdasdasdasd");
-//      super.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
-//      return;
-//    }
-//    
     if (! (entityLiving instanceof EntityPlayer)) {
       return;
     }
@@ -89,7 +83,7 @@ public class ItemGuardiansBow extends ItemBow {
         EntityArrow entityarrow = itemarrow.makeTippedArrow(worldIn, itemstack, entityplayer);
         //TODO: 1.9 Arrows dont fly straight with higher force 
 //        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * 3.0F * forceMultiplier, 1.0F);
-        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * (3.0F + 2), 0.25F);
+        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * (3.0F + forceMultiplier), 0.25F);
 
         if (drawRatio == 1.0F) {
           entityarrow.setIsCritical(true);
@@ -185,31 +179,10 @@ public class ItemGuardiansBow extends ItemBow {
     return EnumAction.BOW;
   }
 
-  //TODO: 1.9 Still needed?
-//  @Override
-//  public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
-//    ArrowNockEvent event = new ArrowNockEvent(player, stack, hand, world, bFull3D);
-//    MinecraftForge.EVENT_BUS.post(event);
-//    if(event.isCanceled()) {
-//      return event.getAction();
-//    }
-//    if(player.capabilities.isCreativeMode || player.inventory.hasItemStack(new ItemStack(Items.arrow))) {
-//      player.setItemInUse(stack, getMaxItemUseDuration(stack));
-//    }
-//    return stack;
-//  }
-
   @Override
   public int getItemEnchantability() {
     return 1;
   }
-
-  //TODO: 1.9
-//  @Override
-//  @SideOnly(Side.CLIENT)
-//  public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
-//    return GuardiansBowModelLoader.getModel(stack, player, useRemaining);
-//  }
 
   public int getDrawTime() {
     return drawTime;

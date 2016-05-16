@@ -29,8 +29,8 @@ entity.enderzoo.FallenKnight.desc.1=Zombie Blindé À distance
 entity.enderzoo.WitherWitch.desc.1=Envoie des Potions de Déssechement
 
 //Enchants
-enchantment.enderzoo.witherArrow=Déssechement 
-enchantment.enderzoo.witherWeapon=Flétrissure
+enchantment.witherArrow=Déssechement 
+enchantment.witherWeapon=Flétrissure
 
 //Blocks
 tile.blockConfusingCharge.name=Charge Désorientante
