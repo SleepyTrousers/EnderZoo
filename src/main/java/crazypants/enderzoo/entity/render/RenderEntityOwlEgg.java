@@ -18,7 +18,7 @@ public class RenderEntityOwlEgg extends RenderSnowball<EntityOwlEgg> {
   public static final Factory FACTORY = new Factory();
   
   public RenderEntityOwlEgg(RenderManager renderManagerIn, RenderItem itemRendererIn) {
-    super(renderManagerIn, EnderZoo.itemPotionEZ, itemRendererIn);
+    super(renderManagerIn, EnderZoo.itemOwlEgg, itemRendererIn);
   }
   
   @Override

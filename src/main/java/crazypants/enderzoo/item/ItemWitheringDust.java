@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemWitheringDust extends Item {
 
-  public static final String NAME = "witheringDust";
+  public static final String NAME = "witheringDust";  
 
   public static ItemWitheringDust create() {
     ItemWitheringDust res = new ItemWitheringDust();
@@ -22,11 +22,7 @@ public class ItemWitheringDust extends Item {
   }
   
   private void init() {
-    GameRegistry.register(this);    
-       
-    //TODO: 1.9 Recipes for wither potions
+    GameRegistry.register(this);           
   }
-  
-  
-  
+ 
 }

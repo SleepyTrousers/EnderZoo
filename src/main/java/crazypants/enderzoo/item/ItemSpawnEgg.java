@@ -39,7 +39,7 @@ public class ItemSpawnEgg extends Item {
 
   private void init() {
     GameRegistry.register(this);
-    
+    //ItemColors.
   }
 
   @Override
@@ -61,15 +61,6 @@ public class ItemSpawnEgg extends Item {
       }
     }
   }
-
-  //TODO: 1.9
-//  @Override
-//  @SideOnly(Side.CLIENT)
-//  public int getColorFromItemStack(ItemStack stack, int pass) {
-//    int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-//    MobInfo mob = MobInfo.values()[damage];
-//    return pass == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();  
-//  }
 
   @Override
   public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

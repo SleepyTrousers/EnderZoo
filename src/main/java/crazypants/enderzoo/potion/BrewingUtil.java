@@ -2,10 +2,13 @@ package crazypants.enderzoo.potion;
 
 import crazypants.enderzoo.EnderZoo;
 import net.minecraft.init.Items;
+import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.potion.PotionHelper;
+import net.minecraft.potion.PotionUtils;
 
 public class BrewingUtil {
 
@@ -28,7 +31,7 @@ public class BrewingUtil {
     if (isSplash) {
       addIngredientToPotion(result, GUN_POWDER);
     }
-    return result;
+    return result;    
   }
 
   public static ItemStack createWitherPotion(boolean isProlonged, boolean isSplash) {

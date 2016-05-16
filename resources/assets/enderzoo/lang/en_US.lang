@@ -39,6 +39,19 @@ enchantment.enderzoo.witherWeapon=Decay
 EnderZoo.floatingPotion=Floating
 EnderZoo.floatingPotion.postfix=Potion of Rising
 
+potion.effect.floating=Potion of Rising
+splash_potion.effect.floating=Splash Potion of Rising
+lingering_potion.effect.floating=Lingering Potion of Rising
+
+potion.effect.withering=Potion of Decay
+splash_potion.effect.withering=Splash Potion of Decay
+lingering_potion.effect.withering=Lingering Potion of Decay
+
+potion.effect.confusion=Potion of Confusion
+splash_potion.effect.confusion=Splash Potion of Confusion
+lingering_potion.effect.confusion=Lingering Potion of Confusion
+
+
 //Blocks
 tile.blockConfusingCharge.name=Confusing Charge
 tile.blockEnderCharge.name=Ender Charge

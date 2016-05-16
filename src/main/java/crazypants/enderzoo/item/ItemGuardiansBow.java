@@ -54,6 +54,13 @@ public class ItemGuardiansBow extends ItemBow {
   }
 
   public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {
+    
+//    if(true) {
+//      System.out.println("asdasdasdasd");
+//      super.onPlayerStoppedUsing(stack, worldIn, entityLiving, timeLeft);
+//      return;
+//    }
+//    
     if (! (entityLiving instanceof EntityPlayer)) {
       return;
     }
@@ -80,7 +87,9 @@ public class ItemGuardiansBow extends ItemBow {
       if (!worldIn.isRemote) {
         ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.arrow));
         EntityArrow entityarrow = itemarrow.makeTippedArrow(worldIn, itemstack, entityplayer);
-        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * 3.0F * forceMultiplier, 1.0F);
+        //TODO: 1.9 Arrows dont fly straight with higher force 
+//        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * 3.0F * forceMultiplier, 1.0F);
+        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * (3.0F + 2), 0.25F);
 
         if (drawRatio == 1.0F) {
           entityarrow.setIsCritical(true);
@@ -121,66 +130,6 @@ public class ItemGuardiansBow extends ItemBow {
     }
 
   }
-  
-//  @Override
-//  public void onPlayerStoppedUsing(ItemStack stack, World world, EntityLivingBase elb, int timeLeft) {
-//    if (! (elb instanceof EntityPlayer)) {
-//      return;
-//    }
-//    EntityPlayer player = (EntityPlayer)elb;
-//    
-//    int drawDuration = getMaxItemUseDuration(stack) - timeLeft;
-//    boolean infiniteArrows = player.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.infinity, stack) > 0;
-//    if(infiniteArrows || player.inventory.hasItemStack(new ItemStack(Items.arrow))) {
-//
-//      ItemStack itemstack = func_185060_a(player);
-//      int i = this.getMaxItemUseDuration(stack) - timeLeft;
-//      i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(stack, world, player, i, itemstack != null || flag);
-//      if (i < 0) return;
-//      
-//      float force = drawDuration / (float) getDrawTime();
-//      force = (force * force + force * 2.0F) / 3.0F;
-//
-//      if(force < 0.2D) {
-//        return;
-//      }
-//      if(force > 1.0F) {
-//        force = 1.0F;
-//      }
-//
-//      EntityArrow entityarrow = new EntityArrow(world, player, force * forceMultiplier);
-//      if(force == 1.0F) {
-//        entityarrow.setIsCritical(true);
-//      }
-//
-//      entityarrow.setDamage(entityarrow.getDamage() + damageBonus);
-//
-//      int powerLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, stack);
-//      if(powerLevel > 0) {
-//        entityarrow.setDamage(entityarrow.getDamage() + powerLevel * 0.5D + 0.5D);
-//      }
-//
-//      int punchLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, stack);
-//      if(punchLevel > 0) {
-//        entityarrow.setKnockbackStrength(punchLevel);
-//      }
-//
-//      if(EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, stack) > 0) {
-//        entityarrow.setFire(100);
-//      }
-//      stack.damageItem(1, player);
-//      world.playSoundAtEntity(player, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + force * 0.5F);
-//
-//      if(infiniteArrows) {
-//        entityarrow.canBePickedUp = 2;
-//      } else {
-//        player.inventory.consumeInventoryItem(Items.arrow);
-//      }
-//      if(!world.isRemote) {
-//        world.spawnEntityInWorld(entityarrow);
-//      }
-//    }
-//  }
 
   private ItemStack getArrowsToShoot(EntityPlayer player) {
     if (isArrow(player.getHeldItem(EnumHand.OFF_HAND))) {

@@ -27,7 +27,6 @@ import crazypants.enderzoo.entity.render.RenderFallenMount;
 import crazypants.enderzoo.entity.render.RenderOwl;
 import crazypants.enderzoo.entity.render.RenderWitherCat;
 import crazypants.enderzoo.entity.render.RenderWitherWitch;
-import crazypants.enderzoo.item.GuardiansBowModelLoader;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
@@ -35,18 +34,16 @@ import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemOwlEgg;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
-import crazypants.enderzoo.potion.EntityPotionEZ;
-import crazypants.enderzoo.potion.RenderEntityPotionEZ;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemSplashPotion;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -93,8 +90,7 @@ public class ClientProxy extends CommonProxy {
     if (Config.owlEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityOwl.class, RenderOwl.FACTORY);
     }
-    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);
-    RenderingRegistry.registerEntityRenderingHandler(EntityPotionEZ.class, RenderEntityPotionEZ.FACTORY);
+    RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);    
     RenderingRegistry.registerEntityRenderingHandler(EntityOwlEgg.class, RenderEntityOwlEgg.FACTORY);
 
   }
@@ -109,6 +105,18 @@ public class ClientProxy extends CommonProxy {
     regRenderer(EnderZoo.itemOwlEgg, ItemOwlEgg.NAME);
     regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
 
+    //Color the spawn eggs
+    IItemColor handler = new IItemColor() {
+      @Override
+      public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+        int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+        MobInfo mob = MobInfo.values()[damage];
+        return tintIndex == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();
+
+      }
+    };
+    Minecraft.getMinecraft().getItemColors().registerItemColorHandler(handler, EnderZoo.itemSpawnEgg);
+
     for (MobInfo inf : MobInfo.values()) {
       if (inf.isEnabled()) {
         regRenderer(EnderZoo.itemSpawnEgg, inf.ordinal(), ItemSpawnEgg.NAME);
@@ -117,7 +125,6 @@ public class ClientProxy extends CommonProxy {
 
     if (Config.guardiansBowEnabled) {
       regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
-      GuardiansBowModelLoader.registerVariants();
     }
     if (Config.confusingChargeEnabled) {
       regRenderer(Item.getItemFromBlock(EnderZoo.blockConfusingCharge), BlockConfusingCharge.NAME);
@@ -128,22 +135,7 @@ public class ClientProxy extends CommonProxy {
     if (Config.enderChargeEnabled) {
       regRenderer(Item.getItemFromBlock(EnderZoo.blockEnderCharge), BlockEnderCharge.NAME);
     }
-
-    RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-    renderItem.getItemModelMesher().register(EnderZoo.itemPotionEZ, new ItemMeshDefinition() {
-      @Override
-      public ModelResourceLocation getModelLocation(ItemStack stack) {
-        // TODO: 1.9
-        if (stack.getItem() instanceof ItemSplashPotion) {
-          return new ModelResourceLocation("bottle_splash", "inventory");
-        }
-        return new ModelResourceLocation("bottle_drinkable", "inventory");
-
-        // return ItemPotion.isSplash(stack.getMetadata()) ? new
-        // ModelResourceLocation("bottle_splash", "inventory")
-        // : new ModelResourceLocation("bottle_drinkable", "inventory");
-      }
-    });
+    
   }
 
   private void regRenderer(Item item, int meta, String name) {

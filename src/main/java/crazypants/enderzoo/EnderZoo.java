@@ -17,8 +17,7 @@ import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemOwlEgg;
 import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
-import crazypants.enderzoo.potion.FloatingPotion;
-import crazypants.enderzoo.potion.ItemPotionEZ;
+import crazypants.enderzoo.potion.Potions;
 import crazypants.enderzoo.spawn.MobSpawnEventHandler;
 import crazypants.enderzoo.spawn.MobSpawns;
 import net.minecraft.init.Blocks;
@@ -57,16 +56,14 @@ public class EnderZoo {
   public static ItemForCreativeMenuIcon itemForCreativeMenuIcon;
   public static ItemGuardiansBow itemGuardiansBow;
   public static ItemOwlEgg itemOwlEgg;
-  
-  public static ItemPotionEZ itemPotionEZ;  
 
-  public static FloatingPotion floatingPotion;
-  
   public static BlockConfusingCharge blockConfusingCharge;
   public static BlockEnderCharge blockEnderCharge;
   public static BlockConcussionCharge blockConcussionCharge;
 
   public static MobSpawnEventHandler spawnEventHandler;
+  
+  public static Potions potions;
 
   @EventHandler
   public void preInit(FMLPreInitializationEvent event) {
@@ -94,12 +91,10 @@ public class EnderZoo {
     if (Config.concussionChargeEnabled) {
       blockConcussionCharge = BlockConcussionCharge.create();
     }
-    
-    itemPotionEZ = ItemPotionEZ.create();
-    
-    if(Config.floatingPotionEnabled) {
-      floatingPotion = FloatingPotion.create();
-    }
+   
+    potions = new Potions();
+    potions.registerPotions();
+   
 
     //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     //        System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -155,12 +150,7 @@ public class EnderZoo {
       ItemStack cc = new ItemStack(blockConcussionCharge);
       GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
     }
-    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);
-    
-    if(Config.floatingPotionEnabled) {
-      floatingPotion.addRecipes();
-    }
-
+    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);   
   }
 
 }
