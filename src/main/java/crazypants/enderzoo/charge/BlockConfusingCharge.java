@@ -15,12 +15,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntitySpellParticleFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -51,21 +48,19 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     return res;
   }
 
-  private String name;
-
   protected BlockConfusingCharge() {
     this(NAME);
   }
 
   protected BlockConfusingCharge(String name) {
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    // setBlockName(name);
+    setRegistryName(name);
     setUnlocalizedName(name);
-    this.name = name;
   }
 
   protected void init() {
-    GameRegistry.registerBlock(this, name);
+    GameRegistry.register(this);
+    GameRegistry.register(new ItemBlock(this), getRegistryName());
     ChargeRegister.instance.registerCharge(this);
   }
 
