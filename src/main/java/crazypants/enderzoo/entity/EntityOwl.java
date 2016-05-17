@@ -39,6 +39,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
@@ -57,6 +58,10 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     SND_HOOT2.setRegistryName("owl.hootDouble");
     SND_HURT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hurt"));
     SND_HURT.setRegistryName("owl.hurt");
+    
+    GameRegistry.register(EntityOwl.SND_HOOT);
+    GameRegistry.register(EntityOwl.SND_HOOT2);
+    GameRegistry.register(EntityOwl.SND_HURT);
   }
   
 

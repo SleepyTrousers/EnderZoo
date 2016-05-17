@@ -47,7 +47,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ClientProxy extends CommonProxy {
 
@@ -88,10 +87,7 @@ public class ClientProxy extends CommonProxy {
     if (Config.direSlimeEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityDireSlime.class, RenderDireSlime.FACTORY);
     }
-    if (Config.owlEnabled) {
-      GameRegistry.register(EntityOwl.SND_HOOT);
-      GameRegistry.register(EntityOwl.SND_HOOT2);
-      GameRegistry.register(EntityOwl.SND_HURT);
+    if (Config.owlEnabled) {      
       RenderingRegistry.registerEntityRenderingHandler(EntityOwl.class, RenderOwl.FACTORY);
     }
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);    
