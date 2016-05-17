@@ -289,9 +289,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       EntityFX fx = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), startX + xOffset, startY + yOffset,
           startZ + zOffset, 0.0D, 0.0D, 0.0D);
       if (fx != null) {
-        fx.setRBGColorF(0.8f, 0.2f, 0.2f);
-        // TODO: 1.9
-        // fx.motionY *= 0.025f;
+        fx.setRBGColorF(0.8f, 0.2f, 0.2f);       
       }
     }
   }

@@ -1,46 +1,46 @@
 {
-  "direwolf.hurt": {
+  "enderzoo:direwolf.hurt": {
     "category": "hostile",
     "sounds": [
-      "direwolf/hurt"
+      "enderzoo:direwolf/hurt"
     ]
   },
-  "direwolf.death": {
+  "enderzoo:direwolf.death": {
     "category": "hostile",
     "sounds": [
-      "direwolf/death"
+      "enderzoo:direwolf/death"
     ]
   },
-  "direwolf.growl": {
+  "enderzoo:direwolf.growl": {
     "category": "hostile",
     "sounds": [
-      "direwolf/growl1",
-      "direwolf/growl2",
-      "direwolf/growl3"
+      "enderzoo:direwolf/growl1",
+      "enderzoo:direwolf/growl2",
+      "enderzoo:direwolf/growl3"
     ]
   },
-  "direwolf.howl": {
+  "enderzoo:direwolf.howl": {
     "category": "hostile",
     "sounds": [
-      "direwolf/howl"
+      "enderzoo:direwolf/howl"
     ]
   },
-  "owl.hootDouble": {
+  "enderzoo:owl.hootDouble": {
     "category": "neutral",
     "sounds": [
-      "owl/hootDouble"
+      "enderzoo:owl/hootDouble"
     ]
   },
-  "owl.hootSingle": {
+  "enderzoo:owl.hootSingle": {
     "category": "neutral",
     "sounds": [
-      "owl/hootSingle"
+      "enderzoo:owl/hootSingle"
     ]
   },
-   "owl.hurt": {
+   "enderzoo:owl.hurt": {
     "category": "neutral",
     "sounds": [
-      "owl/hurt"
+      "enderzoo:owl/hurt"
     ]
   }
 }

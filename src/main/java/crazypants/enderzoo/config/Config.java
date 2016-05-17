@@ -101,6 +101,7 @@ public final class Config {
   public static float fallenKnightChanceMounted = 0.75f;
   public static float fallenKnightChanceArmorUpgradeHard = 0.4f;
   public static float fallenKnightChanceArmorUpgrade = 0.2f;
+  public static double fallenKnightChanceShield = 0.3;
   public static boolean fallKnightMountedArchesMaintainDistance = true;
   public static boolean fallenKnightArchersSwitchToMelee = true;
 
@@ -338,6 +339,8 @@ public final class Config {
         "The chance the type of armor equipped will be improved when dificult is hard").getDouble(fallenKnightChanceArmorUpgradeHard);
     fallenKnightChanceArmorUpgrade = (float) config.get(sectionFallenKnight.name, "fallenKnightChanceArmorUpgrade", fallenKnightChanceArmorUpgrade,
         "The chance the type of armor equipped will be improved").getDouble(fallenKnightChanceArmorUpgrade);
+    fallenKnightChanceShield= (float) config.get(sectionFallenKnight.name, "fallenKnightChanceShield", fallenKnightChanceShield,
+        "The chance ta shield will be equipped").getDouble(fallenKnightChanceShield);
     fallKnightMountedArchesMaintainDistance = config.getBoolean("fallKnightMountedArchesMaintainDistance", sectionFallenKnight.name,
         fallKnightMountedArchesMaintainDistance, "When true mounted archer knigts will attempt to keep distance between themselves and their target");
     fallenKnightArchersSwitchToMelee = config.getBoolean("fallenKnightArchersSwitchToMelee", sectionFallenKnight.name, fallenKnightArchersSwitchToMelee,

@@ -8,6 +8,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -73,7 +74,7 @@ public class DebugUtil {
   @SubscribeEvent
   public void onMonsterSpawn(LivingSpawnEvent evt) {
     if (evt.getEntityLiving() != null) { //&& !evt.entityLiving.getClass().getName().contains("enderzoo")) {
-      //      evt.setResult(Result.DENY);
+            evt.setResult(Result.DENY);
     }
   }
 

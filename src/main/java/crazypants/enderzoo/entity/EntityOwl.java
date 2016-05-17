@@ -46,9 +46,19 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   public static final int EGG_BG_COL = 0xC17949;
   public static final int EGG_FG_COL = 0xFFDDC6;
 
-  private static final SoundEvent SND_HOOT = new SoundEvent(new ResourceLocation("enderzoo:owl.hootSingle"));
-  private static final SoundEvent SND_HOOT2 = new SoundEvent(new ResourceLocation("enderzoo:owl.hootDouble"));
-  private static final SoundEvent SND_HURT = new SoundEvent(new ResourceLocation("enderzoo:owl.hurt"));
+  public static final SoundEvent SND_HOOT;
+  public static final SoundEvent SND_HOOT2;
+  public static final SoundEvent SND_HURT;
+  
+  static {
+    SND_HOOT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hootSingle"));
+    SND_HOOT.setRegistryName("enderzoo:owl.hootSingle");
+    SND_HOOT2 = new SoundEvent(new ResourceLocation("enderzoo", "owl.hootDouble"));
+    SND_HOOT2.setRegistryName("owl.hootDouble");
+    SND_HURT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hurt"));
+    SND_HURT.setRegistryName("owl.hurt");
+  }
+  
 
   private float wingRotation;
   private float prevWingRotation;
@@ -72,6 +82,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     setSize(0.4F, 0.85F);
     stepHeight = 1.0F;
 
+    
     int pri = 0;
     tasks.addTask(++pri, new EntityAIFlyingPanic(this, 2));
     tasks.addTask(++pri, new EntityAIFlyingAttackOnCollide(this, 2.5, false));    

@@ -4,7 +4,6 @@ import crazypants.enderzoo.entity.EntityUtil;
 import crazypants.enderzoo.entity.SpawnUtil;
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IRangedAttackMob;
@@ -186,12 +185,6 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   }
 
   protected PathNavigate getNavigator() {
-    if(entityHost.isRiding()) {
-      Entity ent = entityHost.getRidingEntity();
-      if(ent instanceof EntityLiving) {
-        return ((EntityLiving) ent).getNavigator();
-      }
-    }
     return entityHost.getNavigator();
   }
 }

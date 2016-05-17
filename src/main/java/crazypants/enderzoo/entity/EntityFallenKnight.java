@@ -216,8 +216,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
     if(rand.nextFloat() > Config.fallenKnightRangedRatio) {
       setItemStackToSlot(EntityEquipmentSlot.MAINHAND, getSwordForLevel(equipmentLevel));
-      //TODO: 1.9 Config
-      if(Math.random() <= 0.5) {
+      if(Math.random() <= Config.fallenKnightChanceShield) {
         setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getShieldForLevel(getRandomEquipmentLevel()));
       }
     } else {

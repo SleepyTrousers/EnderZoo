@@ -106,7 +106,7 @@ public class ItemGuardiansBow extends ItemBow {
           entityarrow.canBePickedUp = EntityArrow.PickupStatus.CREATIVE_ONLY;
         }
         
-        entityarrow.setDamage(entityarrow.getDamage() + damageBonus);
+        entityarrow.setDamage(entityarrow.getDamage() + damageBonus + 20);
         
         worldIn.spawnEntityInWorld(entityarrow);
       }

@@ -208,21 +208,6 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     }
   }
 
-//  @Override
-//  public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
-//    //Need to pretend we arn't being ridden else it will update as if a player was riding us    
-//    Entity prev = riddenByEntity;
-//    riddenByEntity = null;    
-//    super.moveEntityWithHeading(p_70612_1_, p_70612_2_);    
-//    riddenByEntity = prev;
-//  }
-  
-  //Need to pretend we arn't being ridden else it will update as if a player was riding us
-  public boolean canBeSteered() {
-    Entity entity = getControllingPassenger();
-    return entity instanceof EntityPlayer;
-  }
-
   @Override
   public boolean attackEntityAsMob(Entity target) {
     if(isRidden() || isDead) {

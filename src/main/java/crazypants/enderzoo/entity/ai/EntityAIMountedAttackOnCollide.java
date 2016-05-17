@@ -1,8 +1,6 @@
 package crazypants.enderzoo.entity.ai;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
@@ -88,7 +86,8 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
    * Execute a one shot task or start executing a continuous task
    */
   public void startExecuting() {
-    getNavigator().setPath(entityPathEntity, speedTowardsTarget);
+    PathNavigate nav = getNavigator();
+    nav.setPath(entityPathEntity, speedTowardsTarget);
     pathUpdateTimer = 0;
   }
 
@@ -103,7 +102,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
    * Updates the task
    */
   public void updateTask() {
-    
+
     EntityLivingBase target = attacker.getAttackTarget();
     attacker.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);        
     --pathUpdateTimer;
@@ -160,12 +159,6 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   }
 
   protected PathNavigate getNavigator() {
-    if(attacker.isRiding()) {
-      Entity ent = attacker.getRidingEntity();
-      if(ent instanceof EntityLiving) {
-        return ((EntityLiving)ent).getNavigator();
-      }
-    }
     return attacker.getNavigator();
   }
   
