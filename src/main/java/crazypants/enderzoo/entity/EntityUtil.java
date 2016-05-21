@@ -195,12 +195,8 @@ public class EntityUtil {
     Block block = bs.getBlock();
     if (!block.getMaterial(bs).isSolid()) {
       return false;
-    }
-
-//    AxisAlignedBB collides = block.getSelectedBoundingBox(bs, world, bellow);    
-//    AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
+    }    
     AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
-//    System.out.println("EntityUtil.canLandAtLocation: " + block.getRegistryName() + " " + collides);
     return collides != null;
   }
 
