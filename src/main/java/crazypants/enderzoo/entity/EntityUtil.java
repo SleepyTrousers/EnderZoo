@@ -111,7 +111,7 @@ public class EntityUtil {
   }
 
   public static boolean isOnGround(EntityCreature entity) {
-    List<AxisAlignedBB> collides = entity.worldObj.getCubes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
+    List<AxisAlignedBB> collides = entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox().offset(0, -0.1, 0));
     if (collides == null || collides.isEmpty()) {
       return false;
     }
@@ -197,7 +197,10 @@ public class EntityUtil {
       return false;
     }
 
+//    AxisAlignedBB collides = block.getSelectedBoundingBox(bs, world, bellow);    
+//    AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
     AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
+//    System.out.println("EntityUtil.canLandAtLocation: " + block.getRegistryName() + " " + collides);
     return collides != null;
   }
 

@@ -14,7 +14,7 @@ public class EnchantmentWitherWeapon extends Enchantment {
   private static final String NAME = "witherWeapon";
 
   protected EnchantmentWitherWeapon() {
-    super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});    
+    super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND});    
     setName(NAME);
     setRegistryName(NAME);
 
@@ -36,11 +36,10 @@ public class EnchantmentWitherWeapon extends Enchantment {
   }
 
   @Override
-  //public void func_151368_a(EntityLivingBase source, Entity entityHit, int p_151368_3_) {
   public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if (entityHit instanceof EntityLivingBase) {
-      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.wither, Config.enchantmentWitherWeaponDuration));
+      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.WITHER, Config.enchantmentWitherWeaponDuration));
     }
   }
 

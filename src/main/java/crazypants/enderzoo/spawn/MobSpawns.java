@@ -47,7 +47,7 @@ public final class MobSpawns {
     spawnEntries.add(entry);
 
     @SuppressWarnings("unchecked")
-    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.stringToClassMapping.get(entry.getMobName());
+    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.NAME_TO_CLASS.get(entry.getMobName());
     if (clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
       return;

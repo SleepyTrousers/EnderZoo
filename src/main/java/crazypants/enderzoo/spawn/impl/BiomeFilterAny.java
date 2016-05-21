@@ -16,7 +16,7 @@ public class BiomeFilterAny extends AbstractBiomeFilter {
       return new BiomeGenBase[0];
     }
     Set<BiomeGenBase> passedBiomes = new HashSet<BiomeGenBase>();
-    Iterator<BiomeGenBase> it = BiomeGenBase.biomeRegistry.iterator();
+    Iterator<BiomeGenBase> it = BiomeGenBase.REGISTRY.iterator();
     while(it.hasNext()) {
       BiomeGenBase candidate = it.next();
       if (candidate != null && isMatchingBiome(candidate)) {

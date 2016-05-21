@@ -14,20 +14,20 @@ public class BrewingUtil {
   public static ItemStack createHarmingPotion(boolean isAugmented, boolean isSplash) {
     ItemStack res;
     if(isSplash) {
-      res = new ItemStack(Items.splash_potion);
+      res = new ItemStack(Items.SPLASH_POTION);
     } else {
-      res = new ItemStack(Items.potionitem);
+      res = new ItemStack(Items.POTIONITEM);
     }
-    PotionUtils.addPotionToItemStack(res, PotionTypes.harming);
+    PotionUtils.addPotionToItemStack(res, PotionTypes.HARMING);
     return res;            
   }
 
   public static ItemStack createWitherPotion(boolean isProlonged, boolean isSplash) {
     ItemStack res;
     if(isSplash) {
-      res = new ItemStack(Items.splash_potion);
+      res = new ItemStack(Items.SPLASH_POTION);
     } else {
-      res = new ItemStack(Items.potionitem);
+      res = new ItemStack(Items.POTIONITEM);
     }
     if(isProlonged) {
       PotionUtils.addPotionToItemStack(res, EnderZoo.potions.getWitheringLong());
@@ -40,14 +40,14 @@ public class BrewingUtil {
   public static ItemStack createHealthPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
     ItemStack res;
     if(isSplash) {
-      res = new ItemStack(Items.splash_potion);
+      res = new ItemStack(Items.SPLASH_POTION);
     } else {
-      res = new ItemStack(Items.potionitem);
+      res = new ItemStack(Items.POTIONITEM);
     }
     if(isProlonged || isAugmented) {
-      PotionUtils.addPotionToItemStack(res, PotionTypes.strong_healing);
+      PotionUtils.addPotionToItemStack(res, PotionTypes.STRONG_HEALING);
     } else {
-      PotionUtils.addPotionToItemStack(res, PotionTypes.healing);
+      PotionUtils.addPotionToItemStack(res, PotionTypes.HEALING);
     }
     return res;
   }
@@ -55,16 +55,16 @@ public class BrewingUtil {
   public static ItemStack createRegenerationPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
     ItemStack res;
     if(isSplash) {
-      res = new ItemStack(Items.splash_potion);
+      res = new ItemStack(Items.SPLASH_POTION);
     } else {
-      res = new ItemStack(Items.potionitem);
+      res = new ItemStack(Items.POTIONITEM);
     }
     if(isAugmented) {
-      PotionUtils.addPotionToItemStack(res, PotionTypes.strong_regeneration);
+      PotionUtils.addPotionToItemStack(res, PotionTypes.STRONG_REGENERATION);
     } else if(isProlonged) {
-      PotionUtils.addPotionToItemStack(res, PotionTypes.long_regeneration);
+      PotionUtils.addPotionToItemStack(res, PotionTypes.LONG_REGENERATION);
     } else {
-      PotionUtils.addPotionToItemStack(res, PotionTypes.regeneration);
+      PotionUtils.addPotionToItemStack(res, PotionTypes.REGENERATION);
     }
     return res;
   }

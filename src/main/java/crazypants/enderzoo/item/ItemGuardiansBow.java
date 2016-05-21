@@ -59,7 +59,7 @@ public class ItemGuardiansBow extends ItemBow {
       return;
     }
     EntityPlayer entityplayer = (EntityPlayer) entityLiving;
-    boolean hasInfinateArrows = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.infinity, stack) > 0;
+    boolean hasInfinateArrows = entityplayer.capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantments.INFINITY, stack) > 0;
     ItemStack itemstack = getArrowsToShoot(entityplayer);
     int draw = getMaxItemUseDuration(stack) - timeLeft;
     draw = ForgeEventFactory.onArrowLoose(stack, worldIn, (EntityPlayer) entityLiving, draw, itemstack != null || hasInfinateArrows);
@@ -68,42 +68,44 @@ public class ItemGuardiansBow extends ItemBow {
     }
 
     if(itemstack == null && hasInfinateArrows) {
-      itemstack = new ItemStack(Items.arrow);
+      itemstack = new ItemStack(Items.ARROW);
     }
     
     if (itemstack == null) {
       return;
     }
 
-    float drawRatio = func_185059_b(draw);
+    float drawRatio = getArrowVelocity(draw);
     if (drawRatio >= 0.1) {
       boolean arrowIsInfinite = hasInfinateArrows && itemstack.getItem() instanceof ItemArrow;
       if (!worldIn.isRemote) {
-        ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.arrow));
-        EntityArrow entityarrow = itemarrow.makeTippedArrow(worldIn, itemstack, entityplayer);
+        ItemArrow itemarrow = (ItemArrow) ((ItemArrow) (itemstack.getItem() instanceof ItemArrow ? itemstack.getItem() : Items.ARROW));
+        EntityArrow entityarrow = itemarrow.createArrow(worldIn, itemstack, entityplayer);
         //TODO: 1.9 Arrows dont fly straight with higher force 
 //        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * 3.0F * forceMultiplier, 1.0F);
-        entityarrow.func_184547_a(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * (3.0F + forceMultiplier), 0.25F);
+        entityarrow.setAim(entityplayer, entityplayer.rotationPitch, entityplayer.rotationYaw, 0.0F, drawRatio * (3.0F + forceMultiplier), 0.25F);
+        //entityarrow.setVelocity(x, y, z);
+        
 
         if (drawRatio == 1.0F) {
           entityarrow.setIsCritical(true);
         }
-        int powerLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.power, stack);
+        int powerLevel = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
         if (powerLevel > 0) {
           entityarrow.setDamage(entityarrow.getDamage() + (double) powerLevel * 0.5D + 0.5D);
         }
-        int knockBack = EnchantmentHelper.getEnchantmentLevel(Enchantments.punch, stack);
+        int knockBack = EnchantmentHelper.getEnchantmentLevel(Enchantments.PUNCH, stack);
         if (knockBack > 0) {
           entityarrow.setKnockbackStrength(knockBack);
         }
-        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.flame, stack) > 0) {
+        if (EnchantmentHelper.getEnchantmentLevel(Enchantments.FLAME, stack) > 0) {
           entityarrow.setFire(100);
         }
 
         stack.damageItem(1, entityplayer);
 
         if (arrowIsInfinite) {
-          entityarrow.canBePickedUp = EntityArrow.PickupStatus.CREATIVE_ONLY;
+          entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
         }
         
         entityarrow.setDamage(entityarrow.getDamage() + damageBonus + 20);
@@ -111,7 +113,7 @@ public class ItemGuardiansBow extends ItemBow {
         worldIn.spawnEntityInWorld(entityarrow);
       }
 
-      worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.entity_arrow_shoot, SoundCategory.NEUTRAL,
+      worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
           1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + drawRatio * 0.5F);
 
       if (!arrowIsInfinite) {
@@ -120,7 +122,7 @@ public class ItemGuardiansBow extends ItemBow {
           entityplayer.inventory.deleteStack(itemstack);
         }
       }
-      entityplayer.addStat(StatList.func_188057_b(this));
+      entityplayer.addStat(StatList.getObjectUseStats(this));
     }
 
   }
@@ -141,10 +143,6 @@ public class ItemGuardiansBow extends ItemBow {
     }
   }
 
-  private boolean isArrow(ItemStack stack) {
-    return stack != null && stack.getItem() instanceof ItemArrow;
-  }
-  
   @SideOnly(Side.CLIENT)
   @SubscribeEvent
   public void onFovUpdateEvent(FOVUpdateEvent fovEvt) {

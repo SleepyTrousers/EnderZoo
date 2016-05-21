@@ -23,11 +23,11 @@ public class RenderEntityOwlEgg extends RenderSnowball<EntityOwlEgg> {
   
   @Override
   public void doRender(EntityOwlEgg entity, double x, double y, double z, float entityYaw, float partialTicks) {
-    super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    super.doRender(entity, x, y, z, entityYaw, partialTicks);    
   }
 
   @Override
-  public ItemStack getPotion(EntityOwlEgg entityIn) {    
+  public ItemStack getStackToRender(EntityOwlEgg entityIn) {    
     return new ItemStack(EnderZoo.itemOwlEgg);
   }
     

@@ -36,7 +36,7 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
 
   public void doRender(EntityWitherWitch p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
     ItemStack itemstack = p_76986_1_.getHeldItem(EnumHand.MAIN_HAND);
-    this.witchModel.field_82900_g = itemstack != null;
+    this.witchModel.holdingItem = itemstack != null;
     super.doRender(p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
   }
 
@@ -95,7 +95,7 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
           float f4 = 0.375F;
           GlStateManager.scale(f4, -f4, f4);
         } else 
-          if (item == Items.bow) {
+          if (item == Items.BOW) {
           GlStateManager.translate(0.0F, 0.125F, -0.125F);
           GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);
           float f1 = 0.625F;

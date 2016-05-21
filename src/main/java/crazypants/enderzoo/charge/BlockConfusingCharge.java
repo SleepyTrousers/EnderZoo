@@ -83,7 +83,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   public void explode(EntityPrimedCharge entity) {
     World world = entity.worldObj;
 
-    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_tnt_primed, SoundCategory.BLOCKS, 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
     PacketHandler.sendToAllAround(new PacketExplodeEffect(entity, this), entity);
   }
@@ -100,7 +100,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
         EntityPrimedCharge entity = new EntityPrimedCharge(this, world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, igniter);
         world.spawnEntityInWorld(entity);
-        world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_tnt_primed, SoundCategory.BLOCKS, 1, 1);
+        world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1, 1);
         
         world.updateEntity(entity);
       }
@@ -129,7 +129,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     // world.spawnParticle("hugeexplosion", x, y, z, 1.0D, 0.0D, 0.0D);
     world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, x, y, z, 1.0D, 0.0D, 0.0D);
 
-    int col = MobEffects.confusion.getLiquidColor();
+    int col = MobEffects.NAUSEA.getLiquidColor();
     float r = (col >> 16 & 255) / 255.0F;
     float g = (col >> 8 & 255) / 255.0F;
     float b = (col >> 0 & 255) / 255.0F;

@@ -45,11 +45,11 @@ public class Potions {
   private FloatingPotion floatingPotion;
 
   public Potions() {
-    withering = new PotionType(WITHERING, new PotionEffect(MobEffects.wither, 900));
-    witheringLong = new PotionType(WITHERING, new PotionEffect(MobEffects.wither, 2400));
+    withering = new PotionType(WITHERING, new PotionEffect(MobEffects.WITHER, 900));
+    witheringLong = new PotionType(WITHERING, new PotionEffect(MobEffects.WITHER, 2400));
 
-    confusion = new PotionType(CONFUSION, new PotionEffect(MobEffects.confusion, 900));
-    confusionLong = new PotionType(CONFUSION, new PotionEffect(MobEffects.confusion, 2400));
+    confusion = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 900));
+    confusionLong = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 2400));
 
     if (Config.floatingPotionEnabled) {
       floatingPotion = FloatingPotion.create();
@@ -71,33 +71,33 @@ public class Potions {
   public void registerPotions() {
     // wither potion
 
-    Predicate<ItemStack> redstone = new ItemPredicateInstance(Items.redstone);
-    Predicate<ItemStack> glowstone = new ItemPredicateInstance(Items.glowstone_dust);
+    Predicate<ItemStack> redstone = new ItemPredicateInstance(Items.REDSTONE);
+    Predicate<ItemStack> glowstone = new ItemPredicateInstance(Items.GLOWSTONE_DUST);
 
     // Wither
-    PotionType.potionTypeRegistry.register(Config.witherPotionID, new ResourceLocation(WITHERING), withering);
-    PotionType.potionTypeRegistry.register(Config.witherPotionLongID, new ResourceLocation(WITHERING_LONG), witheringLong);
+    PotionType.REGISTRY.register(Config.witherPotionID, new ResourceLocation(WITHERING), withering);
+    PotionType.REGISTRY.register(Config.witherPotionLongID, new ResourceLocation(WITHERING_LONG), witheringLong);
 
     Predicate<ItemStack> witheringDust = new ItemPredicateInstance(EnderZoo.itemWitheringDust);
-    registerPotionTypeConversion(PotionTypes.awkward, witheringDust, withering);
+    registerPotionTypeConversion(PotionTypes.AWKWARD, witheringDust, withering);
     registerPotionTypeConversion(withering, redstone, witheringLong);
 
     // Confusion
-    PotionType.potionTypeRegistry.register(Config.confusingPotionID, new ResourceLocation(CONFUSION), confusion);
-    PotionType.potionTypeRegistry.register(Config.confusingPotionLongID, new ResourceLocation(CONFUSION_LONG), confusionLong);
+    PotionType.REGISTRY.register(Config.confusingPotionID, new ResourceLocation(CONFUSION), confusion);
+    PotionType.REGISTRY.register(Config.confusingPotionLongID, new ResourceLocation(CONFUSION_LONG), confusionLong);
 
     Predicate<ItemStack> confusionDust = new ItemPredicateInstance(EnderZoo.itemConfusingDust);
-    registerPotionTypeConversion(PotionTypes.awkward, confusionDust, confusion);
+    registerPotionTypeConversion(PotionTypes.AWKWARD, confusionDust, confusion);
     registerPotionTypeConversion(confusion, redstone, confusionLong);
 
     // Rising
     if (Config.floatingPotionEnabled) {
-      PotionType.potionTypeRegistry.register(Config.floatingPotionID, new ResourceLocation(FLOATING), floating);
-      PotionType.potionTypeRegistry.register(Config.floatingPotionLongID, new ResourceLocation(FLOATING_LONG), floatingLong);
-      PotionType.potionTypeRegistry.register(Config.floatingPotionTwoID, new ResourceLocation(FLOATING_TWO), floatingTwo);
+      PotionType.REGISTRY.register(Config.floatingPotionID, new ResourceLocation(FLOATING), floating);
+      PotionType.REGISTRY.register(Config.floatingPotionLongID, new ResourceLocation(FLOATING_LONG), floatingLong);
+      PotionType.REGISTRY.register(Config.floatingPotionTwoID, new ResourceLocation(FLOATING_TWO), floatingTwo);
 
       Predicate<ItemStack> owlEgg = new ItemPredicateInstance(EnderZoo.itemOwlEgg);
-      registerPotionTypeConversion(PotionTypes.awkward, owlEgg, floating);
+      registerPotionTypeConversion(PotionTypes.AWKWARD, owlEgg, floating);
       registerPotionTypeConversion(floating, redstone, floatingLong);
       registerPotionTypeConversion(floating, glowstone, floatingTwo);
     }

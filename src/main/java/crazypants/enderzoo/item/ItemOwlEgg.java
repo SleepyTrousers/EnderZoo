@@ -45,7 +45,7 @@ public class ItemOwlEgg extends Item {
     if (!playerIn.capabilities.isCreativeMode) {
       --itemStackIn.stackSize;
     }
-    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.entity_arrow_shoot, SoundCategory.BLOCKS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+    worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.BLOCKS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
     if (!worldIn.isRemote) {         
       worldIn.spawnEntityInWorld(new EntityOwlEgg(worldIn, playerIn));
     }

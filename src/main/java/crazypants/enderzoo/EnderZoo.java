@@ -137,20 +137,20 @@ public class EnderZoo {
   }
 
   private void addRecipes() {
-    OreDictionary.registerOre("sand", new ItemStack(Blocks.sand, 1, OreDictionary.WILDCARD_VALUE));
+    OreDictionary.registerOre("sand", new ItemStack(Blocks.SAND, 1, OreDictionary.WILDCARD_VALUE));
     if (Config.confusingChargeEnabled) {      
       ItemStack cc = new ItemStack(blockConfusingCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.gunpowder));
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.GUNPOWDER));
     }
     if (Config.enderChargeEnabled) {      
       ItemStack cc = new ItemStack(blockEnderCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
     }
     if (Config.concussionChargeEnabled) {      
       ItemStack cc = new ItemStack(blockConcussionCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.gunpowder));
+      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
     }
-    GameRegistry.addShapedRecipe(new ItemStack(Items.ender_pearl), " f ", "fff", " f ", 'f', itemEnderFragment);   
+    GameRegistry.addShapedRecipe(new ItemStack(Items.ENDER_PEARL), " f ", "fff", " f ", 'f', itemEnderFragment);   
   }
 
 }

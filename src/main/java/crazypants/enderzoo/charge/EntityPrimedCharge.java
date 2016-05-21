@@ -40,7 +40,7 @@ public class EntityPrimedCharge extends Entity {
     prevPosY = y;
     prevPosZ = z;
     chargePlacedBy = placedBy;
-    dataWatcher.set(CHARGE_ID_KEY, charge.getID());
+    dataManager.set(CHARGE_ID_KEY, charge.getID());
   }
   
 
@@ -54,7 +54,7 @@ public class EntityPrimedCharge extends Entity {
 
   @Override
   protected void entityInit() {
-    this.dataWatcher.register(CHARGE_ID_KEY, Integer.valueOf(80));
+    this.dataManager.register(CHARGE_ID_KEY, Integer.valueOf(80));
   }
 
   @Override
@@ -115,7 +115,7 @@ public class EntityPrimedCharge extends Entity {
     fuse = root.getByte("Fuse");
     if(root.hasKey("charge")) {
       int id = root.getInteger("chargeID");
-      dataWatcher.set(CHARGE_ID_KEY, id);
+      dataManager.set(CHARGE_ID_KEY, id);
       charge = ChargeRegister.instance.getCharge(id);
     }
   }
@@ -125,7 +125,7 @@ public class EntityPrimedCharge extends Entity {
   }
 
   public Block getBlock() {
-    int id = dataWatcher.get(CHARGE_ID_KEY);
+    int id = dataManager.get(CHARGE_ID_KEY);
     charge = ChargeRegister.instance.getCharge(id);
     if(charge != null) {
       return charge.getBlock();

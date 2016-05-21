@@ -53,9 +53,9 @@ public class BlockEnderCharge extends BlockConfusingCharge {
 
   public static void doEntityTeleport(EntityPrimedCharge entity) {
     World world = entity.worldObj;
-    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_generic_explode, SoundCategory.BLOCKS, 1F,
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1F,
         1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));    
-    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.BLOCKS, 2F,
+    world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 2F,
         1 + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
     AxisAlignedBB bb = EntityUtil.getBoundsAround(entity, Config.enderChargeRange);

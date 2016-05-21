@@ -13,26 +13,23 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 public class FlyNodeProcessor extends WalkNodeProcessor {
-
-  //getPathPointTo(Entity entityIn) 
+ 
   @Override
-  public PathPoint func_186318_b() {
-    EntityLiving entityIn = field_186326_b;
+  public PathPoint getStart() {    
+    EntityLiving entityIn = entity;
     return openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D),
         MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
   }
 
-  //getPathPointToCoords
   @Override
-  public PathPoint func_186325_a(double x, double y, double z) {
-    EntityLiving entityIn = field_186326_b;
+  public PathPoint getPathPointToCoords(double x, double y, double z) {
+    EntityLiving entityIn = entity;    
     return openPoint(MathHelper.floor_double(x - entityIn.width / 2.0F), MathHelper.floor_double(y), MathHelper.floor_double(z - entityIn.width / 2.0F));       
   }
 
-  //findPathOptions
   @Override
-  public int func_186320_a(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
-    EntityLiving entityIn = field_186326_b;
+  public int findPathOptions(PathPoint[] pathOptions, PathPoint currentPoint, PathPoint targetPoint, float maxDistance) {
+    EntityLiving entityIn = entity;
     int i = 0;
     for (EnumFacing enumfacing : EnumFacing.values()) {
       PathPoint pathpoint = getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
@@ -57,7 +54,7 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
         for (int k = z; k < z + entitySizeZ; ++k) {
           IBlockState bs = blockaccess.getBlockState(mutableblockpos.set(i, j, k));
           Block block = bs.getBlock();
-          if (block.getMaterial(bs) != Material.air) {
+          if (block.getMaterial(bs) != Material.AIR) {
             AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.worldObj, mutableblockpos);
             if(bb != null) {
               return false;

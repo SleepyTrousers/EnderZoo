@@ -84,8 +84,8 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   protected void entityInit() {
     super.entityInit();
 
-    dataWatcher.register(SCALE_INDEX, Float.valueOf(1));
-    dataWatcher.register(GROWTH_MODE_INDEX, Integer.valueOf(GrowthMode.NONE.ordinal()));
+    dataManager.register(SCALE_INDEX, Float.valueOf(1));
+    dataManager.register(GROWTH_MODE_INDEX, Integer.valueOf(GrowthMode.NONE.ordinal()));
   }
 
   @Override
@@ -104,11 +104,11 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   public void setScale(float scale) {
-    dataWatcher.set(SCALE_INDEX, scale);
+    dataManager.set(SCALE_INDEX, scale);
   }
 
   public float getScale() {
-    return dataWatcher.get(SCALE_INDEX);
+    return dataManager.get(SCALE_INDEX);
   }
 
   public void setGrowthMode(GrowthMode mode) {
@@ -116,11 +116,11 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   private void setGrowthMode(int ordinal) {
-    dataWatcher.set(GROWTH_MODE_INDEX, ordinal);
+    dataManager.set(GROWTH_MODE_INDEX, ordinal);
   }
 
   public GrowthMode getGrowthMode() {
-    return GrowthMode.values()[dataWatcher.get(GROWTH_MODE_INDEX)];
+    return GrowthMode.values()[dataManager.get(GROWTH_MODE_INDEX)];
   }
 
   public float getAngryScale() {
@@ -152,7 +152,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
 
   @Override
   public boolean isPotionApplicable(PotionEffect potion) {
-    return potion.getPotion() != MobEffects.wither && super.isPotionApplicable(potion);
+    return potion.getPotion() != MobEffects.WITHER && super.isPotionApplicable(potion);
   }
 
   @Override
@@ -326,17 +326,17 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   // TODO: New sounds
   @Override
   protected SoundEvent getAmbientSound() {
-    return SoundEvents.entity_cat_ambient;
+    return SoundEvents.ENTITY_CAT_AMBIENT;
   }
 
   @Override
   protected SoundEvent getHurtSound() {
-    return SoundEvents.entity_cat_hurt;
+    return SoundEvents.ENTITY_CAT_HURT;
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.entity_cat_death;
+    return SoundEvents.ENTITY_CAT_DEATH;
   }
 
   @Override

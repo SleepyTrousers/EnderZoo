@@ -97,17 +97,17 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   @Override
   protected SoundEvent getAmbientSound() {
-    return SoundEvents.entity_zombie_ambient;
+    return SoundEvents.ENTITY_ZOMBIE_AMBIENT;
   }
 
   @Override
   protected SoundEvent getHurtSound() {    
-    return SoundEvents.entity_zombie_hurt;    
+    return SoundEvents.ENTITY_ZOMBIE_HURT;    
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.entity_zombie_death;
+    return SoundEvents.ENTITY_ZOMBIE_DEATH;
   }
 
   @Override
@@ -184,7 +184,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   private boolean isRanged() {
     ItemStack itemstack = getHeldItem(EnumHand.MAIN_HAND);
-    return itemstack != null && itemstack.getItem() == Items.bow;
+    return itemstack != null && itemstack.getItem() == Items.BOW;
   }
 
   private void addRandomArmor() {
@@ -204,7 +204,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
       ItemStack itemStack = getItemStackFromSlot(slot);
       if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
-        Item item = EntityLiving.func_184636_a(slot, armorLevel);
+        Item item = EntityLiving.getArmorByChance(slot, armorLevel);
         if(item != null) {
           ItemStack stack = new ItemStack(item);
           if(armorLevel == 0) {
@@ -220,7 +220,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
         setItemStackToSlot(EntityEquipmentSlot.OFFHAND, getShieldForLevel(getRandomEquipmentLevel()));
       }
     } else {
-      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.bow));
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
     }
   }
 
@@ -254,20 +254,20 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     }
     switch (swordLevel) {
     case 0:
-      return new ItemStack(Items.wooden_sword);
+      return new ItemStack(Items.WOODEN_SWORD);
     case 1:
-      return new ItemStack(Items.stone_sword);
+      return new ItemStack(Items.STONE_SWORD);
     case 2:
-      return new ItemStack(Items.iron_sword);
+      return new ItemStack(Items.IRON_SWORD);
     case 4:
-      return new ItemStack(Items.diamond_sword);
+      return new ItemStack(Items.DIAMOND_SWORD);
     }
-    return new ItemStack(Items.iron_sword);
+    return new ItemStack(Items.IRON_SWORD);
   }
   
   private ItemStack getShieldForLevel(int swordLevel) {
     //TODO: 1.9 Can I do something better here?
-    return new ItemStack(Items.shield);
+    return new ItemStack(Items.SHIELD);
   }
 
   @Override
@@ -316,9 +316,9 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
     int numDrops = rand.nextInt(3 + lootingLevel);
     for (int i = 0; i < numDrops; ++i) {
       if(rand.nextBoolean()) {
-        dropItem(Items.bone, 1);
+        dropItem(Items.BONE, 1);
       } else {
-        dropItem(Items.rotten_flesh, 1);
+        dropItem(Items.ROTTEN_FLESH, 1);
       }
     }
   }

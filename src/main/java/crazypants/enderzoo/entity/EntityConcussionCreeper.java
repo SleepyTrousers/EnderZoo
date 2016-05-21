@@ -65,14 +65,14 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
               }
             }
             if (ent instanceof EntityPlayer) {
-              worldObj.playSound(ent.posX, ent.posY, ent.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.HOSTILE, 1.0F, 1.0F, false);
+              worldObj.playSound(ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.HOSTILE, 1.0F, 1.0F, false);
               EnderZoo.proxy.setInstantConfusionOnPlayer((EntityPlayer) ent, Config.concussionCreeperConfusionDuration);
             }
           }
         }
 
 
-        worldObj.playSound(posX, posY, posZ, SoundEvents.entity_generic_explode, SoundCategory.HOSTILE, 4.0F,
+        worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 4.0F,
             (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F, false);
         worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, posX, posY, posZ, 1.0D, 0.0D, 0.0D);
         setDead();
@@ -102,7 +102,7 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
     } else if (num == 1) {
       return EnderZoo.itemConfusingDust;
     } else {
-      return Items.gunpowder;
+      return Items.GUNPOWDER;
     }
   }
 

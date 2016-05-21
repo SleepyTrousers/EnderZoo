@@ -72,7 +72,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack holding) {
     ItemStack itemstack = player.inventory.getCurrentItem();
-    if(itemstack != null && itemstack.getItem() == Items.spawn_egg) {
+    if(itemstack != null && itemstack.getItem() == Items.SPAWN_EGG) {
       return super.processInteract(player, hand, holding);
     }
     return false;
@@ -139,13 +139,13 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
           armorLevel++;
         }
       }
-      Item armorItem = Items.iron_horse_armor;
+      Item armorItem = Items.IRON_HORSE_ARMOR;
       switch (armorLevel) {
       case 1:
-        armorItem = Items.golden_horse_armor;
+        armorItem = Items.GOLDEN_HORSE_ARMOR;
         break;
       case 2:
-        armorItem = Items.diamond_horse_armor;
+        armorItem = Items.DIAMOND_HORSE_ARMOR;
         break;
       }
       armor = new ItemStack(armorItem);

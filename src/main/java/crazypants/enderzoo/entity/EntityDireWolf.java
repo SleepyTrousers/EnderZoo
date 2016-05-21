@@ -70,12 +70,12 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   @Override
   protected void entityInit() {
     super.entityInit();
-    dataWatcher.register(ANGRY_INDEX, Boolean.FALSE);
+    dataManager.register(ANGRY_INDEX, Boolean.FALSE);
     updateAngry();
   }
 
   public boolean isAngry() {
-    return dataWatcher.get(ANGRY_INDEX);
+    return dataManager.get(ANGRY_INDEX);
   }
 
   @Override
@@ -95,7 +95,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   //  }
 
   private void updateAngry() {
-    dataWatcher.set(ANGRY_INDEX, getAttackTarget() != null ? Boolean.TRUE : Boolean.FALSE);
+    dataManager.set(ANGRY_INDEX, getAttackTarget() != null ? Boolean.TRUE : Boolean.FALSE);
   }
 
   @Override
@@ -108,7 +108,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
   @Override
   protected void playStepSound(BlockPos bp, Block p_145780_4_) {
-    playSound(SoundEvents.entity_wolf_step, 0.15F, 1.0F);
+    playSound(SoundEvents.ENTITY_WOLF_STEP, 0.15F, 1.0F);
   }
 
   @Override

@@ -87,10 +87,10 @@ public class SpawnUtil {
     if(checkEntityCollisions && !worldObj.checkNoEntityCollision(entity.getEntityBoundingBox())) {
       return false;
     }
-    if(!worldObj.getCubes(entity, entity.getEntityBoundingBox()).isEmpty()) {
+    if(!worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox()).isEmpty()) {
       return false;
     }    
-    if(!canSpawnInLiquid && worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
+    if(!canSpawnInLiquid && worldObj.containsAnyLiquid(entity.getEntityBoundingBox())) {
       return false;
     }    
     return true;

@@ -213,7 +213,7 @@ public class MobSpawnEventHandler {
       event.getWorld().spawnEntityInWorld(direSlime);
       direSlime.playLivingSound();
       for (ItemStack drop : event.getDrops()) {
-        if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.dirt)) {
+        if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.DIRT)) {
           if (drop.stackSize > 1) {
             drop.stackSize--;
           } else if (event.getDrops().size() == 1) {

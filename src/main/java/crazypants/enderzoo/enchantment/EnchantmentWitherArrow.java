@@ -38,7 +38,7 @@ public class EnchantmentWitherArrow extends Enchantment {
   public void onEntityDamaged(EntityLivingBase user, Entity entityHit, int level) {
     //calc damage modifier    
     if (entityHit instanceof EntityLivingBase) {
-      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.wither, Config.enchantmentWitherArrowDuration));
+      ((EntityLivingBase) entityHit).addPotionEffect(new PotionEffect(MobEffects.WITHER, Config.enchantmentWitherArrowDuration));
     }
   }
  

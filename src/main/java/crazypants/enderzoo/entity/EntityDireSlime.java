@@ -106,7 +106,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   protected Item getDropItem() {
-    return Items.clay_ball;
+    return Items.CLAY_BALL;
   }
 
   @Override
@@ -162,7 +162,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
     int i = getSlimeSize();
     if (canEntityBeSeen(p_70100_1_) && this.getDistanceSqToEntity(p_70100_1_) < (double) i * (double) i
         && p_70100_1_.attackEntityFrom(DamageSource.causeMobDamage(this), getAttackStrength())) {
-      playSound(SoundEvents.entity_slime_attack, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+      playSound(SoundEvents.ENTITY_SLIME_ATTACK, 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
     }
   }
   

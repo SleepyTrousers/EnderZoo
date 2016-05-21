@@ -65,7 +65,7 @@ public class RenderPrimedCharge extends Render<EntityPrimedCharge> {
 
   @Override
   protected ResourceLocation getEntityTexture(EntityPrimedCharge p_110775_1_) {
-    return TextureMap.locationBlocksTexture;
+    return TextureMap.LOCATION_BLOCKS_TEXTURE;
   }
   
   public static class Factory implements IRenderFactory<EntityPrimedCharge> {

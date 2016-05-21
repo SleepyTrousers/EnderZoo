@@ -77,8 +77,8 @@ public class TeleportHelper {
 
       if (foundGround) {
         entity.setPosition(entity.posX, entity.posY, entity.posZ);
-        if (entity.worldObj.getCubes(entity, entity.getEntityBoundingBox()).isEmpty()
-            && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox())) {
+        if (entity.worldObj.getCollisionBoxes(entity, entity.getEntityBoundingBox()).isEmpty()
+            && !entity.worldObj.containsAnyLiquid(entity.getEntityBoundingBox())) {
           doTeleport = true;
         } else if (yInt <= 0) {
           doTeleport = false;
@@ -105,8 +105,8 @@ public class TeleportHelper {
       entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    entity.worldObj.playSound(origX, origY, origZ, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);
-    entity.playSound(SoundEvents.entity_endermen_teleport, 1.0F, 1.0F);
+    entity.worldObj.playSound(origX, origY, origZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);
+    entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
     return true;
 
   }

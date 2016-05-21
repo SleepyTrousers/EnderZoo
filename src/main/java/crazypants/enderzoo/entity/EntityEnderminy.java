@@ -103,7 +103,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   @Override
   protected void entityInit() {
     super.entityInit();
-    dataWatcher.register(SCREAMING_INDEX, Boolean.valueOf(false));
+    dataManager.register(SCREAMING_INDEX, Boolean.valueOf(false));
   }
 
   @Override
@@ -113,7 +113,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       int i = MathHelper.floor_double(posX);
       int j = MathHelper.floor_double(getEntityBoundingBox().minY);
       int k = MathHelper.floor_double(posZ);
-      passedGrassCheck = worldObj.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.grass;
+      passedGrassCheck = worldObj.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.GRASS;
     }
     return passedGrassCheck && posY > Config.enderminyMinSpawnY && super.getCanSpawnHere();
   }
@@ -124,7 +124,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   private boolean shouldAttackPlayer(EntityPlayer player) {
 
     ItemStack itemstack = player.inventory.armorInventory[3];
-    if(itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
+    if(itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
       return false;
     } else {
 
@@ -223,7 +223,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       if(foundGround) {
         setPosition(posX, posY, posZ);
-        if(worldObj.getCubes(this, getEntityBoundingBox()).isEmpty() && !worldObj.isAnyLiquid(getEntityBoundingBox())) {
+        if(worldObj.getCollisionBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.containsAnyLiquid(getEntityBoundingBox())) {
           flag = true;
         }
       }
@@ -246,30 +246,30 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    worldObj.playSound(d3, d4, d5, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);    
-    playSound(SoundEvents.entity_endermen_teleport, 1.0F, 1.0F);
+    worldObj.playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);    
+    playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
     return true;
 
   }
 
   @Override
   protected SoundEvent getAmbientSound() {
-    return isScreaming() ? SoundEvents.entity_endermen_scream : SoundEvents.entity_endermen_ambient;
+    return isScreaming() ? SoundEvents.ENTITY_ENDERMEN_SCREAM : SoundEvents.ENTITY_ENDERMEN_AMBIENT;
   }
 
   @Override
   protected SoundEvent getHurtSound() {
-    return SoundEvents.entity_endermen_hurt;
+    return SoundEvents.ENTITY_ENDERMEN_HURT;
   }
 
   @Override
   protected SoundEvent getDeathSound() {
-    return SoundEvents.entity_endermen_death;
+    return SoundEvents.ENTITY_ENDERMEN_DEATH;
   }
 
   @Override
   protected Item getDropItem() {
-    return Items.ender_pearl;
+    return Items.ENDER_PEARL;
   }
 
   @Override
@@ -354,11 +354,11 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   public boolean isScreaming() {
-    return dataWatcher.get(SCREAMING_INDEX);
+    return dataManager.get(SCREAMING_INDEX);
   }
 
   public void setScreaming(boolean p_70819_1_) {
-    dataWatcher.set(SCREAMING_INDEX, Boolean.valueOf(p_70819_1_));
+    dataManager.set(SCREAMING_INDEX, Boolean.valueOf(p_70819_1_));
   }
 
 //  private final class ClosestEntityComparator implements Comparator<EntityCreeper> {
@@ -453,7 +453,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
           targetEntity = targetPlayer;
           targetPlayer = null;
           super.startExecuting();
-          enderminy.playSound(SoundEvents.entity_endermen_stare, 1.0F, 1.0F);
+          enderminy.playSound(SoundEvents.ENTITY_ENDERMEN_STARE, 1.0F, 1.0F);
           enderminy.setScreaming(true);
           IAttributeInstance iattributeinstance = enderminy.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED);
           iattributeinstance.applyModifier(EntityEnderminy.attackingSpeedBoostModifier);

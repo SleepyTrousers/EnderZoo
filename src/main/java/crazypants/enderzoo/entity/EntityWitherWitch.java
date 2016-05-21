@@ -103,7 +103,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   @Override
   public boolean isPotionApplicable(PotionEffect potion) {
-    return potion.getPotion() != MobEffects.wither && super.isPotionApplicable(potion);
+    return potion.getPotion() != MobEffects.WITHER && super.isPotionApplicable(potion);
   }
 
   @Override
@@ -181,7 +181,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       isHealing = true;
     } else if(target != null && getHeldItem(EnumHand.MAIN_HAND) == null) {
       ItemStack potion;
-      if(getActiveTarget().isPotionActive(MobEffects.wither)) {
+      if(getActiveTarget().isPotionActive(MobEffects.WITHER)) {
         potion = BrewingUtil.createHarmingPotion(EntityUtil.isHardDifficulty(worldObj), true);
       } else {
         potion = BrewingUtil.createWitherPotion(false, true);
@@ -208,7 +208,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   protected boolean shouldStartHeal() {
-    if(isPotionActive(MobEffects.regeneration)) {
+    if(isPotionActive(MobEffects.REGENERATION)) {
       return false;
     }
     return getHealth() < getMaxHealth() * 0.75 && rand.nextFloat() > 0.5 && healTimer <= 0;

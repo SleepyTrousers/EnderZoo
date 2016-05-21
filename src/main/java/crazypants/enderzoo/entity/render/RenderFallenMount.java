@@ -42,7 +42,7 @@ public class RenderFallenMount extends RenderHorse {
   }
 
   private ResourceLocation getArmoredTexture(EntityHorse horse) {
-    String s = horseArmorTextures[horse.func_184783_dl().ordinal()];
+    String s = horseArmorTextures[horse.getHorseArmorType().ordinal()];
     ResourceLocation resourcelocation = textureCache.get(s);
     if(resourcelocation == null) {
       resourcelocation = new ResourceLocation("Layered:" + s);

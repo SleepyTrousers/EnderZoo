@@ -57,6 +57,6 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
   private boolean isOnLeaves() {
     IBlockState bs = entity.worldObj.getBlockState(entity.getPosition().down());
     Block block = bs.getBlock();
-    return block.getMaterial(bs) == Material.leaves;
+    return block.getMaterial(bs) == Material.LEAVES;
   }
 }
