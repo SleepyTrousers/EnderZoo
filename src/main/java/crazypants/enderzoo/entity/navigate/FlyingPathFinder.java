@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.pathfinding.NodeProcessor;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathFinder;
+import net.minecraft.pathfinding.PathHeap;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -19,7 +19,7 @@ import net.minecraft.world.IBlockAccess;
 
 public class FlyingPathFinder extends PathFinder {
   
-  private Path path = new Path();
+  private PathHeap path = new PathHeap();
   private PathPoint[] pathOptions = new PathPoint[32];
   private NodeProcessor nodeProcessor;
 
@@ -30,17 +30,17 @@ public class FlyingPathFinder extends PathFinder {
 
   //createEntityPathTo
   @Override
-  public PathEntity findPath(IBlockAccess blockaccess, EntityLiving entityFrom, Entity entityTo, float dist) {   
+  public Path findPath(IBlockAccess blockaccess, EntityLiving entityFrom, Entity entityTo, float dist) {   
     return createEntityPathTo(blockaccess, entityFrom, entityTo.posX, entityTo.getEntityBoundingBox().minY, entityTo.posZ, dist);
   }
 
 //createEntityPathTo
   @Override
-  public PathEntity findPath(IBlockAccess blockaccess, EntityLiving entityIn, BlockPos targetPos, float dist) {
+  public Path findPath(IBlockAccess blockaccess, EntityLiving entityIn, BlockPos targetPos, float dist) {
     return createEntityPathTo(blockaccess, entityIn, targetPos.getX() + 0.5F, targetPos.getY() + 0.5F, targetPos.getZ() + 0.5F, dist);
   }
 
-  private PathEntity createEntityPathTo(IBlockAccess blockaccess, Entity ent, double x, double y, double z, float distance) {
+  private Path createEntityPathTo(IBlockAccess blockaccess, Entity ent, double x, double y, double z, float distance) {
 
     path.clearPath();
     
@@ -112,7 +112,7 @@ public class FlyingPathFinder extends PathFinder {
     if(resPoints.isEmpty()) {
       return null;
     }
-    return new PathEntity(resPoints.toArray(new PathPoint[resPoints.size()]));
+    return new Path(resPoints.toArray(new PathPoint[resPoints.size()]));
 
   }
 
@@ -201,7 +201,7 @@ public class FlyingPathFinder extends PathFinder {
     return (int)Math.round(d);
   }
 
-  private PathEntity createDefault(IBlockAccess blockaccess, EntityLiving entityIn, float distance, double x, double y, double z) {
+  private Path createDefault(IBlockAccess blockaccess, EntityLiving entityIn, float distance, double x, double y, double z) {
     this.path.clearPath();
     this.nodeProcessor.initProcessor(blockaccess, entityIn);
     
@@ -210,11 +210,11 @@ public class FlyingPathFinder extends PathFinder {
     PathPoint pathpoint1 = nodeProcessor.getPathPointToCoords(x, y, z);
     
     PathPoint[] p = addToPath(entityIn, pathpoint, pathpoint1, distance);
-    PathEntity res;
+    Path res;
     if(p == null) {
       res = null;
     } else {
-      res = new PathEntity(p);  
+      res = new Path(p);  
     }     
     this.nodeProcessor.postProcess();
     return res;

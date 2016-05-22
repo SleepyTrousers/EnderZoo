@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.config.SpawnConfig;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 public final class MobSpawns {
 
@@ -57,7 +57,7 @@ public final class MobSpawns {
       Log.info(entry.getMobName() + " is disabled");
       return;
     }
-
+    
     if (entry.isRemove()) {
       if (PRINT_DETAIL) {
         //yeah, I know I could print them as debug messages but that is more painful to change...
@@ -65,7 +65,7 @@ public final class MobSpawns {
         System.out.print(" - ");
       }
       for (IBiomeFilter filter : entry.getFilters()) {
-        BiomeGenBase[] biomes = filter.getMatchedBiomes();
+        Biome[] biomes = filter.getMatchedBiomes();
         if (PRINT_DETAIL) {
           printBiomeNames(biomes);
         }
@@ -82,7 +82,7 @@ public final class MobSpawns {
       System.out.print(" - ");
     }
     for (IBiomeFilter filter : entry.getFilters()) {
-      BiomeGenBase[] biomes = filter.getMatchedBiomes();
+      Biome[] biomes = filter.getMatchedBiomes();
       if (PRINT_DETAIL) {
         printBiomeNames(biomes);
       }
@@ -94,8 +94,8 @@ public final class MobSpawns {
 
   }
 
-  protected static void printBiomeNames(BiomeGenBase[] biomes) {
-    for (BiomeGenBase biome : biomes) {
+  protected static void printBiomeNames(Biome[] biomes) {
+    for (Biome biome : biomes) {
       if (biome != null) {
         System.out.print(biome.getBiomeName() + ", ");
       } else {

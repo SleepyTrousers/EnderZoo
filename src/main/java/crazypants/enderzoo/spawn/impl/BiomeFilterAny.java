@@ -4,31 +4,31 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 public class BiomeFilterAny extends AbstractBiomeFilter {
 
   @Override
-  public BiomeGenBase[] getMatchedBiomes() {
+  public Biome[] getMatchedBiomes() {
 
     if (types.isEmpty() && names.isEmpty()) {
-      return new BiomeGenBase[0];
+      return new Biome[0];
     }
-    Set<BiomeGenBase> passedBiomes = new HashSet<BiomeGenBase>();
-    Iterator<BiomeGenBase> it = BiomeGenBase.REGISTRY.iterator();
+    Set<Biome> passedBiomes = new HashSet<Biome>();
+    Iterator<Biome> it = Biome.REGISTRY.iterator();
     while(it.hasNext()) {
-      BiomeGenBase candidate = it.next();
+      Biome candidate = it.next();
       if (candidate != null && isMatchingBiome(candidate)) {
         passedBiomes.add(candidate);
       }
     }
 
-    return passedBiomes.toArray(new BiomeGenBase[passedBiomes.size()]);
+    return passedBiomes.toArray(new Biome[passedBiomes.size()]);
   }
 
   @Override
-  public boolean isMatchingBiome(BiomeGenBase biome) {
+  public boolean isMatchingBiome(Biome biome) {
     if (isExcluded(biome)) {
       return false;
     }

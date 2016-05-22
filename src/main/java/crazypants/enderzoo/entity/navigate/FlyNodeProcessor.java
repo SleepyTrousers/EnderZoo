@@ -52,7 +52,7 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
     for (int i = x; i < x + entitySizeX; ++i) {
       for (int j = y; j < y + entitySizeY; ++j) {
         for (int k = z; k < z + entitySizeZ; ++k) {
-          IBlockState bs = blockaccess.getBlockState(mutableblockpos.set(i, j, k));
+          IBlockState bs = blockaccess.getBlockState(mutableblockpos.setPos(i, j, k));
           Block block = bs.getBlock();
           if (block.getMaterial(bs) != Material.AIR) {
             AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.worldObj, mutableblockpos);

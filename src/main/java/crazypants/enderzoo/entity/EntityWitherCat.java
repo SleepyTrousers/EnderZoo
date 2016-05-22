@@ -6,7 +6,7 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideOwned;
 import crazypants.enderzoo.entity.ai.EntityAIFollowOwner;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -286,7 +286,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       double xOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
       double yOffset = offsetScale / 3 + rand.nextFloat() * offsetScale / 3 * 2F;
       double zOffset = offsetScale - rand.nextFloat() * offsetScale * 2;
-      EntityFX fx = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), startX + xOffset, startY + yOffset,
+      Particle fx = Minecraft.getMinecraft().effectRenderer.spawnEffectParticle(EnumParticleTypes.SPELL.getParticleID(), startX + xOffset, startY + yOffset,
           startZ + zOffset, 0.0D, 0.0D, 0.0D);
       if (fx != null) {
         fx.setRBGColorF(0.8f, 0.2f, 0.2f);       

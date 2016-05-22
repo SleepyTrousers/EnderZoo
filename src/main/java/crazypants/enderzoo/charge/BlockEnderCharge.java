@@ -8,8 +8,8 @@ import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityUtil;
 import crazypants.enderzoo.entity.TeleportHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
-import net.minecraft.client.particle.EntityPortalFX;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticlePortal;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -77,7 +77,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
       double motionX = (0.5 - random.nextDouble()) * mag * d;
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
-      EntityFX entityfx = new EntityPortalFX.Factory().getEntityFX
+      Particle entityfx = new ParticlePortal.Factory().getEntityFX
           (i, world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
           motionZ, (int[])null);
       Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);

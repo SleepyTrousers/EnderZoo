@@ -2,7 +2,7 @@ package crazypants.enderzoo.entity.navigate;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathFinder;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -50,21 +50,21 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   public boolean tryFlyToXYZ(double x, double y, double z, double speedIn) {
-    PathEntity pathentity = getPathToPos(new BlockPos((double) MathHelper.floor_double(x), (double) ((int) y), (double) MathHelper.floor_double(z)));
+    Path pathentity = getPathToPos(new BlockPos((double) MathHelper.floor_double(x), (double) ((int) y), (double) MathHelper.floor_double(z)));
     return setPath(pathentity, speedIn, true);
   }
 
   public boolean tryFlyToPos(double x, double y, double z, double speedIn) {
-    PathEntity pathentity = getPathToXYZ(x, y, z);
+    Path pathentity = getPathToXYZ(x, y, z);
     return setPath(pathentity, speedIn, true);
   }
 
   public boolean tryFlyToEntityLiving(Entity entityIn, double speedIn) {
-    PathEntity pathentity = getPathToEntityLiving(entityIn);
+    Path pathentity = getPathToEntityLiving(entityIn);
     return pathentity != null ? setPath(pathentity, speedIn, true) : false;
   }
 
-  public boolean setPath(PathEntity path, double speed, boolean forceFlying) {
+  public boolean setPath(Path path, double speed, boolean forceFlying) {
     if (super.setPath(path, speed)) {
       // String str = "FlyingPathNavigate.setPath:";
       // for (int i = 0; i < path.getCurrentPathLength(); i++) {
@@ -81,7 +81,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   @Override
-  public boolean setPath(PathEntity path, double speed) {
+  public boolean setPath(Path path, double speed) {
     return setPath(path, speed, false);
   }
 

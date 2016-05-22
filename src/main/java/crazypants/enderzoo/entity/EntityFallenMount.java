@@ -108,9 +108,8 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   @Override
   public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData data) {  
-    HorseArmorType horsearmortype = HorseArmorType.ZOMBIE;
-    setType(horsearmortype);
-    
+
+    setHorseArmorStack(null);        
     setHorseSaddled(true);    
     setGrowingAge(0);
     getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.fallenMountHealth);

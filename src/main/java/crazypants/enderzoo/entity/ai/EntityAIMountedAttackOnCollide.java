@@ -3,7 +3,7 @@ package crazypants.enderzoo.entity.ai;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.EnumHand;
@@ -26,7 +26,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
   boolean longMemory;
   
   
-  PathEntity entityPathEntity;
+  Path entityPathEntity;
   Class<?> classTarget;
   private int pathUpdateTimer;
   private double targetPosX;

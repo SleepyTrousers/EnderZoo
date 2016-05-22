@@ -5,7 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -18,7 +18,7 @@ public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
   private int attackTick;
   private double speedTowardsTarget;
   private boolean longMemory;
-  private PathEntity entityPathEntity;
+  private Path entityPathEntity;
   private Class<? extends Entity> classTarget;
   private int delayCounter;
   private double targetX;

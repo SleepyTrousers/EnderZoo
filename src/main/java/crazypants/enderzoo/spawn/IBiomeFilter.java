@@ -1,13 +1,13 @@
 package crazypants.enderzoo.spawn;
 
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 
 public interface IBiomeFilter {
 
   void addBiomeDescriptor(IBiomeDescriptor biome);
 
-  BiomeGenBase[] getMatchedBiomes();
+  Biome[] getMatchedBiomes();
 
-  boolean isMatchingBiome(BiomeGenBase bgb);
+  boolean isMatchingBiome(Biome bgb);
 
 }

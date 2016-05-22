@@ -252,7 +252,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
         int z = MathHelper.floor_double(posZ + ((i >> 2) % 2 - 0.5F) * width * 0.8F);
 
         if (pos.getX() != x || pos.getY() != y || pos.getZ() != z) {
-          pos.set(x, y, z);
+          pos.setPos(x, y, z);
           if (worldObj.getBlockState(pos).getBlock().isVisuallyOpaque()) {
             return true;
           }

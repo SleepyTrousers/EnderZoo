@@ -12,7 +12,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockTNT;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntitySpellParticleFX;
+import net.minecraft.client.particle.ParticleSpell;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -143,43 +143,16 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
 
-      EntitySpellParticleFX entityfx = (EntitySpellParticleFX) new EntitySpellParticleFX.InstantFactory().getEntityFX(i, world, x + motionX * 0.1,
+      ParticleSpell entityfx = (ParticleSpell) new ParticleSpell.InstantFactory().getEntityFX(i, world, x + motionX * 0.1,
           y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY, motionZ, (int[]) null);
       float colRan = 0.75F + random.nextFloat() * 0.25F;
       entityfx.setRBGColorF(r * colRan, g * colRan, b * colRan);
-      // entityfx.multiplyVelocity((float) (random.nextDouble() * 4.0D));
-      // entityfx.multiplyVelocity(0.1f);
+      entityfx.multiplyVelocity(0.1f);      
       Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);
 
     }
 
   }
-
-  // @Override
-  // public IIcon getIcon(int side, int meta) {
-  // return side == 0 ? bottomIcon : (side == 1 ? topIcon : blockIcon);
-  // }
-  //
-  // @Override
-  // public void registerBlockIcons(IIconRegister p_149651_1_) {
-  // blockIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_side");
-  // topIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_top");
-  // bottomIcon = p_149651_1_.registerIcon("enderzoo:" + name + "_bottom");
-  // }
-
-  // @Override
-  // public void func_150114_a(World world, int x, int y, int z, int meta,
-  // EntityLivingBase placedBy) {
-  // if(!world.isRemote) {
-  // if((meta & 1) == 1) {
-  // EntityPrimedCharge entity = new EntityPrimedCharge(this, world, x + 0.5F, y
-  // + 0.5F, z + 0.5F, placedBy);
-  // world.spawnEntityInWorld(entity);
-  // world.playSoundAtEntity(entity, "game.tnt.primed", 1.0F, 1.0F);
-  // world.updateEntity(entity);
-  // }
-  // }
-  // }
 
   @Override
   public void onBlockDestroyedByExplosion(World world, BlockPos pos, Explosion explosion) {

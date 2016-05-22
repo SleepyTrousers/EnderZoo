@@ -3,11 +3,11 @@ package crazypants.enderzoo.spawn.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.common.BiomeDictionary;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.spawn.IBiomeDescriptor;
 import crazypants.enderzoo.spawn.IBiomeFilter;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.common.BiomeDictionary;
 
 public abstract class AbstractBiomeFilter implements IBiomeFilter {
 
@@ -34,7 +34,7 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
     }
   }
 
-  protected boolean isExcluded(BiomeGenBase candidate) {
+  protected boolean isExcluded(Biome candidate) {
     for (BiomeDictionary.Type exType : typeExcludes) {
       if (BiomeDictionary.isBiomeOfType(candidate, exType)) {
         if (Config.spawnConfigPrintDetailedOutput) {
