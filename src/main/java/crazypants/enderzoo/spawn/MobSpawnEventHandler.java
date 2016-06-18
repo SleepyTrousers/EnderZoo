@@ -200,13 +200,16 @@ public class MobSpawnEventHandler {
     if (event.getHarvester() == null || event.getHarvester().capabilities.isCreativeMode) {
       return;
     }
+
     if (!(event.getState().getBlock() instanceof BlockDirt || event.getState().getBlock() instanceof BlockGrass)) {
       return;
-    }    
-    if (Config.direSlimeChance < event.getWorld().rand.nextFloat()) {
-      return;
-    }       
+    }
+
     if (!isToolEffective(event.getState(), event.getHarvester().getHeldItemMainhand())) {
+
+      if (Config.direSlimeChance < event.getWorld().rand.nextFloat()) {
+        return;
+      }
 
       EntityDireSlime direSlime = new EntityDireSlime(event.getWorld());
       direSlime.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.0, event.getPos().getZ() + 0.5);
@@ -232,7 +235,9 @@ public class MobSpawnEventHandler {
       return true;
     }
     for (String type : stack.getItem().getToolClasses(stack)) {
-      if (state.getBlock().isToolEffective(type, state)) {
+      // the "shovel" check is needed for modded blocks that extend dirt/grass but refuse to acknowledge any tool as effective,
+      // e.g. TiC
+      if (state.getBlock().isToolEffective(type, state) || "shovel".equals(type)) {
         return true;
       }
     }
