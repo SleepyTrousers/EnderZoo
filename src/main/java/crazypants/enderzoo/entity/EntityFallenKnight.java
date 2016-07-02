@@ -12,6 +12,7 @@ import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntitySkeleton;
+import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -276,7 +277,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
-    setSkeletonType(0);
+    func_189768_a(SkeletonType.NORMAL);
     addRandomArmor();
     setEnchantmentBasedOnDifficulty(di); //enchantEquipment();
 
