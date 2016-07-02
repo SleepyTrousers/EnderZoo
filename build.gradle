@@ -9,7 +9,7 @@ buildscript {
 }
 
 plugins {
-    id "com.matthewprenger.cursegradle" version "1.0.5"
+    id "com.matthewprenger.cursegradle" version "1.0.7"
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
@@ -25,13 +25,18 @@ group = "com.enderio.enderzoo"
 archivesBaseName = "EnderZoo"
 version = "${minecraft_version}-${mod_version}.${buildnumber}"
 
-if (project.hasProperty('mod_appendix'))
-    version += "_${project.mod_appendix}"
+boolean dev = System.getenv("RELEASE") == null || System.getenv("RELEASE").equalsIgnoreCase("false")
+
+def type = 'release'
+if (project.hasProperty('mod_appendix')) {
+    version += "-${project.mod_appendix}"
+	type = project.mod_appendix
+}
 
 minecraft {
     mappings = "snapshot_20160518"
     version = "${minecraft_version}-${forge_version}"
-    runDir = "run"
+    runDir = 'run'
 
     replace "@VERSION@", project.version
     replaceIn "EnderZoo.java"
@@ -39,10 +44,6 @@ minecraft {
 
 configurations {
     compile.extendsFrom exportedCompile
-}
-
-repositories {
-    mavenCentral()
 }
 
 repositories {
@@ -84,25 +85,18 @@ processResources {
 
 jar {
     from { configurations.exportedCompile.collect { it.isDirectory() ? it : zipTree(it) } }
+    }
+
+
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
-}
-
-task deobfJar(type: Jar) {
-    from sourceSets.main.output
-    from { configurations.exportedCompile.collect { it.isDirectory() ? it : zipTree(it) } }
-    classifier = 'dev'
-}
-
-build.dependsOn sourceJar, deobfJar, javadocJar
+build.dependsOn sourceJar
 
 publishing {
     tasks.publish.dependsOn 'build'
@@ -110,15 +104,47 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
 
-            artifact sourceJar
-            artifact javadocJar
-            artifact deobfJar
+			artifact sourceJar
         }
     }
 
     repositories {
         if (project.hasProperty('mavendir')) {
             maven { url mavendir }
+        } else {
+            mavenLocal()
+        }
+    }
+}
+
+task checkTranslations << {
+    Map<String, String> mapen = new HashMap<String, String>()
+    (new File('resources/assets/enderio/lang/en_US.lang')).eachLine {
+        def (value1, value2) = it.tokenize( '=' )
+        if (value1 == null || value2 == null) {return}
+        mapen.put(value1, value2)
+    }
+    
+    new File('resources/assets/enderio/lang/').eachFileMatch( ~".*\\.lang\$" ) { langfile ->
+        if (!langfile.getName().contains("en_US")) {
+	        Map<String, String> map = new HashMap<String, String>()
+	        File outfile = new File("${langfile}.txt")
+	        Writer outwriter = outfile.newWriter("UTF8")
+	        outwriter.write("\n// Additional translations:\n")
+	        outwriter << langfile.filterLine {
+	            def (value1, value2) = it.tokenize( '=' )
+	            if (value1 == null || value2 == null) {return false}
+	            map.put(value1, value2)
+	            return !mapen.containsKey(value1)
+	        }
+	        
+	        outwriter.append("\n// Missing translations:\n")
+	        for (e in mapen) {
+	            if (!map.containsKey(e.key)) {
+	                outwriter.append(e.key + "=" + e.value + "\n")
+	            }
+	        }
+        println "Created translation report ${outfile}"
         }
     }
 }
@@ -132,13 +158,11 @@ curseforge {
 
     project {
         id = project.projectId
-        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? getChangelogText() : System.getenv('CHANGELOG')
+        changelog = System.getenv('CHANGELOG') == null || System.getenv('CHANGELOG').equals('none') ? "NA" : System.getenv('CHANGELOG')
         changelogType = 'html'
         releaseType = type
         mainArtifact(jar) {
             displayName = "${archivesBaseName} - ${version}"
         }
-        addArtifact(apiJar)
     }
 }
-
