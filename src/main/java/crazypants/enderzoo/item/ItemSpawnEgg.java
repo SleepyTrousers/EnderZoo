@@ -14,6 +14,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
@@ -54,7 +56,7 @@ public class ItemSpawnEgg extends Item {
   }
 
   @Override
-  public void getSubItems(Item item, CreativeTabs tab, List<ItemStack> list) {
+  public void getSubItems(Item item, CreativeTabs tab, NonNullList<ItemStack> list) {
     for (MobInfo mob : MobInfo.values()) {
       if(mob.isEnabled()) {
         list.add(new ItemStack(item, 1, mob.ordinal()));
@@ -63,7 +65,8 @@ public class ItemSpawnEgg extends Item {
   }
 
   @Override
-  public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+  public EnumActionResult onItemUse( EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    ItemStack stack = player.getHeldItem(hand);
     if(!world.isRemote) {
       activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), facing.ordinal());
       if(!player.capabilities.isCreativeMode) {
@@ -85,7 +88,8 @@ public class ItemSpawnEgg extends Item {
     posZ += offsetsZForSide[side];
 
     int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    EntityLiving entity = (EntityLiving) EntityList.createEntityByName(EnderZoo.MODID + "." + MobInfo.values()[damage].getName(), world);
+    
+    EntityLiving entity = (EntityLiving) EntityList.createEntityByIDFromName(new ResourceLocation(EnderZoo.MODID, MobInfo.values()[damage].getName()), world);
     spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
     return entity;
   }

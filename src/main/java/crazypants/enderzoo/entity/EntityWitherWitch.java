@@ -179,7 +179,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       setItemStackToSlot(EntityEquipmentSlot.MAINHAND, potion);
       healTimer = 10;
       isHealing = true;
-    } else if(target != null && getHeldItem(EnumHand.MAIN_HAND) == null) {
+    } else if(target != null && getHeldItem(EnumHand.MAIN_HAND).isEmpty()) {
       ItemStack potion;
       if(getActiveTarget().isPotionActive(MobEffects.WITHER)) {
         potion = BrewingUtil.createHarmingPotion(EntityUtil.isHardDifficulty(world), true);
@@ -189,8 +189,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       setItemStackToSlot(EntityEquipmentSlot.MAINHAND, potion);
       attackTimer = 10;
       healTimer = 40;
-    } else if(noActiveTargetTime > 40 && !isHealing && getHeldItem(EnumHand.MAIN_HAND) != null) {
-      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+    } else if(noActiveTargetTime > 40 && !isHealing && getHeldItem(EnumHand.MAIN_HAND).isEmpty() == false) {
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
       attackedWithPotion = null;
     }
     if(isHealing && healTimer <= 0) {
@@ -216,7 +216,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   @Override
   public void attackEntityWithRangedAttack(EntityLivingBase entity, float rangeRatio) {
-    if(attackTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND) != null && !isHealing) {
+    if(attackTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND).isEmpty() && !isHealing) {
 
       attackedWithPotion = entity;
 
@@ -233,7 +233,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       entitypotion.setThrowableHeading(x, y + groundDistance * 0.2F, z, 0.75F, 8.0F);
       world.spawnEntity(entitypotion);
 
-      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+      setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
     }
   }
 
