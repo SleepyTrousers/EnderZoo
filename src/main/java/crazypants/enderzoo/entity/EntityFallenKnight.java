@@ -12,7 +12,6 @@ import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.SkeletonType;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -115,7 +114,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   public void onLivingUpdate() {
     super.onLivingUpdate();
 
-    if(firstUpdate && !worldObj.isRemote) {
+    if(firstUpdate && !world.isRemote) {
       spawnMount();
     }
 
@@ -164,20 +163,20 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     EntityFallenMount mount = null;
     if(Config.fallenMountEnabled && rand.nextFloat() <= Config.fallenKnightChanceMounted) {
-      mount = new EntityFallenMount(worldObj);
+      mount = new EntityFallenMount(world);
       mount.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
 
-      DifficultyInstance di = worldObj.getDifficultyForLocation(new BlockPos(mount));
+      DifficultyInstance di = world.getDifficultyForLocation(new BlockPos(mount));
       mount.onInitialSpawn(di, null);
       //NB: don;t check for entity collisions as we know the knight will collide
-      if(!SpawnUtil.isSpaceAvailableForSpawn(worldObj, mount, false)) {
+      if(!SpawnUtil.isSpaceAvailableForSpawn(world, mount, false)) {
         mount = null;
       }
     }
     if(mount != null) {
       setCanPickUpLoot(false);
       setCanBreakDoors(false);
-      worldObj.spawnEntityInWorld(mount);      
+      world.spawnEntity(mount);      
       startRiding(mount);
       
     }
@@ -190,7 +189,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
   private void addRandomArmor() {
 
-    float occupiedDiffcultyMultiplier = EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ);
+    float occupiedDiffcultyMultiplier = EntityUtil.getDifficultyMultiplierForLocation(world, posX, posY, posZ);
 
     int equipmentLevel = getRandomEquipmentLevel(occupiedDiffcultyMultiplier);
     int armorLevel = equipmentLevel;
@@ -226,7 +225,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   private int getRandomEquipmentLevel() {
-    return getRandomEquipmentLevel(EntityUtil.getDifficultyMultiplierForLocation(worldObj, posX, posY, posZ));
+    return getRandomEquipmentLevel(EntityUtil.getDifficultyMultiplierForLocation(world, posX, posY, posZ));
   }
 
   private int getRandomEquipmentLevel(float occupiedDiffcultyMultiplier) {
@@ -244,7 +243,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   protected boolean isHardDifficulty() {
-    return EntityUtil.isHardDifficulty(worldObj);
+    return EntityUtil.isHardDifficulty(world);
   }
 
   private ItemStack getSwordForLevel(int swordLevel) {
@@ -277,7 +276,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     //From base entity living class
     getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).applyModifier(new AttributeModifier("Random spawn bonus", rand.nextGaussian() * 0.05D, 1));
-    func_189768_a(SkeletonType.NORMAL);
+//    func_189768_a(SkeletonType.NORMAL);//skeleton types do not exist anymore in 1.11.2. so its always normal.
     addRandomArmor();
     setEnchantmentBasedOnDifficulty(di); //enchantEquipment();
 

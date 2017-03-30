@@ -29,17 +29,17 @@ public class EntityOwlEgg extends EntityThrowable {
       impact.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()), 0.0F);
     }
 
-    if (!worldObj.isRemote && rand.nextInt(8) == 0) {
-      EntityOwl entitychicken = new EntityOwl(worldObj);
+    if (!world.isRemote && rand.nextInt(8) == 0) {
+      EntityOwl entitychicken = new EntityOwl(world);
       entitychicken.setGrowingAge(-24000);
       entitychicken.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-      worldObj.spawnEntityInWorld(entitychicken);
+      world.spawnEntity(entitychicken);
     }
     for (int i = 0; i < 8; ++i) {
-      worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, posX, posY, posZ, (rand.nextFloat() - 0.5D) * 0.08D,
+      world.spawnParticle(EnumParticleTypes.ITEM_CRACK, posX, posY, posZ, (rand.nextFloat() - 0.5D) * 0.08D,
           (rand.nextFloat() - 0.5D) * 0.08D, (rand.nextFloat() - 0.5D) * 0.08D, new int[] { Item.getIdFromItem(EnderZoo.itemOwlEgg) });
     }
-    if (!worldObj.isRemote) {
+    if (!world.isRemote) {
       setDead();
     }
   }

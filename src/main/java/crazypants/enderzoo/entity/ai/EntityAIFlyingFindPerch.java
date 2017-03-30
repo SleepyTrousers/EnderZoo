@@ -44,7 +44,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
 
     BlockPos targetPos = EntityUtil.findRandomLandingSurface(entity, searchRange, entity.getPosition().getY() + 1, 250, searchAttempts);
     if (targetPos != null) {
-      List<EntityCreature> others = entity.worldObj.getEntitiesWithinAABB(entity.getClass(), EntityUtil.getBoundsAround(targetPos, 4));
+      List<EntityCreature> others = entity.getEntityWorld().getEntitiesWithinAABB(entity.getClass(), EntityUtil.getBoundsAround(targetPos, 4));
       if (others != null && others.size() > 1) {
         return false;
       }
@@ -58,7 +58,7 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
   }
 
   private boolean isOnLeaves() {
-    IBlockState bs = entity.worldObj.getBlockState(entity.getPosition().down());
+    IBlockState bs = entity.getEntityWorld().getBlockState(entity.getPosition().down());
     Block block = bs.getBlock();
     return block.getMaterial(bs) == Material.LEAVES;
   }

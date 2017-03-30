@@ -23,6 +23,7 @@ import crazypants.enderzoo.spawn.MobSpawns;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -111,7 +112,8 @@ public class EnderZoo {
   }
 
   private void registerEntity(MobInfo mob) {
-    EntityRegistry.registerModEntity(mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
+    EntityRegistry.registerModEntity(new ResourceLocation(MODID,mob.getName()),
+        mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
   }
 
   @EventHandler

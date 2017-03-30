@@ -38,10 +38,11 @@ public class RenderDireSlime extends RenderLiving<EntityDireSlime> {
   }
 
   @Override
-  protected void rotateCorpse(EntityDireSlime p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_) {
+  protected void applyRotations(EntityDireSlime p_77043_1_, float p_77043_2_, float p_77043_3_, float p_77043_4_) {
+//    this.rotateCorpse(entityLiving, p_77043_2_, p_77043_3_, partialTicks);
     if (p_77043_1_.deathTime > 0) {
       float f3 = (p_77043_1_.deathTime + p_77043_4_ - 1.0F) / 20.0F * 1.6F;
-      f3 = Math.max(MathHelper.sqrt_float(f3), 1.0F);
+      f3 = Math.max(MathHelper.sqrt(f3), 1.0F);
       GL11.glRotatef(f3 * this.getDeathMaxRotation(p_77043_1_), 0.0F, 0.0F, 1.0F);
     }
   }

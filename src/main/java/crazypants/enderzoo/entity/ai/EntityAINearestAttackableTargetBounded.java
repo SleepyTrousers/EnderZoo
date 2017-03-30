@@ -65,7 +65,7 @@ public class EntityAINearestAttackableTargetBounded<T extends EntityLivingBase> 
       double vertDist = getVerticalDistance();
       
       AxisAlignedBB bb = taskOwner.getEntityBoundingBox().expand(horizDist, vertDist, horizDist);
-      List<T> list = taskOwner.worldObj.<T> getEntitiesWithinAABB(targetClass, bb,
+      List<T> list = taskOwner.getEntityWorld().<T> getEntitiesWithinAABB(targetClass, bb,
           Predicates.<T> and(targetEntitySelector, EntitySelectors.NOT_SPECTATING));
       Collections.sort(list, theNearestAttackableTargetSorter);
 

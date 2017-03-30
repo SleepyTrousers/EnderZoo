@@ -50,7 +50,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   public boolean tryFlyToXYZ(double x, double y, double z, double speedIn) {
-    Path pathentity = getPathToPos(new BlockPos((double) MathHelper.floor_double(x), (double) ((int) y), (double) MathHelper.floor_double(z)));
+    Path pathentity = getPathToPos(new BlockPos((double) MathHelper.floor(x), (double) ((int) y), (double) MathHelper.floor(z)));
     return setPath(pathentity, speedIn, true);
   }
 
@@ -156,7 +156,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
   }
 
   private boolean isClear(Vec3d startPos, Vec3d target) {
-    RayTraceResult hit = worldObj.rayTraceBlocks(startPos, target, true, true, false);
+    RayTraceResult hit = world.rayTraceBlocks(startPos, target, true, true, false);
     return hit == null || hit.typeOfHit == RayTraceResult.Type.MISS;
   }
 

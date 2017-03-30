@@ -63,7 +63,7 @@ public class FlyingPathFinder extends PathFinder {
     
     int climbY = 0;
     if (horizDist > 4 && entityIn.onGround) {
-      climbY = 1 * MathHelper.clamp_int((int)(horizDist/8), 1, 3);
+      climbY = 1 * MathHelper.clamp((int)(horizDist/8), 1, 3);
       if (yDelta >= 1) {
         climbY += yDelta;
       } else {
@@ -85,7 +85,7 @@ public class FlyingPathFinder extends PathFinder {
     Vec3d offset = new Vec3d(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
     
     PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));        
-    if(!SpawnUtil.isSpaceAvailableForSpawn(entityIn.worldObj, (EntityLiving)entityIn, false)) {
+    if(!SpawnUtil.isSpaceAvailableForSpawn(entityIn.world, (EntityLiving)entityIn, false)) {
       return createDefault(blockaccess, entityIn, distance, x,y,z);
     }
     

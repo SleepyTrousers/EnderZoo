@@ -119,12 +119,12 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     if (EntityUtil.isPlayerWithinRange(this, 12)) {
       return SND_GROWL;
     }
-    boolean howl = (packHowl > 0 || rand.nextFloat() <= Config.direWolfHowlChance) && worldObj.getTotalWorldTime() > (lastHowl + 10);
+    boolean howl = (packHowl > 0 || rand.nextFloat() <= Config.direWolfHowlChance) && world.getTotalWorldTime() > (lastHowl + 10);
     if (howl) {
       if (packHowl <= 0 && rand.nextFloat() <= 0.6) {
         packHowl = Config.direWolfPackHowlAmount;
       }
-      lastHowl = worldObj.getTotalWorldTime();
+      lastHowl = world.getTotalWorldTime();
       packHowl = Math.max(packHowl - 1, 0);
       return SND_HOWL;
     } else {
@@ -138,7 +138,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
       volume *= (float) Config.direWolfHowlVolumeMult;
       pitch *= 0.8f;
     }
-    worldObj.playSound(posX,posY,posZ, sound, SoundCategory.NEUTRAL, volume, pitch, true);
+    world.playSound(posX,posY,posZ, sound, SoundCategory.NEUTRAL, volume, pitch, true);
   }
 
   @Override
@@ -208,7 +208,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
     }
     int range = 16;
     AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-    List<EntityDireWolf> pack = worldObj.getEntitiesWithinAABB(EntityDireWolf.class, bb);
+    List<EntityDireWolf> pack = world.getEntitiesWithinAABB(EntityDireWolf.class, bb);
     if (pack != null && !pack.isEmpty()) {
       for (EntityDireWolf wolf : pack) {
         if (wolf.getAttackTarget() == null) {

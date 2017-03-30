@@ -28,7 +28,7 @@ public class EntityAIFlyingPanic extends EntityAIBase {
     if (vec3 == null) {
       return false;
     }
-    double yOffset = 1 + theEntityCreature.worldObj.rand.nextInt(3);
+    double yOffset = 1 + theEntityCreature.getEntityWorld().rand.nextInt(3);
     //double yOffset = 0;
     randPosX = vec3.xCoord;
     randPosY = vec3.yCoord + yOffset;

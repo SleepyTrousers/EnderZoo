@@ -122,7 +122,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected PathNavigate getNewNavigator(World worldIn) {
+  protected PathNavigate createNavigator(World worldIn) {
     return new FlyingPathNavigate(this, worldIn);
   }
 
@@ -133,7 +133,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public float getBlockPathWeight(BlockPos pos) {
-    IBlockState bs = worldObj.getBlockState(pos.down());
+    IBlockState bs = world.getBlockState(pos.down());
     return bs.getBlock().getMaterial(bs) == Material.LEAVES ? 10.0F : 0;
   }
 
@@ -155,7 +155,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     prevWingRotation = wingRotation;
     prevDestPos = destPos;
     destPos = (float) (destPos + (onGround ? -1 : 4) * 0.3D);
-    destPos = MathHelper.clamp_float(destPos, 0.0F, 1.0F);
+    destPos = MathHelper.clamp(destPos, 0.0F, 1.0F);
     if (!onGround && wingRotDelta < 1.0F) {
       wingRotDelta = 1.0F;
     }
@@ -170,7 +170,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     }
     wingRotation += wingRotDelta * flapSpeed;
 
-    if (!worldObj.isRemote && !isChild() && --timeUntilNextEgg <= 0) {
+    if (!world.isRemote && !isChild() && --timeUntilNextEgg <= 0) {
       if (isOnLeaves()) {
         playSound(SoundEvents.ENTITY_CHICKEN_EGG, 1.0F, (this.rand.nextFloat() - this.rand.nextFloat()) * 0.2F + 1.0F);
         dropItem(EnderZoo.itemOwlEgg, 1);        
@@ -181,7 +181,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
   
   private boolean isOnLeaves() {
-    IBlockState bs = worldObj.getBlockState(getPosition().down());    
+    IBlockState bs = world.getBlockState(getPosition().down());    
     return bs.getBlock().getMaterial(bs) == Material.LEAVES;
   }
 
@@ -194,10 +194,10 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     AxisAlignedBB movedBB = getEntityBoundingBox().offset(0, motionY, 0);
     BlockPos ep = getPosition();
     BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
-    IBlockState bs = worldObj.getBlockState(pos);
+    IBlockState bs = world.getBlockState(pos);
     Block block = bs.getBlock();
     if (block.getMaterial(bs) != Material.AIR) {
-      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, worldObj, pos);
+      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, world, pos);
       if (bb != null) {
         double ouch = movedBB.maxY - bb.minY;
         if (ouch == 0) {
@@ -208,7 +208,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       }
     }
 
-    moveEntity(motionX, motionY, motionZ);
+    addVelocity(motionX, motionY, motionZ);//moveEntity
 
     // drag
     motionX *= 0.8;
@@ -227,7 +227,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     prevLimbSwingAmount = limbSwingAmount;
     double deltaX = posX - prevPosX;
     double deltaZ = posZ - prevPosZ;
-    float f7 = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ) * 4.0F;
+    float f7 = MathHelper.sqrt(deltaX * deltaX + deltaZ * deltaZ) * 4.0F;
     if (f7 > 1.0F) {
       f7 = 1.0F;
     }
@@ -243,17 +243,17 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(Integer.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
 
       for (int i = 0; i < 8; ++i) {
-        int x = MathHelper.floor_double(posX + ((i >> 1) % 2 - 0.5F) * width * 0.8F);
-        int y = MathHelper.floor_double(posY + ((i >> 0) % 2 - 0.5F) * 0.1F + getEyeHeight());
+        int x = MathHelper.floor(posX + ((i >> 1) % 2 - 0.5F) * width * 0.8F);
+        int y = MathHelper.floor(posY + ((i >> 0) % 2 - 0.5F) * 0.1F + getEyeHeight());
         // I added this check as it was sometimes clipping into the block above
         if (y > getEntityBoundingBox().maxY) {
-          y = MathHelper.floor_double(getEntityBoundingBox().maxY);
+          y = MathHelper.floor(getEntityBoundingBox().maxY);
         }
-        int z = MathHelper.floor_double(posZ + ((i >> 2) % 2 - 0.5F) * width * 0.8F);
+        int z = MathHelper.floor(posZ + ((i >> 2) % 2 - 0.5F) * width * 0.8F);
 
         if (pos.getX() != x || pos.getY() != y || pos.getZ() != z) {
           pos.setPos(x, y, z);
-          if (worldObj.getBlockState(pos).getBlock().isVisuallyOpaque()) {
+          if (world.getBlockState(pos).getBlock().isOpaqueCube(world.getBlockState(pos))) {
             return true;
           }
         }
@@ -338,7 +338,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       return;
     }
 
-    if (worldObj != null && !worldObj.isRemote && (worldObj.isDaytime() || getAttackTarget() != null)) {
+    if (world != null && !world.isRemote && (world.isDaytime() || getAttackTarget() != null)) {
       return;
     }
 
@@ -350,7 +350,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   protected SoundEvent getAmbientSound() {
-    if (worldObj.rand.nextBoolean()) {
+    if (world.rand.nextBoolean()) {
       return SND_HOOT2;
     } else {
       return SND_HOOT;
@@ -369,7 +369,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
   @Override
   public EntityOwl createChild(EntityAgeable ageable) {
-    return new EntityOwl(worldObj);
+    return new EntityOwl(world);
   }
 
   @Override

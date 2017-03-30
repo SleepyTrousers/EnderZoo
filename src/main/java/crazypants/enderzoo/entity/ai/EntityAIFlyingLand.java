@@ -95,8 +95,8 @@ public class EntityAIFlyingLand extends EntityAIBase {
       double fz = entity.posX - Math.floor(entity.posX);
       if (fx > 0.4 && fx < 0.6 && fz > 0.4 && fz < 0.6) {
         BlockPos bellow = entity.getPosition().down();
-        IBlockState bs = entity.worldObj.getBlockState(bellow);
-        if (!bs.getBlock().isAir(bs, entity.worldObj, bellow)) {
+        IBlockState bs = entity.getEntityWorld().getBlockState(bellow);
+        if (!bs.getBlock().isAir(bs, entity.getEntityWorld(), bellow)) {
           entity.getNavigator().clearPathEntity();
           return false;
         }

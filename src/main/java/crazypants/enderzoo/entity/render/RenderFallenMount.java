@@ -29,7 +29,8 @@ public class RenderFallenMount extends RenderHorse {
   private static final Map<String, ResourceLocation> textureCache = Maps.newHashMap();
 
   public RenderFallenMount(RenderManager rm) {
-    super(rm, new ModelHorse(), 0.75F);
+    super(rm);
+//    super(rm, new ModelHorse(), 0.75F);
   }
 
   @Override

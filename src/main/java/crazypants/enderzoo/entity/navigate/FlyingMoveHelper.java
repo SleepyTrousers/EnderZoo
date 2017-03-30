@@ -34,7 +34,7 @@ public class FlyingMoveHelper extends EntityMoveHelper {
       entity.setAIMoveSpeed(entity.getAIMoveSpeed() + (moveSpeed - entity.getAIMoveSpeed()) * moveFactor);
 
       double distSq = xDelta * xDelta + yDelta * yDelta + zDelta * zDelta;
-      double dist = MathHelper.sqrt_double(distSq);
+      double dist = MathHelper.sqrt(distSq);
       yDelta = yDelta / dist;
       if (yDelta > 0) {
         // Ensure enough lift to get up to the target

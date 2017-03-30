@@ -110,15 +110,15 @@ public class ItemGuardiansBow extends ItemBow {
         
         entityarrow.setDamage(entityarrow.getDamage() + damageBonus + 20);
         
-        worldIn.spawnEntityInWorld(entityarrow);
+        worldIn.spawnEntity(entityarrow);
       }
 
       worldIn.playSound((EntityPlayer) null, entityplayer.posX, entityplayer.posY, entityplayer.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL,
           1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + drawRatio * 0.5F);
 
       if (!arrowIsInfinite) {
-        --itemstack.stackSize;
-        if (itemstack.stackSize == 0) {
+        itemstack.shrink(1);
+        if (itemstack.getCount() == 0) {
           entityplayer.inventory.deleteStack(itemstack);
         }
       }

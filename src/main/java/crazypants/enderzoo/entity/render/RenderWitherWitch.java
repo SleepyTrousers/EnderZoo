@@ -87,14 +87,14 @@ public class RenderWitherWitch extends RenderLiving<EntityWitherWitch> {
         GlStateManager.translate(-0.0625F, 0.53125F, 0.21875F);
         Item item = itemstack.getItem();
         Minecraft minecraft = Minecraft.getMinecraft();
-
-        if (item instanceof ItemBlock && minecraft.getBlockRendererDispatcher().isEntityBlockAnimated(Block.getBlockFromItem(item))) {
-          GlStateManager.translate(0.0F, 0.0625F, -0.25F);
-          GlStateManager.rotate(30.0F, 1.0F, 0.0F, 0.0F);
-          GlStateManager.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
-          float f4 = 0.375F;
-          GlStateManager.scale(f4, -f4, f4);
-        } else 
+      //TODO: method is gone, so skip?
+//        if (item instanceof ItemBlock && minecraft.getBlockRendererDispatcher().isEntityBlockAnimated(Block.getBlockFromItem(item))) {
+//          GlStateManager.translate(0.0F, 0.0625F, -0.25F);
+//          GlStateManager.rotate(30.0F, 1.0F, 0.0F, 0.0F);
+//          GlStateManager.rotate(-5.0F, 0.0F, 1.0F, 0.0F);
+//          float f4 = 0.375F;
+//          GlStateManager.scale(f4, -f4, f4);
+//        } else 
           if (item == Items.BOW) {
           GlStateManager.translate(0.0F, 0.125F, -0.125F);
           GlStateManager.rotate(-45.0F, 0.0F, 1.0F, 0.0F);

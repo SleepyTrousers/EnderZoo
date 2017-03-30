@@ -3,6 +3,7 @@ package crazypants.enderzoo.entity.render;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSkeleton;
+import net.minecraft.entity.monster.AbstractSkeleton;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
@@ -18,7 +19,8 @@ public class RenderFallenKnight extends RenderSkeleton {
   }
 
   @Override
-  protected ResourceLocation getEntityTexture(EntitySkeleton entity) {
+  protected ResourceLocation getEntityTexture(AbstractSkeleton entity) {
+  
     return texture;
   }
 

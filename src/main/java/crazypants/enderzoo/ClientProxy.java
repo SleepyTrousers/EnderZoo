@@ -52,12 +52,12 @@ public class ClientProxy extends CommonProxy {
 
   @Override
   public World getClientWorld() {
-    return FMLClientHandler.instance().getClient().theWorld;
+    return FMLClientHandler.instance().getClient().world;
   }
 
   @Override
   public EntityPlayer getClientPlayer() {
-    return Minecraft.getMinecraft().thePlayer;
+    return Minecraft.getMinecraft().player;
   }
 
   @Override
@@ -109,7 +109,7 @@ public class ClientProxy extends CommonProxy {
     IItemColor handler = new IItemColor() {
       @Override
       public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+        int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
         MobInfo mob = MobInfo.values()[damage];
         return tintIndex == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();
 
@@ -161,7 +161,7 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
     ent.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, duration, 1, false, true));
-    Minecraft.getMinecraft().thePlayer.timeInPortal = 1;
+    Minecraft.getMinecraft().player.timeInPortal = 1;
   }
 
 }

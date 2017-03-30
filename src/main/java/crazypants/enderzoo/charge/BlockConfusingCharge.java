@@ -19,6 +19,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
@@ -38,7 +39,8 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
     PacketHandler.INSTANCE.registerMessage(PacketExplodeEffect.class, PacketExplodeEffect.class, PacketHandler.nextID(), Side.CLIENT);
 
-    EntityRegistry.registerModEntity(EntityPrimedCharge.class, "EntityPrimedCharge", Config.entityPrimedChargeId, EnderZoo.instance, 64, 100, false);
+    EntityRegistry.registerModEntity(new ResourceLocation(EnderZoo.MODID,"EntityPrimedCharge"),
+        EntityPrimedCharge.class, "EntityPrimedCharge", Config.entityPrimedChargeId, EnderZoo.instance, 64, 100, false);
     if (!Config.confusingChargeEnabled) {
       return null;
     }
@@ -81,7 +83,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   @Override
   public void explode(EntityPrimedCharge entity) {
-    World world = entity.worldObj;
+    World world = entity.getEntityWorld();
 
     world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 3F, 1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));
 
@@ -99,7 +101,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
         // 1.0F);
 
         EntityPrimedCharge entity = new EntityPrimedCharge(this, world, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, igniter);
-        world.spawnEntityInWorld(entity);
+        world.spawnEntity(entity);
         world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_TNT_PRIMED, SoundCategory.BLOCKS, 1, 1);
         
         world.updateEntity(entity);
@@ -143,7 +145,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
 
-      ParticleSpell entityfx = (ParticleSpell) new ParticleSpell.InstantFactory().getEntityFX(i, world, x + motionX * 0.1,
+      ParticleSpell entityfx = (ParticleSpell) new ParticleSpell.InstantFactory().createParticle(i, world, x + motionX * 0.1,
           y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY, motionZ, (int[]) null);
       float colRan = 0.75F + random.nextFloat() * 0.25F;
       entityfx.setRBGColorF(r * colRan, g * colRan, b * colRan);
@@ -165,7 +167,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   protected void onIgnitedByNeighbour(World world, int x, int y, int z, EntityLivingBase placedBy) {
     EntityPrimedCharge entity = new EntityPrimedCharge(this, world, x + 0.5F, y + 0.5F, z + 0.5F, placedBy);
     entity.setFuse(world.rand.nextInt(entity.getFuse() / 4) + entity.getFuse() / 8);
-    world.spawnEntityInWorld(entity);
+    world.spawnEntity(entity);
   }
 
 }

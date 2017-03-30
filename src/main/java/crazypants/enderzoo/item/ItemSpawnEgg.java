@@ -44,7 +44,7 @@ public class ItemSpawnEgg extends Item {
 
   @Override
   public String getItemStackDisplayName(ItemStack stack) {
-    int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+    int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     String s = ("" + I18n.translateToLocal(getUnlocalizedName() + ".name")).trim();
     String s1 = EnderZoo.MODID + "." + MobInfo.values()[damage].getName();
     if(s1 != null) {
@@ -67,7 +67,7 @@ public class ItemSpawnEgg extends Item {
     if(!world.isRemote) {
       activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), facing.ordinal());
       if(!player.capabilities.isCreativeMode) {
-        --stack.stackSize;
+        stack.shrink(1);
       }
     }
     return EnumActionResult.SUCCESS;
@@ -84,7 +84,7 @@ public class ItemSpawnEgg extends Item {
     posY += offsetsYForSide[side];
     posZ += offsetsZForSide[side];
 
-    int damage = MathHelper.clamp_int(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+    int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     EntityLiving entity = (EntityLiving) EntityList.createEntityByName(EnderZoo.MODID + "." + MobInfo.values()[damage].getName(), world);
     spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
     return entity;
@@ -94,7 +94,7 @@ public class ItemSpawnEgg extends Item {
     if(!world.isRemote && entity != null) {
       entity.setPosition(x, y, z);
       entity.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(x, y, z)), null);
-      world.spawnEntityInWorld(entity);
+      world.spawnEntity(entity);
     }
   }
 }
