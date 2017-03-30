@@ -72,7 +72,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public boolean processInteract(EntityPlayer player, EnumHand hand) {
     ItemStack itemstack = player.inventory.getCurrentItem();
-    if(itemstack != null && itemstack.getItem() == Items.SPAWN_EGG) {
+    if(itemstack.isEmpty()==false && itemstack.getItem() == Items.SPAWN_EGG) {
       return super.processInteract(player, hand);
     }
     return false;
@@ -109,7 +109,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData data) {  
 
-    setHorseArmorStack(null);        
+    setHorseArmorStack(ItemStack.EMPTY);        
     setHorseSaddled(true);    
     setGrowingAge(0);
     getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.fallenMountHealth);
@@ -223,7 +223,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(armor != null) {
+    if(armor.isEmpty()==false) {
       NBTTagCompound armTag = new NBTTagCompound();
       armor.writeToNBT(armTag);
       root.setTag("armor", armTag);

@@ -1,43 +1,43 @@
 //***  Ender Zoo *****//
 
 //Items
-item.spawnEgg.name=Spawn
-item.witheringDust.name=Withering Dust
-item.confusingDust.name=Confusing Powder
-item.enderFragment.name=Ender Fragment
-item.guardiansBow.name=Guardians Bow
-item.owlEgg.name=Owl Egg
+item.spawnegg.name=Spawn
+item.witheringdust.name=Withering Dust
+item.confusingdust.name=Confusing Powder
+item.enderfragment.name=Ender Fragment
+item.guardiansbow.name=Guardians Bow
+item.owlegg.name=Owl Egg
 
 
 //Mobs
-entity.EnderZoo.Enderminy.name=Enderminy
-entity.EnderZoo.ConcussionCreeper.name=Concussion Creeper
-entity.EnderZoo.FallenKnight.name=Fallen Knight
-entity.EnderZoo.FallenMount.name=Fallen Steed
-entity.EnderZoo.WitherWitch.name=Wither Witch
-entity.EnderZoo.WitherCat.name=Wither Cat
-entity.EnderZoo.DireWolf.name=Dire Wolf
-entity.EnderZoo.DireSlime.name=Khndrel Keght
-entity.EnderZoo.Owl.name=Owl
+entity.enderzoo.enderminy.name=Enderminy
+entity.enderzoo.concussioncreeper.name=Concussion Creeper
+entity.enderzoo.fallenknight.name=Fallen Knight
+entity.enderzoo.fallenmount.name=Fallen Steed
+entity.enderzoo.witherwitch.name=Wither Witch
+entity.enderzoo.withercat.name=Wither Cat
+entity.enderzoo.direwolf.name=Dire Wolf
+entity.enderzoo.direslime.name=Khndrel Keght
+entity.enderzoo.owl.name=Owl
 
 //Waila
-entity.EnderZoo.Enderminy.desc.1=Neutral Mob,
-entity.EnderZoo.Enderminy.desc.2=Attacks creepers
+entity.enderzoo.enderminy.desc.1=Neutral Mob,
+entity.enderzoo.enderminy.desc.2=Attacks creepers
 
-entity.EnderZoo.ConcussionCreeper.desc.1=Does no block damage.
-entity.EnderZoo.ConcussionCreeper.desc.2=Teleports nearby entities
-entity.EnderZoo.ConcussionCreeper.desc.3=When it explodes.
+entity.enderzoo.concussioncreeper.desc.1=Does no block damage.
+entity.enderzoo.concussioncreeper.desc.2=Teleports nearby entities
+entity.enderzoo.concussioncreeper.desc.3=When it explodes.
 
-entity.EnderZoo.FallenKnight.desc.1=Ranged armored zombie
-entity.EnderZoo.WitherWitch.desc.1=Throws wither potions
+entity.enderzoo.fallenknight.desc.1=Ranged armored zombie
+entity.enderzoo.witherwitch.desc.1=Throws wither potions
 
 //Enchants
-enchantment.witherArrow=Withering 
-enchantment.witherWeapon=Decay
+enchantment.witherarrow=Withering 
+enchantment.witherweapon=Decay
 
 //Potions
-EnderZoo.floatingPotion=Floating
-EnderZoo.floatingPotion.postfix=Potion of Rising
+EnderZoo.floatingpotion=Floating
+EnderZoo.floatingpotion.postfix=Potion of Rising
 
 potion.effect.floating=Potion of Rising
 splash_potion.effect.floating=Splash Potion of Rising
@@ -56,7 +56,7 @@ tipped_arrow.effect.confusion=Arrow of Confusion
 
 
 //Blocks
-tile.blockConfusingCharge.name=Confusing Charge
-tile.blockEnderCharge.name=Ender Charge
-tile.blockConcussionCharge.name=Concussion Charge
+tile.blockconfusingcharge.name=Confusing Charge
+tile.blockendercharge.name=Ender Charge
+tile.blockconcussioncharge.name=Concussion Charge
 
