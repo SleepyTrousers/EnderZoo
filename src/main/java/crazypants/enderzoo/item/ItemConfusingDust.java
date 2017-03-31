@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemConfusingDust extends Item {
 
-  public static final String NAME = "confusingDust";
+  public static final String NAME = "confusingdust";
 
   public static ItemConfusingDust create() {
     ItemConfusingDust res = new ItemConfusingDust();

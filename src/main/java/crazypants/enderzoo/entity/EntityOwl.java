@@ -43,7 +43,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
-  public static final String NAME = "Owl";
+  public static final String NAME = "owl";
   public static final int EGG_BG_COL = 0xC17949;
   public static final int EGG_FG_COL = 0xFFDDC6;
 

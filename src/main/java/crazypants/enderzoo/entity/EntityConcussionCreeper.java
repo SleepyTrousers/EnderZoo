@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooMob {
 
-  public static final String NAME = "ConcussionCreeper";
+  public static final String NAME = "concussioncreeper";
   public static final int EGG_BG_COL = 0x56FF8E;
   public static final int EGG_FG_COL = 0xFF0A22;
 

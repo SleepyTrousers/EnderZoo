@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
-  public static final String NAME = "DireSlime";
+  public static final String NAME = "direslime";
   public static final int EGG_BG_COL = 0xb9855c;
   public static final int EGG_FG_COL = 0x593d29;
 

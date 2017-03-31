@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnderCharge extends BlockConfusingCharge {
 
-  public static final String NAME = "blockEnderCharge";
+  public static final String NAME = "blockendercharge";
 
   public static BlockEnderCharge create() {
     if(!Config.enderChargeEnabled) {

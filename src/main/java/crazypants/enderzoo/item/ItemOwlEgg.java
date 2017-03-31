@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemOwlEgg extends Item {
 
-  public static final String NAME = "owlEgg";
+  public static final String NAME = "owlegg";
 
   public static ItemOwlEgg create() {
     

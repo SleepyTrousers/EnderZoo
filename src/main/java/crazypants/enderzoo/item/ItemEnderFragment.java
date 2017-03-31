@@ -6,7 +6,7 @@ import crazypants.enderzoo.EnderZooTab;
 
 public class ItemEnderFragment extends Item {
 
-  public static final String NAME = "enderFragment";
+  public static final String NAME = "enderfragment";
 
   public static ItemEnderFragment create() {
     ItemEnderFragment res = new ItemEnderFragment();

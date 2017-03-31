@@ -1,7 +1,5 @@
 package crazypants.enderzoo.item;
 
-import java.util.List;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.entity.MobInfo;
@@ -24,7 +22,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemSpawnEgg extends Item {
 
-  public static final String NAME = "spawnEgg";
+  public static final String NAME = "spawnegg";
 
   public static ItemSpawnEgg create() {
     ItemSpawnEgg res = new ItemSpawnEgg();

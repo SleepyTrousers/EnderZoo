@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
-  public static final String NAME = "blockConfusingCharge";
+  public static final String NAME = "blockconfusingcharge";
 
   private int chargeId;
 

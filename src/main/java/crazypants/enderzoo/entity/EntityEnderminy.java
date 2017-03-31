@@ -47,7 +47,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
-  public static String NAME = "Enderminy";
+  public static final String NAME = "enderminy";
   public static final int EGG_BG_COL = 0x27624D;
   public static final int EGG_FG_COL = 0x212121;
 

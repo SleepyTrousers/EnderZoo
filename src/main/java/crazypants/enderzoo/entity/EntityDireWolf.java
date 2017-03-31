@@ -30,7 +30,7 @@ import net.minecraft.world.World;
 
 public class EntityDireWolf extends EntityMob implements IEnderZooMob {
 
-  public static final String NAME = "DireWolf";
+  public static final String NAME = "direwolf";
   public static final int EGG_BG_COL = 0x606060;
   public static final int EGG_FG_COL = 0xA0A0A0;
 

@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemGuardiansBow extends ItemBow {
 
-  public static final String NAME = "guardiansBow";
+  public static final String NAME = "guardiansbow";
 
   private int drawTime = Config.guardiansBowDrawTime;
   private float damageBonus = Config.guardiansBowDamageBonus;

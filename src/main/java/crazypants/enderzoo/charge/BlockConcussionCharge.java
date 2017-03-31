@@ -7,7 +7,7 @@ import crazypants.enderzoo.config.Config;
 
 public class BlockConcussionCharge extends BlockConfusingCharge {
 
-  public static final String NAME = "blockConcussionCharge";
+  public static final String NAME = "blockconcussioncharge";
 
   public static BlockConcussionCharge create() {
     if(!Config.concussionChargeEnabled) {
