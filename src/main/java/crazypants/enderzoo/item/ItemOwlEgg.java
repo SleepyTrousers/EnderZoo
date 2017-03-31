@@ -18,7 +18,9 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemOwlEgg extends Item {
-
+  private static final float VELOCITY_DEFAULT = 1.5F;
+  private static final float INACCURACY_DEFAULT = 1.0F;
+  private static final float PITCHOFFSET = 0.0F;
   public static final String NAME = "owlegg";
 
   public static ItemOwlEgg create() {
@@ -49,8 +51,11 @@ public class ItemOwlEgg extends Item {
       itemStackIn.shrink(1);
     }
     worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.BLOCKS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-    if (!worldIn.isRemote) {         
-      worldIn.spawnEntity(new EntityOwlEgg(worldIn, playerIn));
+    if (!worldIn.isRemote) {    
+      EntityOwlEgg entityEgg = new EntityOwlEgg(worldIn, playerIn);
+      //without setHeading the egg just falls to the players feet
+      entityEgg.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, PITCHOFFSET, VELOCITY_DEFAULT, INACCURACY_DEFAULT);
+      worldIn.spawnEntity(entityEgg);
     }
     return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
   }
