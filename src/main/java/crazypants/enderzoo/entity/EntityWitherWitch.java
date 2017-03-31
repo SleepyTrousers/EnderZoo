@@ -244,7 +244,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
     entitypotion.setThrowableHeading(lookVec.xCoord * 0.5, -1, lookVec.zCoord * 0.5, 0.75F, 1.0F);
     world.spawnEntity(entitypotion);
-    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+    setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
     healTimer = 80;
   }
 
