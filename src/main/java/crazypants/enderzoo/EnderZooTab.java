@@ -1,8 +1,8 @@
 package crazypants.enderzoo;
 
 import static crazypants.enderzoo.EnderZoo.MODID;
+import static crazypants.enderzoo.EnderZoo.MOD_NAME;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -24,7 +24,7 @@ public class EnderZooTab extends CreativeTabs {
   @Override
   @SideOnly(Side.CLIENT)
   public String getTranslatedTabLabel() {
-    return MODID;
+    return MOD_NAME;
   }
 
   @Override
