@@ -122,8 +122,8 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
    * Checks to see if this enderman should be attacking this player
    */
   private boolean shouldAttackPlayer(EntityPlayer player) {
-
     ItemStack itemstack = player.inventory.armorInventory.get(3);
+//    3: Helmet, 2: Chestpiece, 1: Legs, 0: Boots
     if(itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
       return false;
     } else {

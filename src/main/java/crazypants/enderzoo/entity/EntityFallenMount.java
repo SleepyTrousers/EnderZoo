@@ -72,7 +72,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public boolean processInteract(EntityPlayer player, EnumHand hand) {
     ItemStack itemstack = player.inventory.getCurrentItem();
-    if(itemstack.isEmpty()==false && itemstack.getItem() == Items.SPAWN_EGG) {
+    if(itemstack.getItem() == Items.SPAWN_EGG) {
       return super.processInteract(player, hand);
     }
     return false;
@@ -223,7 +223,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(armor.isEmpty()==false) {
+    if(!armor.isEmpty()) {
       NBTTagCompound armTag = new NBTTagCompound();
       armor.writeToNBT(armTag);
       root.setTag("armor", armTag);

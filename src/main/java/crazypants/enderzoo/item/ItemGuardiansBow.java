@@ -118,7 +118,7 @@ public class ItemGuardiansBow extends ItemBow {
 
       if (!arrowIsInfinite) {
         itemstack.shrink(1);
-        if (itemstack.getCount() == 0) {
+        if (itemstack.isEmpty()) {
           entityplayer.inventory.deleteStack(itemstack);
         }
       }
