@@ -122,14 +122,14 @@ public class MobSpawnEventHandler {
 
     for (EntityLivingBase ent : toApplyOthers) {
       if (!ent.isDead && ent.getEntityWorld() != null) {
-        applyGloablModifiers(ent, ent.getEntityWorld());
+        applyGlobalModifiers(ent, ent.getEntityWorld());
         ent.getEntityData().setBoolean(APPLIED_KEY, true);
       }
     }
     toApplyOthers.clear();
   }
 
-  private void applyGloablModifiers(EntityLivingBase entity, World world) {
+  private void applyGlobalModifiers(EntityLivingBase entity, World world) {
     if (world == null || world.getDifficulty() == null) {
       return;
     }
