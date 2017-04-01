@@ -23,6 +23,7 @@ import net.minecraft.entity.ai.EntityAIMate;
 import net.minecraft.entity.ai.EntityAITempt;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntitySpider;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -449,5 +450,11 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   public void writeEntityToNBT(NBTTagCompound tagCompound) {
     super.writeEntityToNBT(tagCompound);
     tagCompound.setInteger("EggLayTime", this.timeUntilNextEgg);
+  }
+  
+  @Override
+  public boolean canBeLeashedTo(EntityPlayer player){
+    boolean ret = !this.getLeashed() && (this instanceof IMob);
+    return ret;
   }
 }
