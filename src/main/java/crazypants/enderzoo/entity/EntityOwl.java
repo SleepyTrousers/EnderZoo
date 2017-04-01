@@ -169,6 +169,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       flapSpeed *= yDelta;
     }
     wingRotation += wingRotDelta * flapSpeed;
+     
 
     if (!world.isRemote && !isChild() && --timeUntilNextEgg <= 0) {
       if (isOnLeaves()) {
@@ -178,16 +179,44 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       timeUntilNextEgg = getNextLayingTime();
     }
 
+    
+    
+    AxisAlignedBB movedBB = getEntityBoundingBox().offset(0, motionY, 0);
+    BlockPos ep = getPosition();
+    BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
+    IBlockState bs = world.getBlockState(pos);
+    Block block = bs.getBlock();
+    if (block.getMaterial(bs) != Material.AIR) {
+      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, world, pos);
+      if (bb != null) {
+        double ouch = movedBB.maxY - bb.minY;
+        if (ouch == 0) {
+          motionY = -0.1;
+        } else {
+          motionY = 0;
+        }
+      }
+    }
+    
+
+    if (onGround) {
+      motionX *= groundSpeedRatio;
+      motionZ *= groundSpeedRatio;
+    }
   }
   
   private boolean isOnLeaves() {
     IBlockState bs = world.getBlockState(getPosition().down());    
     return bs.getBlock().getMaterial(bs) == Material.LEAVES;
   }
-
+/*
+ //this ONLY fires serverside. however motionX only affects things clientside. so i moved the collision detection to the udptae
   @Override
   public void moveEntityWithHeading(float strafe, float forward) {
 
+    System.out.println("isRemote"+this.world.isRemote);//always false so always server
+    System.out.println("!!strafe"+strafe);
+    System.out.println("!!forward"+forward);
     moveRelative(strafe, forward, 0.1f);
 
     // Dont fly up inot things
@@ -208,8 +237,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       }
     }
 
-    addVelocity(motionX, motionY, motionZ);//moveEntity
-
+  
     // drag
     motionX *= 0.8;
     motionY *= 0.8;
@@ -224,6 +252,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
       motionZ *= groundSpeedRatio;
     }
 
+    addVelocity(motionX, motionY, motionZ);//moveEntity
     prevLimbSwingAmount = limbSwingAmount;
     double deltaX = posX - prevPosX;
     double deltaZ = posZ - prevPosZ;
@@ -233,7 +262,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     }
     limbSwingAmount += (f7 - limbSwingAmount) * 0.4F;
     limbSwing += limbSwingAmount;
-  }
+    
+  }*/
 
   @Override
   public boolean isEntityInsideOpaqueBlock() {
@@ -420,5 +450,4 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     super.writeEntityToNBT(tagCompound);
     tagCompound.setInteger("EggLayTime", this.timeUntilNextEgg);
   }
-
 }
