@@ -441,7 +441,7 @@ public final class Config {
     owlSpiderDamageMultiplier = (float) config.get(sectionOwl.name, "owlSpiderDamageMultiplier", owlSpiderDamageMultiplier, "Damage multiplier against spiders")
         .getDouble(owlSpiderDamageMultiplier);
     owlHootVolumeMult = (float) config
-        .get(sectionDireSlime.name, "owlHootVolumeMult", owlHootVolumeMult, "Adjusts the owls hoot volume. Higher value is loader")
+        .get(sectionOwl.name, "owlHootVolumeMult", owlHootVolumeMult, "Adjusts the owls hoot volume. Higher value is loader")
         .getDouble(owlHootVolumeMult);
     owlHootInterval = config.get(sectionOwl.name, "owlHootInterval", owlHootInterval, "Aprox. number of ticks between hoots").getInt(owlHootInterval);
     owlTimeBetweenEggsMin = config.get(sectionOwl.name, "owlTimeBetweenEggsMin", owlTimeBetweenEggsMin, "Min ticks between egg laying")
