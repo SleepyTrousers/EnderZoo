@@ -4,8 +4,10 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.entity.MobInfo;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -66,12 +68,28 @@ public class ItemSpawnEgg extends Item {
   public EnumActionResult onItemUse( EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
     ItemStack stack = player.getHeldItem(hand);
     if(!world.isRemote) {
-      activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), facing.ordinal());
+      activateSpawnEgg(stack, world, pos.getX(), pos.getY(), pos.getZ(), facing.ordinal(), false);
       if(!player.capabilities.isCreativeMode) {
         stack.shrink(1);
       }
     }
     return EnumActionResult.SUCCESS;
+  }
+  @Override
+  public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand){
+  
+    int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
+    String name = EnderZoo.MODID + ":" + MobInfo.values()[damage].getName();
+    String key = EntityList.getKey(target).toString();
+    //if i clicked a spawn egg on an entity of the matching type
+    //AND that entity has child types, then spawn a baby // https://github.com/SleepyTrousers/EnderZoo/issues/151
+    if(key.equals(name) && target instanceof EntityAgeable){
+      BlockPos pos = target.getPosition();
+      activateSpawnEgg(stack, playerIn.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ(), target.getHorizontalFacing().ordinal(), true);
+      return true;
+    }
+    
+    return false;
   }
 
   //TODO: Copied from MC1.7. Used to be in Facing class but cant find it now
@@ -79,7 +97,7 @@ public class ItemSpawnEgg extends Item {
   public static final int[] offsetsYForSide = new int[] { -1, 1, 0, 0, 0, 0 };
   public static final int[] offsetsZForSide = new int[] { 0, 0, -1, 1, 0, 0 };
 
-  public static EntityLiving activateSpawnEgg(ItemStack stack, World world, double posX, double posY, double posZ, int side) {
+  public static EntityLiving activateSpawnEgg(ItemStack stack, World world, double posX, double posY, double posZ, int side, boolean isBaby) {
    
     posX += offsetsXForSide[side];
     posY += offsetsYForSide[side];
@@ -88,6 +106,10 @@ public class ItemSpawnEgg extends Item {
     int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
     
     EntityLiving entity = (EntityLiving) EntityList.createEntityByIDFromName(new ResourceLocation(EnderZoo.MODID, MobInfo.values()[damage].getName()), world);
+    if(isBaby && entity instanceof EntityAgeable){
+      ((EntityAgeable)entity).setGrowingAge(-24000);
+    }
+    
     spawnEntity(posX + 0.5, posY, posZ + 0.5, entity, world);
     return entity;
   }
