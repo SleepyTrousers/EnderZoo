@@ -22,6 +22,7 @@ import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityPotion;
+import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
@@ -193,7 +194,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
       attackedWithPotion = null;
     }
-    if(isHealing && healTimer <= 0) {
+    //the EntityPotion class validates if this potion is throwable, and if not it logs error "ThrownPotion entity {} has no item?!
+    if(isHealing && healTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.SPLASH_POTION ) {
       throwHealthPotion();
       isHealing = false;
     }
@@ -215,8 +217,9 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   }
 
   @Override
-  public void attackEntityWithRangedAttack(EntityLivingBase entity, float rangeRatio) {
-    if(attackTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND).isEmpty() && !isHealing) {
+  public void attackEntityWithRangedAttack(EntityLivingBase entity, float rangeRatio) {   
+    //the EntityPotion class validates if this potion is throwable, and if not it logs error "ThrownPotion entity {} has no item?!
+    if(attackTimer <= 0 && getHeldItem(EnumHand.MAIN_HAND).getItem() == Items.SPLASH_POTION && !isHealing) {
 
       attackedWithPotion = entity;
 
@@ -239,6 +242,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   protected void throwHealthPotion() {
     ItemStack potion = getHeldItem(EnumHand.MAIN_HAND);
+    //if its not a splash or lingering potion it will be an error
     EntityPotion entitypotion = new EntityPotion(world, this, potion);
     Vec3d lookVec = getLookVec();
 
