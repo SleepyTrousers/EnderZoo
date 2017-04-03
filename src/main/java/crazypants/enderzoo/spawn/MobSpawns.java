@@ -3,7 +3,7 @@ package crazypants.enderzoo.spawn;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.config.SpawnConfig;
@@ -11,6 +11,7 @@ import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
@@ -47,7 +48,7 @@ public final class MobSpawns {
     spawnEntries.add(entry);
 
     @SuppressWarnings("unchecked")
-    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.NAME_TO_CLASS.get(entry.getMobName());
+    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation(EnderZoo.MODID,entry.getMobName()));
     if (clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
       return;

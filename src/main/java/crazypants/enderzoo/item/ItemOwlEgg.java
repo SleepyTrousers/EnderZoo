@@ -11,18 +11,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemOwlEgg extends Item {
-
-  public static final String NAME = "owlEgg";
+  private static final float VELOCITY_DEFAULT = 1.5F;
+  private static final float INACCURACY_DEFAULT = 1.0F;
+  private static final float PITCHOFFSET = 0.0F;
+  public static final String NAME = "owlegg";
 
   public static ItemOwlEgg create() {
     
-    EntityRegistry.registerModEntity(EntityOwlEgg.class, "EntityOwlEgg", Config.entityOwlEggId, EnderZoo.instance, 64, 10, true);
+    EntityRegistry.registerModEntity(new ResourceLocation(EnderZoo.MODID,"EntityOwlEgg"),
+        EntityOwlEgg.class, "EntityOwlEgg", Config.entityOwlEggId, EnderZoo.instance, 64, 10, true);
     
     ItemOwlEgg res = new ItemOwlEgg();
     res.init();
@@ -41,13 +45,17 @@ public class ItemOwlEgg extends Item {
   }
 
   @Override
-  public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+  public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    ItemStack itemStackIn = playerIn.getHeldItem(hand);
     if (!playerIn.capabilities.isCreativeMode) {
-      --itemStackIn.stackSize;
+      itemStackIn.shrink(1);
     }
     worldIn.playSound(playerIn, playerIn.getPosition(), SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.BLOCKS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-    if (!worldIn.isRemote) {         
-      worldIn.spawnEntityInWorld(new EntityOwlEgg(worldIn, playerIn));
+    if (!worldIn.isRemote) {    
+      EntityOwlEgg entityEgg = new EntityOwlEgg(worldIn, playerIn);
+      //without setHeading the egg just falls to the players feet
+      entityEgg.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, PITCHOFFSET, VELOCITY_DEFAULT, INACCURACY_DEFAULT);
+      worldIn.spawnEntity(entityEgg);
     }
     return new ActionResult<ItemStack>(EnumActionResult.SUCCESS, itemStackIn);
   }

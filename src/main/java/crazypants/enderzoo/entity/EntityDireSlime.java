@@ -17,7 +17,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
-  public static final String NAME = "DireSlime";
+  public static final String NAME = "direslime";
   public static final int EGG_BG_COL = 0xb9855c;
   public static final int EGG_FG_COL = 0x593d29;
 
@@ -59,12 +59,12 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   public EntityDireSlime(World world) {
     super(world);
-    setSlimeSize(1);
+    setSlimeSize(1,false);
   }
 
   @Override
-  public void setSlimeSize(int size) {
-    super.setSlimeSize(size);
+  public void setSlimeSize(int size,boolean doFullHeal) {
+    super.setSlimeSize(size,doFullHeal);
     SlimeConf conf = SlimeConf.getConfForSize(size);
     getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(conf.attackDamage);
     getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(conf.health);
@@ -74,15 +74,15 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   @Override
   public void onDeath(DamageSource damageSource) {
     super.onDeath(damageSource);
-    if (!worldObj.isRemote && damageSource != null && damageSource.getEntity() instanceof EntityPlayer) {
+    if (!world.isRemote && damageSource != null && damageSource.getEntity() instanceof EntityPlayer) {
       SlimeConf nextConf = SlimeConf.getConfForSize(getSlimeSize()).bigger();
-      if (nextConf != null && worldObj.rand.nextFloat() <= nextConf.chance) {
-        EntityDireSlime spawn = new EntityDireSlime(worldObj);
-        spawn.setSlimeSize(nextConf.size);
+      if (nextConf != null && world.rand.nextFloat() <= nextConf.chance) {
+        EntityDireSlime spawn = new EntityDireSlime(world);
+        spawn.setSlimeSize(nextConf.size,true);
         spawn.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0);
-        spawn.onInitialSpawn(worldObj.getDifficultyForLocation(new BlockPos(this)), null);
-        if (SpawnUtil.isSpaceAvailableForSpawn(worldObj, spawn, false)) {
-          worldObj.spawnEntityInWorld(spawn);
+        spawn.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(this)), null);
+        if (SpawnUtil.isSpaceAvailableForSpawn(world, spawn, false)) {
+          world.spawnEntity(spawn);
         }
       }
     }
@@ -101,7 +101,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   protected EntitySlime createInstance() {
-    return new EntityDireSlime(this.worldObj);
+    return new EntityDireSlime(this.world);
   }
 
   @Override
@@ -112,13 +112,13 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   @Override
   @SideOnly(Side.CLIENT)
   public int getBrightnessForRender(float p_70070_1_) {
-    int i = MathHelper.floor_double(this.posX);
-    int j = MathHelper.floor_double(this.posZ);
+    int i = MathHelper.floor(this.posX);
+    int j = MathHelper.floor(this.posZ);
 
-    if (!worldObj.isAirBlock(new BlockPos(i, 0, j))) {
+    if (!world.isAirBlock(new BlockPos(i, 0, j))) {
       double d0 = (getEntityBoundingBox().maxY - getEntityBoundingBox().minY) * 0.66D;
-      int k = MathHelper.floor_double(this.posY - getYOffset()+ d0);
-      return worldObj.getCombinedLight(new BlockPos(  i, k, j), 0);           
+      int k = MathHelper.floor(this.posY - getYOffset()+ d0);
+      return world.getCombinedLight(new BlockPos(  i, k, j), 0);           
     } else {
       return 0;
     }
@@ -126,13 +126,13 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   public float getBrightness(float p_70013_1_) {
-    int i = MathHelper.floor_double(this.posX);
-    int j = MathHelper.floor_double(this.posZ);
+    int i = MathHelper.floor(this.posX);
+    int j = MathHelper.floor(this.posZ);
 
-    if (!worldObj.isAirBlock(new BlockPos(i, 0, j))) {
+    if (!world.isAirBlock(new BlockPos(i, 0, j))) {
       double d0 = (getEntityBoundingBox().maxY - getEntityBoundingBox().minY) * 0.66D;
-      int k = MathHelper.floor_double(this.posY - getYOffset() + d0);
-      return worldObj.getLightBrightness(new BlockPos(  i, k, j));
+      int k = MathHelper.floor(this.posY - getYOffset() + d0);
+      return world.getLightBrightness(new BlockPos(  i, k, j));
     } else {
       return 0.0F;
     }

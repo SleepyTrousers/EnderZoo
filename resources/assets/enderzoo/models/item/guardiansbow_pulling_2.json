@@ -1,0 +1,6 @@
+{
+    "parent": "item/bow",
+    "textures": {
+        "layer0": "enderzoo:items/guardiansBow_pulling_2"
+    }
+}

@@ -17,7 +17,7 @@ public class PacketHandler {
   }
 
   public static void sendToAllAround(IMessage message, Entity e, int range) {
-    INSTANCE.sendToAllAround(message, new TargetPoint(e.worldObj.provider.getDimension(), e.posX, e.posY, e.posZ, range));
+    INSTANCE.sendToAllAround(message, new TargetPoint(e.getEntityWorld().provider.getDimension(), e.posX, e.posY, e.posZ, range));
   }
 
   public static void sendToAllAround(IMessage message, Entity e) {

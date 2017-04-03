@@ -10,25 +10,25 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
 
 public class BrewingUtil {
-
-  public static ItemStack createHarmingPotion(boolean isAugmented, boolean isSplash) {
+  public static ItemStack getEmptyPotion(boolean isSplash){
+    //in 1.11.2 brewing must start with potiontypes water
+    //this was created to mimic vanilla ItemPotion.getDefaultInstance()
     ItemStack res;
     if(isSplash) {
-      res = new ItemStack(Items.SPLASH_POTION);
+      res = PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), PotionTypes.WATER);
     } else {
-      res = new ItemStack(Items.POTIONITEM);
+      res = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER);
     }
+    return res;
+  }
+  public static ItemStack createHarmingPotion(boolean isAugmented, boolean isSplash) {
+    ItemStack res = getEmptyPotion(isSplash);
     PotionUtils.addPotionToItemStack(res, PotionTypes.HARMING);
     return res;            
   }
 
   public static ItemStack createWitherPotion(boolean isProlonged, boolean isSplash) {
-    ItemStack res;
-    if(isSplash) {
-      res = new ItemStack(Items.SPLASH_POTION);
-    } else {
-      res = new ItemStack(Items.POTIONITEM);
-    }
+    ItemStack res = getEmptyPotion(isSplash);
     if(isProlonged) {
       PotionUtils.addPotionToItemStack(res, EnderZoo.potions.getWitheringLong());
     } else {
@@ -38,12 +38,7 @@ public class BrewingUtil {
   }
 
   public static ItemStack createHealthPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
-    ItemStack res;
-    if(isSplash) {
-      res = new ItemStack(Items.SPLASH_POTION);
-    } else {
-      res = new ItemStack(Items.POTIONITEM);
-    }
+    ItemStack res = getEmptyPotion(isSplash);
     if(isProlonged || isAugmented) {
       PotionUtils.addPotionToItemStack(res, PotionTypes.STRONG_HEALING);
     } else {
@@ -53,12 +48,7 @@ public class BrewingUtil {
   }
 
   public static ItemStack createRegenerationPotion(boolean isProlonged, boolean isAugmented, boolean isSplash) {
-    ItemStack res;
-    if(isSplash) {
-      res = new ItemStack(Items.SPLASH_POTION);
-    } else {
-      res = new ItemStack(Items.POTIONITEM);
-    }
+    ItemStack res = getEmptyPotion(isSplash);
     if(isAugmented) {
       PotionUtils.addPotionToItemStack(res, PotionTypes.STRONG_REGENERATION);
     } else if(isProlonged) {

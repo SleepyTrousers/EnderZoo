@@ -23,6 +23,7 @@ import crazypants.enderzoo.spawn.MobSpawns;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
@@ -36,10 +37,10 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
-@Mod(modid = MODID, name = MOD_NAME, version = VERSION, dependencies = "required-after:Forge@10.13.0.1150,)", guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
+@Mod(modid = MODID, name = MOD_NAME, version = VERSION, guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
 public class EnderZoo {
 
-  public static final String MODID = "EnderZoo";
+  public static final String MODID = "enderzoo";
   public static final String MOD_NAME = "Ender Zoo";
   public static final String VERSION = "@VERSION@";
 
@@ -111,7 +112,8 @@ public class EnderZoo {
   }
 
   private void registerEntity(MobInfo mob) {
-    EntityRegistry.registerModEntity(mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
+    EntityRegistry.registerModEntity(new ResourceLocation(MODID,mob.getName()),
+        mob.getClz(), mob.getName(), mob.getEntityId(), this, 64, 3, true);
   }
 
   @EventHandler

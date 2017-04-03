@@ -111,24 +111,25 @@ public class MobSpawnEventHandler {
     if (evt.phase != Phase.END) {
       return;
     }
+   
     for (EntityLivingBase ent : toApplyEZ) {
-      if (!ent.isDead && ent.worldObj != null) {
-        applyEnderZooModifiers(ent, ent.worldObj);
+      if (!ent.isDead && ent.getEntityWorld() != null) {
+        applyEnderZooModifiers(ent, ent.getEntityWorld());
         ent.getEntityData().setBoolean(APPLIED_KEY, true);
       }
     }
     toApplyEZ.clear();
 
     for (EntityLivingBase ent : toApplyOthers) {
-      if (!ent.isDead && ent.worldObj != null) {
-        applyGloablModifiers(ent, ent.worldObj);
+      if (!ent.isDead && ent.getEntityWorld() != null) {
+        applyGlobalModifiers(ent, ent.getEntityWorld());
         ent.getEntityData().setBoolean(APPLIED_KEY, true);
       }
     }
     toApplyOthers.clear();
   }
 
-  private void applyGloablModifiers(EntityLivingBase entity, World world) {
+  private void applyGlobalModifiers(EntityLivingBase entity, World world) {
     if (world == null || world.getDifficulty() == null) {
       return;
     }
@@ -213,12 +214,12 @@ public class MobSpawnEventHandler {
 
       EntityDireSlime direSlime = new EntityDireSlime(event.getWorld());
       direSlime.setPosition(event.getPos().getX() + 0.5, event.getPos().getY() + 0.0, event.getPos().getZ() + 0.5);
-      event.getWorld().spawnEntityInWorld(direSlime);
+      event.getWorld().spawnEntity(direSlime);
       direSlime.playLivingSound();
       for (ItemStack drop : event.getDrops()) {
         if (drop != null && drop.getItem() != null && drop.getItem() == Item.getItemFromBlock(Blocks.DIRT)) {
-          if (drop.stackSize > 1) {
-            drop.stackSize--;
+          if (drop.getCount() > 1) {
+            drop.shrink(1);
           } else if (event.getDrops().size() == 1) {
             event.getDrops().clear();
           } else {
@@ -231,7 +232,7 @@ public class MobSpawnEventHandler {
   }
 
   public static boolean isToolEffective(IBlockState state, ItemStack stack) {
-    if(stack == null) { //don't spawn them with an empty hand, helps newly spawned players
+    if(stack.isEmpty()) { //don't spawn them with an empty hand, helps newly spawned players
       return true;
     }
     for (String type : stack.getItem().getToolClasses(stack)) {

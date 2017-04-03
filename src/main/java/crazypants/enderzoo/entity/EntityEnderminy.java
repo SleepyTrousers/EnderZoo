@@ -47,7 +47,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 
 public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
-  public static String NAME = "Enderminy";
+  public static final String NAME = "enderminy";
   public static final int EGG_BG_COL = 0x27624D;
   public static final int EGG_FG_COL = 0x212121;
 
@@ -110,10 +110,10 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   public boolean getCanSpawnHere() {
     boolean passedGrassCheck = true;
     if(Config.enderminySpawnOnlyOnGrass) {
-      int i = MathHelper.floor_double(posX);
-      int j = MathHelper.floor_double(getEntityBoundingBox().minY);
-      int k = MathHelper.floor_double(posZ);
-      passedGrassCheck = worldObj.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.GRASS;
+      int i = MathHelper.floor(posX);
+      int j = MathHelper.floor(getEntityBoundingBox().minY);
+      int k = MathHelper.floor(posZ);
+      passedGrassCheck = world.getBlockState(VecUtil.bpos(i, j - 1, k)).getBlock() == Blocks.GRASS;
     }
     return passedGrassCheck && posY > Config.enderminyMinSpawnY && super.getCanSpawnHere();
   }
@@ -122,8 +122,8 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
    * Checks to see if this enderman should be attacking this player
    */
   private boolean shouldAttackPlayer(EntityPlayer player) {
-
-    ItemStack itemstack = player.inventory.armorInventory[3];
+    ItemStack itemstack = player.inventory.armorInventory.get(3);
+//    3: Helmet, 2: Chestpiece, 1: Legs, 0: Boots
     if(itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.PUMPKIN)) {
       return false;
     } else {
@@ -146,9 +146,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   public void onLivingUpdate() {
-    if(this.worldObj.isRemote) {
+    if(this.world.isRemote) {
       for (int i = 0; i < 2; ++i) {
-        this.worldObj.spawnParticle(EnumParticleTypes.PORTAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
+        this.world.spawnParticle(EnumParticleTypes.PORTAL, this.posX + (this.rand.nextDouble() - 0.5D) * (double) this.width,
             this.posY + this.rand.nextDouble() * (double) this.height - 0.25D, this.posZ + (this.rand.nextDouble() - 0.5D) * (double) this.width,
             (this.rand.nextDouble() - 0.5D) * 2.0D, -this.rand.nextDouble(), (this.rand.nextDouble() - 0.5D) * 2.0D, new int[0]);
       }
@@ -159,7 +159,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
   protected void updateAITasks() {
     if(isWet()) {
-      attackEntityFrom(DamageSource.drown, 1.0F);
+      attackEntityFrom(DamageSource.DROWN, 1.0F);
     }
     if(isScreaming() && !isAggressive && rand.nextInt(100) == 0) {
       setScreaming(false);
@@ -202,16 +202,16 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     posY = event.getTargetY();
     posZ = event.getTargetZ();
 
-    int xInt = MathHelper.floor_double(posX);
-    int yInt = MathHelper.floor_double(posY);
-    int zInt = MathHelper.floor_double(posZ);
+    int xInt = MathHelper.floor(posX);
+    int yInt = MathHelper.floor(posY);
+    int zInt = MathHelper.floor(posZ);
 
     boolean flag = false;
-    if(worldObj.isBlockLoaded(new BlockPos(xInt, yInt, zInt))) {
+    if(world.isBlockLoaded(new BlockPos(xInt, yInt, zInt))) {
 
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
-        IBlockState bs = worldObj.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
+        IBlockState bs = world.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
         Block block = bs.getBlock();
         if(block.getMaterial(bs).blocksMovement()) {
           foundGround = true;
@@ -223,7 +223,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
 
       if(foundGround) {
         setPosition(posX, posY, posZ);
-        if(worldObj.getCollisionBoxes(this, getEntityBoundingBox()).isEmpty() && !worldObj.containsAnyLiquid(getEntityBoundingBox())) {
+        if(world.getCollisionBoxes(this, getEntityBoundingBox()).isEmpty() && !world.containsAnyLiquid(getEntityBoundingBox())) {
           flag = true;
         }
       }
@@ -243,10 +243,10 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       double d7 = d3 + (posX - d3) * d6 + (rand.nextDouble() - 0.5D) * width * 2.0D;
       double d8 = d4 + (posY - d4) * d6 + rand.nextDouble() * height;
       double d9 = d5 + (posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * width * 2.0D;
-      worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
+      world.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
     }
 
-    worldObj.playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);    
+    world.playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1.0F, 1.0F, false);    
     playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1.0F, 1.0F);
     return true;
 
@@ -341,7 +341,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
     int range = 16;
     AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);
-    List<EntityEnderminy> minies = worldObj.getEntitiesWithinAABB(EntityEnderminy.class, bb);
+    List<EntityEnderminy> minies = world.getEntitiesWithinAABB(EntityEnderminy.class, bb);
     if(minies != null && !minies.isEmpty()) {
 
       for (EntityEnderminy miny : minies) {
@@ -398,7 +398,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
      */
     public boolean shouldExecute() {
       double d0 = getTargetDistance();
-      List<EntityPlayer> list = taskOwner.worldObj.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
+      List<EntityPlayer> list = taskOwner.world.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
       Collections.sort(list, this.theNearestAttackableTargetSorter);
       if(list.isEmpty()) {
         return false;

@@ -43,7 +43,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
 
   public EntityAIMountedAttackOnCollide(EntityCreature attacker, double speedTowardsTarget, double speedTowardsTargetMounted, boolean longMemory) {
     this.attacker = attacker;
-    this.worldObj = attacker.worldObj;
+    this.worldObj = attacker.world;
     this.speedTowardsTarget = speedTowardsTarget;
     this.speedTowardsTargetMounted = speedTowardsTargetMounted;
     this.longMemory = longMemory;

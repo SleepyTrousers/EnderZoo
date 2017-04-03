@@ -39,7 +39,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     SHRINK
   };
 
-  public static final String NAME = "WitherCat";
+  public static final String NAME = "withercat";
   public static final int EGG_BG_COL = 0x303030;
   public static final int EGG_FG_COL = 0xFFFFFF;
 
@@ -161,7 +161,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       return false;
     }
     boolean res = super.attackEntityFrom(source, amount);
-    if (!worldObj.isRemote) {
+    if (!world.isRemote) {
       if (source.getEntity() instanceof EntityLivingBase) {
         if (owner != null) {
           EntityLivingBase ownerHitBy = owner.getAITarget();
@@ -187,7 +187,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   @Override
   public void onLivingUpdate() {
     super.onLivingUpdate();
-    if (worldObj.isRemote) {
+    if (world.isRemote) {
       float scale = getScale();
       if (lastScale != scale) {
         spawnParticles();
@@ -197,7 +197,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
       return;
     }
 
-    if (!worldObj.isRemote && attackTargetChanged) {
+    if (!world.isRemote && attackTargetChanged) {
       EntityUtil.cancelCurrentTasks(this);
       tasks.removeTask(followTask);
       if (getAttackTarget() == null) {
@@ -254,7 +254,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
     if (growthRatio == 0) {
       return;
     }
-    double damageInc = EntityUtil.isHardDifficulty(worldObj) ? Config.witherCatAngryAttackDamageHardModifier : 0;
+    double damageInc = EntityUtil.isHardDifficulty(world) ? Config.witherCatAngryAttackDamageHardModifier : 0;
     double attackDif = (damageInc + Config.witherCatAngryAttackDamage) - Config.witherCatAttackDamage;
     double toAdd = attackDif * growthRatio;
     AttributeModifier mod = new AttributeModifier(ATTACK_BOOST_MOD_UID, "Transformed Attack Modifier", toAdd, 0);

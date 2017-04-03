@@ -33,7 +33,7 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
 
   public EntityAIAttackOnCollideAggressive(EntityCreature attacker, double attackSpeed, boolean longMemory) {
     this.attacker = attacker;
-    worldObj = attacker.worldObj;
+    worldObj = attacker.world;
     speedTowardsTarget = attackSpeed;
     this.longMemory = longMemory;
     setMutexBits(3);

@@ -31,7 +31,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
   public static final int EGG_BG_COL = 0x365A25;
   public static final int EGG_FG_COL = 0xA0A0A0;
-  public static String NAME = "FallenMount";
+  public static final String NAME = "fallenmount";
 
   public static final double MOUNTED_ATTACK_MOVE_SPEED = Config.fallenMountChargeSpeed;;
 
@@ -70,10 +70,10 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   }
 
   @Override
-  public boolean processInteract(EntityPlayer player, EnumHand hand, ItemStack holding) {
+  public boolean processInteract(EntityPlayer player, EnumHand hand) {
     ItemStack itemstack = player.inventory.getCurrentItem();
-    if(itemstack != null && itemstack.getItem() == Items.SPAWN_EGG) {
-      return super.processInteract(player, hand, holding);
+    if(itemstack.getItem() == Items.SPAWN_EGG) {
+      return super.processInteract(player, hand);
     }
     return false;
   }
@@ -109,7 +109,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public IEntityLivingData onInitialSpawn(DifficultyInstance di, IEntityLivingData data) {  
 
-    setHorseArmorStack(null);        
+    setHorseArmorStack(ItemStack.EMPTY);        
     setHorseSaddled(true);    
     setGrowingAge(0);
     getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Config.fallenMountHealth);
@@ -117,7 +117,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     getAttributeMap().getAttributeInstanceByName("horse.jumpStrength").setBaseValue(0.5);
     setHealth(getMaxHealth());
     
-    float chanceOfArmor = worldObj.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
+    float chanceOfArmor = world.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmoredHard
         : Config.fallenMountChanceArmored;
     if(rand.nextFloat() <= chanceOfArmor) {
 
@@ -128,7 +128,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
       float occupiedDiffcultyMultiplier = di.getClampedAdditionalDifficulty();
       //TODO: Do I need this normalised still?
       occupiedDiffcultyMultiplier /= 1.5f; // normalize
-      float chanceImprovedArmor = worldObj.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
+      float chanceImprovedArmor = world.getDifficulty() == EnumDifficulty.HARD ? Config.fallenMountChanceArmorUpgradeHard
           : Config.fallenMountChanceArmorUpgrade;
       chanceImprovedArmor *= (1 + occupiedDiffcultyMultiplier); //If we have the max occupied factor, double the chance of improved armor
 
@@ -156,7 +156,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void onUpdate() {
     super.onUpdate();
-    if(!worldObj.isRemote && worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
+    if(!world.isRemote && world.getDifficulty() == EnumDifficulty.PEACEFUL) {
       setDead();
     }
   }
@@ -166,11 +166,11 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     super.onLivingUpdate();
 
-    if(worldObj.isDaytime() && !worldObj.isRemote) {
-      if(burnInSun() && worldObj.getTotalWorldTime() % 20 == 0) {
+    if(world.isDaytime() && !world.isRemote) {
+      if(burnInSun() && world.getTotalWorldTime() % 20 == 0) {
         float f = getBrightness(1.0F);
         if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
-            && worldObj.canBlockSeeSky(new BlockPos(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)))) {
+            && world.canBlockSeeSky(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)))) {
           setFire(8);
         }
       }
@@ -214,7 +214,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     }
     super.attackEntityAsMob(target);
     if(!isRearing()) {
-      makeHorseRearWithSound();
+      makeMad();
     }
     float damage = (float) getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
     return target.attackEntityFrom(DamageSource.causeMobDamage(this), damage);
@@ -223,7 +223,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(armor != null) {
+    if(!armor.isEmpty()) {
       NBTTagCompound armTag = new NBTTagCompound();
       armor.writeToNBT(armTag);
       root.setTag("armor", armTag);
@@ -236,7 +236,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     setHorseSaddled(true);
     if(root.hasKey("armor")) {
       NBTTagCompound armTag = root.getCompoundTag("armor");
-      armor = ItemStack.loadItemStackFromNBT(armTag);
+      armor = new ItemStack(armTag);
       setHorseArmorStack(armor);
     }
   }

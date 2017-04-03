@@ -223,7 +223,7 @@ public class SpawnConfigParser extends DefaultHandler {
       invalidEntryElement = true;
       return;
     }
-    rate = MathHelper.clamp_int(rate, 1, 100);
+    rate = MathHelper.clamp(rate, 1, 100);
 
     currentEntry = new SpawnEntry(id, mobName, rate);
     String creatureType = getStringValue(ATT_CREATURE_TYPE, attributes, null);
@@ -301,7 +301,7 @@ public class SpawnConfigParser extends DefaultHandler {
         }
       } else {
         try {
-          Type type = BiomeDictionary.Type.valueOf(biomeType);
+          Type type = BiomeDictionary.Type.getType(biomeType);
           currentFilter.addBiomeDescriptor(new BiomeDescriptor(type, isExclude));
         } catch (Exception e) {
           Log.warn("Attribute " + ATT_TYPE + " in element " + ELEMENT_BIOME + " with value " + biomeType + " is invalid and has been ignored.");

@@ -95,19 +95,19 @@ public class EntityAIRangedAttack extends EntityAIBase {
       if (distToTargetSq > attackRangeSq || !canSee) {
         return;
       }
-      float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
+      float rangeRatio = MathHelper.sqrt(distToTargetSq) / attackRange;
       if (rangeRatio < 0.1F) {
         rangeRatio = 0.1F;
       } else if (rangeRatio > 1.0F) {
         rangeRatio = 1.0F;
       }
       rangedAttackEntityHost.attackEntityWithRangedAttack(attackTarget, rangeRatio);
-      timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
+      timeUntilNextAttack = MathHelper.floor(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
 
     } else if (timeUntilNextAttack < 0) {
       entityHost.setAttackTarget(attackTarget);
-      float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
-      timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
+      float rangeRatio = MathHelper.sqrt(distToTargetSq) / attackRange;
+      timeUntilNextAttack = MathHelper.floor(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
     }
   }
 }

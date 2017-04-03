@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockEnderCharge extends BlockConfusingCharge {
 
-  public static final String NAME = "blockEnderCharge";
+  public static final String NAME = "blockendercharge";
 
   public static BlockEnderCharge create() {
     if(!Config.enderChargeEnabled) {
@@ -52,7 +52,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
   }
 
   public static void doEntityTeleport(EntityPrimedCharge entity) {
-    World world = entity.worldObj;
+    World world = entity.getEntityWorld();
     world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 1F,
         1.4f + ((world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F));    
     world.playSound((EntityPlayer)null, entity.posX, entity.posY, entity.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.BLOCKS, 2F,
@@ -77,7 +77,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
       double motionX = (0.5 - random.nextDouble()) * mag * d;
       double motionY = (0.5 - random.nextDouble()) * mag;
       double motionZ = (0.5 - random.nextDouble()) * mag * d;
-      Particle entityfx = new ParticlePortal.Factory().getEntityFX
+      Particle entityfx = new ParticlePortal.Factory().createParticle
           (i, world, x + motionX * 0.1, y + motionY * 0.1, z + motionZ * 0.1, motionX, motionY,
           motionZ, (int[])null);
       Minecraft.getMinecraft().effectRenderer.addEffect(entityfx);

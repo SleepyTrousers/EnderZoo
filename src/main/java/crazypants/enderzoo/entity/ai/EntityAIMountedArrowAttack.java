@@ -119,13 +119,13 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
       if(distToTargetSq > attackRangeSq || !canSeeTarget) {
         return;
       }
-      float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
-      rangeRatio = MathHelper.clamp_float(rangeRatio, 0.1f, 1);
+      float rangeRatio = MathHelper.sqrt(distToTargetSq) / attackRange;
+      rangeRatio = MathHelper.clamp(rangeRatio, 0.1f, 1);
       rangedAttackEntityHost.attackEntityWithRangedAttack(attackTarget, rangeRatio);
-      timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
+      timeUntilNextAttack = MathHelper.floor(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
     } else if(timeUntilNextAttack < 0) {
-      float rangeRatio = MathHelper.sqrt_double(distToTargetSq) / attackRange;
-      timeUntilNextAttack = MathHelper.floor_float(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
+      float rangeRatio = MathHelper.sqrt(distToTargetSq) / attackRange;
+      timeUntilNextAttack = MathHelper.floor(rangeRatio * (maxRangedAttackTime - minRangedAttackTime) + minRangedAttackTime);
     }
   }
 
@@ -162,7 +162,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     Point3i probePoint = new Point3i((int) Math.round(targetDir.xCoord), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.zCoord));
     Point3i target = new Point3i(probePoint);
 
-    World world = entityHost.worldObj;
+    World world = entityHost.getEntityWorld();
 
     if(!SpawnUtil.findClearGround(world, target, probePoint)) {
       return false;

@@ -17,14 +17,14 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
   @Override
   public PathPoint getStart() {    
     EntityLiving entityIn = entity;
-    return openPoint(MathHelper.floor_double(entityIn.getEntityBoundingBox().minX), MathHelper.floor_double(entityIn.getEntityBoundingBox().minY + 0.5D),
-        MathHelper.floor_double(entityIn.getEntityBoundingBox().minZ));
+    return openPoint(MathHelper.floor(entityIn.getEntityBoundingBox().minX), MathHelper.floor(entityIn.getEntityBoundingBox().minY + 0.5D),
+        MathHelper.floor(entityIn.getEntityBoundingBox().minZ));
   }
 
   @Override
   public PathPoint getPathPointToCoords(double x, double y, double z) {
     EntityLiving entityIn = entity;    
-    return openPoint(MathHelper.floor_double(x - entityIn.width / 2.0F), MathHelper.floor_double(y), MathHelper.floor_double(z - entityIn.width / 2.0F));       
+    return openPoint(MathHelper.floor(x - entityIn.width / 2.0F), MathHelper.floor(y), MathHelper.floor(z - entityIn.width / 2.0F));       
   }
 
   @Override
@@ -55,7 +55,7 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
           IBlockState bs = blockaccess.getBlockState(mutableblockpos.setPos(i, j, k));
           Block block = bs.getBlock();
           if (block.getMaterial(bs) != Material.AIR) {
-            AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.worldObj, mutableblockpos);
+            AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.world, mutableblockpos);
             if(bb != null) {
               return false;
             }

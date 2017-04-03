@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemWitheringDust extends Item {
 
-  public static final String NAME = "witheringDust";  
+  public static final String NAME = "witheringdust";  
 
   public static ItemWitheringDust create() {
     ItemWitheringDust res = new ItemWitheringDust();

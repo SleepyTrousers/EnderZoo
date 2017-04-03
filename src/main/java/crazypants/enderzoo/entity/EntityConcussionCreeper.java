@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooMob {
 
-  public static final String NAME = "ConcussionCreeper";
+  public static final String NAME = "concussioncreeper";
   public static final int EGG_BG_COL = 0x56FF8E;
   public static final int EGG_FG_COL = 0xFF0A22;
 
@@ -55,26 +55,26 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
 
         int range = Config.concussionCreeperExplosionRange;
         AxisAlignedBB bb = new AxisAlignedBB(posX - range, posY - range, posZ - range, posX + range, posY + range, posZ + range);        
-        List<EntityLivingBase> ents = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, bb);
+        List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, bb);
         for (EntityLivingBase ent : ents) {
           if (ent != this) {
-            if (!worldObj.isRemote) {
+            if (!world.isRemote) {
               boolean done = false;
               for (int i = 0; i < 20 && !done; i++) {
                 done = TeleportHelper.teleportRandomly(ent, Config.concussionCreeperMaxTeleportRange);
               }
             }
             if (ent instanceof EntityPlayer) {
-              worldObj.playSound(ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.HOSTILE, 1.0F, 1.0F, false);
+              world.playSound(ent.posX, ent.posY, ent.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.HOSTILE, 1.0F, 1.0F, false);
               EnderZoo.proxy.setInstantConfusionOnPlayer((EntityPlayer) ent, Config.concussionCreeperConfusionDuration);
             }
           }
         }
 
 
-        worldObj.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 4.0F,
-            (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F, false);
-        worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, posX, posY, posZ, 1.0D, 0.0D, 0.0D);
+        world.playSound(posX, posY, posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.HOSTILE, 4.0F,
+            (1.0F + (world.rand.nextFloat() - world.rand.nextFloat()) * 0.2F) * 0.7F, false);
+        world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, posX, posY, posZ, 1.0D, 0.0D, 0.0D);
         setDead();
       }
     }

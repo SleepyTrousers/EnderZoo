@@ -37,7 +37,7 @@ public class BiomeFilterAll extends AbstractBiomeFilter {
       return false;
     }
     for (BiomeDictionary.Type type : types) {
-      if (!BiomeDictionary.isBiomeOfType(biome, type)) {
+      if (!BiomeDictionary.hasType(biome, type)) {
         return false;
       }
     }

@@ -70,7 +70,7 @@ public class EntityPrimedCharge extends Entity {
   @Override
   public void onUpdate() {
 
-    if(worldObj.isRemote && isDead) {
+    if(world.isRemote && isDead) {
 //      System.out.println("EntityPrimedCharge.onUpdate: Dead");
     }
 
@@ -78,7 +78,8 @@ public class EntityPrimedCharge extends Entity {
     prevPosY = posY;
     prevPosZ = posZ;
     motionY -= 0.03999999910593033D;
-    moveEntity(motionX, motionY, motionZ);
+
+    addVelocity(motionX, motionY, motionZ);
     motionX *= 0.9800000190734863D;
     motionY *= 0.9800000190734863D;
     motionZ *= 0.9800000190734863D;
@@ -91,13 +92,13 @@ public class EntityPrimedCharge extends Entity {
 
     if(fuse-- <= 0) {
       setDead();
-      if(!worldObj.isRemote) {
+      if(!world.isRemote) {
         if(charge != null) {
           charge.explode(this);
         }
       }
     } else {
-      worldObj.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
+      world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, posX, posY + 0.5D, posZ, 0.0D, 0.0D, 0.0D);
     }
   }
 
