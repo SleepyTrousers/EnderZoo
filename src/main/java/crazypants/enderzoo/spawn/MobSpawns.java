@@ -47,8 +47,10 @@ public final class MobSpawns {
     
     spawnEntries.add(entry);
 
+    String mobname = entry.getMobName().replace("EnderZoo.","").toLowerCase();//To fix legacy config files that werent updated, for existing installs
+    //but the config xml also has been updated too
     @SuppressWarnings("unchecked")
-    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation(EnderZoo.MODID,entry.getMobName()));
+    Class<? extends EntityLiving> clz = (Class<? extends EntityLiving>) EntityList.getClass(new ResourceLocation(EnderZoo.MODID,mobname));
     if (clz == null) {
       Log.warn("Skipping spawn entry " + entry.getId() + " as mob " + entry.getMobName() + " is not registered");
       return;
