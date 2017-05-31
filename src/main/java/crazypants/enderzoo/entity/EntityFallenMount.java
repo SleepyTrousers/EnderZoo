@@ -223,7 +223,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(!armor.isEmpty()) {
+    if(armor != null && !armor.isEmpty()) {
       NBTTagCompound armTag = new NBTTagCompound();
       armor.writeToNBT(armTag);
       root.setTag("armor", armTag);
