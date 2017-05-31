@@ -2,6 +2,8 @@ package crazypants.enderzoo.entity;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideAggressive;
 import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;
@@ -164,6 +166,12 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   @Override
   protected Item getDropItem() {
     return Item.getItemById(-1);
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   public float getTailRotation() {

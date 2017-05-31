@@ -129,7 +129,13 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   protected Item getDropItem() {
-    return Items.CLAY_BALL;
+    return this.getSlimeSize() == 4 ? Item.getItemFromBlock(Blocks.CLAY) : Items.CLAY_BALL;
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   @Override

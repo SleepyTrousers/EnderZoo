@@ -1,5 +1,7 @@
 package crazypants.enderzoo.entity;
 
+import javax.annotation.Nullable;
+
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
@@ -416,6 +418,12 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   protected Item getDropItem() {
     return Items.FEATHER;
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   @Override
