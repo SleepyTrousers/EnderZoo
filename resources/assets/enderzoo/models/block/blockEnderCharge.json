@@ -1,8 +1,0 @@
-{
-    "parent": "block/cube_bottom_top",
-    "textures": {
-        "bottom": "enderzoo:blocks/blockEnderCharge_bottom",
-        "top": "enderzoo:blocks/blockEnderCharge_top",
-        "side": "enderzoo:blocks/blockEnderCharge_side"
-    }
-}

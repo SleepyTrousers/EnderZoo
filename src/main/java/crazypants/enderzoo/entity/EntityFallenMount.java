@@ -39,7 +39,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   private final EntityAINearestAttackableTarget<EntityPlayer> findTargetAI;
   private EntityAIAttackMelee attackAI;
 
-  private ItemStack armor;
+  private ItemStack armor = ItemStack.EMPTY;
 
   public EntityFallenMount(World world) {
     super(world);
@@ -149,6 +149,9 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
       }
       armor = new ItemStack(armorItem);
       setHorseArmorStack(armor);
+    } else {
+      armor = ItemStack.EMPTY;
+      setHorseArmorStack(armor);
     }
     return data;
   }
@@ -223,11 +226,9 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
   @Override
   public void writeEntityToNBT(NBTTagCompound root) {
     super.writeEntityToNBT(root);
-    if(armor != null && !armor.isEmpty()) {
-      NBTTagCompound armTag = new NBTTagCompound();
-      armor.writeToNBT(armTag);
-      root.setTag("armor", armTag);
-    }
+    NBTTagCompound armTag = new NBTTagCompound();
+    armor.writeToNBT(armTag);
+    root.setTag("armor", armTag);
   }
 
   @Override
@@ -237,6 +238,9 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
     if(root.hasKey("armor")) {
       NBTTagCompound armTag = root.getCompoundTag("armor");
       armor = new ItemStack(armTag);
+      setHorseArmorStack(armor);
+    } else {
+      armor = ItemStack.EMPTY;
       setHorseArmorStack(armor);
     }
   }

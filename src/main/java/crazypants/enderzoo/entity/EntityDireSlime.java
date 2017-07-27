@@ -1,14 +1,20 @@
 package crazypants.enderzoo.entity;
 
+import javax.annotation.Nullable;
+
 import crazypants.enderzoo.config.Config;
+import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.monster.EntityMagmaCube;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -94,10 +100,27 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
     isDead = true;
   }
 
-//  @Override
-//  protected String getSlimeParticle() {
-//    return "blockcrack_" + Block.getIdFromBlock(Blocks.dirt) + "_0";
-//  }
+  @Override
+  protected EnumParticleTypes getParticleType() {
+    return EnumParticleTypes.BLOCK_CRACK;
+  }
+
+  @Override
+  protected boolean spawnCustomParticles() {
+    int i = this.getSlimeSize();
+    for (int j = 0; j < i * 8; ++j) {
+      float f = this.rand.nextFloat() * ((float) Math.PI * 2F);
+      float f1 = this.rand.nextFloat() * 0.5F + 0.5F;
+      float f2 = MathHelper.sin(f) * (float) i * 0.5F * f1;
+      float f3 = MathHelper.cos(f) * (float) i * 0.5F * f1;
+      World world = this.world;
+      EnumParticleTypes enumparticletypes = this.getParticleType();
+      double d0 = this.posX + (double) f2;
+      double d1 = this.posZ + (double) f3;
+      world.spawnParticle(enumparticletypes, d0, this.getEntityBoundingBox().minY, d1, 0.0D, 0.0D, 0.0D, Block.getStateId(Blocks.DIRT.getDefaultState()));
+    }
+    return true;
+  }
 
   @Override
   protected EntitySlime createInstance() {
@@ -106,7 +129,13 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   protected Item getDropItem() {
-    return Items.CLAY_BALL;
+    return this.getSlimeSize() == 4 ? Item.getItemFromBlock(Blocks.CLAY) : Items.CLAY_BALL;
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   @Override
