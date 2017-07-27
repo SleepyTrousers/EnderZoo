@@ -3,6 +3,8 @@ package crazypants.enderzoo.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
@@ -31,6 +33,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -117,6 +120,12 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       ItemStack item = drops[rand.nextInt(drops.length)].copy();
       entityDropItem(item, 0);
     }
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   @Override

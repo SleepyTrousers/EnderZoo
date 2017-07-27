@@ -3,6 +3,8 @@ package crazypants.enderzoo.entity;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;
@@ -13,6 +15,7 @@ import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
@@ -104,6 +107,12 @@ public class EntityConcussionCreeper extends EntityCreeper implements IEnderZooM
     } else {
       return Items.GUNPOWDER;
     }
+  }
+
+  @Override
+  @Nullable
+  protected ResourceLocation getLootTable() {
+    return null; // use getDropItem() instead
   }
 
   private void setTimeSinceIgnited(int i) {
