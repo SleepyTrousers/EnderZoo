@@ -1,10 +1,9 @@
 package crazypants.enderzoo.entity.render;
 
 import org.lwjgl.opengl.GL11;
-
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,7 +30,7 @@ public final class RenderUtil {
       GL11.glPushMatrix();
       GL11.glRotatef(-entity.renderYawOffset, 0, 1, 0);
 
-      VertexBuffer tes = Tessellator.getInstance().getBuffer();
+      BufferBuilder tes = Tessellator.getInstance().getBuffer();
             
       double width = (bb.maxX - bb.minX) / 2;
       double height = bb.maxY - bb.minY;

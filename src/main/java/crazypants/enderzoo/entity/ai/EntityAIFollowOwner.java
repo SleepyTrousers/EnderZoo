@@ -1,9 +1,9 @@
 package crazypants.enderzoo.entity.ai;
 
+import crazypants.enderzoo.entity.IOwnable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import crazypants.enderzoo.entity.IOwnable;
 
 public class EntityAIFollowOwner extends EntityAIBase {
 
@@ -31,7 +31,7 @@ public class EntityAIFollowOwner extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     EntityLivingBase owner = owned.getOwner();
     if (owner == null || !owner.isEntityAlive()) {
       return false;

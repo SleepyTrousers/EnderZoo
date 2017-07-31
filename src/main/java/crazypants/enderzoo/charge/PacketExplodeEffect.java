@@ -1,12 +1,12 @@
 package crazypants.enderzoo.charge;
 
+import crazypants.enderzoo.EnderZoo;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import crazypants.enderzoo.EnderZoo;
 
 public class PacketExplodeEffect implements IMessage, IMessageHandler<PacketExplodeEffect, IMessage> {
 

@@ -2,7 +2,6 @@ package crazypants.enderzoo.charge;
 
 import java.util.List;
 import java.util.Random;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.PacketHandler;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -46,7 +44,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     }
 
     BlockConfusingCharge res = new BlockConfusingCharge();
-    res.init();
+  
     return res;
   }
 
@@ -56,15 +54,16 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   protected BlockConfusingCharge(String name) {
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    setRegistryName(name);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,name));
     setUnlocalizedName(name);
-  }
-
-  protected void init() {
-    GameRegistry.register(this);
-    GameRegistry.register(new ItemBlock(this), getRegistryName());
+    EnderZoo.instance.register(this);
+   // GameRegistry.register(new ItemBlock(this),);
+    ItemBlock ib = new ItemBlock(this);
+    ib.setRegistryName(new ResourceLocation(EnderZoo.MODID,name));
+    EnderZoo.instance.register(ib);
     ChargeRegister.instance.registerCharge(this);
   }
+
 
   @Override
   public int getID() {

@@ -79,7 +79,7 @@ public class EntityAIFlyingLand extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
 
     if (entity.onGround) {
       onGroundCount++;

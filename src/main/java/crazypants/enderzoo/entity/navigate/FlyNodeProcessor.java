@@ -32,8 +32,8 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
     EntityLiving entityIn = entity;
     int i = 0;
     for (EnumFacing enumfacing : EnumFacing.values()) {
-      PathPoint pathpoint = getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
-          currentPoint.zCoord + enumfacing.getFrontOffsetZ());
+      PathPoint pathpoint = getSafePoint(entityIn, currentPoint.x + enumfacing.getFrontOffsetX(), currentPoint.y + enumfacing.getFrontOffsetY(),
+          currentPoint.z + enumfacing.getFrontOffsetZ());
       if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance)) {
         pathOptions[i++] = pathpoint;
       }

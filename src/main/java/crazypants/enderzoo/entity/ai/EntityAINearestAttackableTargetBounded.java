@@ -2,10 +2,8 @@ package crazypants.enderzoo.entity.ai;
 
 import java.util.Collections;
 import java.util.List;
-
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -67,7 +65,7 @@ public class EntityAINearestAttackableTargetBounded<T extends EntityLivingBase> 
       AxisAlignedBB bb = taskOwner.getEntityBoundingBox().expand(horizDist, vertDist, horizDist);
       List<T> list = taskOwner.getEntityWorld().<T> getEntitiesWithinAABB(targetClass, bb,
           Predicates.<T> and(targetEntitySelector, EntitySelectors.NOT_SPECTATING));
-      Collections.sort(list, theNearestAttackableTargetSorter);
+      Collections.sort(list, this.sorter);
 
       if (list.isEmpty()) {
         return false;

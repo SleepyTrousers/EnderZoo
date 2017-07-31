@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-
 import crazypants.enderzoo.IoUtil;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.spawn.ISpawnEntry;

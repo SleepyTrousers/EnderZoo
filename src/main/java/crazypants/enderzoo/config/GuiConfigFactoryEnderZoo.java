@@ -2,7 +2,6 @@ package crazypants.enderzoo.config;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config.Section;
 import net.minecraft.client.gui.GuiScreen;

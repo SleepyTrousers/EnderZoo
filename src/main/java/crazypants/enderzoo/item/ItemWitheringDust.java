@@ -1,8 +1,9 @@
 package crazypants.enderzoo.item;
 
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.util.ResourceLocation;
 
 public class ItemWitheringDust extends Item {
 
@@ -10,19 +11,15 @@ public class ItemWitheringDust extends Item {
 
   public static ItemWitheringDust create() {
     ItemWitheringDust res = new ItemWitheringDust();
-    res.init();
+    EnderZoo.instance.register(res);    
     return res;
   }
 
   private ItemWitheringDust() {
     setUnlocalizedName(NAME);
-    setRegistryName(NAME);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }
   
-  private void init() {
-    GameRegistry.register(this);           
-  }
- 
 }

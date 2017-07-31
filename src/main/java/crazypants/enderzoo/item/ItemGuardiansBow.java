@@ -1,5 +1,6 @@
 package crazypants.enderzoo.item;
 
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -15,13 +16,13 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,21 +37,21 @@ public class ItemGuardiansBow extends ItemBow {
 
   public static ItemGuardiansBow create() {
     ItemGuardiansBow res = new ItemGuardiansBow();
-    res.init();
+    EnderZoo.instance.register(res); 
     MinecraftForge.EVENT_BUS.register(res);
     return res;
   }
 
   protected ItemGuardiansBow() {
     setUnlocalizedName(NAME);
-    setRegistryName(NAME);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setMaxDamage(800);
     setHasSubtypes(false);
   }
 
   protected void init() {
-    GameRegistry.register(this);    
+    EnderZoo.instance.register(this);    
   }
 
   public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {

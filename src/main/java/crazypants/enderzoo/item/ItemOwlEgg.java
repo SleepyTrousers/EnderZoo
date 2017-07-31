@@ -15,7 +15,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemOwlEgg extends Item {
   private static final float VELOCITY_DEFAULT = 1.5F;
@@ -29,19 +28,18 @@ public class ItemOwlEgg extends Item {
         EntityOwlEgg.class, "EntityOwlEgg", Config.entityOwlEggId, EnderZoo.instance, 64, 10, true);
     
     ItemOwlEgg res = new ItemOwlEgg();
-    res.init();
+    EnderZoo.instance.register(res);
     return res;
   }
 
   private ItemOwlEgg() {
     setUnlocalizedName(NAME);
-    setRegistryName(NAME);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }
 
   private void init() {
-    GameRegistry.register(this);
   }
 
   @Override

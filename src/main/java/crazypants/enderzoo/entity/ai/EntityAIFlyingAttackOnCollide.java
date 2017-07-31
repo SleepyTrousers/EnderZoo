@@ -69,11 +69,11 @@ public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
   private void setPathTo(EntityLivingBase target) {
     Vec3d targPos = target.getPositionVector();
     AxisAlignedBB targBB = target.getEntityBoundingBox();
-    entityPathEntity = attacker.getNavigator().getPathToPos(new BlockPos(targPos.xCoord, targBB.maxY + 1, targPos.zCoord));    
+    entityPathEntity = attacker.getNavigator().getPathToPos(new BlockPos(targPos.x, targBB.maxY + 1, targPos.z));    
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     EntityLivingBase target = attacker.getAttackTarget();
     if(target == null || !target.isEntityAlive()) {      
       return false;
@@ -112,7 +112,7 @@ public class EntityAIFlyingAttackOnCollide extends EntityAIBase {
         targetX += failedPathFindingPenalty;
         if (attacker.getNavigator().getPath() != null) {
           PathPoint finalPathPoint = attacker.getNavigator().getPath().getFinalPathPoint();
-          if (finalPathPoint != null && entitylivingbase.getDistanceSq(finalPathPoint.xCoord, finalPathPoint.yCoord, finalPathPoint.zCoord) < 1)
+          if (finalPathPoint != null && entitylivingbase.getDistanceSq(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z) < 1)
             failedPathFindingPenalty = 0;
           else
             failedPathFindingPenalty += 10;

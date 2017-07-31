@@ -21,7 +21,7 @@ public class EntityAIFlyingPanic extends EntityAIBase {
 
   @Override
   public boolean shouldExecute() {
-    if (theEntityCreature.getAITarget() == null && !theEntityCreature.isBurning()) {
+    if (theEntityCreature.getAttackTarget() == null && !theEntityCreature.isBurning()) {
       return false;
     }
     Vec3d vec3 = RandomPositionGenerator.findRandomTarget(theEntityCreature, 5, 4);
@@ -30,9 +30,9 @@ public class EntityAIFlyingPanic extends EntityAIBase {
     }
     double yOffset = 1 + theEntityCreature.getEntityWorld().rand.nextInt(3);
     //double yOffset = 0;
-    randPosX = vec3.xCoord;
-    randPosY = vec3.yCoord + yOffset;
-    randPosZ = vec3.zCoord;
+    randPosX = vec3.x;
+    randPosY = vec3.y + yOffset;
+    randPosZ = vec3.z;
     return true;
   }
 
@@ -42,7 +42,7 @@ public class EntityAIFlyingPanic extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return !theEntityCreature.getNavigator().noPath();
   }
 

@@ -1,22 +1,5 @@
 package crazypants.enderzoo.waila;
 
-import java.util.List;
-
-//TEMPORARY: removed for 1.11.2 initial port
-//Sam<Lothrazar>
-
-import crazypants.enderzoo.entity.IEnderZooMob;
-//import mcp.mobius.waila.api.IWailaConfigHandler;
-//import mcp.mobius.waila.api.IWailaEntityAccessor;
-//import mcp.mobius.waila.api.IWailaEntityProvider;
-//import mcp.mobius.waila.api.IWailaRegistrar;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
-
 public class WailaCompat //implements IWailaEntityProvider
 {
 //

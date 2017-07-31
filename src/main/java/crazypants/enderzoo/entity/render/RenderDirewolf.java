@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity.render;
 
 import org.lwjgl.opengl.GL11;
-
 import crazypants.enderzoo.entity.EntityDireWolf;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLiving;

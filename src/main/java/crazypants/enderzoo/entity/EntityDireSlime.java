@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -80,7 +79,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   @Override
   public void onDeath(DamageSource damageSource) {
     super.onDeath(damageSource);
-    if (!world.isRemote && damageSource != null && damageSource.getEntity() instanceof EntityPlayer) {
+    if (!world.isRemote && damageSource != null && damageSource.getTrueSource() instanceof EntityPlayer) {
       SlimeConf nextConf = SlimeConf.getConfForSize(getSlimeSize()).bigger();
       if (nextConf != null && world.rand.nextFloat() <= nextConf.chance) {
         EntityDireSlime spawn = new EntityDireSlime(world);
@@ -140,7 +139,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
 
   @Override
   @SideOnly(Side.CLIENT)
-  public int getBrightnessForRender(float p_70070_1_) {
+  public int getBrightnessForRender() {
     int i = MathHelper.floor(this.posX);
     int j = MathHelper.floor(this.posZ);
 
@@ -154,7 +153,7 @@ public class EntityDireSlime extends EntityMagmaCube implements IEnderZooMob {
   }
 
   @Override
-  public float getBrightness(float p_70013_1_) {
+  public float getBrightness() {
     int i = MathHelper.floor(this.posX);
     int j = MathHelper.floor(this.posZ);
 

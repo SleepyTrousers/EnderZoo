@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
@@ -42,7 +41,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
@@ -62,9 +60,9 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     SND_HURT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hurt"));
     SND_HURT.setRegistryName("owl.hurt");
     
-    GameRegistry.register(EntityOwl.SND_HOOT);
-    GameRegistry.register(EntityOwl.SND_HOOT2);
-    GameRegistry.register(EntityOwl.SND_HURT);
+    EnderZoo.instance.register(EntityOwl.SND_HOOT);
+    EnderZoo.instance.register(EntityOwl.SND_HOOT2);
+    EnderZoo.instance.register(EntityOwl.SND_HURT);
   }
   
 
@@ -391,7 +389,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {    
+  protected SoundEvent getHurtSound(DamageSource s) {    
     return SND_HURT;
   }
 

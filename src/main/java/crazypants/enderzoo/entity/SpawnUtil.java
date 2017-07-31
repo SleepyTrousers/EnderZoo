@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import java.util.List;
-
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.block.Block;

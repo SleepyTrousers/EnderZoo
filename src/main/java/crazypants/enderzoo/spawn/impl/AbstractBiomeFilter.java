@@ -2,7 +2,6 @@ package crazypants.enderzoo.spawn.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.spawn.IBiomeDescriptor;
 import crazypants.enderzoo.spawn.IBiomeFilter;

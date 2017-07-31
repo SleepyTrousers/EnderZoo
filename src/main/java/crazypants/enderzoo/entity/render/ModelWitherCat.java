@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity.render;
 
 import org.lwjgl.opengl.GL11;
-
 import crazypants.enderzoo.entity.EntityWitherCat;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;

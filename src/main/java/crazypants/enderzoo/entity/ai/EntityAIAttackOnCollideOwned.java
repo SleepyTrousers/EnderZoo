@@ -28,8 +28,8 @@ public class EntityAIAttackOnCollideOwned extends EntityAIAttackMelee {
   }
 
   @Override
-  public boolean continueExecuting() {
-    return super.continueExecuting() || retreating;
+  public boolean shouldContinueExecuting() {
+    return super.shouldContinueExecuting() || retreating;
   }
 
   @Override

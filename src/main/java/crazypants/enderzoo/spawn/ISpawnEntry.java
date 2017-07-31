@@ -1,7 +1,6 @@
 package crazypants.enderzoo.spawn;
 
 import java.util.List;
-
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.world.World;
 
