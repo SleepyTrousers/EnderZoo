@@ -110,30 +110,34 @@ public class EnderZoo {
       //Register enchantments
       Enchantments.getInstance();
       MobSpawns.instance.loadSpawnConfig();
-      addRecipes();
       if (Config.enderZooDifficultyModifierEnabled || Config.globalDifficultyModifierEnabled) {
         spawnEventHandler = new MobSpawnEventHandler();
         spawnEventHandler.init();
       }
     }
     private void addRecipes() {
-      OreDictionary.registerOre("sand", new ItemStack(Blocks.SAND, 1, OreDictionary.WILDCARD_VALUE));
-    if (Config.confusingChargeEnabled) {
-      ItemStack cc = new ItemStack(blockConfusingCharge);
-      addRecipe(new ShapedOreRecipe(new ResourceLocation(MODID, "recipe" + resourceLocationCounter), cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.GUNPOWDER));
-      resourceLocationCounter++;
-    }
-    if (Config.enderChargeEnabled) {
-      ItemStack cc = new ItemStack(blockEnderCharge);
-      addRecipe(new ShapedOreRecipe(new ResourceLocation(MODID, "recipe" + resourceLocationCounter), cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
-      resourceLocationCounter++;
-    }
-    if (Config.concussionChargeEnabled) {
-      ItemStack cc = new ItemStack(blockConcussionCharge);
-      addRecipe(new ShapedOreRecipe(new ResourceLocation(MODID, "recipe" + resourceLocationCounter), cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
-      resourceLocationCounter++;
-    }
-    addRecipe(new ShapedOreRecipe(new ResourceLocation(MODID, "recipe" + resourceLocationCounter), new ItemStack(Items.ENDER_PEARL), " f ", "fff", " f ", 'f', itemEnderFragment));
+      ResourceLocation rl;
+      //OreDictionary.registerOre("sand", new ItemStack(Blocks.SAND, 1, OreDictionary.WILDCARD_VALUE));//sand is already in dict by default
+      if (Config.confusingChargeEnabled) {
+        ItemStack cc = new ItemStack(blockConfusingCharge);
+        rl = new ResourceLocation(MODID, "recipe" + resourceLocationCounter);
+        addRecipe(new ShapedOreRecipe(rl, cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.GUNPOWDER), rl);
+        resourceLocationCounter++;
+      }
+      if (Config.enderChargeEnabled) {
+        ItemStack cc = new ItemStack(blockEnderCharge);
+        rl = new ResourceLocation(MODID, "recipe" + resourceLocationCounter);
+        addRecipe(new ShapedOreRecipe(rl, cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER), rl);
+        resourceLocationCounter++;
+      }
+      if (Config.concussionChargeEnabled) {
+        ItemStack cc = new ItemStack(blockConcussionCharge);
+        rl = new ResourceLocation(MODID, "recipe" + resourceLocationCounter);
+        addRecipe(new ShapedOreRecipe(rl, cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER), rl);
+        resourceLocationCounter++;
+      }
+      rl = new ResourceLocation(MODID, "recipe" + resourceLocationCounter);
+      addRecipe(new ShapedOreRecipe(rl, new ItemStack(Items.ENDER_PEARL), " f ", "fff", " f ", 'f', itemEnderFragment), rl);
       resourceLocationCounter++;
     }
     private int resourceLocationCounter = 0;
@@ -144,7 +148,8 @@ public class EnderZoo {
     private List<SoundEvent> sounds = new ArrayList<SoundEvent>();
     private List<Potion> potionlist = new ArrayList<Potion>();
     private List<PotionType> potiontype = new ArrayList<PotionType>();
-    private void addRecipe(IRecipe r) {
+    private void addRecipe(IRecipe r, ResourceLocation rl) {
+      r.setRegistryName(rl);
       this.recipes.add(r);
     }
     public void register(Item r) {
@@ -172,6 +177,7 @@ public class EnderZoo {
     @SubscribeEvent
     public void onRegisterItems(RegistryEvent.Register<Item> event) {
       event.getRegistry().registerAll(this.items.toArray(new Item[0]));
+      addRecipes();
     }
     @SubscribeEvent
     public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
