@@ -1,7 +1,6 @@
 package crazypants.enderzoo;
 
 import java.awt.Color;
-
 import org.lwjgl.opengl.GL11;
 
 public final class ColorUtil {

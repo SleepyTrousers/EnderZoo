@@ -1,10 +1,9 @@
 package crazypants.enderzoo.item;
 
-import net.minecraft.item.Item;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 
 public class ItemEnderFragment extends Item {
 

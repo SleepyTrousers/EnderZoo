@@ -1,8 +1,8 @@
 package crazypants.enderzoo.spawn.impl;
 
+import crazypants.enderzoo.spawn.IBiomeDescriptor;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import crazypants.enderzoo.spawn.IBiomeDescriptor;
 
 public class BiomeDescriptor implements IBiomeDescriptor {
 

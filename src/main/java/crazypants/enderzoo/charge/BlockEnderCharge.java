@@ -2,7 +2,6 @@ package crazypants.enderzoo.charge;
 
 import java.util.List;
 import java.util.Random;
-
 import crazypants.enderzoo.PacketHandler;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityUtil;

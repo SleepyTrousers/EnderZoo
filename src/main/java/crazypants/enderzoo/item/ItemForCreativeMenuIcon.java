@@ -3,7 +3,6 @@ package crazypants.enderzoo.item;
 import crazypants.enderzoo.EnderZoo;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemForCreativeMenuIcon extends Item {
 

@@ -2,9 +2,7 @@ package crazypants.enderzoo.entity;
 
 import java.lang.reflect.Field;
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import crazypants.enderzoo.config.Config;

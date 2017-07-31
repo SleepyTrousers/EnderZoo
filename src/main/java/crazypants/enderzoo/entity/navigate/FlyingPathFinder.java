@@ -3,7 +3,6 @@ package crazypants.enderzoo.entity.navigate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import crazypants.enderzoo.entity.SpawnUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;

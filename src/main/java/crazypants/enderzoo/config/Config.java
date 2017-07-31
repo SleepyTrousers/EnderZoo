@@ -3,7 +3,6 @@ package crazypants.enderzoo.config;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.Log;
 import net.minecraft.enchantment.Enchantment.Rarity;

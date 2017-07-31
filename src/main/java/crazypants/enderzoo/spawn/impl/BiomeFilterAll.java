@@ -3,7 +3,6 @@ package crazypants.enderzoo.spawn.impl;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 

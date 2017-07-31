@@ -1,9 +1,7 @@
 package crazypants.enderzoo.entity;
 
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideAggressive;
 import crazypants.enderzoo.entity.ai.EntityAINearestAttackableTargetBounded;

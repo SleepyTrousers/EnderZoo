@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity.navigate;
 
 import java.lang.reflect.Field;
-
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 

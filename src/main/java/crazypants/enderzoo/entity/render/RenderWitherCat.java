@@ -2,7 +2,6 @@ package crazypants.enderzoo.entity.render;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
-
 import crazypants.enderzoo.entity.EntityWitherCat;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;
 import net.minecraft.client.renderer.OpenGlHelper;

@@ -2,11 +2,10 @@ package crazypants.enderzoo.spawn.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.world.World;
 import crazypants.enderzoo.spawn.IBiomeFilter;
 import crazypants.enderzoo.spawn.ISpawnEntry;
+import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.world.World;
 
 public class SpawnEntry implements ISpawnEntry {
 

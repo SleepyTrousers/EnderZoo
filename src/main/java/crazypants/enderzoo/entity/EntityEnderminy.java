@@ -3,9 +3,7 @@ package crazypants.enderzoo.entity;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;

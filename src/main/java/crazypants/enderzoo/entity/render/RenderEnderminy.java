@@ -1,9 +1,7 @@
 package crazypants.enderzoo.entity.render;
 
 import java.util.Random;
-
 import org.lwjgl.opengl.GL11;
-
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityEnderminy;
 import net.minecraft.client.model.ModelEnderman;

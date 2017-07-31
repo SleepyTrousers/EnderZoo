@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIFlyingAttackOnCollide;
@@ -42,7 +41,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 

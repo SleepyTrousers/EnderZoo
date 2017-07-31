@@ -2,9 +2,7 @@ package crazypants.enderzoo.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityWitherCat.GrowthMode;

@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import java.util.UUID;
-
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.ai.EntityAIAttackOnCollideOwned;
 import crazypants.enderzoo.entity.ai.EntityAIFollowOwner;

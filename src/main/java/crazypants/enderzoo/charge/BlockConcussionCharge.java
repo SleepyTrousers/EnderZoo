@@ -1,9 +1,9 @@
 package crazypants.enderzoo.charge;
 
+import crazypants.enderzoo.config.Config;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import crazypants.enderzoo.config.Config;
 
 public class BlockConcussionCharge extends BlockConfusingCharge {
 

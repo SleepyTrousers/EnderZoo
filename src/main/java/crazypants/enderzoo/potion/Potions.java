@@ -1,12 +1,8 @@
 package crazypants.enderzoo.potion;
 
-import java.lang.reflect.Method;
-
 import com.google.common.base.Predicate;
-
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
-import jline.internal.Log;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.PotionTypes;
@@ -16,7 +12,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionHelper;
 import net.minecraft.potion.PotionType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 public class Potions {
 
@@ -40,8 +35,6 @@ public class Potions {
   private PotionType floatingLong;
   private PotionType floatingTwo;  
 
-  private Method regTypeConvMethod;
-
   private FloatingPotion floatingPotion;
 
   public Potions() {
@@ -57,34 +50,17 @@ public class Potions {
       floatingLong = new PotionType(FLOATING, new PotionEffect(floatingPotion, Config.floatingPotionDurationLong));
       floatingTwo = new PotionType(FLOATING, new PotionEffect(floatingPotion, Config.floatingPotionTwoDuration, 1));
     }
-        
-    try {
-//      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, null, new String[] { "registerPotionTypeConversion", "func_185204_a" },
-//          PotionType.class, Predicate.class, PotionType.class);
-      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, "func_193357_a", "func_193357_a" ,
-          PotionType.class, Predicate.class, PotionType.class);
-    } catch (Exception e) {
-      Log.error("Could not find method to register potions. Potions will not be brewable.");
-      e.printStackTrace();
-    }
-
   }
 
   public void registerPotions() {
-    // wither potion
-
-    Predicate<ItemStack> redstone = new ItemPredicateInstance(Items.REDSTONE);
-    Predicate<ItemStack> glowstone = new ItemPredicateInstance(Items.GLOWSTONE_DUST);
-
     // Wither
     withering.setRegistryName(new ResourceLocation(EnderZoo.MODID,WITHERING));
     EnderZoo.instance.register(withering);
     witheringLong.setRegistryName(new ResourceLocation(EnderZoo.MODID,WITHERING_LONG));
     EnderZoo.instance.register(witheringLong);
 
-    Predicate<ItemStack> witheringDust = new ItemPredicateInstance(EnderZoo.itemWitheringDust);
-    registerPotionTypeConversion(PotionTypes.AWKWARD, witheringDust, withering);
-    registerPotionTypeConversion(withering, redstone, witheringLong);
+    registerPotionTypeConversion(PotionTypes.AWKWARD, EnderZoo.itemWitheringDust, withering);
+    registerPotionTypeConversion(withering, Items.REDSTONE, witheringLong);
 
     // Confusion
     confusion.setRegistryName(new ResourceLocation(EnderZoo.MODID,CONFUSION));
@@ -92,9 +68,8 @@ public class Potions {
     confusionLong.setRegistryName(new ResourceLocation(EnderZoo.MODID,CONFUSION_LONG));
     EnderZoo.instance.register(confusionLong);
 
-    Predicate<ItemStack> confusionDust = new ItemPredicateInstance(EnderZoo.itemConfusingDust);
-    registerPotionTypeConversion(PotionTypes.AWKWARD, confusionDust, confusion);
-    registerPotionTypeConversion(confusion, redstone, confusionLong);
+    registerPotionTypeConversion(PotionTypes.AWKWARD, EnderZoo.itemConfusingDust, confusion);
+    registerPotionTypeConversion(confusion, Items.REDSTONE, confusionLong);
 
     // Rising
     if (Config.floatingPotionEnabled) {
@@ -105,10 +80,9 @@ public class Potions {
       floatingTwo.setRegistryName(new ResourceLocation(EnderZoo.MODID,FLOATING_TWO));
       EnderZoo.instance.register(floatingTwo);
 
-      Predicate<ItemStack> owlEgg = new ItemPredicateInstance(EnderZoo.itemOwlEgg);
-      registerPotionTypeConversion(PotionTypes.AWKWARD, owlEgg, floating);
-      registerPotionTypeConversion(floating, redstone, floatingLong);
-      registerPotionTypeConversion(floating, glowstone, floatingTwo);
+      registerPotionTypeConversion(PotionTypes.AWKWARD, EnderZoo.itemOwlEgg, floating);
+      registerPotionTypeConversion(floating, Items.REDSTONE, floatingLong);
+      registerPotionTypeConversion(floating, Items.GLOWSTONE_DUST, floatingTwo);
     }
 
   }
@@ -117,12 +91,12 @@ public class Potions {
    * Registers a conversion from one PotionType to another PotionType, with the
    * given reagent
    */
-  private void registerPotionTypeConversion(PotionType input, Predicate<ItemStack> reagentPredicate, PotionType output) {
-    if (regTypeConvMethod == null) {
-      return;
-    }
+//  private void registerPotionTypeConversion(PotionType input, Predicate<ItemStack> reagentPredicate, PotionType output) {
+  private void registerPotionTypeConversion(PotionType input, Item reagentPredicate, PotionType output) {
+
     try {
-      regTypeConvMethod.invoke(null, input, reagentPredicate, output);
+      PotionHelper.func_193357_a(input, reagentPredicate, output);
+      //regTypeConvMethod.invoke(null, input, reagentPredicate, output);
     } catch (Exception e) {
       e.printStackTrace();
     }

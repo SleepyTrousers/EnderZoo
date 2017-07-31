@@ -1,7 +1,6 @@
 package crazypants.enderzoo.entity;
 
 import javax.annotation.Nullable;
-
 import crazypants.enderzoo.config.Config;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
