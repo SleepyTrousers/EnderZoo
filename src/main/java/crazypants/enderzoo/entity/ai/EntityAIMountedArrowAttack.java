@@ -65,7 +65,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return shouldExecute() || !getNavigator().noPath();
   }
 
@@ -159,7 +159,7 @@ public class EntityAIMountedArrowAttack extends EntityAIBase {
     targetDir = VecUtil.add(targetDir, entityPos);
     
 
-    Point3i probePoint = new Point3i((int) Math.round(targetDir.xCoord), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.zCoord));
+    Point3i probePoint = new Point3i((int) Math.round(targetDir.x), (int) Math.round(entityHost.posY), (int) Math.round(targetDir.z));
     Point3i target = new Point3i(probePoint);
 
     World world = entityHost.getEntityWorld();

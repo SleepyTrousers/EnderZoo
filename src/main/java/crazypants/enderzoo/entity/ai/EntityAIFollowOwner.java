@@ -31,7 +31,7 @@ public class EntityAIFollowOwner extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     EntityLivingBase owner = owned.getOwner();
     if (owner == null || !owner.isEntityAlive()) {
       return false;

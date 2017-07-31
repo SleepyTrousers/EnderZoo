@@ -171,7 +171,7 @@ public class EntityFallenMount extends EntityHorse implements IEnderZooMob {
 
     if(world.isDaytime() && !world.isRemote) {
       if(burnInSun() && world.getTotalWorldTime() % 20 == 0) {
-        float f = getBrightness(1.0F);
+        float f = getBrightness();
         if(f > 0.5F && rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F
             && world.canBlockSeeSky(new BlockPos(MathHelper.floor(posX), MathHelper.floor(posY), MathHelper.floor(posZ)))) {
           setFire(8);

@@ -36,9 +36,9 @@ public class TeleportHelper {
         entity.getEntityBoundingBox().minY + entity.height / 2.0F - toEntity.posY + toEntity.getEyeHeight(), entity.posZ - toEntity.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
-    double d1 = entity.posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
-    double d2 = entity.posY + (rand.nextInt(16) - 8) - vec3.yCoord * d0;
-    double d3 = entity.posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
+    double d1 = entity.posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.x * d0;
+    double d2 = entity.posY + (rand.nextInt(16) - 8) - vec3.y * d0;
+    double d3 = entity.posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.z * d0;
     return teleportTo(entity, d1, d2, d3, false);
   }
 

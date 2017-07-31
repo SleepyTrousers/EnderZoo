@@ -14,19 +14,19 @@ public class VecUtil {
   }
 	
   public static Vec3d scale(Vec3d vec, double scale) {
-	  return new Vec3d(vec.xCoord * scale, vec.yCoord * scale, vec.zCoord * scale);
+	  return new Vec3d(vec.x * scale, vec.y * scale, vec.z * scale);
   }
 
   public static Vec3d copy(Vec3d vec) {
-    return new Vec3d(vec.xCoord, vec.yCoord, vec.zCoord);
+    return new Vec3d(vec.x, vec.y, vec.z);
   }
 
   public static Vec3d subtract(Vec3d a, Vec3d b) {    
-    return new Vec3d(a.xCoord - b.xCoord, a.yCoord - b.yCoord, a.zCoord - b.zCoord);
+    return new Vec3d(a.x - b.x, a.y - b.y, a.z - b.z);
   }
 
   public static Vec3d add(Vec3d a, Vec3d b) {    
-    return new Vec3d(a.xCoord + b.xCoord, a.yCoord+ b.yCoord, a.zCoord+ b.zCoord);
+    return new Vec3d(a.x + b.x, a.y+ b.y, a.z + b.z);
   }
 
 }

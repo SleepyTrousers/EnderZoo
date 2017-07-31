@@ -23,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -144,7 +145,7 @@ public class EntityDireWolf extends EntityMob implements IEnderZooMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {
+  protected SoundEvent getHurtSound(DamageSource s) {
     return SND_HURT;
   }
 

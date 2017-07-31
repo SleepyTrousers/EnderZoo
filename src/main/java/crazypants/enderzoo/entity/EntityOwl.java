@@ -391,7 +391,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {    
+  protected SoundEvent getHurtSound(DamageSource s) {    
     return SND_HURT;
   }
 

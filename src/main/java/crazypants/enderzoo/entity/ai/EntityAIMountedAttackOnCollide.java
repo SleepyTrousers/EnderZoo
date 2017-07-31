@@ -120,7 +120,7 @@ public class EntityAIMountedAttackOnCollide extends EntityAIBase {
 
       if(getNavigator().getPath() != null) {
         PathPoint finalPathPoint = getNavigator().getPath().getFinalPathPoint();
-        if(finalPathPoint != null && target.getDistanceSq(finalPathPoint.xCoord, finalPathPoint.yCoord, finalPathPoint.zCoord) < 1) {
+        if(finalPathPoint != null && target.getDistanceSq(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z) < 1) {
           failedPathFindingPenalty = 0;
         } else {
           failedPathFindingPenalty += 10;

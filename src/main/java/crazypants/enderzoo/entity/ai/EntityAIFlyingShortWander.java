@@ -35,12 +35,12 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
     }
     
     Vec3d vec3 = RandomPositionGenerator.findRandomTarget(entity, 4, 2);    
-    if (vec3 == null || entity.posY - vec3.yCoord < -2) {
+    if (vec3 == null || entity.posY - vec3.y < -2) {
       return false;
     }    
-    randPosX = vec3.xCoord;
-    randPosY = vec3.yCoord;
-    randPosZ = vec3.zCoord;
+    randPosX = vec3.x;
+    randPosY = vec3.y;
+    randPosZ = vec3.z;
     return true;
   }
 
@@ -50,7 +50,7 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return !entity.getNavigator().noPath();
   }
 

@@ -57,8 +57,8 @@ public class RenderWitherCat extends RenderLiving<EntityWitherCat> {
   private class AngryLayer implements LayerRenderer<EntityWitherCat> {
 
     @Override
-    public void doRenderLayer(EntityWitherCat cat, float p_177201_2_, float p_177201_3_, float p_177201_4_, float p_177201_5_, float p_177201_6_,
-        float p_177201_7_, float p_177201_8_) {
+    public void doRenderLayer(EntityWitherCat cat, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw,
+        float headPitch, float iScale) {
 
       float blendFactor = 1.0F;
       float scale = cat.getScale();
@@ -81,8 +81,8 @@ public class RenderWitherCat extends RenderLiving<EntityWitherCat> {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, j / 1.0F, k / 1.0F);
         GL11.glEnable(GL11.GL_LIGHTING);
 
-        getMainModel().render(cat, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_, p_177201_8_);
-        setLightmap(cat, p_177201_4_);
+        getMainModel().render(cat, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, iScale);
+        setLightmap(cat);
       }
 
     }

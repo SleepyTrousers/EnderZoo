@@ -57,7 +57,7 @@ public class EntityAIRangedAttack extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return shouldExecute() || !entityHost.getNavigator().noPath();
   }
 

@@ -27,4 +27,14 @@ public class ConfigFactoryEnderZoo implements IModGuiFactory {
     return null;
   }
 
+  @Override
+  public boolean hasConfigGui() {
+    return true;
+  }
+
+  @Override
+  public GuiScreen createConfigGui(GuiScreen parentScreen) {
+    return null;
+  }
+
 }

@@ -57,8 +57,8 @@ public class RenderEnderminy extends RenderLiving<EntityEnderminy> {
   private class EyesLayer implements LayerRenderer<EntityEnderminy> {
 
     @Override
-    public void doRenderLayer(EntityEnderminy em, float p_177201_2_, float p_177201_3_, float p_177201_4_, float p_177201_5_, float p_177201_6_,
-        float p_177201_7_, float p_177201_8_) {
+    public void doRenderLayer(EntityEnderminy em, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw,
+        float headPitch, float scale) {
 
       bindTexture(endermanEyesTexture);
       GlStateManager.enableBlend();
@@ -72,8 +72,8 @@ public class RenderEnderminy extends RenderLiving<EntityEnderminy> {
       OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j, (float)k);
       GlStateManager.enableLighting();
       GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-      getMainModel().render(em, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_, p_177201_8_);
-      setLightmap(em, p_177201_4_);
+      getMainModel().render(em, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scale);
+      setLightmap(em);
       GlStateManager.depthMask(true);
       GlStateManager.disableBlend();
       GlStateManager.enableAlpha();
