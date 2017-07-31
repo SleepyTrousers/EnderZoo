@@ -46,7 +46,7 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
     }
 
     BlockConfusingCharge res = new BlockConfusingCharge();
-    res.init();
+  
     return res;
   }
 
@@ -56,15 +56,16 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
 
   protected BlockConfusingCharge(String name) {
     setCreativeTab(EnderZooTab.tabEnderZoo);
-    setRegistryName(name);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,name));
     setUnlocalizedName(name);
-  }
-
-  protected void init() {
-    GameRegistry.register(this);
-    GameRegistry.register(new ItemBlock(this), getRegistryName());
+    EnderZoo.instance.register(this);
+   // GameRegistry.register(new ItemBlock(this),);
+    ItemBlock ib = new ItemBlock(this);
+    ib.setRegistryName(new ResourceLocation(EnderZoo.MODID,name));
+    EnderZoo.instance.register(ib);
     ChargeRegister.instance.registerCharge(this);
   }
+
 
   @Override
   public int getID() {

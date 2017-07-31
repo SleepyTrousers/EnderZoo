@@ -30,7 +30,7 @@ public class BlockEnderCharge extends BlockConfusingCharge {
     }
 
     BlockEnderCharge res = new BlockEnderCharge();
-    res.init();
+
     return res;
   }
 

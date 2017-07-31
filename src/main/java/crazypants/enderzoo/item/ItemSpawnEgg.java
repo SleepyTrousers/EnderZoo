@@ -25,18 +25,15 @@ public class ItemSpawnEgg extends Item {
   public static final String NAME = "spawnegg";
   public static ItemSpawnEgg create() {
     ItemSpawnEgg res = new ItemSpawnEgg();
-    res.init();
+   
+    EnderZoo.instance.register(res);
     return res;
   }
   private ItemSpawnEgg() {
     setUnlocalizedName(NAME);
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(true);
-    setRegistryName(NAME);
-  }
-  private void init() {
-    GameRegistry.register(this);
-    //ItemColors.
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
   }
   @Override
   public String getItemStackDisplayName(ItemStack stack) {

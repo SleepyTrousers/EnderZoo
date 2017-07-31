@@ -206,15 +206,7 @@ public final class Config {
 
   public static final Section sectionPotions = new Section("Potions", "potions");
   
-  public static int witherPotionID = 71400;
-  public static int witherPotionLongID = 71401;
-  
-  public static int confusingPotionID = 71410;
-  public static int confusingPotionLongID = 71411;
-  
-  public static int floatingPotionID = 71420;
-  public static int floatingPotionLongID = 71421;
-  public static int floatingPotionTwoID = 71422;
+
   
   public static boolean floatingPotionEnabled = true;  
   public static double floatingPotionSpeed = 0.15;
@@ -548,16 +540,6 @@ public final class Config {
         "Effects the speed with which arrows leave the bow. A 'vanilla' bow has a multiplier of 2.").getDouble(guardiansBowForceMultiplier);
     guardiansBowFovMultiplier = (float) config.get(sectionGuardian.name, "guardiansBowFovMultiplier", guardiansBowFovMultiplier,
         "The reduction in FOV when the bow is fullen drawn (the zoom level). A 'vanilla' bow has a value of 0.15").getDouble(guardiansBowFovMultiplier);
-
-    witherPotionID = config.get(sectionPotions.name, "witherPotionID", witherPotionID, "Potion ID").getInt(witherPotionID); 
-    witherPotionLongID = config.get(sectionPotions.name, "witherPotionLongID", witherPotionLongID, "Potion ID").getInt(witherPotionLongID);
-    
-    confusingPotionID = config.get(sectionPotions.name, "confusingPotionID", confusingPotionID, "Potion ID").getInt(confusingPotionID);
-    confusingPotionLongID = config.get(sectionPotions.name, "confusingPotionLongID", confusingPotionLongID, "Potion ID").getInt(confusingPotionLongID);
-    
-    floatingPotionID = config.get(sectionPotions.name, "floatingPotionID", floatingPotionID, "Potion ID").getInt(floatingPotionID);
-    floatingPotionLongID = config.get(sectionPotions.name, "floatingPotionLongID", floatingPotionLongID, "Potion ID").getInt(floatingPotionLongID);
-    floatingPotionTwoID = config.get(sectionPotions.name, "floatingPotionTwoID", floatingPotionTwoID, "Potion ID").getInt(floatingPotionTwoID);
 
     floatingPotionEnabled = config.getBoolean("floatingPotionEnabled", sectionPotions.name, floatingPotionEnabled,
         "If false floating potions will be disabled");    

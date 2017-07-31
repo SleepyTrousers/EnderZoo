@@ -15,7 +15,7 @@ public class FloatingPotion extends Potion {
 
   public static FloatingPotion create() {
     FloatingPotion res = new FloatingPotion();
-    GameRegistry.register(res);
+    EnderZoo.instance.register(res);
     return res;
   }
 

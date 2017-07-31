@@ -62,9 +62,9 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     SND_HURT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hurt"));
     SND_HURT.setRegistryName("owl.hurt");
     
-    GameRegistry.register(EntityOwl.SND_HOOT);
-    GameRegistry.register(EntityOwl.SND_HOOT2);
-    GameRegistry.register(EntityOwl.SND_HURT);
+    EnderZoo.instance.register(EntityOwl.SND_HOOT);
+    EnderZoo.instance.register(EntityOwl.SND_HOOT2);
+    EnderZoo.instance.register(EntityOwl.SND_HURT);
   }
   
 

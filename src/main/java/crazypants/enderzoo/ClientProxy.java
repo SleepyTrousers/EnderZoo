@@ -93,12 +93,13 @@ public class ClientProxy extends CommonProxy {
     RenderingRegistry.registerEntityRenderingHandler(EntityPrimedCharge.class, RenderPrimedCharge.FACTORY);    
     RenderingRegistry.registerEntityRenderingHandler(EntityOwlEgg.class, RenderEntityOwlEgg.FACTORY);
 
+    
+
   }
 
   @Override
   public void init() {
     super.init();
-
     regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
     regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
     regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);

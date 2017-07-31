@@ -1,6 +1,8 @@
 package crazypants.enderzoo.item;
 
+import crazypants.enderzoo.EnderZoo;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemForCreativeMenuIcon extends Item {
@@ -9,19 +11,14 @@ public class ItemForCreativeMenuIcon extends Item {
 
   public static ItemForCreativeMenuIcon create() {
     ItemForCreativeMenuIcon res = new ItemForCreativeMenuIcon();
-    res.init();
+    EnderZoo.instance.register(res);
     return res;
   }
 
   private ItemForCreativeMenuIcon() {
     setUnlocalizedName(NAME);
-    setRegistryName(NAME);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
     setCreativeTab(null);    
     setHasSubtypes(false);
   }
-
-  private void init() {
-    GameRegistry.register(this);
-  }
-
 }

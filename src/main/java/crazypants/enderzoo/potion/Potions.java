@@ -49,7 +49,7 @@ public class Potions {
     witheringLong = new PotionType(WITHERING, new PotionEffect(MobEffects.WITHER, 2400));
 
     confusion = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 900));
-    confusionLong = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 2400));
+    confusionLong = new PotionType(CONFUSION_LONG, new PotionEffect(MobEffects.NAUSEA, 2400));
 
     if (Config.floatingPotionEnabled) {
       floatingPotion = FloatingPotion.create();
@@ -59,7 +59,9 @@ public class Potions {
     }
         
     try {
-      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, null, new String[] { "registerPotionTypeConversion", "func_185204_a" },
+//      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, null, new String[] { "registerPotionTypeConversion", "func_185204_a" },
+//          PotionType.class, Predicate.class, PotionType.class);
+      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, "func_193357_a", "func_193357_a" ,
           PotionType.class, Predicate.class, PotionType.class);
     } catch (Exception e) {
       Log.error("Could not find method to register potions. Potions will not be brewable.");
@@ -75,16 +77,20 @@ public class Potions {
     Predicate<ItemStack> glowstone = new ItemPredicateInstance(Items.GLOWSTONE_DUST);
 
     // Wither
-    PotionType.REGISTRY.register(Config.witherPotionID, new ResourceLocation(WITHERING), withering);
-    PotionType.REGISTRY.register(Config.witherPotionLongID, new ResourceLocation(WITHERING_LONG), witheringLong);
+    withering.setRegistryName(new ResourceLocation(EnderZoo.MODID,WITHERING));
+    EnderZoo.instance.register(withering);
+    witheringLong.setRegistryName(new ResourceLocation(EnderZoo.MODID,WITHERING_LONG));
+    EnderZoo.instance.register(witheringLong);
 
     Predicate<ItemStack> witheringDust = new ItemPredicateInstance(EnderZoo.itemWitheringDust);
     registerPotionTypeConversion(PotionTypes.AWKWARD, witheringDust, withering);
     registerPotionTypeConversion(withering, redstone, witheringLong);
 
     // Confusion
-    PotionType.REGISTRY.register(Config.confusingPotionID, new ResourceLocation(CONFUSION), confusion);
-    PotionType.REGISTRY.register(Config.confusingPotionLongID, new ResourceLocation(CONFUSION_LONG), confusionLong);
+    confusion.setRegistryName(new ResourceLocation(EnderZoo.MODID,CONFUSION));
+    EnderZoo.instance.register(confusion);
+    confusionLong.setRegistryName(new ResourceLocation(EnderZoo.MODID,CONFUSION_LONG));
+    EnderZoo.instance.register(confusionLong);
 
     Predicate<ItemStack> confusionDust = new ItemPredicateInstance(EnderZoo.itemConfusingDust);
     registerPotionTypeConversion(PotionTypes.AWKWARD, confusionDust, confusion);
@@ -92,9 +98,12 @@ public class Potions {
 
     // Rising
     if (Config.floatingPotionEnabled) {
-      PotionType.REGISTRY.register(Config.floatingPotionID, new ResourceLocation(FLOATING), floating);
-      PotionType.REGISTRY.register(Config.floatingPotionLongID, new ResourceLocation(FLOATING_LONG), floatingLong);
-      PotionType.REGISTRY.register(Config.floatingPotionTwoID, new ResourceLocation(FLOATING_TWO), floatingTwo);
+      floating.setRegistryName(new ResourceLocation(EnderZoo.MODID,FLOATING));
+      EnderZoo.instance.register(floating);
+      floatingLong.setRegistryName(new ResourceLocation(EnderZoo.MODID,FLOATING_LONG));
+      EnderZoo.instance.register(floatingLong);
+      floatingTwo.setRegistryName(new ResourceLocation(EnderZoo.MODID,FLOATING_TWO));
+      EnderZoo.instance.register(floatingTwo);
 
       Predicate<ItemStack> owlEgg = new ItemPredicateInstance(EnderZoo.itemOwlEgg);
       registerPotionTypeConversion(PotionTypes.AWKWARD, owlEgg, floating);

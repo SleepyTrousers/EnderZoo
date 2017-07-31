@@ -15,7 +15,7 @@ public class BlockConcussionCharge extends BlockConfusingCharge {
     }
 
     BlockConcussionCharge res = new BlockConcussionCharge();
-    res.init();
+    
     return res;
   }
 

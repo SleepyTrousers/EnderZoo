@@ -29,19 +29,18 @@ public class ItemOwlEgg extends Item {
         EntityOwlEgg.class, "EntityOwlEgg", Config.entityOwlEggId, EnderZoo.instance, 64, 10, true);
     
     ItemOwlEgg res = new ItemOwlEgg();
-    res.init();
+    EnderZoo.instance.register(res);
     return res;
   }
 
   private ItemOwlEgg() {
     setUnlocalizedName(NAME);
-    setRegistryName(NAME);
+    setRegistryName(new ResourceLocation(EnderZoo.MODID,NAME));
     setCreativeTab(EnderZooTab.tabEnderZoo);
     setHasSubtypes(false);
   }
 
   private void init() {
-    GameRegistry.register(this);
   }
 
   @Override

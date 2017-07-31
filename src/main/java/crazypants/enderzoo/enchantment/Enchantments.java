@@ -1,6 +1,6 @@
 package crazypants.enderzoo.enchantment;
 
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import crazypants.enderzoo.EnderZoo;
 
 public class Enchantments {
 
@@ -16,11 +16,9 @@ public class Enchantments {
   
   private void registerEnchantments() {    
     EnchantmentWitherArrow wa = new EnchantmentWitherArrow();
-    GameRegistry.register(wa);
-    //ForgeRegistries.ENCHANTMENTS.register(wa);       
+    EnderZoo.instance.register(wa);    
     EnchantmentWitherWeapon ww = new EnchantmentWitherWeapon();
-//    ForgeRegistries.ENCHANTMENTS.register(ww);
-    GameRegistry.register(ww);
+    EnderZoo.instance.register(ww);
     
     
   }
