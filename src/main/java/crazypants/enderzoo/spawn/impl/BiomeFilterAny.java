@@ -31,7 +31,8 @@ public class BiomeFilterAny extends AbstractBiomeFilter {
     if (isExcluded(biome)) {
       return false;
     }
-    if (names.contains(biome.getBiomeName())) {
+    //uh oh getBiomeName() is now client only
+    if (names.contains(biome.getRegistryName().toString())) {
       return true;
     }
     for (BiomeDictionary.Type type : types) {
