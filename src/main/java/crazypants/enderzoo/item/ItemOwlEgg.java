@@ -2,6 +2,7 @@ package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityOwlEgg;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemOwlEgg extends Item {
   private static final float VELOCITY_DEFAULT = 1.5F;
@@ -41,7 +41,7 @@ public class ItemOwlEgg extends Item {
   }
 
   private void init() {
-    GameRegistry.register(this);
+	RegistryHandler.ITEMS.add(this);
   }
 
   @Override

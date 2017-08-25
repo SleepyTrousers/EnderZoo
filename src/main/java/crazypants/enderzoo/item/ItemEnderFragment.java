@@ -1,8 +1,8 @@
 package crazypants.enderzoo.item;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
 
 public class ItemEnderFragment extends Item {
 
@@ -22,6 +22,6 @@ public class ItemEnderFragment extends Item {
   }
 
   private void init() {
-    GameRegistry.register(this);
+	RegistryHandler.ITEMS.add(this);
   }
 }

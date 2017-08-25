@@ -1,7 +1,7 @@
 package crazypants.enderzoo.item;
 
+import crazypants.enderzoo.RegistryHandler;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemForCreativeMenuIcon extends Item {
 
@@ -21,7 +21,7 @@ public class ItemForCreativeMenuIcon extends Item {
   }
 
   private void init() {
-    GameRegistry.register(this);
+	RegistryHandler.ITEMS.add(this);
   }
 
 }

@@ -6,6 +6,7 @@ import java.util.Random;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
 import crazypants.enderzoo.PacketHandler;
+import crazypants.enderzoo.RegistryHandler;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.entity.EntityUtil;
 import net.minecraft.block.Block;
@@ -61,8 +62,8 @@ public class BlockConfusingCharge extends BlockTNT implements ICharge {
   }
 
   protected void init() {
-    GameRegistry.register(this);
-    GameRegistry.register(new ItemBlock(this), getRegistryName());
+	RegistryHandler.BLOCKS.add(this);
+    RegistryHandler.ITEMS.add(new ItemBlock(this).setRegistryName(getRegistryName()));
     ChargeRegister.instance.registerCharge(this);
   }
 

@@ -2,6 +2,7 @@ package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
 import crazypants.enderzoo.entity.MobInfo;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityAgeable;
@@ -20,7 +21,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemSpawnEgg extends Item {
 
@@ -40,8 +40,7 @@ public class ItemSpawnEgg extends Item {
   }
 
   private void init() {
-    GameRegistry.register(this);
-    //ItemColors.
+	RegistryHandler.ITEMS.add(this);
   }
 
   @Override

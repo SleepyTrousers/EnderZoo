@@ -8,7 +8,6 @@ import crazypants.enderzoo.charge.BlockConcussionCharge;
 import crazypants.enderzoo.charge.BlockConfusingCharge;
 import crazypants.enderzoo.charge.BlockEnderCharge;
 import crazypants.enderzoo.config.Config;
-import crazypants.enderzoo.enchantment.Enchantments;
 import crazypants.enderzoo.entity.MobInfo;
 import crazypants.enderzoo.item.ItemConfusingDust;
 import crazypants.enderzoo.item.ItemEnderFragment;
@@ -35,7 +34,6 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
 
 @Mod(modid = MODID, name = MOD_NAME, version = VERSION, guiFactory = "crazypants.enderzoo.config.ConfigFactoryEnderZoo")
 public class EnderZoo {
@@ -92,22 +90,9 @@ public class EnderZoo {
     if (Config.concussionChargeEnabled) {
       blockConcussionCharge = BlockConcussionCharge.create();
     }
-   
     potions = new Potions();
-    potions.registerPotions();
-   
 
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            System.err.println("EnderZoo.preInit: DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            DebugUtil.instance.setEnabled(true);
-
-    FMLInterModComms.sendMessage("Waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
+    FMLInterModComms.sendMessage("waila", "register", "crazypants.enderzoo.waila.WailaCompat.load");
     proxy.preInit();
   }
 
@@ -125,11 +110,7 @@ public class EnderZoo {
   @EventHandler
   public void postInit(FMLPostInitializationEvent event) {
 
-    //Register enchantments
-    Enchantments.getInstance();
-
     MobSpawns.instance.loadSpawnConfig();
-    addRecipes();
 
     if (Config.enderZooDifficultyModifierEnabled || Config.globalDifficultyModifierEnabled) {
       spawnEventHandler = new MobSpawnEventHandler();
@@ -138,21 +119,21 @@ public class EnderZoo {
 
   }
 
-  private void addRecipes() {
+  protected static void addRecipes() {
     OreDictionary.registerOre("sand", new ItemStack(Blocks.SAND, 1, OreDictionary.WILDCARD_VALUE));
     if (Config.confusingChargeEnabled) {      
       ItemStack cc = new ItemStack(blockConfusingCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.GUNPOWDER));
+      GameRegistry.addShapedRecipe(blockConfusingCharge.getRegistryName(), null, cc, "csc", "sgs", "csc", 'c', itemConfusingDust, 's', "sand", 'g', Items.GUNPOWDER);
     }
     if (Config.enderChargeEnabled) {      
       ItemStack cc = new ItemStack(blockEnderCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
+      GameRegistry.addShapedRecipe(blockEnderCharge.getRegistryName(), null, cc, "csc", "sgs", "csc", 'c', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER);
     }
     if (Config.concussionChargeEnabled) {      
       ItemStack cc = new ItemStack(blockConcussionCharge);
-      GameRegistry.addRecipe(new ShapedOreRecipe(cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER));
+      GameRegistry.addShapedRecipe(blockConcussionCharge.getRegistryName(), null, cc, "eee", "sgs", "ccc", 'c', itemConfusingDust, 'e', itemEnderFragment, 's', "sand", 'g', Items.GUNPOWDER);
     }
-    GameRegistry.addShapedRecipe(new ItemStack(Items.ENDER_PEARL), " f ", "fff", " f ", 'f', itemEnderFragment);   
+    GameRegistry.addShapedRecipe(itemEnderFragment.getRegistryName(), null, new ItemStack(Items.ENDER_PEARL), " f ", "fff", " f ", 'f', itemEnderFragment);   
   }
 
 }

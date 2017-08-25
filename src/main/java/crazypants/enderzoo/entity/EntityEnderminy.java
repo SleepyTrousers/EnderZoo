@@ -317,7 +317,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     }
 
     boolean res = super.attackEntityFrom(damageSource, p_70097_2_);
-    if(damageSource instanceof EntityDamageSource && damageSource.getEntity() instanceof EntityPlayer &&
+    if(damageSource instanceof EntityDamageSource && damageSource.getTrueSource() instanceof EntityPlayer &&
         getHealth() > 0
     //&& !ItemDarkSteelSword.isEquippedAndPowered((EntityPlayer) damageSource.getEntity(), 1)) {
     ) {

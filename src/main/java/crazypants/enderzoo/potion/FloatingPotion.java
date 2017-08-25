@@ -7,7 +7,6 @@ import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class FloatingPotion extends Potion {
 
@@ -15,7 +14,6 @@ public class FloatingPotion extends Potion {
 
   public static FloatingPotion create() {
     FloatingPotion res = new FloatingPotion();
-    GameRegistry.register(res);
     return res;
   }
 
