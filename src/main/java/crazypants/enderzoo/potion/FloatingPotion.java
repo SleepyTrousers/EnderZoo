@@ -10,7 +10,7 @@ import net.minecraft.potion.Potion;
 
 public class FloatingPotion extends Potion {
 
-  private static final String NAME = EnderZoo.MODID + ".floatingPotion";
+  private static final String NAME = EnderZoo.MODID + ".floatingpotion";
 
   public static FloatingPotion create() {
     FloatingPotion res = new FloatingPotion();

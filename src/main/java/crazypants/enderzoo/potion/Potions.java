@@ -40,17 +40,17 @@ public class Potions {
   private FloatingPotion floatingPotion;
 
   public Potions() {
-    withering = new PotionType(new PotionEffect(MobEffects.WITHER, 900)).setRegistryName(WITHERING);
-    witheringLong = new PotionType(new PotionEffect(MobEffects.WITHER, 2400)).setRegistryName(WITHERING_LONG);
+    withering = new PotionType(WITHERING, new PotionEffect(MobEffects.WITHER, 900)).setRegistryName(EnderZoo.MODID, WITHERING);
+    witheringLong = new PotionType(WITHERING, new PotionEffect(MobEffects.WITHER, 2400)).setRegistryName(EnderZoo.MODID, WITHERING_LONG);
 
-    confusion = new PotionType(new PotionEffect(MobEffects.NAUSEA, 900)).setRegistryName(CONFUSION);
-    confusionLong = new PotionType(new PotionEffect(MobEffects.NAUSEA, 2400)).setRegistryName(CONFUSION_LONG);
+    confusion = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 900)).setRegistryName(EnderZoo.MODID, CONFUSION);
+    confusionLong = new PotionType(CONFUSION, new PotionEffect(MobEffects.NAUSEA, 2400)).setRegistryName(EnderZoo.MODID, CONFUSION_LONG);
 
     if (Config.floatingPotionEnabled) {
       floatingPotion = FloatingPotion.create();
-      floating = new PotionType(new PotionEffect(floatingPotion, Config.floatingPotionDuration)).setRegistryName(FLOATING);
-      floatingLong = new PotionType(new PotionEffect(floatingPotion, Config.floatingPotionDurationLong)).setRegistryName(FLOATING_LONG);
-      floatingTwo = new PotionType(new PotionEffect(floatingPotion, Config.floatingPotionTwoDuration, 1)).setRegistryName(FLOATING_TWO);
+      floating = new PotionType(FLOATING, new PotionEffect(floatingPotion, Config.floatingPotionDuration)).setRegistryName(EnderZoo.MODID, FLOATING);
+      floatingLong = new PotionType(FLOATING, new PotionEffect(floatingPotion, Config.floatingPotionDurationLong)).setRegistryName(EnderZoo.MODID, FLOATING_TWO);
+      floatingTwo = new PotionType(FLOATING, new PotionEffect(floatingPotion, Config.floatingPotionTwoDuration, 1)).setRegistryName(EnderZoo.MODID, FLOATING_LONG);
     }
 
   }
