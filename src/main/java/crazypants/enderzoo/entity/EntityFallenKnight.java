@@ -204,7 +204,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
       ItemStack itemStack = getItemStackFromSlot(slot);
-      if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
+      if(itemStack.isEmpty() && rand.nextFloat() <= chancePerPiece) {
         Item item = EntityLiving.getArmorByChance(slot, armorLevel);
         if(item != null) {
           ItemStack stack = new ItemStack(item);
