@@ -3,7 +3,6 @@ package crazypants.enderzoo.entity.ai;
 import java.util.List;
 
 import crazypants.enderzoo.entity.EntityUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;

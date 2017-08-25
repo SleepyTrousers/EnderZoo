@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
 import net.minecraft.block.Block;
@@ -22,7 +23,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -41,7 +41,7 @@ public class EntityUtil {
   }
 
   public static String getDisplayNameForEntity(String mobName) {
-    return I18n.translateToLocal("entity." + mobName + ".name");
+    return EnderZoo.proxy.translate("entity." + mobName + ".name");
   }
 
   public static Vec3d getEntityPosition(Entity entity) {

@@ -12,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public class WailaCompat implements IWailaEntityProvider
@@ -40,7 +39,7 @@ public class WailaCompat implements IWailaEntityProvider
     name = name.substring(EnderZoo.MODID.length() + 1, name.length());    
     String locKey = "entity." + name + ".desc.";
     String loc = null;
-    for (int line = 1; !(loc = I18n.translateToLocal(locKey + line)).equals(locKey + line); line++) {
+    for (int line = 1; !(loc = EnderZoo.proxy.translate(locKey + line)).equals(locKey + line); line++) {
       currenttip.add(loc);
     }
     return currenttip;

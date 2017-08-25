@@ -19,7 +19,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 public class ItemSpawnEgg extends Item {
@@ -46,10 +45,10 @@ public class ItemSpawnEgg extends Item {
   @Override
   public String getItemStackDisplayName(ItemStack stack) {
     int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-    String s = ("" + I18n.translateToLocal(getUnlocalizedName() + ".name")).trim();
+    String s = ("" + EnderZoo.proxy.translate(getUnlocalizedName() + ".name")).trim();
     String s1 = EnderZoo.MODID + "." + MobInfo.values()[damage].getName();
     if(s1 != null) {
-      s = s + " " + I18n.translateToLocal("entity." + s1 + ".name");
+      s = s + " " + EnderZoo.proxy.translate("entity." + s1 + ".name");
     }
     return s;
   }

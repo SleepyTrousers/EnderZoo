@@ -6,7 +6,6 @@ import java.util.List;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config.Section;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.fml.client.config.GuiConfig;
 import net.minecraftforge.fml.client.config.IConfigElement;
@@ -14,7 +13,7 @@ import net.minecraftforge.fml.client.config.IConfigElement;
 public class GuiConfigFactoryEnderZoo extends GuiConfig {
 
   public GuiConfigFactoryEnderZoo(GuiScreen parentScreen) {
-    super(parentScreen, getConfigElements(parentScreen), EnderZoo.MODID, false, false, I18n.translateToLocal("enderzoo.config.title"));
+    super(parentScreen, getConfigElements(parentScreen), EnderZoo.MODID, false, false, EnderZoo.proxy.translate("enderzoo.config.title"));
   }
 
   private static List<IConfigElement> getConfigElements(GuiScreen parent) {

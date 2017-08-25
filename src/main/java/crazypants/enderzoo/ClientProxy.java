@@ -38,6 +38,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
@@ -162,6 +163,11 @@ public class ClientProxy extends CommonProxy {
   public void setInstantConfusionOnPlayer(EntityPlayer ent, int duration) {
     ent.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, duration, 1, false, true));
     Minecraft.getMinecraft().player.timeInPortal = 1;
+  }
+  
+  @Override
+  public String translate(String unlocalized) {
+	  return I18n.format(unlocalized);
   }
 
 }

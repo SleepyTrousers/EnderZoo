@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.vec.VecUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
