@@ -32,10 +32,8 @@ import crazypants.enderzoo.item.ItemEnderFragment;
 import crazypants.enderzoo.item.ItemForCreativeMenuIcon;
 import crazypants.enderzoo.item.ItemGuardiansBow;
 import crazypants.enderzoo.item.ItemOwlEgg;
-import crazypants.enderzoo.item.ItemSpawnEgg;
 import crazypants.enderzoo.item.ItemWitheringDust;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.client.resources.I18n;
@@ -46,8 +44,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy {
 
@@ -64,6 +66,9 @@ public class ClientProxy extends CommonProxy {
   @Override
   public void preInit() {
     super.preInit();
+    
+    MinecraftForge.EVENT_BUS.register(this);
+    
     if (Config.enderminyEnabled) {
       RenderingRegistry.registerEntityRenderingHandler(EntityEnderminy.class, RenderEnderminy.FACTORY);
     }
@@ -95,48 +100,22 @@ public class ClientProxy extends CommonProxy {
     RenderingRegistry.registerEntityRenderingHandler(EntityOwlEgg.class, RenderEntityOwlEgg.FACTORY);
 
   }
-
-  @Override
-  public void init() {
-    super.init();
-
-    regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
-    regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
-    regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);
-    regRenderer(EnderZoo.itemOwlEgg, ItemOwlEgg.NAME);
-    regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
-
-    //Color the spawn eggs
-    IItemColor handler = new IItemColor() {
-      @Override
-      public int getColorFromItemstack(ItemStack stack, int tintIndex) {
-        int damage = MathHelper.clamp(stack.getItemDamage(), 0, MobInfo.values().length - 1);
-        MobInfo mob = MobInfo.values()[damage];
-        return tintIndex == 0 ? mob.getEggBackgroundColor() : mob.getEggForegroundColor();
-
-      }
-    };
-    Minecraft.getMinecraft().getItemColors().registerItemColorHandler(handler, EnderZoo.itemSpawnEgg);
-
-    for (MobInfo inf : MobInfo.values()) {
-      if (inf.isEnabled()) {
-        regRenderer(EnderZoo.itemSpawnEgg, inf.ordinal(), ItemSpawnEgg.NAME);
-      }
-    }
-
-    if (Config.guardiansBowEnabled) {
-      regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
-    }
-    if (Config.confusingChargeEnabled) {
-      regRenderer(Item.getItemFromBlock(EnderZoo.blockConfusingCharge), BlockConfusingCharge.NAME);
-    }
-    if (Config.concussionChargeEnabled) {
-      regRenderer(Item.getItemFromBlock(EnderZoo.blockConcussionCharge), BlockConcussionCharge.NAME);
-    }
-    if (Config.enderChargeEnabled) {
-      regRenderer(Item.getItemFromBlock(EnderZoo.blockEnderCharge), BlockEnderCharge.NAME);
-    }
-    
+  
+  @SubscribeEvent
+  public void onModelRegister(ModelRegistryEvent e) {
+	  regRenderer(EnderZoo.itemWitheringDust, ItemWitheringDust.NAME);
+	  regRenderer(EnderZoo.itemConfusingDust, ItemConfusingDust.NAME);
+	  regRenderer(EnderZoo.itemEnderFragment, ItemEnderFragment.NAME);
+	  regRenderer(EnderZoo.itemOwlEgg, ItemOwlEgg.NAME);
+	  regRenderer(EnderZoo.itemForCreativeMenuIcon, ItemForCreativeMenuIcon.NAME);
+	  if (Config.guardiansBowEnabled) 
+	      regRenderer(EnderZoo.itemGuardiansBow, ItemGuardiansBow.NAME);
+	  if (Config.confusingChargeEnabled) 
+	    regRenderer(Item.getItemFromBlock(EnderZoo.blockConfusingCharge), BlockConfusingCharge.NAME);
+	  if (Config.concussionChargeEnabled)
+	    regRenderer(Item.getItemFromBlock(EnderZoo.blockConcussionCharge), BlockConcussionCharge.NAME);
+	  if (Config.enderChargeEnabled)
+	    regRenderer(Item.getItemFromBlock(EnderZoo.blockEnderCharge), BlockEnderCharge.NAME);
   }
 
   private void regRenderer(Item item, int meta, String name) {
@@ -144,15 +123,13 @@ public class ClientProxy extends CommonProxy {
   }
 
   private void regRenderer(Item item, int meta, String modId, String name) {
-    RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
-    // ItemMeshDefinition d;
     String resourceName;
     if (modId != null) {
       resourceName = modId + ":" + name;
     } else {
       resourceName = name;
     }
-    renderItem.getItemModelMesher().register(item, meta, new ModelResourceLocation(resourceName, "inventory"));
+    ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(resourceName, "inventory"));
   }
 
   private void regRenderer(Item item, String name) {
