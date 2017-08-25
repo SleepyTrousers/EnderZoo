@@ -13,8 +13,8 @@ public class ConfigFactoryEnderZoo implements IModGuiFactory {
   }
 
   @Override
-  public Class<? extends GuiScreen> mainConfigGuiClass() {
-    return GuiConfigFactoryEnderZoo.class;
+  public GuiScreen createConfigGui(GuiScreen current) {
+    return new GuiConfigFactoryEnderZoo(current);
   }
 
   @Override
@@ -23,8 +23,8 @@ public class ConfigFactoryEnderZoo implements IModGuiFactory {
   }
 
   @Override
-  public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
-    return null;
+  public boolean hasConfigGui() {
+	return true;
   }
 
 }
