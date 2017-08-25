@@ -54,7 +54,7 @@ public class EntityUtil {
   }
 
   public static AxisAlignedBB getBoundsAround(Vec3d pos, double range) {
-    return getBoundsAround(pos.xCoord, pos.yCoord, pos.zCoord, range);
+    return getBoundsAround(pos.x, pos.y, pos.z, range);
   }
 
   public static AxisAlignedBB getBoundsAround(BlockPos pos, int range) {
@@ -117,8 +117,7 @@ public class EntityUtil {
     }
     BlockPos groundPos = entity.getPosition().down();
     IBlockState bs = entity.getEntityWorld().getBlockState(groundPos);
-    Block block = bs.getBlock();
-    if (block.getMaterial(bs).isLiquid()) {
+    if (bs.getMaterial().isLiquid()) {
       return false;
     }
     return true;
@@ -144,7 +143,7 @@ public class EntityUtil {
       int z = ep.getZ() + -searchRange + (worldObj.rand.nextInt(searchRange + 1) * 2);      
       entity.setPosition(x + 0.5, y, z + 0.5);
       boolean isSpace = SpawnUtil.isSpaceAvailableForSpawn(worldObj, entity, false);
-      entity.setPosition(pos.xCoord, pos.yCoord, pos.zCoord);
+      entity.setPosition(pos.x, pos.y, pos.z);
       if(isSpace) {
         return new BlockPos(x,y,z);
       } 
@@ -195,7 +194,7 @@ public class EntityUtil {
     BlockPos bellow = new BlockPos(x, y, z).down();
     IBlockState bs = world.getBlockState(bellow);
     Block block = bs.getBlock();
-    if (!block.getMaterial(bs).isSolid()) {
+    if (!bs.getMaterial().isSolid()) {
       return false;
     }    
     AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);

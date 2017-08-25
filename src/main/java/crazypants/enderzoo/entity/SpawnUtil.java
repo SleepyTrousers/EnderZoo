@@ -73,8 +73,7 @@ public class SpawnUtil {
 	if(bs == null || bs.getBlock() == null) {
 		return false;
 	}
-    Block block = bs.getBlock();
-    if(block.getMaterial(bs).isLiquid()) {
+    if(bs.getMaterial().isLiquid()) {
       return true;
     }
     return false;

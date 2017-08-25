@@ -59,12 +59,11 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
 
   private boolean isOnLeaves() {
     IBlockState bs = entity.getEntityWorld().getBlockState(entity.getPosition().down());
-    Block block = bs.getBlock();
-    return block.getMaterial(bs) == Material.LEAVES;
+    return bs.getMaterial() == Material.LEAVES;
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return !entity.getNavigator().noPath();
   }
 

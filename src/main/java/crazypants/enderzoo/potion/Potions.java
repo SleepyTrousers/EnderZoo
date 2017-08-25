@@ -59,7 +59,7 @@ public class Potions {
     }
         
     try {
-      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, null, new String[] { "registerPotionTypeConversion", "func_185204_a" },
+      regTypeConvMethod = ReflectionHelper.findMethod(PotionHelper.class, "registerPotionTypeConversion", "func_185204_a",
           PotionType.class, Predicate.class, PotionType.class);
     } catch (Exception e) {
       Log.error("Could not find method to register potions. Potions will not be brewable.");

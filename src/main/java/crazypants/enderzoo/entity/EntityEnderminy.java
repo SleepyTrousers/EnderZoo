@@ -186,9 +186,9 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
         + p_70816_1_.getEyeHeight(), posZ - p_70816_1_.posZ);
     vec3 = vec3.normalize();
     double d0 = 16.0D;
-    double d1 = posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
-    double d2 = posY + (rand.nextInt(16) - 8) - vec3.yCoord * d0;
-    double d3 = posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
+    double d1 = posX + (rand.nextDouble() - 0.5D) * 8.0D - vec3.x * d0;
+    double d2 = posY + (rand.nextInt(16) - 8) - vec3.y * d0;
+    double d3 = posZ + (rand.nextDouble() - 0.5D) * 8.0D - vec3.z * d0;
     return teleportTo(d1, d2, d3);
   }
 
@@ -215,8 +215,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       boolean foundGround = false;
       while (!foundGround && yInt > 0) {
         IBlockState bs = world.getBlockState(new BlockPos(xInt, yInt - 1, zInt));
-        Block block = bs.getBlock();
-        if(block.getMaterial(bs).blocksMovement()) {
+        if(bs.getMaterial().blocksMovement()) {
           foundGround = true;
         } else {
           --posY;
@@ -261,7 +260,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {
+  protected SoundEvent getHurtSound(DamageSource source) {
     return SoundEvents.ENTITY_ENDERMEN_HURT;
   }
 
@@ -326,7 +325,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
       if(rand.nextInt(3) == 0) {
         for (int i = 0; i < 64; ++i) {
           if(teleportRandomly(16)) {
-            setAttackTarget((EntityPlayer) damageSource.getEntity());
+            setAttackTarget((EntityPlayer) damageSource.getTrueSource());
             doGroupArgo();
             return true;
           }
@@ -408,7 +407,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     public boolean shouldExecute() {
       double d0 = getTargetDistance();
       List<EntityPlayer> list = taskOwner.world.getEntitiesWithinAABB(EntityPlayer.class, taskOwner.getEntityBoundingBox().expand(d0, 4.0D, d0), targetEntitySelector);
-      Collections.sort(list, this.theNearestAttackableTargetSorter);
+      Collections.sort(list, this.sorter);
       if(list.isEmpty()) {
         return false;
       } else {
@@ -439,7 +438,8 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting() {
+    @Override
+    public boolean shouldContinueExecuting() {
       if(targetPlayer != null) {
         if(!enderminy.shouldAttackPlayer(targetPlayer)) {
           return false;
@@ -449,7 +449,7 @@ public class EntityEnderminy extends EntityMob implements IEnderZooMob {
           return true;
         }
       } else {
-        return super.continueExecuting();
+        return super.shouldContinueExecuting();
       }
     }
 

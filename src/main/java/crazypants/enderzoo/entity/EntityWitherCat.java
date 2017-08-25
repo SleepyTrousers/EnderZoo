@@ -157,19 +157,19 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
 
   @Override
   public boolean attackEntityFrom(DamageSource source, float amount) {
-    if (owner != null && source.getEntity() == owner) {
+    if (owner != null && source.getTrueSource() == owner) {
       return false;
     }
     boolean res = super.attackEntityFrom(source, amount);
     if (!world.isRemote) {
-      if (source.getEntity() instanceof EntityLivingBase) {
+      if (source.getTrueSource() instanceof EntityLivingBase) {
         if (owner != null) {
-          EntityLivingBase ownerHitBy = owner.getAITarget();
+          EntityLivingBase ownerHitBy = owner.getRevengeTarget();
           if (ownerHitBy == null) {
-            owner.setRevengeTarget((EntityLivingBase) source.getEntity());
+            owner.setRevengeTarget((EntityLivingBase) source.getTrueSource());
           }
         } else if (owner == null) {
-          setAttackTarget((EntityLivingBase) source.getEntity());
+          setAttackTarget((EntityLivingBase) source.getTrueSource());
         }
       }
     }
@@ -330,7 +330,7 @@ public class EntityWitherCat extends EntityMob implements IOwnable<EntityWitherC
   }
 
   @Override
-  protected SoundEvent getHurtSound() {
+  protected SoundEvent getHurtSound(DamageSource source) {
     return SoundEvents.ENTITY_CAT_HURT;
   }
 

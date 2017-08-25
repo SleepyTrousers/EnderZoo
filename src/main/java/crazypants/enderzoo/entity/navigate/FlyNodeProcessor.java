@@ -32,8 +32,8 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
     EntityLiving entityIn = entity;
     int i = 0;
     for (EnumFacing enumfacing : EnumFacing.values()) {
-      PathPoint pathpoint = getSafePoint(entityIn, currentPoint.xCoord + enumfacing.getFrontOffsetX(), currentPoint.yCoord + enumfacing.getFrontOffsetY(),
-          currentPoint.zCoord + enumfacing.getFrontOffsetZ());
+      PathPoint pathpoint = getSafePoint(entityIn, currentPoint.x + enumfacing.getFrontOffsetX(), currentPoint.y + enumfacing.getFrontOffsetY(),
+          currentPoint.z + enumfacing.getFrontOffsetZ());
       if (pathpoint != null && !pathpoint.visited && (pathpoint.distanceTo(targetPoint) < maxDistance)) {
         pathOptions[i++] = pathpoint;
       }
@@ -54,7 +54,7 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
         for (int k = z; k < z + entitySizeZ; ++k) {
           IBlockState bs = blockaccess.getBlockState(mutableblockpos.setPos(i, j, k));
           Block block = bs.getBlock();
-          if (block.getMaterial(bs) != Material.AIR) {
+          if (bs.getMaterial() != Material.AIR) {
             AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.world, mutableblockpos);
             if(bb != null) {
               return false;
