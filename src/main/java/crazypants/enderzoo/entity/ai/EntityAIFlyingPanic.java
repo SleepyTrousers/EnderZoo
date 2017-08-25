@@ -21,6 +21,7 @@ public class EntityAIFlyingPanic extends EntityAIBase {
 
   @Override
   public boolean shouldExecute() {
+    if (theEntityCreature.getRevengeTarget() == null && !theEntityCreature.isBurning()) {
       return false;
     }
     Vec3d vec3 = RandomPositionGenerator.findRandomTarget(theEntityCreature, 5, 4);
