@@ -19,6 +19,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public class RegistryHandler {
@@ -58,9 +59,17 @@ public class RegistryHandler {
 	public void onEntityRegister(Register<EntityEntry> e) {
 	    for (MobInfo mob : MobInfo.values()) {
 	    	EntityEntry entry = new EntityEntry(mob.getClz(), mob.getName());
-	    	entry.setEgg(new EntityEggInfo(new ResourceLocation(EnderZoo.MODID, mob.getName()),mob.getEggForegroundColor(), mob.getEggBackgroundColor()));
-	        e.getRegistry().register(entry);
+	    	ResourceLocation name = new ResourceLocation(EnderZoo.MODID, mob.getName());
+	    	entry.setRegistryName(name);
+	    	entry.setEgg(new EntityEggInfo(name, mob.getEggBackgroundColor(), mob.getEggForegroundColor()));
+	    	e.getRegistry().register(entry);
+	        registerEntity(mob);
 	      }
+	}
+	
+	private void registerEntity(MobInfo mob) {
+		EntityRegistry.registerModEntity(new ResourceLocation(EnderZoo.MODID, mob.getName()),
+		mob.getClz(), mob.getName(), mob.getEntityId(), EnderZoo.instance, 64, 3, true);
 	}
 	
 	@SubscribeEvent
