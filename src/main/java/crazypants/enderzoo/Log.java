@@ -1,25 +1,27 @@
 package crazypants.enderzoo;
 
-import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public final class Log {
 
-  public static final String CHANNEL = EnderZoo.MODID;
+  public static final Logger LOG = LogManager.getLogger(EnderZoo.MODID);
 
   public static void warn(String msg) {
-    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.WARN, msg, (Object[]) null);
+	  LOG.log(Level.WARN, msg);
   }
 
   public static void error(String msg) {
-    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.ERROR, msg);
+	  LOG.log(Level.ERROR, msg);
   }
 
   public static void info(String msg) {
-    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.INFO, msg);
+	  LOG.log(Level.INFO, msg);
   }
 
   public static void debug(String msg) {
-    FMLLog.log(CHANNEL, org.apache.logging.log4j.Level.DEBUG, msg);
+	  LOG.log(Level.DEBUG, msg);
   }
 
   private Log() {

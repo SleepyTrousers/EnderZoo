@@ -8,7 +8,6 @@ import java.util.UUID;
 import crazypants.enderzoo.EnderZoo;
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -191,13 +190,12 @@ public class EntityUtil {
       return false;
     }
 
-    BlockPos bellow = new BlockPos(x, y, z).down();
-    IBlockState bs = world.getBlockState(bellow);
-    Block block = bs.getBlock();
+    BlockPos below = new BlockPos(x, y, z).down();
+    IBlockState bs = world.getBlockState(below);
     if (!bs.getMaterial().isSolid()) {
       return false;
     }    
-    AxisAlignedBB collides = block.getCollisionBoundingBox(bs, world, bellow);
+    AxisAlignedBB collides = bs.getCollisionBoundingBox(world, below);
     return collides != null;
   }
 

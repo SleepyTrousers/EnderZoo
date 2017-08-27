@@ -183,9 +183,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     BlockPos ep = getPosition();
     BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
     IBlockState bs = world.getBlockState(pos);
-    Block block = bs.getBlock();
     if (bs.getMaterial() != Material.AIR) {
-      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, world, pos);
+      AxisAlignedBB bb = bs.getCollisionBoundingBox(world, pos);
       if (bb != null) {
         double ouch = movedBB.maxY - bb.minY;
         if (ouch == 0) {
@@ -281,7 +280,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
         if (pos.getX() != x || pos.getY() != y || pos.getZ() != z) {
           pos.setPos(x, y, z);
-          if (world.getBlockState(pos).getBlock().isOpaqueCube(world.getBlockState(pos))) {
+          if (world.getBlockState(pos).isOpaqueCube()) {
             return true;
           }
         }

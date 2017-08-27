@@ -6,6 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+@SuppressWarnings("deprecation")
 public class CommonProxy {
 
   public CommonProxy() {
@@ -29,7 +30,6 @@ public class CommonProxy {
     ent.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, duration, 1, false, true));    
   }
   
-  @SuppressWarnings("deprecation")
   public String translate(String unlocalized) {
 	  return I18n.translateToLocal(unlocalized);
   }

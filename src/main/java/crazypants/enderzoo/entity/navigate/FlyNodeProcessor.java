@@ -1,6 +1,5 @@
 package crazypants.enderzoo.entity.navigate;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -53,9 +52,8 @@ public class FlyNodeProcessor extends WalkNodeProcessor {
       for (int j = y; j < y + entitySizeY; ++j) {
         for (int k = z; k < z + entitySizeZ; ++k) {
           IBlockState bs = blockaccess.getBlockState(mutableblockpos.setPos(i, j, k));
-          Block block = bs.getBlock();
           if (bs.getMaterial() != Material.AIR) {
-            AxisAlignedBB bb = block.getCollisionBoundingBox(bs, entityIn.world, mutableblockpos);
+            AxisAlignedBB bb = bs.getCollisionBoundingBox(entityIn.world, mutableblockpos);
             if(bb != null) {
               return false;
             }
