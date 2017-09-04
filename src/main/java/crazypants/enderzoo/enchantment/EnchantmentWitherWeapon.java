@@ -13,7 +13,7 @@ public class EnchantmentWitherWeapon extends Enchantment {
 
   private static final String NAME = "witherWeapon";
 
-  protected EnchantmentWitherWeapon() {
+  public EnchantmentWitherWeapon() {
     super(Config.enchantmentWitherWeaponRarity, EnumEnchantmentType.WEAPON, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND, EntityEquipmentSlot.OFFHAND});    
     setName(NAME);
     setRegistryName(NAME);

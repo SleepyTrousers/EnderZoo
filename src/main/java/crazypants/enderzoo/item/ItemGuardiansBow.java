@@ -1,6 +1,7 @@
 package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
 import crazypants.enderzoo.config.Config;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +22,6 @@ import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -50,7 +50,7 @@ public class ItemGuardiansBow extends ItemBow {
   }
 
   protected void init() {
-    GameRegistry.register(this);    
+	RegistryHandler.ITEMS.add(this);    
   }
 
   public void onPlayerStoppedUsing(ItemStack stack, World worldIn, EntityLivingBase entityLiving, int timeLeft) {

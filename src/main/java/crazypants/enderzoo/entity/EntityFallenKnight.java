@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -101,7 +102,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {    
+  protected SoundEvent getHurtSound(DamageSource source) {    
     return SoundEvents.ENTITY_ZOMBIE_HURT;    
   }
 
@@ -203,7 +204,7 @@ public class EntityFallenKnight extends EntitySkeleton implements IEnderZooMob {
 
     for(EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
       ItemStack itemStack = getItemStackFromSlot(slot);
-      if(itemStack == null && rand.nextFloat() <= chancePerPiece) {
+      if(itemStack.isEmpty() && rand.nextFloat() <= chancePerPiece) {
         Item item = EntityLiving.getArmorByChance(slot, armorLevel);
         if(item != null) {
           ItemStack stack = new ItemStack(item);

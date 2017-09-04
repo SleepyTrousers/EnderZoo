@@ -42,7 +42,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
@@ -61,10 +60,6 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     SND_HOOT2.setRegistryName("owl.hootDouble");
     SND_HURT = new SoundEvent(new ResourceLocation("enderzoo", "owl.hurt"));
     SND_HURT.setRegistryName("owl.hurt");
-    
-    GameRegistry.register(EntityOwl.SND_HOOT);
-    GameRegistry.register(EntityOwl.SND_HOOT2);
-    GameRegistry.register(EntityOwl.SND_HURT);
   }
   
 
@@ -137,7 +132,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   @Override
   public float getBlockPathWeight(BlockPos pos) {
     IBlockState bs = world.getBlockState(pos.down());
-    return bs.getBlock().getMaterial(bs) == Material.LEAVES ? 10.0F : 0;
+    return bs.getMaterial() == Material.LEAVES ? 10.0F : 0;
   }
 
   @Override
@@ -188,9 +183,8 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
     BlockPos ep = getPosition();
     BlockPos pos = new BlockPos(ep.getX(), movedBB.maxY, ep.getZ());
     IBlockState bs = world.getBlockState(pos);
-    Block block = bs.getBlock();
-    if (block.getMaterial(bs) != Material.AIR) {
-      AxisAlignedBB bb = block.getCollisionBoundingBox(bs, world, pos);
+    if (bs.getMaterial() != Material.AIR) {
+      AxisAlignedBB bb = bs.getCollisionBoundingBox(world, pos);
       if (bb != null) {
         double ouch = movedBB.maxY - bb.minY;
         if (ouch == 0) {
@@ -210,7 +204,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   
   private boolean isOnLeaves() {
     IBlockState bs = world.getBlockState(getPosition().down());    
-    return bs.getBlock().getMaterial(bs) == Material.LEAVES;
+    return bs.getMaterial() == Material.LEAVES;
   }
 /*
  //this ONLY fires serverside. however motionX only affects things clientside. so i moved the collision detection to the udptae
@@ -286,7 +280,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
 
         if (pos.getX() != x || pos.getY() != y || pos.getZ() != z) {
           pos.setPos(x, y, z);
-          if (world.getBlockState(pos).getBlock().isOpaqueCube(world.getBlockState(pos))) {
+          if (world.getBlockState(pos).isOpaqueCube()) {
             return true;
           }
         }
@@ -391,7 +385,7 @@ public class EntityOwl extends EntityAnimal implements IFlyingMob {
   }
 
   @Override
-  protected SoundEvent getHurtSound() {    
+  protected SoundEvent getHurtSound(DamageSource source) {    
     return SND_HURT;
   }
 

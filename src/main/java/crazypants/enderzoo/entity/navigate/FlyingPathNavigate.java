@@ -45,8 +45,8 @@ public class FlyingPathNavigate extends PathNavigateGround {
 
   @Override
   protected Vec3d getEntityPosition() {
-    int y = (int) (theEntity.getEntityBoundingBox().minY + 0.5D);
-    return new Vec3d(theEntity.posX, y, theEntity.posZ);
+    int y = (int) (entity.getEntityBoundingBox().minY + 0.5D);
+    return new Vec3d(entity.posX, y, entity.posZ);
   }
 
   public boolean tryFlyToXYZ(double x, double y, double z, double speedIn) {
@@ -93,18 +93,18 @@ public class FlyingPathNavigate extends PathNavigateGround {
       // theEntity.isAirBorne = true;
       pathFollow(); // follow it
       if (!noPath()) { // if we haven't finished, then set the new move point
-        Vec3d targetPos = currentPath.getPosition(theEntity);
+        Vec3d targetPos = currentPath.getPosition(entity);
         if (targetPos == null) {
           return;
         }
-        double y = targetPos.yCoord;
+        double y = targetPos.y;
         if (forceFlying) {
           double aboveBlock = y - (int) y;
           if (aboveBlock < 0.10) {
             y = (int) y + 0.10;
           }
         }
-        theEntity.getMoveHelper().setMoveTo(targetPos.xCoord, y, targetPos.zCoord, speed);
+        entity.getMoveHelper().setMoveTo(targetPos.x, y, targetPos.z, speed);
       }
     }
 
@@ -114,13 +114,13 @@ public class FlyingPathNavigate extends PathNavigateGround {
   protected void pathFollow() {
 
     Vec3d entPos = getEntityPosition();
-    float entWidthSq = theEntity.width * theEntity.width;
-    if (currentPath.getCurrentPathIndex() == currentPath.getCurrentPathLength() - 1 && theEntity.onGround) {
+    float entWidthSq = entity.width * entity.width;
+    if (currentPath.getCurrentPathIndex() == currentPath.getCurrentPathLength() - 1 && entity.onGround) {
       entWidthSq = 0.01f; // we need to be right on top of the last point if on
                           // the ground so we don't hang on ledges
     }
 
-    Vec3d targetPos = currentPath.getVectorFromIndex(theEntity, currentPath.getCurrentPathIndex());
+    Vec3d targetPos = currentPath.getVectorFromIndex(entity, currentPath.getCurrentPathIndex());
 
     double distToCurrTargSq = entPos.squareDistanceTo(targetPos);
     if (distToCurrTargSq < entWidthSq) {
@@ -130,7 +130,7 @@ public class FlyingPathNavigate extends PathNavigateGround {
     // there
     int i = 6;
     for (int j = Math.min(currentPath.getCurrentPathIndex() + i, currentPath.getCurrentPathLength() - 1); j > currentPath.getCurrentPathIndex(); --j) {
-      targetPos = currentPath.getVectorFromIndex(theEntity, j);
+      targetPos = currentPath.getVectorFromIndex(entity, j);
       if (targetPos.squareDistanceTo(entPos) <= 36.0D && isDirectPathBetweenPoints(entPos, targetPos, 0, 0, 0)) {
         currentPath.setCurrentPathIndex(j);
         break;
@@ -142,11 +142,11 @@ public class FlyingPathNavigate extends PathNavigateGround {
   @Override
   protected boolean isDirectPathBetweenPoints(Vec3d startPos, Vec3d endPos, int sizeX, int sizeY, int sizeZ) {
 
-    Vec3d target = new Vec3d(endPos.xCoord, endPos.yCoord + theEntity.height * 0.5D, endPos.zCoord);
+    Vec3d target = new Vec3d(endPos.x, endPos.y + entity.height * 0.5D, endPos.z);
     if (!isClear(startPos, target)) {
       return false;
     }
-    AxisAlignedBB bb = theEntity.getEntityBoundingBox();
+    AxisAlignedBB bb = entity.getEntityBoundingBox();
     startPos = new Vec3d(bb.maxX, bb.maxY, bb.maxZ);
     if (!isClear(startPos, target)) {
       return false;

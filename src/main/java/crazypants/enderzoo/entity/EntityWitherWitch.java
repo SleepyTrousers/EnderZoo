@@ -96,7 +96,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
   protected float applyPotionDamageCalculations(DamageSource damageSource, float damage) {
     //same as a vanilla witch
     damage = super.applyPotionDamageCalculations(damageSource, damage);
-    if(damageSource.getEntity() == this) {
+    if(damageSource.getTrueSource() == this) {
       damage = 0.0F;
     }
     if(damageSource.isMagicDamage()) {
@@ -130,7 +130,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
 
   @Override
   public void setRevengeTarget(EntityLivingBase target) {
-    EntityLivingBase curTarget = getAITarget();
+    EntityLivingBase curTarget = getRevengeTarget();
     super.setRevengeTarget(target);
     if(curTarget == target || world.isRemote || target == null) {
       return;
@@ -255,7 +255,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     EntityPotion entitypotion = new EntityPotion(world, this, potion);
     Vec3d lookVec = getLookVec();
 
-    entitypotion.setThrowableHeading(lookVec.xCoord * 0.5, -1, lookVec.zCoord * 0.5, 0.75F, 1.0F);
+    entitypotion.setThrowableHeading(lookVec.x * 0.5, -1, lookVec.z * 0.5, 0.75F, 1.0F);
     world.spawnEntity(entitypotion);
     setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
     healTimer = 80;
@@ -289,7 +289,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
     cat.onInitialSpawn(world.getDifficultyForLocation(new BlockPos(this)), null);
     cat.setOwner(this);
     cat.setPositionAndRotation(spawnLoc.x + 0.5, spawnLoc.y + 0.5, spawnLoc.z + 0.5, rotationYaw, 0);
-    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, world, (float)cat.posX, (float)cat.posY, (float)cat.posZ))) {
+    if (MinecraftForge.EVENT_BUS.post(new LivingSpawnEvent.CheckSpawn(cat, world, (float)cat.posX, (float)cat.posY, (float)cat.posZ, false))) {
       return;
     }
     if(!cat.getCanSpawnHere()) {
@@ -358,7 +358,7 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       return;
     }
     EntityLivingBase currentTarget = getActiveTarget();
-    EntityLivingBase hitBy = getAITarget();
+    EntityLivingBase hitBy = getRevengeTarget();
     if(hitBy == null) {
       //agro the cats if we have been hit or we have actually thrown a potion
       hitBy = attackedWithPotion;
@@ -388,5 +388,8 @@ public class EntityWitherWitch extends EntityMob implements IRangedAttackMob, IE
       }
     }
   }
+
+  @Override
+  public void setSwingingArms(boolean swingingArms) { }
 
 }

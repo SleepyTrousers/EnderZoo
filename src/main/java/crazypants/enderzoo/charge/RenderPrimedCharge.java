@@ -39,7 +39,7 @@ public class RenderPrimedCharge extends Render<EntityPrimedCharge> {
     f2 = (1.0F - ((float) entity.fuse - partialTicks + 1.0F) / 100.0F) * 0.8F;
     this.bindEntityTexture(entity);
     GlStateManager.translate(-0.5F, -0.5F, 0.5F);
-    blockrendererdispatcher.renderBlockBrightness(entity.getBlock().getDefaultState(), entity.getBrightness(partialTicks));
+    blockrendererdispatcher.renderBlockBrightness(entity.getBlock().getDefaultState(), entity.getBrightness());
     GlStateManager.translate(0.0F, 0.0F, 1.0F);
 
     if (entity.fuse / 5 % 2 == 0) {

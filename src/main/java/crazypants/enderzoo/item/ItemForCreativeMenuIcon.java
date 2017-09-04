@@ -1,7 +1,11 @@
 package crazypants.enderzoo.item;
 
+import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
 public class ItemForCreativeMenuIcon extends Item {
 
@@ -16,12 +20,17 @@ public class ItemForCreativeMenuIcon extends Item {
   private ItemForCreativeMenuIcon() {
     setUnlocalizedName(NAME);
     setRegistryName(NAME);
-    setCreativeTab(null);    
+    setCreativeTab(EnderZooTab.tabEnderZoo);    
     setHasSubtypes(false);
   }
 
   private void init() {
-    GameRegistry.register(this);
+	RegistryHandler.ITEMS.add(this);
+  }
+  
+  @Override
+  public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> list) {
+	  
   }
 
 }

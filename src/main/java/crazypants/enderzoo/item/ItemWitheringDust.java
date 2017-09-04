@@ -1,8 +1,8 @@
 package crazypants.enderzoo.item;
 
 import crazypants.enderzoo.EnderZooTab;
+import crazypants.enderzoo.RegistryHandler;
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemWitheringDust extends Item {
 
@@ -22,7 +22,7 @@ public class ItemWitheringDust extends Item {
   }
   
   private void init() {
-    GameRegistry.register(this);           
+	RegistryHandler.ITEMS.add(this);        
   }
  
 }

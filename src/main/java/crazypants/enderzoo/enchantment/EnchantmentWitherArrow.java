@@ -13,7 +13,7 @@ public class EnchantmentWitherArrow extends Enchantment {
 
   private static final String NAME = "witherArrow";
 
-  protected EnchantmentWitherArrow() {
+  public EnchantmentWitherArrow() {
     super(Config.enchantmentWitherArrowRarity, EnumEnchantmentType.BOW, new EntityEquipmentSlot[] {EntityEquipmentSlot.MAINHAND});
     setName(NAME);
     setRegistryName(NAME);

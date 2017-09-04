@@ -4,7 +4,6 @@ import java.util.List;
 
 import crazypants.enderzoo.vec.Point3i;
 import crazypants.enderzoo.vec.VecUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -73,8 +72,7 @@ public class SpawnUtil {
 	if(bs == null || bs.getBlock() == null) {
 		return false;
 	}
-    Block block = bs.getBlock();
-    if(block.getMaterial(bs).isLiquid()) {
+    if(bs.getMaterial().isLiquid()) {
       return true;
     }
     return false;

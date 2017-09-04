@@ -82,7 +82,7 @@ public class RenderWitherCat extends RenderLiving<EntityWitherCat> {
         GL11.glEnable(GL11.GL_LIGHTING);
 
         getMainModel().render(cat, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_, p_177201_8_);
-        setLightmap(cat, p_177201_4_);
+        setLightmap(cat);
       }
 
     }

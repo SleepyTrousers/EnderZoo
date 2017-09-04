@@ -3,7 +3,6 @@ package crazypants.enderzoo.entity.ai;
 import java.util.List;
 
 import crazypants.enderzoo.entity.EntityUtil;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
@@ -59,12 +58,11 @@ public class EntityAIFlyingFindPerch extends EntityAIBase {
 
   private boolean isOnLeaves() {
     IBlockState bs = entity.getEntityWorld().getBlockState(entity.getPosition().down());
-    Block block = bs.getBlock();
-    return block.getMaterial(bs) == Material.LEAVES;
+    return bs.getMaterial() == Material.LEAVES;
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return !entity.getNavigator().noPath();
   }
 

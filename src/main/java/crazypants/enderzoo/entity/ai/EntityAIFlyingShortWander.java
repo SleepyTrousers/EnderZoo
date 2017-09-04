@@ -1,6 +1,5 @@
 package crazypants.enderzoo.entity.ai;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
@@ -35,12 +34,12 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
     }
     
     Vec3d vec3 = RandomPositionGenerator.findRandomTarget(entity, 4, 2);    
-    if (vec3 == null || entity.posY - vec3.yCoord < -2) {
+    if (vec3 == null || entity.posY - vec3.y < -2) {
       return false;
     }    
-    randPosX = vec3.xCoord;
-    randPosY = vec3.yCoord;
-    randPosZ = vec3.zCoord;
+    randPosX = vec3.x;
+    randPosY = vec3.y;
+    randPosZ = vec3.z;
     return true;
   }
 
@@ -50,13 +49,12 @@ public class EntityAIFlyingShortWander extends EntityAIBase {
   }
 
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     return !entity.getNavigator().noPath();
   }
 
   private boolean isOnLeaves() {
     IBlockState bs = entity.getEntityWorld().getBlockState(entity.getPosition().down());
-    Block block = bs.getBlock();
-    return block.getMaterial(bs) == Material.LEAVES;
+    return bs.getMaterial() == Material.LEAVES;
   }
 }

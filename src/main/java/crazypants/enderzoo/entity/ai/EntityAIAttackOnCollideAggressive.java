@@ -76,7 +76,7 @@ public class EntityAIAttackOnCollideAggressive extends EntityAIBase {
    * Returns whether an in-progress EntityAIBase should continue executing
    */
   @Override
-  public boolean continueExecuting() {
+  public boolean shouldContinueExecuting() {
     EntityLivingBase entitylivingbase = attacker.getAttackTarget();
     return entitylivingbase == null ? false : (!entitylivingbase.isEntityAlive() ? false : (!longMemory ? !attacker.getNavigator().noPath() : attacker
         .isWithinHomeDistanceCurrentPosition()));

@@ -57,9 +57,9 @@ public class FlyingPathFinder extends PathFinder {
     
     Vec3d targ = new Vec3d(x, y, z);
     Vec3d ePos = entityIn.getPositionVector();
-    double yDelta = targ.yCoord - ePos.yCoord;
+    double yDelta = targ.y - ePos.y;
 
-    double horizDist = new Vec3d(x,0,z).distanceTo(new Vec3d(ePos.xCoord,0,ePos.zCoord));
+    double horizDist = new Vec3d(x,0,z).distanceTo(new Vec3d(ePos.x,0,ePos.z));
     
     int climbY = 0;
     if (horizDist > 4 && entityIn.onGround) {
@@ -79,12 +79,12 @@ public class FlyingPathFinder extends PathFinder {
     // climb, then descend
     double climbDistance = Math.min(horizDist / 2.0, climbY);
 
-    Vec3d horizDirVec = new Vec3d(targ.xCoord,0,targ.zCoord);
-    horizDirVec = horizDirVec.subtract(new Vec3d(ePos.xCoord, 0, ePos.zCoord));
+    Vec3d horizDirVec = new Vec3d(targ.x,0,targ.z);
+    horizDirVec = horizDirVec.subtract(new Vec3d(ePos.x, 0, ePos.z));
     horizDirVec = horizDirVec.normalize();
-    Vec3d offset = new Vec3d(horizDirVec.xCoord * climbDistance, climbY, horizDirVec.zCoord * climbDistance);
+    Vec3d offset = new Vec3d(horizDirVec.x * climbDistance, climbY, horizDirVec.z * climbDistance);
     
-    PathPoint climbPoint = new PathPoint(rnd(startPoint.xCoord + offset.xCoord), rnd(startPoint.yCoord + offset.yCoord), rnd(startPoint.zCoord + offset.zCoord));        
+    PathPoint climbPoint = new PathPoint(rnd(startPoint.x + offset.x), rnd(startPoint.y + offset.y), rnd(startPoint.z + offset.z));        
     if(!SpawnUtil.isSpaceAvailableForSpawn(entityIn.world, (EntityLiving)entityIn, false)) {
       return createDefault(blockaccess, entityIn, distance, x,y,z);
     }
@@ -101,7 +101,7 @@ public class FlyingPathFinder extends PathFinder {
     path.clearPath();    
     nodeProcessor.initProcessor(blockaccess, (EntityLiving) entityIn);
     //climbPoint.index = -1;
-    climbPoint = new PathPoint(climbPoint.xCoord, climbPoint.yCoord, climbPoint.zCoord);
+    climbPoint = new PathPoint(climbPoint.x, climbPoint.y, climbPoint.z);
     points = addToPath(entityIn, climbPoint, endPoint, distance);
     nodeProcessor.postProcess();
 
