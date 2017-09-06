@@ -61,7 +61,7 @@ Each filter must contain one or more biome entries
          The special name BASE_LAND_TYPES includes:
          MESA, FOREST, PLAINS, MOUNTAIN, HILLS, SWAMP, SANDY, SNOWY, WASTELAND, BEACH
          
-- name: The name of the biome. Must be exactly as registered.
+- name: The registry name of the biome. Must be exactly as registered, must be in the format modid:biome.  For vanilla, use minecraft as the modid.
          
 - exclude: (Optional, default false) when set to false any biomes matching this type will be excluded. For example, if
             FOREST is specified as a biome type, and CONIFEROUS is specified with the exclude set to true, then the mob will not

@@ -26,6 +26,7 @@ import crazypants.enderzoo.spawn.impl.BiomeFilterAny;
 import crazypants.enderzoo.spawn.impl.DimensionFilter;
 import crazypants.enderzoo.spawn.impl.SpawnEntry;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -309,7 +310,7 @@ public class SpawnConfigParser extends DefaultHandler {
       }
       return;
     }
-    currentFilter.addBiomeDescriptor(new BiomeDescriptor(biomeName.trim(), isExclude));
+    currentFilter.addBiomeDescriptor(new BiomeDescriptor(new ResourceLocation(biomeName.trim()), isExclude));
   }
 
   protected boolean isEmptyString(String str) {

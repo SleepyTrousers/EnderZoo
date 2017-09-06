@@ -6,6 +6,7 @@ import java.util.List;
 import crazypants.enderzoo.config.Config;
 import crazypants.enderzoo.spawn.IBiomeDescriptor;
 import crazypants.enderzoo.spawn.IBiomeFilter;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
@@ -14,8 +15,8 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
   protected final List<BiomeDictionary.Type> types = new ArrayList<BiomeDictionary.Type>();
   protected final List<BiomeDictionary.Type> typeExcludes = new ArrayList<BiomeDictionary.Type>();
 
-  protected final List<String> names = new ArrayList<String>();
-  protected final List<String> nameExcludes = new ArrayList<String>();
+  protected final List<ResourceLocation> names = new ArrayList<ResourceLocation>();
+  protected final List<ResourceLocation> nameExcludes = new ArrayList<ResourceLocation>();
 
   @Override
   public void addBiomeDescriptor(IBiomeDescriptor biome) {
@@ -44,9 +45,9 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
 
       }
     }
-    for (String exName : nameExcludes) {
-      if (exName != null && exName.equals(candidate.getBiomeName())) {
-        System.out.print("Excluded " + candidate.getBiomeName() + ", ");
+    for (ResourceLocation exName : nameExcludes) {
+      if (exName != null && exName.equals(candidate.getRegistryName())) {
+        System.out.print("Excluded " + candidate.getRegistryName() + ", ");
         return false;
       }
     }
