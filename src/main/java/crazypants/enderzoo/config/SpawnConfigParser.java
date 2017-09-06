@@ -172,15 +172,15 @@ public class SpawnConfigParser extends DefaultHandler {
   private void parseDimExclude(Attributes attributes) {
     String name = getStringValue(ATT_NAME, attributes, null);
     if (name != null) {
-      currentEntry.addDimensioFilter(new DimensionFilter(name));
+      currentEntry.addDimensionFilter(new DimensionFilter(name));
       return;
     }
     int id = getIntValue(ATT_ID, attributes, Integer.MAX_VALUE);
     if (id != Integer.MAX_VALUE) {
-      currentEntry.addDimensioFilter(new DimensionFilter(id));
+      currentEntry.addDimensionFilter(new DimensionFilter(id));
       return;
     }
-    currentEntry.addDimensioFilter(new DimensionFilter(getIntValue(ATT_ID_START, attributes, Integer.MAX_VALUE), getIntValue(ATT_ID_END, attributes,
+    currentEntry.addDimensionFilter(new DimensionFilter(getIntValue(ATT_ID_START, attributes, Integer.MAX_VALUE), getIntValue(ATT_ID_END, attributes,
         Integer.MAX_VALUE)));
 
   }

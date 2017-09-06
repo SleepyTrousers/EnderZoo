@@ -7,7 +7,7 @@ public interface IBiomeDescriptor {
 
   BiomeDictionary.Type getType();
 
-  ResourceLocation getName();
+  ResourceLocation getRegistryName();
 
   boolean isExclude();
 

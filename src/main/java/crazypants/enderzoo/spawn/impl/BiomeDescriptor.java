@@ -24,7 +24,7 @@ public class BiomeDescriptor implements IBiomeDescriptor {
   }
 
   @Override
-  public ResourceLocation getName() {
+  public ResourceLocation getRegistryName() {
     return name;
   }
 

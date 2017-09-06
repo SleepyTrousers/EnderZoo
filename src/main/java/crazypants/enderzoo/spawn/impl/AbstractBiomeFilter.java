@@ -26,11 +26,11 @@ public abstract class AbstractBiomeFilter implements IBiomeFilter {
       } else {
         types.add(biome.getType());
       }
-    } else if (biome.getName() != null) {
+    } else if (biome.getRegistryName() != null) {
       if (biome.isExclude()) {
-        nameExcludes.add(biome.getName());
+        nameExcludes.add(biome.getRegistryName());
       } else {
-        names.add(biome.getName());
+        names.add(biome.getRegistryName());
       }
     }
   }
