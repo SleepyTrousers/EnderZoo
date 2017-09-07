@@ -38,7 +38,7 @@ public class SpawnEntry implements ISpawnEntry {
     return filters;
   }
 
-  public void addDimensioFilter(DimensionFilter filter) {
+  public void addDimensionFilter(DimensionFilter filter) {
     dimFilters.add(filter);
   }
 

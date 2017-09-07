@@ -33,7 +33,7 @@ public class BiomeFilterAll extends AbstractBiomeFilter {
     if (isExcluded(biome)) {
       return false;
     }
-    if (!names.isEmpty() && !names.contains(biome.getBiomeName())) {
+    if (!names.isEmpty() && !names.contains(biome.getRegistryName())) {
       return false;
     }
     for (BiomeDictionary.Type type : types) {
